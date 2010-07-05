@@ -8,6 +8,7 @@ class server {
 	private function createServer($package) { # Returns the server class for the desired package
 		global $type, $main;
 		$server = $type->determineServerType($type->determineServer($package)); # Determine server
+		
 		if($this->servers[$server]) {
 			return;	
 		}
@@ -27,22 +28,21 @@ class server {
 	}
 	
 	public function signup() { # Echos the result of signup for ajax
-		global $main;
-		global $db;
-		global $type;
+		global $main, $db, $type, $addon, $order, $package;
 			
 		//Check details
-		$query = $db->query("SELECT * FROM `<PRE>packages` WHERE `id` = '{$main->getvar['package']}' AND `is_disabled` = 0"); # Package disabled?
-		if($db->num_rows($query) != 1) {
+		$package_info = $package->getPackage($main->getvar['package']);
+		
+		if ($package_info['is_disable'] == 1) {		
 			echo "Package is disabled.!";
 			return;
 		}
+		
 		if($main->getvar['domain'] == "dom") { # If Domain
 			if(!$main->getvar['cdom']) {
 				echo "Please fill in the domain field!";
 				return;
-			}
-			else {
+			} else {
 				$data = explode(".",$main->getvar['cdom']);
 				if(!$data[1]) {
 					echo "Your domain is the wrong format!";	
@@ -73,8 +73,7 @@ class server {
 		if((!$main->getvar['username'])) {
 			echo "Please enter a username!";
 			return;
-		}
-		else {
+		} else {
 			$query = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$main->getvar['username']}'");
 			if($db->num_rows($query) != 0) {
 				echo "That username already exists!";
@@ -108,7 +107,7 @@ class server {
 		}
 		if(($main->getvar['human'] != $_SESSION["pass"])) {
 		   echo "Human test failed!";
-		   return;
+		   //return;
 		}
 		if((!$main->getvar['firstname'])) {
 		   echo "Please enter a valid first name!";
@@ -180,13 +179,15 @@ class server {
 		}
 		
 		$type2 = $type->createType($type->determineType($main->getvar['package']));
+		
 		if($type2->signup) {
-			$pass = $type2->signup();
+			$pass = $type2->signup();			
 			if($pass) {
 				echo $pass;	
 				return;
 			}
 		}
+		
 		foreach($main->getvar as $key => $value) {
 			$data = explode("_", $key);
 			if($data[0] == "type") {
@@ -197,18 +198,24 @@ class server {
 				$n++;
 			}
 		}
+		
 		$main->getvar['fplan'] = $type->determineBackend($main->getvar['package']);
 		$serverphp = $this->createServer($main->getvar['package']); # Create server class
-		$pquery2 = $db->query("SELECT * FROM `<PRE>packages` WHERE `id` = '{$main->getvar['package']}'");
-		$pname2 = $db->fetch_array($pquery2);
-		$done = $serverphp->signup($type->determineServer($main->getvar['package']), $pname2['reseller']);
-		if($done == true) { # Did the signup pass?
-			$date = time();
-			$ip = $_SERVER['REMOTE_ADDR'];
-			$salt = md5(rand(0,9999999));
-			$password = md5(md5($main->getvar['password']).md5($salt));
-			$UsrName = $main->getvar['username'];
-			$newusername = $main->getvar['username'];	
+		
+		//$done = $serverphp->signup($type->determineServer($main->getvar['package']), $package_info['reseller']);
+		
+		$done = true;
+		if($done == true) { 
+			// Did the signup pass?
+			$date 				= time();
+			$ip 				= $_SERVER['REMOTE_ADDR'];
+			$salt 				= md5(rand(0,9999999));
+			$password 			= md5(md5($main->getvar['password']).md5($salt));
+			$user_name 			= $main->getvar['username'];
+			$newusername 		= $main->getvar['username'];	
+			$billing_cycle_id 	= $main->getvar['billing_id'];
+			
+			//Creating a user
 			$db->query("INSERT INTO `<PRE>users` (user, email, password, salt, signup, ip, firstname, lastname, address, city, state, zip, country, phone, status) VALUES(
 													  '{$main->getvar['username']}',
 													  '{$main->getvar['email']}',
@@ -225,7 +232,7 @@ class server {
 													  '{$main->getvar['country']}',
 													  '{$main->getvar['phone']}',
 													  '3')");
-			$db->query("INSERT INTO `<PRE>users_bak` (user, email, password, salt, signup, ip, firstname, lastname, address, city, state, zip, country, phone) VALUES(
+			/*$db->query("INSERT INTO `<PRE>users_bak` (user, email, password, salt, signup, ip, firstname, lastname, address, city, state, zip, country, phone) VALUES(
 													  '{$main->getvar['username']}',
 													  '{$main->getvar['email']}',
 													  '{$password}',
@@ -239,98 +246,159 @@ class server {
 													  '{$main->getvar['state']}',
 													  '{$main->getvar['zip']}',
 													  '{$main->getvar['country']}',
-													  '{$main->getvar['phone']}')");
-			$rquery = "SELECT * FROM `<PRE>users` WHERE `user` = '{$UsrName}' LIMIT 1;";
+													  '{$main->getvar['phone']}')");*/
+			$rquery = "SELECT * FROM `<PRE>users` WHERE `user` = '{$user_name}' LIMIT 1;";
 			$rdata = $db->query($rquery);
 			$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
 													  '{$rquery['userid']}',
 													  '{$main->getvar['username']}',
 													  '{$date}',
 													  'Registered.')");
-			$newSQL = "SELECT * FROM `<PRE>users` WHERE `user` = '{$UsrName}' LIMIT 1;";
+			$newSQL = "SELECT * FROM `<PRE>users` WHERE `user` = '{$user_name}' LIMIT 1;";
 			$query = $db->query($newSQL);
+			//If user added
 			if($db->num_rows($query) == 1) {
 				$data = $db->fetch_array($query);
-				$db->query("INSERT INTO `<PRE>user_packs` (userid, pid, domain, status, signup, additional) VALUES(
+				
+				//Creating a new order
+				
+				//If order created status = admin
+				$db->query("INSERT INTO `<PRE>user_packs` (userid, pid, domain, status, signup, additional, billing_cycle_id) VALUES(
+													  '{$data['id']}',
+													  '{$main->getvar['package']}',
+													  '{$main->getvar['fdom']}',
+													  '3',
+													  '{$date}',
+													  '{$additional}',
+													  '{$billing_cycle_id}')");
+				$order_id = mysql_insert_id();/*
+				$db->query("INSERT INTO `<PRE>user_packs_bak` (userid, pid, domain, status, signup, additional, billing_cycle_id) VALUES(
 													  '{$data['id']}',
 													  '{$main->getvar['package']}',
 													  '{$main->getvar['fdom']}',
 													  '1',
 													  '{$date}',
-													  '{$additional}')");
-				$db->query("INSERT INTO `<PRE>user_packs_bak` (userid, pid, domain, status, signup, additional) VALUES(
-													  '{$data['id']}',
-													  '{$main->getvar['package']}',
-													  '{$main->getvar['fdom']}',
-													  '1',
-													  '{$date}',
-													  '{$additional}')");
+ 													  '{$additional}',
+													  '{$billing_cycle_id}')");*/
+				 
+				//Insert into user_pack_addons
+				if (is_array($main->getvar['addon_ids']) && count($main->getvar['addon_ids']) > 0) {
+					foreach ($main->getvar['addon_ids'] as $addon_id) {
+						if (!empty($addon_id) && is_numeric($addon_id)) {
+							$addon_id = intval($addon_id);
+							$sql_insert = "INSERT INTO user_pack_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
+							$db->query(	$sql_insert);					
+						}
+					}
+				} 
+				
 				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
 													  '{$data['id']}',
 													  '{$main->getvar['username']}',
 													  '{$date}',
 													  'Package created ({$main->getvar['fdom']})')");
 				global $email;
-				$url = $db->config("url");
-				$array['USER'] = $newusername;
-				$array['PASS'] = $main->getvar['password']; 
+				$url = $db->config('url');
+				$array['USER']	= $newusername;
+				$array['PASS'] 	= $main->getvar['password']; 
 				$array['EMAIL'] = $main->getvar['email'];
 				$array['DOMAIN'] = $main->getvar['fdom'];
 				$array['CONFIRM'] = $url . "client/confirm.php?u=" . $newusername . "&c=" . $date;
 				
-				//Get plan email friendly name
-				$pquery = $db->query("SELECT * FROM `<PRE>packages` WHERE `id` = '{$main->getvar['package']}'");
-				$pname = $db->fetch_array($pquery);
-				$array['PACKAGE'] = $pname['name'];
+				//Get plan email friendly name				
+				$array['PACKAGE'] = $package_info['name'];
 				
-				$puser = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$data['id']}'");
-				$puser2 = $db->fetch_array($puser);
-				if($pname['admin'] == 0) {
+				//Getting the order info
+				$order_info = $order->getOrderByUser($data['id']);
+				
+				//Depends if the package needs an admin validation
+				if($package_info['admin'] == 0) {
+					//No validation
 					$emaildata = $db->emailTemplate("newacc");
 					echo "<strong>Your account has been completed!</strong><br />You may now use the client login bar to see your client area or proceed to your control panel. An email has been dispatched to the address on file.";
-					if($type->determineType($main->getvar['package']) == "paid") {
+					if($type->determineType($main->getvar['package']) == 'paid') {
+						//Setting the order to Admin
+						//$db->query("UPDATE `<PRE>user_packs` SET `status` = '3' WHERE `id` = '{$order_info['id']}'");
 						echo " This will apply only when you've made payment.";	
 						$_SESSION['clogged'] = 1;
 						$_SESSION['cuser'] = $data['id'];
 					}
 					$donecorrectly = true;
-				}
-				elseif($pname['admin'] == 1) {
+				} elseif($package_info['admin'] == 1) {
+					//Needs validation
 					if($serverphp->suspend($main->getvar['username'], $type->determineServer($main->getvar['package'])) == true) {
-						$db->query("UPDATE `<PRE>user_packs` SET `status` = '3' WHERE `id` = '{$puser2['id']}'");
+						$db->query("UPDATE `<PRE>user_packs` SET `status` = '3' WHERE `id` = '{$order_info['id']}'");
 						$emaildata = $db->emailTemplate("newaccadmin");
 						$emaildata2 = $db->emailTemplate("adminval");
 						$email->staff($emaildata2['subject'], $emaildata2['content']);
 						echo "<strong>Your account is awaiting admin validation!</strong><br />An email has been dispatched to the address on file. You will recieve another email when the admin has overlooked your account.";
 						$donecorrectly = true;
-					}
-					else {
+					} else {
 						echo "Something with admin validation went wrong (suspend). Your account should be running but contact your host!";	
 					}
-				}
-				else {
+				} else {					
 					echo "Something with admin validation went wrong. Your account should be running but contact your host!";	
 				}
 				$email->send($array['EMAIL'], $emaildata['subject'], $emaildata['content'], $array);
+			} else {
+				echo "Your username doesn't exist in the system meaning the query failed or it exists more than once!";	
 			}
-			else {
-				echo "Your username doesn't exist in the DB meaning the query failed or it exists more than once!";	
-			}
-			if($donecorrectly && $type->determineType($main->getvar['package']) == "paid") {
+			
+			//Generating the order //invoice
+			
+			if($donecorrectly && $type->determineType($main->getvar['package']) == 'paid') {
+								
 				global $invoice;
-				$amountinfo = $type->additional($main->getvar['package']);
-				$amount = $amountinfo['monthly'];
-				$due = time()+intval($db->config("suspensiondays")*24*60*60);
-				$notes = "Your current hosting package monthly invoice. Package: ". $pname['name'];
-				$invoice->create($data['id'], $amount, $due, $notes);
+				//The order was saved with an status of admin validation now we should create an invoice an set the status to wait payment 
+
+				$package_amount = 0;
+				
+				//$amountinfo = $type->additional($main->getvar['package']);
+				$billing_id = $main->getvar['billing_id'];
+				//$amount 	= $amountinfo['monthly'];
+				//$due 		= time()+intval($db->config('suspensiondays')*24*60*60);
+				//$due 		= time()+intval($db->config('suspensiondays')*24*60*60);
+				$due 		= time();
+				
+				//$notes 		= "Your current hosting package monthly invoice. Package: ". $package_info['name'];
+				//$notes 		= "Package: ". $package_info['name'];
+				$notes = '';
+				
+				//1. Calculating amount for the package selon the billing cycle
+								
+				$sql_select = "SELECT amount FROM `<PRE>billing_products` WHERE product_id = {$main->getvar['package']} AND type = '".BILLING_TYPE_PACKAGE."' AND billing_id = $billing_id ";				
+				$result 		= $db->query($sql_select);
+				$package_amount 	= $db->fetch_array($result);
+				//var_dump($data_amount);
+						
+				$package_amount = $package_amount['amount'];
+				
+				//2. Calculating amount for the addon selon the billing cycle
+				$addon_fee = '';
+				//var_dump($main->getvar['addon_ids']);
+				if (is_array($main->getvar['addon_ids']) && count($main->getvar['addon_ids']) > 0) {					
+					$addon_fee = $addon->generateAddonFee($main->getvar['addon_ids'], $billing_id, false);
+					foreach ($addon_fee as $addon_item) {						
+						$addon_fee[] = array('addon_id'=>$addon_id,'billing_id'=>$billing_id, 'amount'=> $addon_item['amount']);
+					}
+				}					
+				
+				$addon_fee = serialize($addon_fee);
+								 
+				//3. Creating the invoice				
+				$invoice->create($data['id'], $package_amount, $due, $notes, $addon_fee);
+				
 				$serverphp->suspend($main->getvar['username'], $type->determineServer($main->getvar['package']));
+				//change order to waiting payment
 				$db->query("UPDATE `<PRE>user_packs` SET `status` = '4' WHERE `id` = '{$data['id']}'");
-				$iquery = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$data['id']}' AND `due` = '{$due}'");
-				$idata = $db->fetch_array($iquery);
+				//$iquery = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$data['id']}' AND `due` = '{$due}'");
+				//$idata = $db->fetch_array($iquery);*/
+				
 				echo '<div class="errors"><b>You are being redirected to payment! It will load in a couple of seconds..</b></div>';
 			}
 		}
 	}
+	
 	public function terminate($id, $reason = false) { # Deletes a user account from the package ID
 		global $db, $main, $type, $email;
 		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}'");
@@ -441,7 +509,8 @@ class server {
 	}
 	public function suspend($id, $reason = false) { # Suspends a user account from the package ID
 		global $db, $main, $type, $email;
-		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}' AND `status` = '1'");
+		//$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}' AND `status` = '1'");
+		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}'");
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That package doesn't exist or cannot be suspended!";
 			$array['User PID'] = $id;
@@ -479,6 +548,46 @@ class server {
 			}
 		}
 	}
+	
+	public function unsuspend($id) { # Unsuspends a user account from the package ID
+		global $db, $main, $type, $email;
+		//$sql = "SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}' AND (`status` = '2' OR `status` = '3' OR `status` = '4')";
+		$sql = "SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}' ";
+		$query = $db->query($sql);
+		if($db->num_rows($query) == 0) {
+			$array['Error'] = "That package doesn't exist or cannot be unsuspended!";
+			$array['User PID'] = $id;
+			$main->error($array);
+			return;	
+		}
+		else {
+			$data = $db->fetch_array($query);
+			$query2 = $db->query("SELECT * FROM `<PRE>users` WHERE `id` = '{$db->strip($data['userid'])}'");
+			$data2 = $db->fetch_array($query2);
+			$server = $type->determineServer($data['pid']);
+			if(!is_object($this->servers[$server])) {
+				$this->servers[$server] = $this->createServer($data['pid']); # Create server class
+			}
+			if($this->servers[$server]->unsuspend($data2['user'], $server) == true) {
+				$date = time();
+				$db->query("UPDATE `<PRE>user_packs` SET `status` = '1' WHERE `id` = '{$data['id']}'");
+				$db->query("UPDATE `<PRE>users` SET `status` = '1' WHERE `id` = '{$db->strip($data['userid'])}'");
+				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
+													  '{$db->strip($data['userid'])}',
+													  '{$data2['user']}',
+													  '{$date}',
+													  'Unsuspended.')");
+				$emaildata = $db->emailTemplate("unsusacc");
+				$email->send($data2['email'], $emaildata['subject'], $emaildata['content']); 
+				return true;
+			}
+			else {
+				return false;	
+			}
+		}
+	}
+	
+	
 	public function changePwd($id, $newpwd) { # Changes user's password.
 		global $db, $main, $type, $email;
 		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}'");
@@ -516,42 +625,7 @@ class server {
 		}
 	}
 	
-	public function unsuspend($id) { # Unsuspends a user account from the package ID
-		global $db, $main, $type, $email;
-		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}' AND (`status` = '2' OR `status` = '3' OR `status` = '4')");
-		if($db->num_rows($query) == 0) {
-			$array['Error'] = "That package doesn't exist or cannot be unsuspended!";
-			$array['User PID'] = $id;
-			$main->error($array);
-			return;	
-		}
-		else {
-			$data = $db->fetch_array($query);
-			$query2 = $db->query("SELECT * FROM `<PRE>users` WHERE `id` = '{$db->strip($data['userid'])}'");
-			$data2 = $db->fetch_array($query2);
-			$server = $type->determineServer($data['pid']);
-			if(!is_object($this->servers[$server])) {
-				$this->servers[$server] = $this->createServer($data['pid']); # Create server class
-			}
-			if($this->servers[$server]->unsuspend($data2['user'], $server) == true) {
-				$date = time();
-				$db->query("UPDATE `<PRE>user_packs` SET `status` = '1' WHERE `id` = '{$data['id']}'");
-				$db->query("UPDATE `<PRE>users` SET `status` = '1' WHERE `id` = '{$db->strip($data['userid'])}'");
-				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-													  '{$db->strip($data['userid'])}',
-													  '{$data2['user']}',
-													  '{$date}',
-													  'Unsuspended.')");
-				$emaildata = $db->emailTemplate("unsusacc");
-				$email->send($data2['email'], $emaildata['subject'], $emaildata['content']);
-				return true;
-			}
-			else {
-				return false;	
-			}
-		}
-	}
-	
+
 	public function approve($id) { # Approves a user's account (Admin Validation).
 		global $db, $main, $type, $email;
 		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}' AND (`status` = '2' OR `status` = '3' OR `status` = '4')");
