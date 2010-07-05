@@ -1,10 +1,6 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Compiler
-// By Jonny H
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
+
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 
 #Define the main THT

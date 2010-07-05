@@ -1,10 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// AJAX Class
-// By Jonny H and Kevin M
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
 
 define("LINK", "./");
 include("compiler.php");
