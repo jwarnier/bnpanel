@@ -1,5 +1,5 @@
 <?php
-
+/* For licensing terms, see /license.txt */
 
 //Check if called by script
 if(THT != 1){
@@ -135,6 +135,9 @@ class addon {
 				}	
 				$html .= $main->createCheckbox($data['name'], 'addon_'.$data['id'], $checked);					
 			}
+		}
+		if (empty($html)) {
+			$html = '-';
 		}
 		return $html;
 	}
