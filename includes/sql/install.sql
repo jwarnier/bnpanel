@@ -509,7 +509,7 @@ CREATE TABLE `%PRE%billing_cycles` (
 
 
 INSERT INTO `%PRE%billing_cycles` (`number_months`, `name`, `status`) VALUES
-('12', 'Annualy', '1'),
+('12', 'Annually', '1'),
 ('6', 'Semiannually', '1'),
 ('1', 'Monthly', '1');
 
