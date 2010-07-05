@@ -140,16 +140,16 @@ function checkForDependencies() {
 }
 
 //Billing types
-define(BILLING_TYPE_ADDON, 				'addon');
-define(BILLING_TYPE_PACKAGE, 			'package');
+define(BILLING_TYPE_ADDON, 						'addon');
+define(BILLING_TYPE_PACKAGE, 					'package');
 
 //Addong status
-define(ADDON_STATUS_ACTIVE, 			1);
-define(ADDON_STATUS_INACTIVE, 			0);
+define(ADDON_STATUS_ACTIVE, 					1);
+define(ADDON_STATUS_INACTIVE, 					0);
 
 //Billing cycle status
-define(BILLING_CYCLE_STATUS_ACTIVE, 	1);
-define(BILLING_CYCLE_STATUS_INACTIVE, 	0);
+define(BILLING_CYCLE_STATUS_ACTIVE, 			1);
+define(BILLING_CYCLE_STATUS_INACTIVE, 			0);
 
 // Relation between packages and users 
 define(ORDER_STATUS_ACTIVE, 					1);
@@ -157,5 +157,8 @@ define(ORDER_STATUS_SUSPEND, 					2);
 define(ORDER_STATUS_WAITING_VALIDATION, 		3); //Awaiting Validation
 define(ORDER_STATUS_WAITING_PAYMENT, 			4); //Awaiting Payment
 define(ORDER_STATUS_CANCELLED, 					9);
+
+//Server status
+define(SERVER_STATUS, 'production');
 
 
