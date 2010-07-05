@@ -1,4 +1,6 @@
 <?php
+/* For licensing terms, see /license.txt */
+
 /**
 	ISPConfig Plugin for TheHostingTool (THT)
 	@author Julio Montoya <gugli100@gmail.com> Beeznest	2010
@@ -66,7 +68,7 @@ class ispconfig extends Panel {
 		}
 	}
 
-	/*
+	/**
 		Manage the ISPConfig SOAP functions
 		@param  string the action will be the same name as the specify in the ISPConfig API
 		@param	array  parameters that the SOAP will used 
@@ -149,7 +151,7 @@ class ispconfig extends Panel {
 		}
 	}
 
-	/*
+	/**
 		Changes the user password
 		@param string	username
 		@param string	new password
@@ -318,8 +320,6 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			}		
 			return true;	
 		}
-		return true;
-	
 	}
 	
 	/**
@@ -447,11 +447,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		} else {
 			return false;
 		}
-	
-
 	}
-
-
 
 	/**
 		Deletes an user account
@@ -474,5 +470,3 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		}
 	}
 }
-
-?>
