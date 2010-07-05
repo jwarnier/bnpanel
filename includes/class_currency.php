@@ -54,8 +54,10 @@ class currency {
 	 */
 	 
 	function toCurrency($number, $curr= array (), $with_symbol= 1) {
-		global $db; 
-		if (!empty($number)) {
+		global $db;		
+		if (isset($number)) {		
+			$number = $this->toFloat($number);
+			//var_dump($number);
 	        if (!isset ($curr['symbol_prefixed']))
 				$curr['symbol_prefixed']= 0; // 1 if is a prefix 0 if is a sufix
 			if (!isset ($curr['symbol'])) {
