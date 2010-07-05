@@ -94,19 +94,21 @@ function nextstep() {
 		case 2:		
 			if(1) {		
 				var addon_list = '';
-				if (document.order.addon_ids.length ==  null) {
-					//only one element
-					addon_list  = document.order.addon_ids.value;
-				} else {
-				
-					for (var i=0; i < document.order.addon_ids.length; i++) {	
-						//alert(document.order.addon_ids[i].value);				
-						if (document.order.addon_ids[i].checked) {
-					   		if (document.order.addon_ids[i].value != 'undefined' ) { 
-					      		addon_list = addon_list + document.order.addon_ids[i].value + '-';
-							}				      
-						}
-					}						
+				// If no addons
+				if (document.getElementById("addon_ids") != null) {
+					//Only one addon present
+					if (document.order.addon_ids.length ==  null) {					
+						addon_list  = document.order.addon_ids.value;
+					} else {				
+						for (var i=0; i < document.order.addon_ids.length; i++) {	
+							//alert(document.order.addon_ids[i].value);				
+							if (document.order.addon_ids[i].checked) {
+						   		if (document.order.addon_ids[i].value != 'undefined' ) { 
+						      		addon_list = addon_list + document.order.addon_ids[i].value + '-';
+								}				      
+							}
+						}						
+					}
 				}
 				
 				var billing_id  = document.getElementById("billing_id").value;
