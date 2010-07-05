@@ -544,3 +544,46 @@ CREATE TABLE IF NOT EXISTS `%PRE%logs` (
 --
 -- Dumping data for table `%PRE%user_packs_bak`
 --
+
+
+
+
+-- New tables for BNPanel
+
+CREATE TABLE `%PRE%billing_cycles` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `number_months` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `status` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `cycle_month` (`number_months`,`name`)
+);
+
+CREATE TABLE  `%PRE%billing_products` (
+  `billing_id` int NOT NULL,
+  `product_id` int NOT NULL,
+  `amount` decimal(16,6) NOT NULL DEFAULT '0.000000',
+  `type` varchar(255) NOT NULL
+);
+
+CREATE TABLE  `%PRE%addons` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `setup_fee` decimal(16,6) NOT NULL DEFAULT '0.000000',
+  `description` varchar(255) NOT NULL,
+  `status` int NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE  `%PRE%package_addons` (
+  `package_id` int NOT NULL DEFAULT '0',
+  `addon_id` int NOT NULL DEFAULT '0'
+);
+
+CREATE TABLE `%PRE%user_pack_addons` (
+  `order_id` int NOT NULL,
+  `addon_id` int NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+);
+
