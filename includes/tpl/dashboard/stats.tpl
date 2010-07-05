@@ -1,7 +1,7 @@
 <!--Stats.tpl-->
 <br />
-<strong>Your THT Installation Statistics</strong>
-<p>Here you can see what is happening in your THT Installation. You can also access to some quick links here.</p><br />
+<strong>Your BNPanel Installation Statistics</strong>
+<p>Here you can see what is happening in your BNPanel Installation. You can also access to some quick links here.</p><br />
 <table style="border: 0;" width="100%">
 <tr>
         <td width="50%" style="margin-right: 40px;">
