@@ -348,9 +348,10 @@ class server {
 				
 				//1. Calculating amount for the package selon the billing cycle
 								
-				$sql_select = "SELECT amount FROM `<PRE>billing_products` WHERE product_id = {$main->getvar['package']} AND type = '".BILLING_TYPE_PACKAGE."' AND billing_id = $billing_id ";				
+				$sql_select = "SELECT amount FROM `<PRE>billing_products` WHERE product_id = {$main->getvar['package']} AND type = '".BILLING_TYPE_PACKAGE."' AND billing_id = $billing_id ";
+								
 				$result 		= $db->query($sql_select);
-				$package_amount 	= $db->fetch_array($result);
+				$package_amount = $db->fetch_array($result);
 				//var_dump($data_amount);
 						
 				$package_amount = $package_amount['amount'];
@@ -366,7 +367,7 @@ class server {
 				}					
 				
 				$addon_fee = serialize($addon_fee);
-								 
+				
 				//3. Creating the invoice				
 				$invoice->create($data['id'], $package_amount, $due, $notes, $addon_fee);
 				
