@@ -20,9 +20,29 @@ class paid {
         # As Jonny would say... Start the mo trunkin functions #
 
         public function __construct() { # Assign stuff to variables on creation
-			global $main, $db, $invoice;
+			global $main, $db, $invoice,$billing;
 			$this->acpNav[] = array("Paid Configuration", "paid", "coins.png", "Paid Configuration");
-			$this->acpForm[] = array("Monthly Cost", '<input name="monthly" type="text" id="monthly" size="5" onkeypress="return onlyNumbers();" />', 'monthly');
+			
+			//Adding billing cycle
+			$myresults = array();
+			if (isset($main->getvar['do']) && is_numeric($main->getvar['do'])) {
+					
+				$sql = "SELECT billing_id, b.name, amount FROM `<PRE>billing_cycles`  b INNER JOIN `<PRE>billing_products` bp on (bp.billing_id = b.id) WHERE product_id =".$main->getvar['do'];
+				$query = $db->query($sql);		
+				
+				while($data = $db->fetch_array($query)) {
+					$myresults[$data['billing_id']] = $data['amount'];				
+				}						
+			}
+			
+			$billing_list = $billing->getBillingCycles();			
+			foreach ($billing_list as $billing_id=>$data) {
+				$amount = '';
+				if (isset($myresults[$billing_id])) {
+					$amount = $myresults[$billing_id];
+				}	
+				$this->acpForm[] = array($data['name'].' ('.$db->config('currency').')' , $main->createInput('', 'billing_cycle_'.$billing_id, $amount));
+			}					
 		}
 		
 		public function acpPage() {
