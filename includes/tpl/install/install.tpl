@@ -10,7 +10,7 @@ var goingforit;
 text[1] = "Choose Method";
 text[2] = "Enter Details";
 text[3] = "Running Queries";
-text[4] = "Enter THT Details";
+text[4] = "Enter Details";
 text[5] = "Finished";
 function change() {
 	if(goingforit != 1) {
@@ -206,9 +206,9 @@ $(window).load(function () {
                   </tr>
                     </tr>
                      <tr>
-                    <td width="20%">THT Prefix:</td>
+                    <td width="20%">Prefix:</td>
                     <td><label>
-                      <input name="prefix" type="text" id="prefix" value="tht_" />
+                      <input name="prefix" type="text" id="prefix" value="bnp_" />
                     </label><a class="tooltip" title="This is the table prefixes for the THT database. Unless you want this to be different. Leave it default."><img src="<ICONDIR>information.png"></a></td>
                   </tr>
                   <tr>
@@ -227,7 +227,7 @@ $(window).load(function () {
                     </td>
                 </tr>
               <tr>
-                <td width="30%">Your THT URL:<br />
+                <td width="30%">Your URL:<br />
                   (Including the trailing slash)</td>
                 <td><label>
                   <input name="url" type="text" id="url" value="%GENERATED_URL%" />
