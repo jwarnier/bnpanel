@@ -244,7 +244,7 @@ class page {
 			
 			//Displays a list of users based on account status.
 			case "list":
-				echo "<div class=\"subborder\"><form id=\"filter\" name=\"filter\" method=\"post\" action=\"\"><select size=\"1\" name=\"show\"><option value=\"all\">ALL</option><option value=\"1\">Active</option><option value=\"0\">Awaiting Validation</option><option value=\"2\">Suspended</option><option value=\"9\">Cancelled</option></select><input type=\"submit\" name=\"filter\" id=\"filter\" value=\"Filter Accounts\" /></form><table width=\"100%\" cellspacing=\"2\" cellpadding=\"2\" border=\"1\" style=\"border-collapse: collapse\" bordercolor=\"#000000\"><tr bgcolor=\"#EEEEEE\">";
+				echo "<div class=\"subborder\"><form id=\"filter\" name=\"filter\" method=\"post\" action=\"\"><select size=\"1\" name=\"show\"><option value=\"all\">ALL</option><option value=\"1\">Active</option><option value=\"0\">Awaiting Validation</option><option value=\"2\">Suspended</option><option value=\"4\">Awaiting Payment</option><option value=\"9\">Cancelled</option></select><input type=\"submit\" name=\"filter\" id=\"filter\" value=\"Filter Accounts\" /></form><table width=\"100%\" cellspacing=\"2\" cellpadding=\"2\" border=\"1\" style=\"border-collapse: collapse\" bordercolor=\"#000000\"><tr bgcolor=\"#EEEEEE\">";
 				echo "<td width=\"100\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Date Registered</td><td width=\"100\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Username</td><td align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">E-mail</td></tr>";
 				$l = $main->getvar['l'];
 				$p = $main->getvar['p'];
@@ -339,7 +339,9 @@ class page {
 				$array['SUSPENDED'] = $db->num_rows($query);
 				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '3'");
 				$array['ADMIN'] = $db->num_rows($query);
-				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '9'");
+				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '4'");
+				$array['WAITING'] = $db->num_rows($query);				
+				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '9'"); 
 				$array['CANCELLED'] = $db->num_rows($query);
 				echo $style->replaceVar("tpl/clientstats.tpl", $array);
 				break;
