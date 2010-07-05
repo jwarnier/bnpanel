@@ -69,10 +69,6 @@ function acp() {
 					}
 				}
 			}
-			$array2['IMGURL'] = "information.png";
-			$array2['LINK'] = "?page=credits";
-			$array2['VISUAL'] = "Credits";
-			$array['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);
 			$array2['IMGURL'] = "logout.png";
 			$array2['LINK'] = "?page=logout";
 			$array2['VISUAL'] = "Logout";
