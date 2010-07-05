@@ -64,8 +64,7 @@ class page {
 				$query = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$_SESSION['cuser']}' ORDER BY `id` ASC");
 				$userdata = mysql_fetch_row($db->query("SELECT `user`,`firstname`,`lastname` FROM `<PRE>users` WHERE `id` = {$_SESSION['cuser']}"));
 				$domain = mysql_fetch_row($db->query("SELECT domain, pid, billing_cycle_id  FROM `<PRE>user_packs` WHERE `userid` = {$_SESSION['cuser']}"));
-				$extra = array(
-					"userinfo" 	=> "$userdata[2], $userdata[1] ($userdata[0])",
+				$extra = array(					
 					"domain"	=> $domain[0],
 					"pid"	=> $domain[1],
 					"billing_cycle_id"	=> $domain[2]			
@@ -95,15 +94,10 @@ class page {
 						}					
 					}
 					
-					$array['addon_fee'] = $addon_fee_string;
-					
+					$array['addon_fee'] = $addon_fee_string;					
 					
 					$total_amount 		= $total_amount + $array['amount'];
 					$array['amount'] 	= $total_amount." ".$db->config("currency");
-					
-					//$array['package']		 = $package_name_list[$package_id];
-					//$array['billing_cycle']  = $billing_cycle_name_list[$billing_cycle_id]['name'];
-					//$array['due'] =  ($array["is_paid"] == 1 ? '<span style="color:green">'.$array['due'].'</span>' :  '<span style="color:red">'.$array['due'].'</span>');
 					
 					$array['edit']  	= '';			
 					$array['delete']  	= '';
@@ -112,7 +106,7 @@ class page {
 					//var_dump($array);
 					
 					
-					$array2['list'] .= $style->replaceVar("tpl/invoices/invoice-list-item.tpl", array_merge($array, $extra));
+					$array2['list'] .= $style->replaceVar("tpl/invoices/invoice-list-item-client.tpl", array_merge($array, $extra));
 				}
 				$array2['num'] = mysql_num_rows($query);
 				
