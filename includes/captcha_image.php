@@ -1,4 +1,4 @@
-<?
+<?php
 /* For licensing terms, see /license.txt */
 
 // *** CAPTCHA image generation ***
@@ -13,8 +13,7 @@ header("Content-Type: image/jpeg");
 die(create_image());
 
 // *** Function List ***
-function create_image()
-{
+function create_image() {
 	// *** Generate a passcode using md5
 	//	(it will be all lowercase hex letters and numbers ***
 	$md5 = md5(rand(0,9999));
