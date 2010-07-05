@@ -12,6 +12,8 @@ class server {
 		if($this->servers[$server]) {
 			return;	
 		}
+		//Abstract class Panel added
+		require_once LINK."servers/panel.php";
 		$link = LINK."servers/".$server.".php";
 		if(!file_exists($link)) {
 			$array['Error'] = "The server .php doesn't exist!";
@@ -215,6 +217,7 @@ class server {
 			$newusername 		= $main->getvar['username'];	
 			$billing_cycle_id 	= $main->getvar['billing_id'];
 			
+			//@todo this should be moved to a class_user function
 			//Creating a user
 			$db->query("INSERT INTO `<PRE>users` (user, email, password, salt, signup, ip, firstname, lastname, address, city, state, zip, country, phone, status) VALUES(
 													  '{$main->getvar['username']}',
@@ -232,21 +235,7 @@ class server {
 													  '{$main->getvar['country']}',
 													  '{$main->getvar['phone']}',
 													  '3')");
-			/*$db->query("INSERT INTO `<PRE>users_bak` (user, email, password, salt, signup, ip, firstname, lastname, address, city, state, zip, country, phone) VALUES(
-													  '{$main->getvar['username']}',
-													  '{$main->getvar['email']}',
-													  '{$password}',
-													  '{$salt}',
-													  '{$date}',
-													  '{$ip}',
-													  '{$main->getvar['firstname']}',
-													  '{$main->getvar['lastname']}',
-													  '{$main->getvar['address']}',
-													  '{$main->getvar['city']}',
-													  '{$main->getvar['state']}',
-													  '{$main->getvar['zip']}',
-													  '{$main->getvar['country']}',
-													  '{$main->getvar['phone']}')");*/
+													  
 			$rquery = "SELECT * FROM `<PRE>users` WHERE `user` = '{$user_name}' LIMIT 1;";
 			$rdata = $db->query($rquery);
 			$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
@@ -261,26 +250,19 @@ class server {
 				$data = $db->fetch_array($query);
 				
 				//Creating a new order
-				
+				//@todo this should be moved to a class_order function
 				//If order created status = admin
-				$db->query("INSERT INTO `<PRE>user_packs` (userid, pid, domain, status, signup, additional, billing_cycle_id) VALUES(
+				$sql_user_pack = "INSERT INTO `<PRE>user_packs` (userid, pid, domain, status, signup, additional, billing_cycle_id) VALUES(
 													  '{$data['id']}',
 													  '{$main->getvar['package']}',
 													  '{$main->getvar['fdom']}',
 													  '3',
 													  '{$date}',
 													  '{$additional}',
-													  '{$billing_cycle_id}')");
-				$order_id = mysql_insert_id();/*
-				$db->query("INSERT INTO `<PRE>user_packs_bak` (userid, pid, domain, status, signup, additional, billing_cycle_id) VALUES(
-													  '{$data['id']}',
-													  '{$main->getvar['package']}',
-													  '{$main->getvar['fdom']}',
-													  '1',
-													  '{$date}',
- 													  '{$additional}',
-													  '{$billing_cycle_id}')");*/
-				 
+													  '{$billing_cycle_id}')";
+				$db->query($sql_user_pack);
+				$order_id = mysql_insert_id();
+								 
 				//Insert into user_pack_addons
 				if (is_array($main->getvar['addon_ids']) && count($main->getvar['addon_ids']) > 0) {
 					foreach ($main->getvar['addon_ids'] as $addon_id) {
@@ -435,6 +417,7 @@ class server {
 			}
 		}
 	}
+	
 	public function cancel($id, $reason = false) { # Deletes a user account from the package ID
 		global $db, $main, $type, $email;
 		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}' AND `status` != '9'");
@@ -471,6 +454,7 @@ class server {
 			}
 		}
 	}
+	
 	public function decline($id) { # Deletes a user account from the package ID
 		global $db, $main, $type, $email;
 		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}' AND `status` != '9'");
@@ -596,8 +580,7 @@ class server {
 			$array['User PID'] = $id;
 			$main->error($array);
 			return;
-		}
-		else {
+		} else {
 			$data = $db->fetch_array($query);
 			$query2 = $db->query("SELECT * FROM `<PRE>users` WHERE `id` = '{$db->strip($data['userid'])}'");
 			$data2 = $db->fetch_array($query2);
@@ -616,7 +599,7 @@ class server {
 													  '{$db->strip($data['userid'])}',
 													  '{$data2['user']}',
 													  '{$date}',
-													  'cPanel password updated.')");
+													  'Control Panel password updated.')");
 				return true;
 			}
 			else {
