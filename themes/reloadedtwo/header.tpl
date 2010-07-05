@@ -16,7 +16,7 @@
         	</span>
         	<span id="header_right" style="margin-right: 95px;">
         	<a href="#" title="%INFO%" class="tooltip"><img src="<ICONDIR>help.png" alt="info"/></a>
-                <strong>Welcome to your THT Installation.</strong>
+                <strong>Welcome to your BNPanel Installation.</strong>
         	</span>
         </div>
     </div>
