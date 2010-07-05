@@ -1,11 +1,4 @@
-<?php
-//////////////////////////////
-// The Hosting Tool
-// Main functions class
-// By Jonny H
-// Released under the GNU-GPL
-//////////////////////////////
-
+<?php/* For licensing terms, see /license.txt */
 //Check if called by script
 if(THT != 1){die();}
 
@@ -32,12 +25,12 @@ class main {
 	 	     return $var; #Untouched
 	     }
 	}
-	public function error($array) { # The main THT Error show
-		echo "<strong>/////////////////THT ERROR<br /></strong>";
-		foreach($array as $key => $data) {
-			echo "<strong>". $key . ":</strong> ". $data ."<br />";
-		}
-		echo "/////////////////<br />";
+	public function error($array) {
+		echo "<strong>ERROR<br /></strong>";
+		foreach($array as $key => $data) {
+			echo "<strong>". $key . ":</strong> ". $data ."<br />";
+		}
+		echo "<br />";
 	}
 	
 	public function redirect($url, $headers = 0, $long = 0) { # Redirects user, default headers
