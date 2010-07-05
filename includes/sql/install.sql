@@ -507,6 +507,13 @@ CREATE TABLE `%PRE%billing_cycles` (
   UNIQUE KEY `cycle_month` (`number_months`,`name`)
 );
 
+
+INSERT INTO `%PRE%billing_cycles` (`number_months`, `name`, `status`) VALUES
+('12', 'Annualy', '1'),
+('6', 'Semiannually', '1'),
+('1', 'Monthly', '1');
+
+
 CREATE TABLE  `%PRE%billing_products` (
   `billing_id` int NOT NULL,
   `product_id` int NOT NULL,
