@@ -1,10 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Order Class
-// By Nick (TheRaptor) + Jonny + Jimmie
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
 
 //Check if called by script
 if(THT != 1){
@@ -12,9 +7,17 @@ if(THT != 1){
 }
 
 class order {
-	var $user_pack_status = array( array('Active', 1), array('Suspend', 2), array('Admin', 3), array('Awaiting Payment', 4), array('Cancel', 9));
+	var $user_pack_status = array(
+								array('Active', 					ORDER_STATUS_ACTIVE), 
+								array('Suspend', 					ORDER_STATUS_SUSPEND), 
+								array('Waiting admin validation', 	ORDER_STATUS_WAITING_VALIDATION), 
+								array('Waiting payment', 			ORDER_STATUS_WAITING_PAYMENT), 
+								array('Cancelled', 					ORDER_STATUS_CANCELLED)
+							);
 	
-	/**
+	/** 
+	 * Creates an order
+	 * 
 	 * @param 	int		User id
 	 * @param	float	amount
 	 * @param	date	expiration date
@@ -30,6 +33,9 @@ class order {
 		return $db->query("INSERT INTO `<PRE>invoices` (uid, amount, due, notes, addon_fee ) VALUES('{$uid}', '{$amount}', '{$due}', '{$notes}','{$addon_fee}' )");
 	}
 	
+	/**
+	 * Deletes an order
+	 */
 	public function delete($id) { # Deletes invoice upon invoice id
 		global $db;
 		$query = $db->query("DELETE FROM `<PRE>user_packs` WHERE `id` = '{$id}'"); //Delete the invoice
@@ -39,15 +45,13 @@ class order {
 	
 	public function edit($iid, $uid, $amount, $due, $notes) { # Edit an invoice. Fields created can only be edited?
 		global $db;
-		$query = $db->query("UPDATE `<PRE>invoices` SET
-						   `uid` = '{$uid}',
-						   `amount` = '{$amount}',
-						   `due` = '{$due}',
-						   `notes` = '{$notes}',
-						   WHERE `id` = '{$iid}'");
-		return $query;
+	
+		return ;
 	}
 	
+	/**
+	 * Gets an order by user
+	 */
 	public function getOrderByUser($user_id) {
 		global $db;
 		//Getting the domain info
@@ -59,7 +63,7 @@ class order {
 
 	
 	/**
-	 * Gets invoice information 
+	 * Gets Order information 
 	 * @param	int the invoice id
 	 * @return	array 
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
@@ -88,7 +92,7 @@ class order {
 	}
 	
 	/**
-	 * Gets all invoices 
+	 * Gets all orders (use only with template) 
 	 * @return	array 
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
 	 */	 
@@ -191,7 +195,10 @@ class order {
 		return $array2;		
 	}
 	
-	public function getAllOrders() {
+	/**
+	 * Gets all orders 
+	 */
+	 public function getAllOrders() {
 		global $db;
 		
 		$result = $db->query("SELECT * FROM `<PRE>user_packs`");
@@ -205,7 +212,7 @@ class order {
 	}
 	
 	/**
-	 * Gets an Invoice info to show using the templates
+	 * Gets an Order to show using the templates
 	 * @param	int	invoice id
 	 * @return	array 
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
@@ -220,34 +227,16 @@ class order {
 		} else {			
 			$total = 0;
 			
-			
-			
 			//	var_dump($data);
 			$array['ID'] 		= $order_info['id'];
 			$user_id 			= $order_info['userid'];
-			//$total				= $total + $order_info['amount'];
-			/*
-			if ($read_only) {
-				$array['AMOUNT']= $currency->toCurrency($order_info['amount']);
-			} else {
-				$array['AMOUNT']= $data['amount'];
-			}*/	
 			
 			//User info
 			$sql = "SELECT id, user, firstname, lastname FROM `<PRE>users` WHERE `id` = ".$user_id;
 			
 			$query_users 		= $db->query($sql);
 			$user_info  		= $db->fetch_array($query_users);
-			$array['USER'] 		=  $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';	
-						
-			//- ----
-			/*
-			if ($read_only == true) {
-				$array['IS_PAID']  = ($data['is_paid'] == 1) ? 'yes' : 'no';
-			} else {
-				$array['IS_PAID']  = $main->createCheckbox('', 'is_paid', $data['is_paid']);
-			}	*/			
-			
+			$array['USER'] 		=  $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';									
 			$array['CREATED_AT'] 	= date('Y-m-d', $order_info['signup']);
 			
 		
@@ -273,40 +262,7 @@ class order {
 								
 			$array['ADDON'] = ' - ';
 			$addong_result_string = '';
-			/*
-			foreach($addon_list as $data) {
-				$checked = false;
-				if (in_array($data['id'], $addon_selected_list)) {
-					$checked = true;
-					$total = $total + $addon_selected_list[$data['id']];
-					if ($read_only == true) {
-						if ($show_price) {
-							$addong_result_string .= $data['name'].' - '.$currency->toCurrency($addon_selected_list[$data['id']]).'<br />';
-						} else {
-							$addong_result_string .= $data['name'].'<br />';
-						}
-					}
-				}		
-				
-				if ($read_only == false) {
-					$my_amount = $addon_selected_list[$data['id']];
-					if (empty($my_amount)) {
-						$my_amount = $addon_list[$data['id']]['amount'];					 
-					}
-					$my_amount = $currency->toCurrency($my_amount);
-					if ($show_price) {
-						$check_box_name = $data['name'].' - '.$my_amount;
-					} else {
-						$check_box_name = $data['name'];
-					}
-					$addong_result_string .= $main->createCheckbox($check_box_name, 'addon_'.$data['id'], $checked);
-				}					
-			}*/
-			
-			//if (!empty($addong_result_string)) {
-			
-				$array['ADDON'] = 	$addon->generateAddonCheckboxesWithBilling($billing_cycle_id, $package_id, array_flip($addon_selected_list));
-			//}		
+			$array['ADDON'] = 	$addon->generateAddonCheckboxesWithBilling($billing_cycle_id, $package_id, array_flip($addon_selected_list));
 			
 			//Packages feature added				
 			$query = $db->query("SELECT * FROM `<PRE>packages`");
@@ -330,10 +286,8 @@ class order {
 		   		$package_list = array();
 				foreach($packages as $package) {
 					$package_list[$package['id']] = array($package['name'].' - '.$currency->toCurrency($package['amount']), $package['id']);				
-				}
-				
-				$array['PACKAGES'] = $main->dropDown('package_id', $package_list, $order_info['pid'], 1, '', array('onchange'=>'loadAddons(this);'));	
-				
+				}				
+				$array['PACKAGES'] = $main->dropDown('package_id', $package_list, $order_info['pid'], 1, '', array('onchange'=>'loadAddons(this);'));				
 			}
 			
 			//Billing cycle
@@ -343,15 +297,8 @@ class order {
 				while($billing_cycle_data = $db->fetch_array($query)) {
 					$values[$billing_cycle_data['id']] = array($billing_cycle_data['name'], $billing_cycle_data['id']);				
 				}
-				 //onchange="check('pass', this.value+':'+document.getElementById('confirmp').value)"
-				
 			}
 			$array['BILLING_CYCLES'] .= $main->dropDown('billing_cycle_id', $values, $billing_cycle_id, 1,'', array('onchange'=>'loadPackages(this);'));
-			//$array['BILLING_CYCLES'] .= 
-			//$array['BILLING_CYCLES'] = $values[$billing_cycle_id][0].'<input type="hidden" name="billing_id" value="'.$billing_cycle_id.'">';
-			//$array['TOTAL'] = $currency->toCurrency($total);
-			
-			
 			$array['STATUS'] = $main->dropDown('status', $this->user_pack_status, $order_info['status']);	
 			return $array;
 		}
