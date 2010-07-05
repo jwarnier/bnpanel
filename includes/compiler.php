@@ -62,8 +62,8 @@ closedir($handle); #Close the folder
 
 if(INSTALL == 1) {
 	define("THEME", $db->config("theme")); # Set the default theme
-	define("URL", $db->config("url")); # Sets the URL THT is located at
-	define("NAME", $db->config("name")); # Sets the name of the website
+	define("URL", 	$db->config("url")); # Sets the URL THT is located at
+	define("NAME", 	$db->config("name")); # Sets the name of the website
 	//Converts all POSTS into variable - DB Friendly.
 	if($_POST) {
 		foreach($_POST as $key => $value) {
@@ -139,12 +139,23 @@ function checkForDependencies() {
 	}
 }
 
-define(BILLING_TYPE_ADDON, 		'addon');
-define(BILLING_TYPE_PACKAGE, 	'package');
+//Billing types
+define(BILLING_TYPE_ADDON, 				'addon');
+define(BILLING_TYPE_PACKAGE, 			'package');
 
-define(ADDON_STATUS_ACTIVE, 	1);
-define(ADDON_STATUS_INACTIVE, 	0);
+//Addong status
+define(ADDON_STATUS_ACTIVE, 			1);
+define(ADDON_STATUS_INACTIVE, 			0);
 
+//Billing cycle status
 define(BILLING_CYCLE_STATUS_ACTIVE, 	1);
 define(BILLING_CYCLE_STATUS_INACTIVE, 	0);
-?>
+
+// Relation between packages and users 
+define(ORDER_STATUS_ACTIVE, 					1);
+define(ORDER_STATUS_SUSPEND, 					2);
+define(ORDER_STATUS_WAITING_VALIDATION, 		3); //Awaiting Validation
+define(ORDER_STATUS_WAITING_PAYMENT, 			4); //Awaiting Payment
+define(ORDER_STATUS_CANCELLED, 					9);
+
+
