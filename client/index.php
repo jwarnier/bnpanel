@@ -94,8 +94,7 @@ function client() {
 				}
 				$array['HIDDEN'] .= " ";
 				$html = $style->replaceVar("tpl/warning.tpl", $array);	
-			}
-			elseif($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
+			} elseif($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
 				if($main->postvar['yes']) {
 					foreach($main->getvar as $key => $value) {
 					  if($i) {
@@ -121,7 +120,12 @@ function client() {
 					ob_clean(); # Flush the HTML
 				}
 				elseif($content->navlist) {
-					$html = "Select a sub-page from the sidebar.";
+					//$html = "Select a sub-page from the sidebar.";
+					ob_start();
+					$content->content();
+					$html = ob_get_contents(); # Retrieve the HTML
+					ob_clean(); # Flush the HTML		
+									
 				}
 				else {
 					ob_start();
