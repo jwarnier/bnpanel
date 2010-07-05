@@ -119,11 +119,11 @@ class main {
 		else {
 			return false;
 		}
-	}
-	
-	public function dropDown($name, $values, $default = 0, $top = 1, $class = "") { # Returns HTML for a drop down menu with all values and selected
-		if($top) {
-			$html .= '<select name="'.$name.'" id="'.$name.'" class="'.$class.'">';
+	}		/*	public function createInput($type, $label, $name, $value) {		switch($type) {			case THT_INPUT:			$html = $label.': <input name="'.$name.'" value="'.$value.'"> <br/>';			break;			case THT_CHECKBOX:								}				return $html;	}		*/
+	/**	 * Creates an input	 * @param string	label	 * @param string	name	 * @param bool		true if the checkbox will be checked	 * @return string html	 * 	 */	public function createInput($label, $name, $value) {		$html = $label.': <input name="'.$name.'" value="'.$value.'"> <br/>';		return $html;	}		/**	 * Creates a checkbox	 * @param string	label	 * @param string	name	 * @param bool		true if the checkbox will be checked	 * @return string html	 * 	 */	public function createCheckbox($label, $name, $checked = false) {		if ($checked == true) {			$checked = 'checked="'.$checked.'"';		} else {			$checked = '';		}		if(empty($label)) {			$label = '';		} else {			$label = $label.':';		}		$html = $label.'<input type="checkbox" name="'.$name.'"  '.$checked.' > <br/>';		return $html;	}		
+	public function dropDown($name, $values, $default = 0, $top = 1, $class = "",$parameter_list = array()) { # Returns HTML for a drop down menu with all values and selected//var_dump($parameter_list);
+		if($top) {// onchange="checksomething(this);			$extra = '';			foreach($parameter_list as $key=>$parameter) {				$extra .= $key.'="'.$parameter.'"';			}
+			$html .= '<select name="'.$name.'" id="'.$name.'" class="'.$class.'" '.$extra.'>';
 		}
 		if($values) {
 			foreach($values as $key => $value) {
@@ -138,7 +138,7 @@ class main {
 			$html .= '</select>';
 		}
 		return $html;
-	}
+	}	
 	
 	public function userDetails($id) { # Returns the details of a user in an array
 		global $db;
