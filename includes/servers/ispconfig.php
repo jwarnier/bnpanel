@@ -345,15 +345,17 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 
 		//Getting domains by user THT problem 1 account = 1 domain
 		$site_info = $this->remote('client_get_sites_by_user', $site_params);
-		foreach($site_info as $domain) {
-			//tacking the first domain of the user
-			$domain_id = $domain['domain_id'];
-			break;
+		if ($site_info !== false) {
+			foreach($site_info as $domain) {
+				//tacking the first domain of the user
+				$domain_id = $domain['domain_id'];
+				break;
+			}
+			$params_get_site['primary_id'] = $domain_id;
+			$result = $this->remote('sites_web_domain_inactive',$params_get_site);
+		} else {
+			return false;
 		}
-
-		$params_get_site['primary_id'] = $domain_id;
-		$result = $this->remote('sites_web_domain_inactive',$params_get_site);
-
 
 /*
 		//Getting the site info
