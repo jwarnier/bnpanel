@@ -12,54 +12,66 @@ class type {
 	# Start the functions #
 	
 	public function acpPadd($type) { # Returns the html of a custom form
+	
 		global $style;
+		$type_value = $type;
 		if(!$this->classes[$type]) {
 			$type = $this->createType($type);
 		} else {
 			$type = $this->classes[$type];	
 		}
+		
 		if($type->acpForm) {
-                        $html .= $style->javascript();
-                        $html .= '<script type="text/javascript">
-                        var gi = 0;
-                        $(document).ready(function(){
-                            //var info = new Array();
-                            var info;
-                            $("#submitIt").click(function() {
-                                $("input").each(function(i) {
-                                    if(gi == 0) {
-                                        info = this.name + "="  + $("#" + this.id).val();
-                                    }
-                                    else {
-                                        info = info + "," + this.name + "="  + $("#" + this.id).val();
-                                    }
-
-                                    
-                                    gi++;
-                                });
-                                $("select").each(function(i) {
-                                    if(gi == 0) {
-                                        info = this.name + "="  + $("#" + this.id).val();
-                                    }
-                                    else {
-                                        info = info + "," + this.name + "="  + $("#" + this.id).val();
-                                    }
-                                    gi++;
-                                });
-                                var id = window.name.toString().split("-")[1];
-                                window.opener.transfer(id, info);
-                                window.close();
-                            });
-                        });
-                        </script>';
-
-			foreach($type->acpForm as $key => $value) {
-				$array['NAME'] = $value[0] .":";
-				$array['FORM'] = $value[1];
-				$html .= $style->replaceVar("tpl/acptypeform.tpl", $array);
-			}
+	        $html .= $style->javascript();
+	        $html .= '<script type="text/javascript">
+	        var gi = 0;
+	        $(document).ready(function(){
+	            //var info = new Array();
+	            var info;
+	            $("#submitIt").click(function() {
+	                $("input").each(function(i) {
+	                    if(gi == 0) {
+	                        info = this.name + "="  + $("#" + this.id).val();
+	                    }
+	                    else {
+	                        info = info + "," + this.name + "="  + $("#" + this.id).val();
+	                    }                                    
+	                    gi++;
+	                });
+	                $("select").each(function(i) {
+	                    if(gi == 0) {
+	                        info = this.name + "="  + $("#" + this.id).val();
+	                    }
+	                    else {
+	                        info = info + "," + this.name + "="  + $("#" + this.id).val();
+	                    }
+	                    gi++;
+	                });
+	                var id = window.name.toString().split("-")[1];
+	                window.opener.transfer(id, info);
+	                window.close();
+	            });
+	        });
+	        </script>';
+	        
+			if (count($type->acpForm) > 0 ) { 
+				foreach($type->acpForm as $key => $value) {
+					$array['NAME'] = $value[0] .":";
+					$array['FORM'] = $value[1];
+					$html .= $style->replaceVar("tpl/acptypeform.tpl", $array);
+				}
+			}			
+			//Submit button commented when adding a new package
             //$html .= "<button id=\"submitIt\">Submit</button>";
 			return $html;
+		} else {			
+			switch ($type_value) {
+				case 'paid':
+					echo 'You need to create first new billing cycles: <a href="index.php?page=billing">here</a>';
+				break;
+				default:
+				break;
+			}
 		}
 	}
 	
@@ -104,8 +116,7 @@ class type {
 		$file = LINK . "types/". $type .".php";
 		if(!file_exists($file)) {
 			echo "Type doesn't exist!";	
-		}
-		else {
+		} else {
 			include($file);
 			$type = new $type;
 			return $type;
