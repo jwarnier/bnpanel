@@ -1,12 +1,6 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Client Area
-// By Jonny H
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
 
-//Compile THT
 define("LINK", "../includes/");
 include(LINK ."compiler.php");
 
@@ -51,9 +45,11 @@ function client() {
 				$array2['VISUAL'] = $row['visual'];
 				$array['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);
 			}
-				# Types Navbar
-			$navquery = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$_SESSION['cuser']}'");
+			# Types Navbar
+			$sql = "SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$_SESSION['cuser']}'";
+			$navquery = $db->query($sql);
 			$navdata = $db->fetch_array($navquery);
+			
 			$class = $type->createType($type->determineType($navdata['pid']));
 			if($class->clientNav) {
 				foreach($class->clientNav as $key2 => $value)  {
