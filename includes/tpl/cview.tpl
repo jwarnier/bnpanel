@@ -27,19 +27,20 @@ function check() {
     <td width="20%"><strong>Package:</strong></td>
     <td>%PACKAGE%</td>
   </tr>
+    
+    <tr>
+    <td colspan="2">   
+    <strong>Package description :</strong>
+          %DESCRIPTION%    
+    </td>
+  </tr>
+  
     <tr>
     <td width="20%"><strong>Addons:</strong></td>
     <td>%ADDON%</td>
   </tr>
-  <tr>
-    <td colspan="2">
-    <div class="subborder">
-        <div class="sub">
-          %DESCRIPTION%
-        </div>
-    </div>
-    </td>
-  </tr>
+  
+  
   <tr>
     <td colspan="2"><strong>Change cPanel Password:</strong> <input name="change" type="checkbox" id="change" value="1" onchange="check()" /></td>
   </tr>
