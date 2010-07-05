@@ -1,10 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Install Script
-// By Jonny H and Kevin M
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
 
 /*
  * This is a pretty bad attempt at being secure. If you're having

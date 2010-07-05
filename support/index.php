@@ -1,10 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Support Area
-// By Jonny H
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
 
 //Compile THT
 define("LINK", "../includes/");
@@ -24,8 +19,7 @@ if(!$main->getvar['page']) {
 	$link = "pages/". $main->getvar['page'] .".php";
 if($db->config("senabled") == 0) {
 	$html = $db->config("smessage");
-}
-else{
+} else {
 	if(!file_exists($link)) {
 		$html = "Seems like the .php is non existant. Is it deleted?";	
 	}
@@ -56,9 +50,10 @@ else{
 		}
 	}
 }
-	echo '<div>';
-	echo $main->table($header, $html);
-	echo '</div>';
+
+echo '<div>';
+echo $main->table($header, $html);
+echo '</div>';
 
 $data = ob_get_contents();
 ob_end_clean();
@@ -69,5 +64,4 @@ echo $style->get("footer.tpl");
 
 //Output
 include(LINK ."output.php");
-
 ?>

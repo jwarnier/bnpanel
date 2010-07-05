@@ -1,10 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Order Form
-// By Jonny H
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
 
 //Compile THT
 define("LINK", "../includes/");
@@ -43,21 +38,19 @@ echo '<div id="ajaxwrapper">'; #Ajax wrapper, for steps
 //Get all packages
 if(!$main->getvar['id']) {
 $packages2 = $db->query("SELECT * FROM `<PRE>packages` WHERE `is_hidden` = 0 AND `is_disabled` = 0 ORDER BY `order` ASC"); 
-}
-else {
-$packages2 = $db->query("SELECT * FROM `<PRE>packages` WHERE `is_disabled` = 0 AND `id` = '{$main->getvar['id']}'");
+} else {
+	$packages2 = $db->query("SELECT * FROM `<PRE>packages` WHERE `is_disabled` = 0 AND `id` = '{$main->getvar['id']}'");
 }
 if($db->num_rows($packages2) == 0) {
 	echo $main->table("No packages", "Sorry there are no available packages!");
-}
-else {
+} else {
 	while($data = $db->fetch_array($packages2)) {
 		if(!$n) {
 			$array['PACKAGES'] .= "<tr>";	
 		}
-		$array2['NAME'] = $data['name'];
-		$array2['DESCRIPTION'] = $data['description'];
-		$array2['ID'] = $data['id'];
+		$array2['NAME'] 		= $data['name'];
+		$array2['DESCRIPTION'] 	= $data['description'];
+		$array2['ID']			= $data['id'];
 		$array['PACKAGES'] .= $style->replaceVar("tpl/orderpackages.tpl", $array2);	
 		$n++;
 		if($n == 1) {
@@ -67,8 +60,16 @@ else {
 			$array['PACKAGES'] .= "</tr>";	
 			$n = 0;	
 		}
+		
+		//Selecting billing cycles
+		$billing_cycles = $db->query("SELECT * FROM `<PRE>billing_cycles` WHERE status = ".BILLING_CYCLE_STATUS_ACTIVE);
+		$array['BILLING_CYCLE'] = '';
+		while($billing_cycle_data = $db->fetch_array($billing_cycles)) {
+			$array['BILLING_CYCLE'].= '<option value="'.$billing_cycle_data['id'].'">'.$billing_cycle_data['name'].'</option>';
+		}
+			
 	}
-	$array['TOS'] = $db->config("tos");
+	$array['TOS'] = $db->config('tos');
 	$array['USER'] = "";
 	$array['DOMAIN'] = '<input name="cdom" id="cdom" type="text" />';
 	$sub = $db->query("SELECT * FROM `<PRE>subdomains`");
@@ -85,8 +86,7 @@ else {
 	//Determine what to show in Client box
 	if(!$_SESSION['clogged']) {
 		$content = $style->replaceVar("tpl/clogin.tpl");
-	}
-	else {
+	} else {
 		$clientdata = $db->client($_SESSION['cuser']);
 		$array['NAME'] = $clientdata['user'];
 		$content = $style->replaceVar("tpl/cdetails.tpl", $array);
