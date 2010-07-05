@@ -344,6 +344,7 @@ class AJAX {
 		if($_SESSION['logged']) {
 			//echo '<script type="text/javascript" src="'.URL.'includes/javascript/jquerytooltip.js">';
 			$type = $main->getvar['type'];
+		
 			$value = $main->getvar['value'];
 			if($main->getvar['num']) {
 				$show = $main->getvar['num'];
@@ -360,7 +361,8 @@ class AJAX {
 				$lower = 0;
 				$upper = $show;
 			}
-			$query = $db->query("SELECT * FROM `<PRE>users`, `<PRE>user_packs` WHERE `{$type}` LIKE '%{$value}%' AND <PRE>user_packs.userid = <PRE>users.id ORDER BY `{$type}` ASC LIMIT {$lower}, {$upper}");
+			$sql = "SELECT * FROM `<PRE>users` u, `<PRE>user_packs` WHERE u.{$type} LIKE '%{$value}%' AND user_packs.userid = u.id ORDER BY u.{$type} ASC LIMIT {$lower}, {$upper}";
+			$query = $db->query($sql);
 			$rownum = $db->num_rows($query);
 			if($db->num_rows($query) == 0) {
 				echo "No clients found!";	
@@ -405,7 +407,7 @@ class AJAX {
 				}
 				echo '<div class="break"></div>';
 				echo '<div align="center">';
-				$query = $db->query("SELECT * FROM `<PRE>users`, `<PRE>user_packs` WHERE `{$type}` LIKE '%{$value}%' AND <PRE>user_packs.userid = <PRE>users.id ORDER BY `{$type}` ASC");
+				$query = $db->query("SELECT * FROM `<PRE>users` u, `<PRE>user_packs` WHERE u.{$type} LIKE '%{$value}%' AND user_packs.userid = u.id ORDER BY u.{$type} ASC");
 				$num = $db->num_rows($query);
 				$pages = ceil($num/$show);
 				echo "Page..";
