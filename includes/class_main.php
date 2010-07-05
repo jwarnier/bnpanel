@@ -406,6 +406,6 @@ if(THT != 1){die();}class main {
 		
 		//Let's wrap it all up.
 		return true;
-	}
+	}		public function getOrderStatusList() {		return array(			ORDER_STATUS_ACTIVE				=> 'Active', 			ORDER_STATUS_SUSPEND 			=> 'Suspend', 			ORDER_STATUS_WAITING_VALIDATION	=> 'Waiting admin validation', 			ORDER_STATUS_WAITING_PAYMENT	=> 'Waiting payment', 			ORDER_STATUS_CANCELLED			=> 'Cancelled', 			);	}	
 }
 ?>
