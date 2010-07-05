@@ -1286,12 +1286,12 @@ class AJAX {
 	   }
 	   
 	   function loadpackages() {
-	   		global $main, $db, $addon, $currency, $order;
+	   		global $main, $db, $addon, $currency, $order, $package;
 	   		$billing_id = $main->getvar['billing_id'];
 	   		$order_id	= $main->getvar['order_id'];
 			$order_info = $order->getOrderInfo($order_id);
 			
-			$packages = $addon->getAllPackagesByBillingCycle($billing_id);
+			$packages = $package->getAllPackagesByBillingCycle($billing_id);
 					
 	   		$package_list = array();
 			foreach($packages as $package) {
