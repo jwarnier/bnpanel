@@ -1106,18 +1106,20 @@ class AJAX {
 	   		$package_id = $main->getvar['package_id'];
 	   		
 	   		
-	   		$html = '<fieldset style="width: 90%;"> <legend><b>Package Order</b></legend><table width="100%" >';
+	   		$html = '<fieldset style="width: 90%;"><legend><b>Package Order</b></legend><table width="100%" >';
 	   		
 	   		$sql = "SELECT a.name, amount, bc.name  as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 					ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = {$main->getvar['billing_id']} ";
 			$result = $db->query($sql); 
-			if ($db->num_rows($result) > 0) {
-				while($data = $db->fetch_array($result)) {	
+			$package_billing_info_exist = false;
+			if ($db->num_rows($result) > 0) {				
+				while($data = $db->fetch_array($result)) {
 					$amount_to_show  = $currency->toCurrency($data['amount']);			
 			       	$html .= "<tr>	<td width=\"33%\"> {$data['name']}</td>
 			            <td width=\"33%\" align=\"right\"><strong>{$data['billing_name']}</strong></td>
 			            <td width=\"33%\" align=\"right\">{$amount_to_show}</td>		     
 			        	</tr>";
+			        $package_billing_info_exist = true;
 				} 
 			} else {
 				$html .='No data for this package at the moment'; 					
@@ -1155,8 +1157,11 @@ class AJAX {
 		   		$html .='</table></fieldset>';		   		
 		   		
 		   		$html .='<input type="hidden" name="billing_id" value="'.$billing_id.'">';
-		   		if ($info_exist)
-		   			echo $html;
+	   		}
+   			if ($package_billing_info_exist) {
+	   			echo $html;
+	   		} else {
+	   			echo 'No billing cycle for this package';
 	   		}
 	   }
 	   
