@@ -1,30 +1,22 @@
 <?php/* For licensing terms, see /license.txt */
 //Check if called by script
-if(THT != 1){die();}
-
-class main {
-	
-	public $postvar = array(), $getvar = array(); # All post/get strings
-	
+if(THT != 1){die();}class main {
+	public $postvar = array(), $getvar = array(); # All post/get strings	
 	public function cleaninteger($var){ # Transforms an Integer Value (1/0) to a Friendly version (Yes/No)
-	     $patterns[0] = '/0/';
-         $patterns[1] = '/1/';
-         $replacements[0] = 'No';
-         $replacements[1] = 'Yes';
-         return preg_replace($patterns, $replacements, $var);
+	     $patterns[0] = '/0/';
+         $patterns[1] = '/1/';
+         $replacements[0] = 'No';
+         $replacements[1] = 'Yes';
+         return preg_replace($patterns, $replacements, $var);
 	}
-	
-	public function cleanwip($var){ # Cleans v* from the version Number so we can work
-	     if(preg_match('/v/', $var)){
-	     $wip[0] = '/v/';
-	     $wipr[0] = '';
-	     $cleaned = preg_replace($wip, $wipr, $var);
-	     return $cleaned;
-	     }
-	     else{
-	 	     return $var; #Untouched
-	     }
-	}
+	public function cleanwip($var){ # Cleans v* from the version Number so we can work
+	     if(preg_match('/v/', $var)) {
+	     	$wip[0] = '/v/';
+	     	$wipr[0] = '';
+	     	$cleaned = preg_replace($wip, $wipr, $var);
+	     	return $cleaned;
+	     } else {	     	return $var; #Untouched
+	     }	}
 	public function error($array) {
 		echo "<strong>ERROR<br /></strong>";
 		foreach($array as $key => $data) {
@@ -41,17 +33,15 @@ class main {
 			echo '<meta http-equiv="REFRESH" content="'.$long.';url='.$url.'">'; # HTML Headers
 		}
 	}
-	
-	public function errors($error = 0) { # Shows error default, sets error if $error set
-		if(!$error) {
-			if($_SESSION['errors']) {
-				return $_SESSION['errors'];
-			}
-		}
-		else {
-			$_SESSION['errors'] = $error;
-		}
-	}
+		/**	 *  Shows error default, sets error if $error set	 */
+	public function errors($error = 0) {
+		if(!$error) {
+			if($_SESSION['errors']) {
+				return $_SESSION['errors'];
+			}
+		} else {
+			$_SESSION['errors'] = $error;
+		}	}
 	
 	public function table($header, $content = 0, $width = 0, $height = 0) { # Returns the HTML for a THT table
 		global $style;
