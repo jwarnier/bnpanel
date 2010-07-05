@@ -1,4 +1,6 @@
 <?
+/* For licensing terms, see /license.txt */
+
 // *** CAPTCHA image generation ***
 // *** http://frikk.tk ***
 

@@ -1,10 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Cron Job
-// By Jonny H
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
 
 define("LINK", "./");
 define("CRON", 1);
