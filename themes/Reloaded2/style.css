@@ -31,7 +31,7 @@ h1 {
 }
 .logo {
 	width:100%;
-	background:url(<IMG>img_03.png) center no-repeat;
+	background:url(<IMG>logo.png) center no-repeat;
 	height:133px;
 }
 #nav {
