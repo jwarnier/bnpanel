@@ -66,7 +66,7 @@ function client() {
 			}
 			$type->classes[$type->determineType($navdata['pid'])] = $class;
 			
-			$array2['IMGURL'] = "delete.png";
+			$array2['IMGURL'] = "logout.png";
 			$array2['LINK'] = "?page=logout";
 			$array2['VISUAL'] = "Logout";
 			$array['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);
