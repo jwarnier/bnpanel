@@ -27,6 +27,10 @@ function check() {
     <td width="20%"><strong>Package:</strong></td>
     <td>%PACKAGE%</td>
   </tr>
+    <tr>
+    <td width="20%"><strong>Addons:</strong></td>
+    <td>%ADDON%</td>
+  </tr>
   <tr>
     <td colspan="2">
     <div class="subborder">
