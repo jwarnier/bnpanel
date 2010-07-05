@@ -34,15 +34,25 @@ class page {
 		
 		switch($main->getvar['sub']) {
 			default:
-				if($_POST) {
-					//var_dump($main->postvar); 
+				
+				if($_POST) {				 
+					$exist_billing_cycle = false;
+					
 					foreach($main->postvar as $key => $value) {
+						//echo ($key.' - '.$value).' <br />';
 						if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle") {
 							$main->errors("Please fill in all the fields: ".$key);							
 							$n++;
 						}
+						if ($main->postvar['type'] == 'paid' && $exist_billing_cycle == false) {
+							if (substr($key,0,13) != "billing_cycle") {
+								$exist_billing_cycle = true;	
+								$main->errors("Please add a billing cycle first");			
+								$n++;					
+							}	
+						}						
 					}
-					
+					 
 					if(!$n) {
 						foreach($main->postvar as $key => $value) {
 							if($key != "name") {
@@ -62,10 +72,11 @@ class page {
 						foreach($billing_list as $billing_id=>$value) {
 							$variable_name = 'billing_cycle_'.$billing_id;
 							if (isset($main->postvar[$variable_name])) {
-								echo $sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$billing_id}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_PACKAGE."')";
+								$sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$billing_id}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_PACKAGE."')";
 								$db->query($sql_insert);									
 							}
 						}
+						
 						/*
 						$query = $db->query("SELECT * FROM `<PRE>billing_cycles` WHERE status = ".BILLING_CYCLE_STATUS_ACTIVE);												
 						if($db->num_rows($query) > 0) {											
@@ -81,7 +92,7 @@ class page {
 							}						
 						}*/
 						
-						var_dump($main->postvar);
+						//var_dump($main->postvar);
 						$query = $db->query("SELECT * FROM `<PRE>addons` WHERE status = ".ADDON_STATUS_ACTIVE);
 						
 						if($db->num_rows($query) > 0) {
@@ -94,8 +105,7 @@ class page {
 								}
 							}						
 						}
-						//$main->errors("Package has been added!");
-						exit;
+						$main->errors("Package has been added!");						
 					}
 				}
 				$query = $db->query("SELECT * FROM `<PRE>servers`");
