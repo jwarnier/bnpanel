@@ -86,7 +86,8 @@ define("FOLDER", substr($path,$position)); # Add current folder name to global
 if(FOLDER != "install" && FOLDER != "includes" && INSTALL != 1) { # Are we installing?	
 	$error['Error'] = "THT isn't Installed!";
 	$error['What to do'] = "Please run the install script @ <a href='".LINK."../install'>here</a>";
-	die($main->error($error));
+	$main->redirect('install');
+	//die($main->error($error));
 }
 
 //Resets the error.
