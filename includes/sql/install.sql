@@ -33,9 +33,9 @@ INSERT INTO `%PRE%acpnav` (`visual`, `icon`, `link`) VALUES
 ('Knowledge Base', 'folder.png', 'kb'),
 ('Look & Feel', 'rainbow.png', 'lof'),
 ('Invoice Management', 'script.png', 'invoices'),
-('Payments', 	'rainbow.png', 'payment'),
+--('Payments', 	'rainbow.png', 'payment'),
 ('Billing Cycles', 'rainbow.png', 'billing'),
-('Plugins', 'rainbow.png', 'plugins'),
+--('Plugins', 'rainbow.png', 'plugins'),
 ('Addons', 'rainbow.png', 'addons'),
 ('Orders', 'rainbow.png', 'orders'),
 ('Logs', 'report.png', 'logs');
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%config` (
 --
 
 INSERT INTO `%PRE%config` (`name`, `value`) VALUES
-('url', 'http://thehostingtool.com/'),
+('url', 'http://bnpanel.com/'),
 ('version', '1.2.3'),
 ('smtp_user', 'user'),
 ('senabled', '1'),
@@ -129,7 +129,7 @@ INSERT INTO `%PRE%config` (`name`, `value`) VALUES
 ('paypalemail', 'your@email.com'),
 ('default', 'order'),
 ('theme', 'Reloaded2'),
-('name', 'TheHostingTool'),
+('name', 'BNPanel'),
 ('tos', '<p><span style="font-weight: bold;"><span style="color: #333333; font-family: Tahoma; font-size: 11px; font-weight: normal;"><span style="color: #ff0000;">The following content is prohibited on our servers:</span><ol>\r\n<li><strong>Illegal use</strong></li>\r\n<li><strong>Threatening Material</strong></li>\r\n<li><strong>Fraudulent Content</strong></li>\r\n<li><strong>Forgery or Impersonation</strong></li>\r\n<li><strong>Unsolicited Content</strong></li>\r\n<li><strong>Copyright Infringements</strong></li>\r\n<li><strong>Collection of Private Date (Unless DPA Registered)</strong></li>\r\n<li><strong>Viruses</strong></li>\r\n<li><strong>IRC Networks (Including all IRC Material)</strong></li>\r\n<li><strong>Peer to Peer software&nbsp;<br /></strong></li>\r\n<li><strong>Any Adult Content</strong></li>\r\n<li><strong>Non-english Content</strong></li>\r\n</ol></span></span></p>'),
 ('multiple', '1'),
 ('general', '1'),
@@ -138,7 +138,7 @@ INSERT INTO `%PRE%config` (`name`, `value`) VALUES
 ('cenabled', '1'),
 ('cmessage', '<p>Client area isn''t enabled. Sorry, contact your host for more details.</p>'),
 ('emailmethod', 'php'),
-('emailfrom', 'The Hosting Tool <admin@thehostingtool.com>'),
+('emailfrom', 'The Hosting Tool <admin@bnpanel.com>'),
 ('smtp_host', 'localhost'),
 ('smtp_user', 'user'),
 ('smtp_password', 'password'),
