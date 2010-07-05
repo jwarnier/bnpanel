@@ -27,6 +27,12 @@ function check() {
     <td width="20%"><strong>Package:</strong></td>
     <td>%PACKAGE%</td>
   </tr>
+  
+     <tr>
+    <td width="20%"><strong>Addons:</strong></td>
+    <td>%ADDON%</td>
+  </tr>  
+  
     
     <tr>
     <td colspan="2">   
@@ -35,11 +41,7 @@ function check() {
     </td>
   </tr>
   
-    <tr>
-    <td width="20%"><strong>Addons:</strong></td>
-    <td>%ADDON%</td>
-  </tr>
-  
+
   
   <tr>
     <td colspan="2"><strong>Change Control Panel Password:</strong> <input name="change" type="checkbox" id="change" value="1" onchange="check()" /></td>
@@ -53,14 +55,14 @@ function check() {
      <a title="Type your current account password here." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
   </tr>
   <tr>
-  <td>New cPanel Password:</td>
+  <td>New Control Panel Password:</td>
     <td><input type="password" name="newpass" id="newpass" />
      <a title="Type your new cPanel password here." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
   </tr>
   <tr>
-  <td>Confirm cPanel Password:</td>
+  <td>Confirm Control Panel Password:</td>
     <td><input type="password" name="cpass" id="cpass" />
-     <a title="Confirm your new cPanel password here." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
+     <a title="Confirm your new Control Panel password here." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
   </tr>
 </table>
 </div></div>
