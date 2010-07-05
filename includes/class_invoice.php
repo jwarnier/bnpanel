@@ -1,10 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Invoice Class
-// By Nick (TheRaptor) + Jonny + Jimmie
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
 
 //Check if called by script
 if(THT != 1){

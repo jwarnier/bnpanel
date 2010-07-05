@@ -1,11 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Server Class
-// By Jonny H
-// Released under the GNU-GPL
-//////////////////////////////
-
+/* For licensing terms, see /license.txt */
 class server {
 	
 	private $servers = array(); # All the servers in a array
