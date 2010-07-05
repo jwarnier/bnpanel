@@ -42,7 +42,7 @@ function check() {
   
   
   <tr>
-    <td colspan="2"><strong>Change cPanel Password:</strong> <input name="change" type="checkbox" id="change" value="1" onchange="check()" /></td>
+    <td colspan="2"><strong>Change Control Panel Password:</strong> <input name="change" type="checkbox" id="change" value="1" onchange="check()" /></td>
   </tr>
   <tr>
   <td colspan="2">
