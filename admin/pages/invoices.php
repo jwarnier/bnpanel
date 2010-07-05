@@ -1,59 +1,126 @@
 <?php
-// The Hosting Tool
-// Client Area - Invoice Management
-// By Jimmie Lin
-// Date + UI improvements Julio Montoya <gugli100@gmail.com> Beeznest
-// Released under the GNU-GPL
+/**
+ * The Hosting Tool (THT)
+ * 
+ * @author Julio Montoya <gugli100@gmail.com> BeezNest
+ *  
+ */
 
-//Check if called by script
 if(THT != 1){die();}
 
 class page {
-	public function content(){ # Displays the page 
-		global $style, $db, $main, $invoice;
-		if(isset($_GET['iid']) and isset($_GET['pay'])){
+	
+	public function __construct() {
+		$this->navtitle = "Invoice Sub Menu";
+		$this->navlist[] = array("View all Invoices", "package_go.png", "all");
+		//$this->navlist[] = array("Add Invoice", "package_add.png", "add");
+		//$this->navlist[] = array("Edit Invoice", "package_go.png", "edit");		
+		//$this->navlist[] = array("Delete Invoice", "package_delete.png", "delete");		
+	}
+	
+	public function description() {
+		return "<strong>Managing Invoices</strong><br />
+		Welcome to the Invoice Management Area. Here you can add, edit and delete Invoices. <br />
+		To get started, choose a link from the sidebar's SubMenu.";	
+	}	
+	
+	public function content() {		
+		global $style, $db, $main, $invoice,$addon, $package;
+		
+		if(isset($_GET['iid']) && isset($_GET['pay'])){			
 			$invoice->set_paid($_GET['iid']);
 			echo "<span style='color:green'>Invoice #{$_GET['iid']} marked as paid. <a href='index.php?page=invoices&iid={$_GET['iid']}&unpay=true'>Undo this action</a></span>";
-		}
-		elseif(isset($_GET['iid']) and isset($_GET['unpay'])){
+		} elseif(isset($_GET['iid']) && isset($_GET['unpay'])){		
 			$invoice->set_unpaid($_GET['iid']);
 			echo "<span style='color:red'>Invoice {$_GET['iid']} marked as unpaid. <a href='index.php?page=invoices&iid={$_GET['iid']}&pay=true'>Undo this action</a></span>";
 		}
-		// List invoices. :)
-		$query = $db->query("SELECT * FROM `<PRE>invoices` ORDER BY id DESC");
-		$query2 = $db->query("SELECT * FROM `<PRE>invoices` WHERE `is_paid` = 0 ");
-		$array2['list'] = "";
-
-		while($array = $db->fetch_array($query)){
-			//Getting the user info
-			$sql = "SELECT user, firstname, lastname FROM `<PRE>users` WHERE `id` = ".$array["uid"];
-			$query_users 		= $db->query($sql);
-			$user_info  		= $db->fetch_array($query_users);
-			$array['userinfo'] =  $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';
-			$array['due'] = strftime("%D", $array['due']);
+		
+		switch($main->getvar['sub']) {						
+			case 'add':
+				echo $style->replaceVar("tpl/invoices/addinvoice.tpl");
+			break;
+			case 'edit':
+				if(isset($main->getvar['do'])) {
+					$query = $db->query("SELECT * FROM `<PRE>invoices` WHERE `id` = '{$main->getvar['do']}'");
+					if($db->num_rows($query) == 0) {
+						echo "That invoice doesn't exist!";	
+					} else {						
+						if($_POST) {
+							foreach($main->postvar as $key => $value) {
+								//if($value == "" && !$n && $key != "admin") {
+								
+								/*if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle"  && substr($key,0,5) != "addon" ) {
+									$main->errors("Please fill in all the fields!");
+									$n++;
+								}*/
+							}							
+							if(!$n) {								
+								//var_dump($main->postvar);								var_dump($main->getvar);
+								if ($main->postvar['is_paid'] == 'on') {
+									$invoice->set_paid($main->getvar['do']);
+								} else {
+									$invoice->set_unpaid($main->getvar['do']);
+								}
+								
+								$addong_list = $addon->getAllAddonsByBillingId($main->postvar['billing_id']);
+								
+								$new_addon_list = array();																
+								foreach($addong_list as $addon_id=>$addon_amount) {																								
+									$variable_name = 'addon_'.$addon_id;
+									//var_dump($variable_name);
+									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
+										$new_addon_list[$addon_id] = $main->postvar[$variable_name];				
+									}															
+								}
+								//var_dump($new_addon_list);
+								
+														
+								$new_addon_list_serialized = $addon->generateAddonFeeFromList($new_addon_list, $main->postvar['billing_id'], true);
+								
+								$main->postvar['due'] = strtotime($main->postvar['due']);
+								
+								//`amount` = '{$main->postvar['amount']}',
+								
+								$update_sql = "UPDATE `<PRE>invoices` SET
+										   `notes` = '{$main->postvar['notes']}',
+										    `due` = '{$main->postvar['due']}',
+										   `amount` = '{$main->postvar['amount']}',
+										   `addon_fee` = '{$new_addon_list_serialized}'
+										   	WHERE `id` = '{$main->getvar['do']}'";										   
+								$db->query($update_sql);						
+										
+								$main->errors("Invoice has been edited!");
+								//$main->done();
+							}
+						}						
+					}					
+					$return_array = $invoice->getInvoice($main->getvar['do']);
+					$return_array['DUE'] = substr($return_array['DUE'], 0, 10);
+					
+					echo $style->replaceVar("tpl/invoices/editinvoice.tpl", $return_array);
+				}
+			break;
+			case 'delete':			
+				if (isset($main->getvar['do'])) { 
+					$invoice->delete($main->getvar['do']);
+					$main->errors("The invoice has been deleted!");
+				}
+				echo "<ERRORS>";							
+			break;			
+			case 'view':				
+				if(isset($main->getvar['do'])) {					
+					$return_array = $invoice->getInvoice($main->getvar['do'], true);									
+					echo $style->replaceVar("tpl/invoices/viewinvoice.tpl", $return_array);					
+				}
+			break;
 			
-			//Getting the domain info
-			$sql = "SELECT domain FROM `<PRE>user_packs` WHERE `userid` = ".$array["uid"];
-			$query_domain 		= $db->query($sql);
-			$domain_info  		= $db->fetch_array($query_domain);
-			$array['domain'] 	= $domain_info['domain'];
-	
-			//Amount
-			$array['amount'] = $array['amount']." ".$db->config("currency");			
-
-			//Paid configuration
-			$array["paid"] = ($array["is_paid"] == 1 ? "<span style='color:green'>Already Paid</span>" :
-			"<span style='color:red'>Unpaid <br />Due date: {$array['due']}</span>");
-			$array["pay"] = ($array["is_paid"] == 0 ? 
-			"<img src='../themes/icons/tick.png' 	alt='Pay' /> <a href='index.php?page=invoices&iid={$array['id']}&pay=true' title='Mark as paid'>Mark as paid </a>" :
-			"<img src='../themes/icons/cancel.png'  alt='Already paid!' /> <a href='index.php?page=invoices&iid={$array['id']}&unpay=true' title='Mark as unpaid'>Mark as unpaid</a>");
-
-			$array2['list'] .= $style->replaceVar("tpl/invoices/invoice-list-item.tpl", $array);
+			case 'all':
+			default :				
+				$return_array = $invoice->getAllInvoicesToArray();
+				echo $style->replaceVar("tpl/invoices/admin-page.tpl", $return_array);				
+			break;	
+			
 		}
-		$array2['num'] = mysql_num_rows($query);
-		$array2['numpaid'] = intval($array2['num']-mysql_num_rows($query2));
-		$array2['numunpaid'] = mysql_num_rows($query2);
-		echo $style->replaceVar("tpl/invoices/admin-page.tpl", $array2);
 	}
 }
 ?>
