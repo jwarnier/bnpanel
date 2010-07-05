@@ -4,8 +4,7 @@
 
 <table width="100%" border="0" cellspacing="3" cellpadding="0">
 	<tr> 
-        <td width="5%"><div align="left"><b>&nbsp;No.</b></div></td>
-        <td><strong>User</strong></td>
+        <td width="5%"><div align="left"><b>&nbsp;No.</b></div></td>        
         <td><strong><a title="Domain name" class="tooltip"><img src="<ICONDIR>world.png" border="0" /></a>Domain</strong></td>
         <td><strong><a title="The amount of money you owe." class="tooltip"><img src="<ICONDIR>money.png" border="0" /></a> Amount</strong></td>      	
           <!-- <td><b><a title="Package name" class="tooltip"><img src="<ICONDIR>package_green.png" border="0" /></a> Package</b></td>-->
