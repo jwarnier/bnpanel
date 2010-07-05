@@ -10,7 +10,7 @@
     <td><a href="../support/">Support Area</a></td>
   </tr>
   <tr>
-    <td align="right"><a title="Logout of your current username." class="tooltip"><img src="<URL>themes/icons/delete.png" /></a></td>
+    <td align="right"><a title="Logout of your current username." class="tooltip"><img src="<URL>themes/icons/logout.png" /></a></td>
     <td><a href="?do=logout">Logout</a></td>
 </tr>
 </table>
