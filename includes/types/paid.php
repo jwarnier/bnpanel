@@ -1,15 +1,11 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Paid - THT Type
-// By Nick, Jimmie Lin, and Kevin M, Jonny
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
 
 //Check if called by script
 if(THT != 1){die();}
 
 class paid {
+	
     public $acpForm = array(), $orderForm = array(), $acpNav = array(), $acpSubNav = array(); # The HTML Forms arrays
 	public $signup = true; # Does this type have a signup function?
 	public $cron = false; # Do we have a cron?
@@ -25,6 +21,7 @@ class paid {
 			
 			//Adding billing cycle
 			$myresults = array();
+			
 			if (isset($main->getvar['do']) && is_numeric($main->getvar['do'])) {
 					
 				$sql = "SELECT billing_id, b.name, amount FROM `<PRE>billing_cycles`  b INNER JOIN `<PRE>billing_products` bp on (bp.billing_id = b.id) WHERE product_id =".$main->getvar['do'];
@@ -35,14 +32,16 @@ class paid {
 				}						
 			}
 			
-			$billing_list = $billing->getBillingCycles();			
-			foreach ($billing_list as $billing_id=>$data) {
-				$amount = '';
-				if (isset($myresults[$billing_id])) {
-					$amount = $myresults[$billing_id];
-				}	
-				$this->acpForm[] = array($data['name'].' ('.$db->config('currency').')' , $main->createInput('', 'billing_cycle_'.$billing_id, $amount));
-			}					
+			$billing_list = $billing->getBillingCycles();	
+			if (is_array($billing_list) && count($billing_list) > 0) {		
+				foreach ($billing_list as $billing_id=>$data) {
+					$amount = '';
+					if (isset($myresults[$billing_id])) {
+						$amount = $myresults[$billing_id];
+					}	
+					$this->acpForm[] = array($data['name'].' ('.$db->config('currency').')' , $main->createInput('', 'billing_cycle_'.$billing_id, $amount));
+				}
+			}									
 		}
 		
 		public function acpPage() {
