@@ -1,4 +1,4 @@
-<p>From here you can see all invoices in your THT installation and some simple statistics.</p>
+<p>From here you can see all invoices in your BNPanel installation and some simple statistics.</p>
 <div class="subborder">
 	<div class="sub">
 		<strong>Invoice Statistics</strong>
