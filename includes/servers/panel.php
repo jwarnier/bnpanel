@@ -21,7 +21,7 @@ abstract class Panel {
 		return $passwd;
 	}
 	
-	private function serverDetails($server) {
+	public function serverDetails($server) {
 		global $db;
 		global $main;
 		$sql = "SELECT * FROM `<PRE>servers` WHERE `id` = '{$db->strip($server)}'";
@@ -35,7 +35,8 @@ abstract class Panel {
 			return $db->fetch_array($query);
 		}
 	}
-	private function remote($action, $params){}
+	
+	public	function remote($action, $params){}
 	public	function changePwd($username, $newpwd, $server_id) {}
 	public	function signup($server, $reseller, $user, $email, $pass ) {}
 	public	function suspend($username, $server_id, $reason) {}
