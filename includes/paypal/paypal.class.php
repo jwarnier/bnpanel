@@ -87,8 +87,12 @@ class paypal_class {
    function paypal_class() {
        
       // initialization constructor.  Called when class is created.
-      
-      $this->paypal_url = 'https://www.paypal.com/cgi-bin/webscr';
+      $test = 'sandbox';
+		if ($test == 'sandbox') {
+			$this->paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+		} else {
+			$this->paypal_url = 'https://www.paypal.com/cgi-bin/webscr';
+		}  
       
       $this->last_error = '';
       
@@ -125,6 +129,7 @@ class paypal_class {
 		  $post .= $split.$name."=".$value;
 		  $n++;
 	  }
+	  
 	  header("Location: ".$this->paypal_url."?".$post);
     
    }
@@ -132,7 +137,8 @@ class paypal_class {
    function validate_ipn() {
 
       // parse the paypal URL
-      $url_parsed=parse_url($this->paypal_url);        
+      $url_parsed=parse_url($this->paypal_url);    
+      //var_dump($url_parsed);    
 
       // generate the post string from the _POST vars aswell as load the
       // _POST vars into an arry so we can play with them from the calling
