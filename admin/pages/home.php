@@ -1,10 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Admin Area - Home
-// By Jonny H & Jimmie L
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
 
 //Check if called by script
 if(THT != 1){die();}
@@ -90,7 +85,7 @@ class page {
 		$stats['UPG_BOX'] = $upgrademsg;
 		$stats_box = $style->replaceVar('tpl/dashboard/stats.tpl', $stats);
 		$content = '<strong>Welcome to your Admin Dashboard!</strong><br />Welcome to the dashboard of your Admin Control Panel. In this area you can do the tasks that you need to complete such as manage servers, create packages, manage users.<br />
-		Here, you can also change the look and feel of your THT Installation. If you require any help, be sure to ask at the <a href="http://thehostingtool.com/forum" title="THT Community is the official stop for THT Support, THT Modules, Developer Center and more! Visit our growing community now!" class="tooltip">THT Community</a><br /><br />'.$stats_box.'<br />'.$install_check.$conf_check.'</div></div>';
+		Here, you can also change the look and feel of your BNPanel Installation. If you require any help, be sure to ask at the <a href="http://thehostingtool.com/forum" title="THT Community is the official stop for THT Support, THT Modules, Developer Center and more! Visit our growing community now!" class="tooltip">BNPanel Community</a><br /><br />'.$stats_box.'<br />'.$install_check.$conf_check.'</div></div>';
 		echo $content;
 		if($_POST) {
 			foreach($main->postvar as $key => $value) {
