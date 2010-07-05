@@ -76,6 +76,7 @@ class email {
 		else {
 			$this->email['content'] = $content;	
 		}
+		//echo '<pre>';print_r($this->email['content']);
 		$this->email['subject'] = $subject;
 		$method = $this->method;
 		if($method == "php") {
