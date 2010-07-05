@@ -39,7 +39,7 @@
   <tr>
     <td valign="top">Billing cycle:</td>
     <td>
-    %BILLING_CYCLE% <a title="The Server which the package is located at." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+    %BILLING_CYCLE%
     </td>
   </tr>
    
