@@ -1,10 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Admin Area - System Tools
-// By Jonny H & Jimmie Lin
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
 
 //Check if called by script
 if(THT != 1){die();}
@@ -62,7 +57,7 @@ class page {
 		global $page;
 		global $style;
 		global $email;
-		$array['STATUS'] = "Viewing System tools for your THT Installation";
+		$array['STATUS'] = "Viewing System tools for your BNPanel Installation";
 		echo $style->replaceVar('tpl/tools.tpl', $array);
 	}
 	
