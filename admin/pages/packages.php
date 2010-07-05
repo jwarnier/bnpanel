@@ -1,7 +1,8 @@
 <?php
+/* For licensing terms, see /license.txt */
+
 /**
-	The Hosting Tool
-	
+	BNPanel	
 	@package	Admin Area - Packages
 	@author 	Jonny H
 	@author 	Julio Montoya <gugli100@gmail.com> Beeznest 2010 Addon feature implemented 
@@ -34,10 +35,10 @@ class page {
 		
 		switch($main->getvar['sub']) {
 			default:
-				
+				$n = 0;
 				if($_POST) {				 
 					$exist_billing_cycle = false;
-					
+					//var_dump($main->postvar );
 					foreach($main->postvar as $key => $value) {
 						//echo ($key.' - '.$value).' <br />';
 						if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle") {
@@ -45,14 +46,19 @@ class page {
 							$n++;
 						}
 						if ($main->postvar['type'] == 'paid' && $exist_billing_cycle == false) {
-							if (substr($key,0,13) != "billing_cycle") {
-								$exist_billing_cycle = true;	
-								$main->errors("Please add a billing cycle first");			
-								$n++;					
+							if (substr($key,0,13) == "billing_cycle") {								
+								$exist_billing_cycle = true;
 							}	
 						}						
 					}
+					//var_dump($exist_billing_cycle, $n);
+					if ($main->postvar['type'] == 'paid' && $exist_billing_cycle == false) {
+						$main->errors("Please add a billing cycle first");			
+						$n++;	
+					}
 					 
+					 	
+						
 					if(!$n) {
 						foreach($main->postvar as $key => $value) {
 							if($key != "name") {
