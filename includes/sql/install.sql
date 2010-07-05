@@ -163,16 +163,16 @@ INSERT INTO `%PRE%config` (`name`, `value`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%invoices` (
-  `id` int(255) NOT NULL auto_increment,
-  `uid` int(255) NOT NULL,
-  `amount` int(255) NOT NULL,
-  `is_paid` int(1) NOT NULL default '0',
+  `id` int NOT NULL auto_increment,
+  `uid` int NOT NULL,
+  `amount` decimal(16,6) NOT NULL,
+  `is_paid` int NOT NULL default '0',
   `created` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `due` text NOT NULL,
-  `is_suspended` int(1) NOT NULL default '0',
+  `is_suspended` int NOT NULL default '0',
   `notes` text NOT NULL,
   `uniqueid` varchar(255) NOT NULL,
-   `addon_fee` longtext NOT NULL,
+  `addon_fee` longtext NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
