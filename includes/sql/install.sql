@@ -10,30 +10,35 @@ CREATE TABLE IF NOT EXISTS `%PRE%acpnav` (
   `visual` varchar(20) NOT NULL,
   `icon` varchar(50) NOT NULL,
   `link` varchar(20) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+  PRIMARY KEY  (id)
+);
 
 --
 -- Dumping data for table `%PRE%acpnav`
 --
 
-INSERT INTO `%PRE%acpnav` (`id`, `visual`, `icon`, `link`) VALUES
-(1, 'Home', 'house.png', 'home'),
-(2, 'General Settings', 'cog.png', 'settings'),
-(3, 'Servers', 'server.png', 'servers'),
-(4, 'Packages', 'package_green.png', 'packages'),
-(5, 'Staff Accounts', 'user_gray.png', 'staff'),
-(6, 'Subdomains', 'link.png', 'sub'),
-(7, 'Clients', 'group.png', 'users'),
-(8, 'Change Password', 'shield.png', 'pass'),
-(9, 'Server Status', 'computer.png', 'status'),
-(10, 'Mail Center', 'email_open.png', 'email'),
-(12, 'Client Importer', 'user_orange.png', 'import'),
-(13, 'Tickets', 'page_white_text.png', 'tickets'),
-(14, 'Knowledge Base', 'folder.png', 'kb'),
-(15, 'Look & Feel', 'rainbow.png', 'lof'),
-(19, 'Invoice Management', 'script.png', 'invoices'),
-(20, 'Logs', 'report.png', 'logs');
+INSERT INTO `%PRE%acpnav` (`visual`, `icon`, `link`) VALUES
+('Home', 'house.png', 'home'),
+('General Settings', 'cog.png', 'settings'),
+('Servers', 'server.png', 'servers'),
+('Packages', 'package_green.png', 'packages'),
+('Staff Accounts', 'user_gray.png', 'staff'),
+('Subdomains', 'link.png', 'sub'),
+('Clients', 'group.png', 'users'),
+('Change Password', 'shield.png', 'pass'),
+('Server Status', 'computer.png', 'status'),
+('Mail Center', 'email_open.png', 'email'),
+('Client Importer', 'user_orange.png', 'import'),
+('Tickets', 'page_white_text.png', 'tickets'),
+('Knowledge Base', 'folder.png', 'kb'),
+('Look & Feel', 'rainbow.png', 'lof'),
+('Invoice Management', 'script.png', 'invoices'),
+('Payments', 	'rainbow.png', 'payment'),
+('Billing Cycles', 'rainbow.png', 'billing'),
+('Plugins', 'rainbow.png', 'plugins'),
+('Addons', 'rainbow.png', 'addons'),
+('Orders', 'rainbow.png', 'orders'),
+('Logs', 'report.png', 'logs');
 
 -- --------------------------------------------------------
 
