@@ -151,33 +151,38 @@ class addon {
 					$checked = true;
 				}	
 				$html .= $main->createCheckbox($value['name'], 'addon_'.$value['id'], $checked);					
-		}
-	
+		}	
 		return $html;
 	}
 	
 	
+	/**
+	 * Generate checkboxes depeding in a billing id and package id
+	 */
 	public function generateAddonCheckboxesWithBilling($billing_id, $package_id, $selected_values = array(), $show_price = false) {
 		global $db, $main,$currency;
 		$values = $this->getAllAddonsByBillingCycleAndPackage($billing_id, $package_id);
 			
 		$return_value = array();
-		$html = '';		
-		foreach($values as $value ) {
-				$checked = false;
-				if (isset($selected_values[$value['id']])) {
-					$checked = true;					
-				}	
-				$html .= $main->createCheckbox($value['name'].' - '.$currency->toCurrency($value['amount']), 'addon_'.$value['id'], $checked);					
+		$html = '';	
+		if (is_array($values) && count($values) > 0 ){	
+			foreach($values as $value ) {
+					$checked = false;
+					if (isset($selected_values[$value['id']])) {
+						$checked = true;					
+					}	
+					$html .= $main->createCheckbox($value['name'].' - '.$currency->toCurrency($value['amount']), 'addon_'.$value['id'], $checked);					
+			}
+		} else {
+			$html = ' - ';
 		}
 		//$return_value= array('html'=> $html, 'total' => $total);
 		return $html;
 	}
 	
-
-	
-	
-	
+	/**
+	 * Gets all addons
+	 */	
 	public function getAllAddons($status = ADDON_STATUS_ACTIVE) {
 		global $db, $main;
 		if (!in_array($status, array(ADDON_STATUS_ACTIVE, ADDON_STATUS_INACTIVE))) {
@@ -193,6 +198,9 @@ class addon {
 		return $addon_list; 	
 	}
 	
+	/**
+	 * Gets all addons by billing id
+	 */
 	public function getAddonByBillingCycle($addon_id, $billing_id) {
 		global $db;
 		$addon_list = array();		
@@ -208,7 +216,9 @@ class addon {
 		return $addon_list;
 	}
 	
-	
+	/**
+	 * Gets all addons by package id
+	 */
 	public function getAddonsByPackage($package_id) {
 		global $db, $main;
 		
