@@ -72,7 +72,7 @@ class ispconfig extends Panel {
 		@param	array  parameters that the SOAP will used 
 		@return mixed  result of the SOAP call
 	*/
-	private function remote($action, $params) {
+	public function remote($action, $params) {
 		$soap_client = $this->load();
 		
 		$result = array();
