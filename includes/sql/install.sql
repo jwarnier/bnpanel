@@ -172,6 +172,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%invoices` (
   `is_suspended` int(1) NOT NULL default '0',
   `notes` text NOT NULL,
   `uniqueid` varchar(255) NOT NULL,
+   `addon_fee` longtext NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -467,6 +468,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%user_packs` (
   `signup` varchar(20) NOT NULL,
   `status` varchar(1) NOT NULL,
   `additional` text NOT NULL,
+  `billing_cycle_id` int NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
