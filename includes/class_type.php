@@ -15,8 +15,7 @@ class type {
 		global $style;
 		if(!$this->classes[$type]) {
 			$type = $this->createType($type);
-		}
-		else {
+		} else {
 			$type = $this->classes[$type];	
 		}
 		if($type->acpForm) {
@@ -59,25 +58,26 @@ class type {
 				$array['FORM'] = $value[1];
 				$html .= $style->replaceVar("tpl/acptypeform.tpl", $array);
 			}
-                        $html .= "<button id=\"submitIt\">Submit</button>";
+            //$html .= "<button id=\"submitIt\">Submit</button>";
 			return $html;
 		}
 	}
 	
 	public function orderForm($type) { # Returns the html of a custom form
 		global $style;
+		
 		if(!$this->classes[$type]) {
 			$type = $this->createType($type);
-		}
-		else {
+		} else {
 			$type = $this->classes[$type];	
-		}
+		}		
+		
 		if($type->orderForm) {
 			foreach($type->orderForm as $key => $value) {
 				$array['NAME'] = $value[0] .":";
 				$array['FORM'] = $value[1];
 				$html .= $style->replaceVar("tpl/acptypeform.tpl", $array);
-			}
+			} 
 			return $html;
 		}
 	}
@@ -142,6 +142,7 @@ class type {
 	public function determineServer($id) { # Returns server of a package
 		global $db;
 		global $main;
+		
 		$query = $db->query("SELECT * FROM `<PRE>packages` WHERE `id` = '{$db->strip($id)}'");
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That package doesn't exist!";
