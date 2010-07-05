@@ -1,10 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Client Area - Invoice Management
-// By Jonny H and Kevin M
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
 
 //Check if called by script
 if(THT != 1){die();}
@@ -92,10 +87,11 @@ class page {
 					if (!empty($array['addon_fee'])) {
 						
 						$array['addon_fee'] = unserialize($array['addon_fee']);
-						
-						foreach($array['addon_fee'] as $addon) {					
-							$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';
-							$total_amount +=$addon['amount'];					
+						if (is_array($array['addon_fee']) && count($array['addon_fee']) > 0 ) {
+							foreach($array['addon_fee'] as $addon) {					
+								$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';
+								$total_amount = $total_amount + $addon['amount'];					
+							}
 						}					
 					}
 					
