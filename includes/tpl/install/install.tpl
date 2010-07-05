@@ -56,7 +56,7 @@ function change() {
 							document.getElementById("sqlerror").innerHTML = wrong+"Your Config isn't writeable!";
 							break;
 						case 4:
-							document.getElementById("sqlerror").innerHTML = wrong+"THT is already installed!";
+							document.getElementById("sqlerror").innerHTML = wrong+"BNPanel is already installed!";
 							break;
 					}
 				});
@@ -141,7 +141,7 @@ $(window).load(function () {
         <td><div class="subborder"><div class="sub" id="3">Step 3: Running Queries</div></div></td>
       </tr>
       <tr>
-        <td><div class="subborder"><div class="sub" id="4">Step 4: Enter THT Details</div></div></td>
+        <td><div class="subborder"><div class="sub" id="4">Step 4: Enter BNPanel Details</div></div></td>
       </tr>
       <tr>
         <td><div class="subborder"><div class="sub" id="5">Step 5: Finished</div></div></td>
@@ -202,14 +202,14 @@ $(window).load(function () {
                     <td width="20%">mySQL Database:</td>
                     <td><label>
                       <input name="database" type="text" id="database" />
-                    </label><a class="tooltip" title="The database where the THT SQL will be inside. Includes your control panel username."><img src="<ICONDIR>information.png"></a></td>
+                    </label><a class="tooltip" title="The database where the BNPanel SQL will be inside. Includes your control panel username."><img src="<ICONDIR>information.png"></a></td>
                   </tr>
                     </tr>
                      <tr>
                     <td width="20%">Prefix:</td>
                     <td><label>
                       <input name="prefix" type="text" id="prefix" value="bnp_" />
-                    </label><a class="tooltip" title="This is the table prefixes for the THT database. Unless you want this to be different. Leave it default."><img src="<ICONDIR>information.png"></a></td>
+                    </label><a class="tooltip" title="This is the table prefixes for the BNPanel database. Unless you want this to be different. Leave it default."><img src="<ICONDIR>information.png"></a></td>
                   </tr>
                   <tr>
                     <td colspan="2" align="center"><label>
@@ -231,10 +231,10 @@ $(window).load(function () {
                   (Including the trailing slash)</td>
                 <td><label>
                   <input name="url" type="text" id="url" value="%GENERATED_URL%" />
-                </label><a class="tooltip" title="This is a very important field. Make sure this is correct before clicking next. The THT URL is where your THT is located. Make sure it's in this format: http://example.com/tht/"><img src="<ICONDIR>information.png"></a></td>
+                </label><a class="tooltip" title="This is a very important field. Make sure this is correct before clicking next. The BNPanel URL is where your BNPanel is located. Make sure it's in this format: http://example.com/BNPanel/"><img src="<ICONDIR>information.png"></a></td>
               </tr>
                <tr>
-                <td colspan="2"><strong>Staff Account</strong></td>
+                <td colspan="2"><strong>Admin Account</strong></td>
                 </tr>
               <tr>
                 <td width="30%">Username:</td>
@@ -253,7 +253,7 @@ $(window).load(function () {
                 <td width="30%">Email:</td>
                 <td><label>
                   <input name="email" type="text" id="email" />
-                </label><a class="tooltip" title="This is your email where all THT emails will be sent to."><img src="<ICONDIR>information.png"></a></td>
+                </label><a class="tooltip" title="This is your email where all BNPanel emails will be sent to."><img src="<ICONDIR>information.png"></a></td>
               </tr>
               </tr>
                  <tr>
@@ -270,7 +270,7 @@ $(window).load(function () {
             </table>
              </div>
              <div id="step5" style="display:none;">
-             All the steps have been completed! You can now use your script as per usual. You can login in to your staff area <a href="../admin/">here</a>.
+             All the steps have been completed! You can now use your script as per usual. You can login in to your admin area <a href="../admin/">here</a>.
              </div>
         </div>
     </div>
