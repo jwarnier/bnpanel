@@ -79,10 +79,10 @@ class addon {
 					$data_amount_addon 	= $db->fetch_array($result);							
 					$addon_fee[] = array('addon_id'=>$addon_id,'billing_id'=>$billing_id, 'amount'=> $data_amount_addon['amount']);
 				}
-			}
-			if ($serialize == true) {
-				$addon_fee = serialize($addon_fee);
-			}
+			}			
+		}
+		if ($serialize == true) {
+			$addon_fee = serialize($addon_fee);
 		}
 		return $addon_fee;
 	}	
