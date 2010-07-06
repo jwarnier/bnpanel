@@ -15,28 +15,55 @@ class order {
 	 * @param	float	amount
 	 * @param	date	expiration date
 	 */
-	public function create($uid, $amount, $due, $notes, $addon_fee) {
-		global $db;
-		global $email;
-		$client 		= $db->client($uid);
-		$emailtemp 		= $db->emailTemplate('newinvoice');
+	public function create($user_id, $username, $domain, $package_id, $signup, $status, $additional, $billing_cycle_id) {
+		global $db, $email;
+		/*
+		$emailtemp 		= $db->emailTemplate('neworder');
 		$array['USER'] 	= $client['user'];
 		$array['DUE'] 	= strftime("%D", $due);
 		$email->send($client['email'], $emailtemp['subject'], $emailtemp['content'], $array);
-		return $db->query("INSERT INTO `<PRE>invoices` (uid, amount, due, notes, addon_fee ) VALUES('{$uid}', '{$amount}', '{$due}', '{$notes}','{$addon_fee}' )");
+		*/
+		$db->query("INSERT INTO `<PRE>user_pack` (uid, username, domain, pid, signup, status, additional, billing_cycle_id )
+						   VALUES('{$user_id}', '{$username}', '{$domain}', '{$package_id}','{$signup}','{$status}','{$additional}','{$billing_cycle_id}')");
+		$order_id = mysql_insert_id();
+	
+		return	$order_id;
 	}
+	
+	/** 
+	 * Add addon to a order
+	 * 
+	 * @param 	int		User id
+	 * @param	float	amount
+	 * @param	date	expiration date
+	 */
+	 
+	public function addAddons($order_id, $addon_list) {
+		global $db;
+		//Insert into user_pack_addons
+		if (is_array($addon_list) && count($addon_list) > 0) {
+			foreach ($addon_list as $addon_id) {
+				if (!empty($addon_id) && is_numeric($addon_id)) {
+					$addon_id = intval($addon_id);
+					$sql_insert = "INSERT INTO user_pack_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
+					$db->query(	$sql_insert);					
+				}
+			}
+		}
+	}
+	
+	
 	
 	/**
 	 * Deletes an order
 	 */
 	public function delete($id) { # Deletes invoice upon invoice id
 		global $db;
-		$query = $db->query("DELETE FROM `<PRE>user_packs` WHERE `id` = '{$id}'"); //Delete the invoice
-		$query = $db->query("DELETE FROM `<PRE>user_pack_addons` WHERE `order_id` = '{$id}'"); //Delete the invoice
+		$query = $db->query("DELETE FROM `<PRE>user_packs` WHERE `user_id` = '{$id}'"); //Delete the order
 		return true;
 	}
 	
-	public function edit($iid, $uid, $amount, $due, $notes) { # Edit an invoice. Fields created can only be edited?
+	public function edit($order_id) {
 		global $db;
 	
 		return ;
@@ -294,6 +321,7 @@ class order {
 			$array['BILLING_CYCLES'] .= $main->dropDown('billing_cycle_id', $values, $billing_cycle_id, 1,'', array('onchange'=>'loadPackages(this);'));
 			
 			$user_pack_status = $main->getOrderStatusList();
+			
 			$new_order_list = array();
 			foreach($user_pack_status as $key=>$value) {
 				$new_order_list[] = array($value, $key);
