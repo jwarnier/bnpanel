@@ -1,12 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Admin Area - Look and Feel
-// By: Nick & Kevin M
-// Released under the GNU-GPL
-// Thanks to: Jimmie32, Jonny H
-//////////////////////////////
-
+/* For licensing terms, see /license.txt */
 //Check if called by script
 if(THT != 1){die();}
 

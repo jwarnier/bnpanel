@@ -1,6 +1,8 @@
 <?php
+/* For licensing terms, see /license.txt */
+
 /**
- * The Hosting Tool (THT)
+ * BNPanel
  * 
  * @author Julio Montoya <gugli100@gmail.com> BeezNest
  *  

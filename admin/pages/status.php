@@ -1,10 +1,6 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Admin Area - Home
-// By Jonny H
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
+
 /*
  * Server Status for AdminCP
  * By Jimmie Lin
