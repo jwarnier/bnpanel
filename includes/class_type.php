@@ -113,13 +113,18 @@ class type {
 	}
 	
 	public function createType($type) { # Creates a class and then returns it
-		$file = LINK . "types/". $type .".php";
-		if(!file_exists($file)) {
-			echo "Type doesn't exist!";	
+		if (!empty($type)) {
+			$file = LINK . "types/". $type .".php";
+			if(!file_exists($file)) {
+				//echo "Type doesn't exist!";
+				return false;	
+			} else {
+				include($file);
+				$type = new $type;
+				return $type;
+			}
 		} else {
-			include($file);
-			$type = new $type;
-			return $type;
+			return false;
 		}
 	}
 	
