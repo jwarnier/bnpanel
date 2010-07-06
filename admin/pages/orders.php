@@ -14,9 +14,6 @@ class page {
 	public function __construct() {
 		$this->navtitle = "Order Sub Menu";
 		$this->navlist[] = array("View all orders", "package_go.png", "all");
-		//$this->navlist[] = array("Add Invoice", "package_add.png", "add");
-		//$this->navlist[] = array("Edit Invoice", "package_go.png", "edit");		
-		//$this->navlist[] = array("Delete Invoice", "package_delete.png", "delete");		
 	}
 	
 	public function description() {
@@ -26,7 +23,7 @@ class page {
 	}
 		
 	public function content() {		
-		global $style, $db, $main, $invoice,$addon, $order, $billing, $currency, $package;
+		global $style, $db, $main, $invoice,$addon, $order, $billing, $currency, $package, $user;
 		
 		if(isset($_GET['iid']) && isset($_GET['pay'])){			
 			$invoice->set_paid($_GET['iid']);
@@ -140,7 +137,7 @@ class page {
 						$main->redirect("?page=invoices&sub=all");									
 					}
 					
-					$user_info  =  $main->userDetails($order_info['userid']);
+					$user_info  =  $user->getUserById($order_info['userid']);
 					
 					
 					$return_array['USER'] 			= $user_info['firstname'].' '.$user_info['lastname'];
