@@ -1,11 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Admin Area - Type
-// By Jonny H
-// Released under the GNU-GPL
-//////////////////////////////
-
+/* For licensing terms, see /license.txt */
 //Check if called by script
 if(THT != 1){die();}
 
