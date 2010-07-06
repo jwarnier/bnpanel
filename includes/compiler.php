@@ -151,14 +151,33 @@ define(ADDON_STATUS_INACTIVE, 					0);
 define(BILLING_CYCLE_STATUS_ACTIVE, 			1);
 define(BILLING_CYCLE_STATUS_INACTIVE, 			0);
 
-// Relation between packages and users 
+// Relation between packages and users a.k.a Orders 
 define(ORDER_STATUS_ACTIVE, 					1);
-define(ORDER_STATUS_SUSPEND, 					2);
+define(ORDER_STATUS_INACTIVE, 					2);
 define(ORDER_STATUS_WAITING_VALIDATION, 		3); //Awaiting Validation
-define(ORDER_STATUS_WAITING_PAYMENT, 			4); //Awaiting Payment
-define(ORDER_STATUS_CANCELLED, 					9);
+//define(ORDER_STATUS_WAITING_PAYMENT, 			4); //Awaiting Payment
+define(ORDER_STATUS_DELETED, 					9);
+
+		
+// Invoices
+define(INVOICE_STATUS_PAID, 					1); // Active in THT 1
+define(INVOICE_STATUS_CANCELLED, 				2); // Suspended in THT 2
+define(INVOICE_STATUS_WAITING_PAYMENT, 			3); // Awaiting Payment 4
+define(INVOICE_STATUS_DELETED, 					9); // Cancelled in 9
+
 
 //Server status
 define(SERVER_STATUS, 'production');
+//define(SERVER_STATUS, 'test'); //show mysql errors + user paypal sandbox
+
+
+// User status 
+define(USER_STATUS_ACTIVE, 						1);// Active users
+define(USER_STATUS_SUSPENDED, 					2);// Suspend users can't login
+define(USER_STATUS_WAITING_ADMIN_VALIDATION,	3);// Waiting can't login till admin validation 
+//define(USER_STATUS_WAITING_PAYMENT, 			4); //should not be use is useless!! 
+define(USER_STATUS_DELETED, 					9); //cancelled deleted users
+
+
 
 
