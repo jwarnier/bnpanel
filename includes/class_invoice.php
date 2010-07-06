@@ -40,41 +40,32 @@ class invoice {
 						   WHERE `id` = '{$iid}'");
 		return $query;
 	}
-
-	public function pay($iid, $returnURL = "order/index.php") {
+	
+	/**
+	 * Pays an invoice
+	 * 
+	 */
+	public function pay($invoice_id, $returnURL = "order/index.php") {
 		global $db;
 		require_once("paypal/paypal.class.php");
-		$test = 'live';
-		$test = 'sandbox';
+
 		$paypal 		= new paypal_class;
-		$invoice_info 	= $this->getInvoiceInfo($iid);
+		$invoice_info 	= $this->getInvoiceInfo($invoice_id);
 		
 		if($_SESSION['cuser'] == $invoice_info['uid']) {
 
-			if ($test == 'sandbox') {
+			if (SERVER_STATUS == 'test') {
 				$paypal->paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 			} else {
 				$paypal->paypal_url = 'https://www.paypal.com/cgi-bin/webscr';
 			}
-			$paypal->add_field('business', 			$db->config('paypalemail'));
-			
-			/*
-			 *
-		      0 – all shopping cart transactions use the GET method
-		      1 – the payer’s browser is redirected to the return URL by the GET method, and no transaction variables are sent
-		      2 – the payer’s browser is redirected to the return URL by the POST method, and all transaction variables are also posted
-			 */			
-			 
-			//$paypal->add_field('rm', 			1);
-			
-			$paypal->add_field('return', 			urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$iid));
-			$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$iid));
-			$paypal->add_field('notify_url',  		urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$iid));
+			$paypal->add_field('business', 			$db->config('paypalemail'));					
+			$paypal->add_field('return', 			urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
+			$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
+			$paypal->add_field('notify_url',  		urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
 			$paypal->add_field('item_name', 		$db->config('name').' Order: '.$invoice_info['notes']);
 			$paypal->add_field('amount', 			$invoice_info['total_amount']);
 			$paypal->add_field('currency_code', 	$db->config('currency'));
-			
-			//echo 'ready to  go';
 			$paypal->submit_paypal_post(); // submit the fields to paypal
 		} else {
 			echo "You don't seem to be the person who owns that invoice!";	
@@ -193,11 +184,11 @@ class invoice {
 
 			//Paid configuration links
 			$array['paid'] = ($array["is_paid"] == 1 ? "<span style='color:green'>Already Paid</span>" :
-														"<span style='color:red'>Unpaid</span>");
+													   "<span style='color:red'>Unpaid</span>");
 														
 			$array['pay'] = ($array["is_paid"] == 0 ? 
-			"<img src='../themes/icons/tick.png' 	alt='Pay' /> <a href='index.php?sub=all&page=invoices&iid={$array['id']}&pay=true' title='Mark as paid'>Mark as paid </a>" :
-			"<img src='../themes/icons/cancel.png'  alt='Already paid!' /> <a href='index.php?sub=all&page=invoices&iid={$array['id']}&unpay=true' title='Mark as unpaid'>Mark as unpaid</a>");
+			"<a href='index.php?sub=all&page=invoices&iid={$array['id']}&pay=true' title='Mark as paid'> <img src='../themes/icons/money_add.png' width=\"18px\" alt='Mark as paid' title='Mark as paid' /></a>" :
+			"<a href='index.php?sub=all&page=invoices&iid={$array['id']}&unpay=true' title='Mark as unpaid'> <img src='../themes/icons/money_delete.png'  width=\"18px\" alt='Mark as unpaid'title='Mark as unpaid' /> </a>");
 			
 			$array['due'] =  ($array["is_paid"] == 1 ? '<span style="color:green">'.$array['due'].'</span>' :  '<span style="color:red">'.$array['due'].'</span>');
 			
