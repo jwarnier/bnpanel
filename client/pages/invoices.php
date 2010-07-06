@@ -21,7 +21,7 @@ class page {
 
 		switch($main->getvar['sub']) {
 			case 'paid':				
-				if(isset($_GET['invoiceID'])) {					
+				if(isset($_GET['invoiceID'])) {				
 					require_once("../includes/paypal/paypal.class.php");
 					$paypal = new paypal_class;
 					if($paypal->validate_ipn()){
@@ -31,9 +31,9 @@ class page {
 						if($client['status'] == 2) {
 							$server->unsuspend($client['id']);
 						}
-					}
-					else {
+					} else {						
 						$main->errors("Your invoice hasn't been paid!");
+						echo '<ERRORS>';
 					}
 				}
 			break;				
@@ -44,8 +44,7 @@ class page {
 				}
 			break;					
 			case 'all':
-			default :	
-						
+			default :							
 				//Package info
 				$sql = "SELECT id, name  FROM `<PRE>packages`";
 				$packages 		= $db->query($sql);
@@ -56,9 +55,7 @@ class page {
 				$billing_cycle_name_list = $billing->getBillingCycles();
 				
 				//Addons
-				$addons_list = $addon->getAllAddons();
-				
-				
+				$addons_list = $addon->getAllAddons();				
 				
 				// List of invoices. :)
 				$query = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$_SESSION['cuser']}' ORDER BY `id` ASC");
@@ -94,18 +91,12 @@ class page {
 						}					
 					}
 					
-					$array['addon_fee'] = $addon_fee_string;					
-					
+					$array['addon_fee'] = $addon_fee_string;
 					$total_amount 		= $total_amount + $array['amount'];
-					$array['amount'] 	= $total_amount." ".$db->config("currency");
+					$array['amount'] 	= $total_amount." ".$db->config('currency');
 					
 					$array['edit']  	= '';			
 					$array['delete']  	= '';
-					
-					
-					//var_dump($array);
-					
-					
 					$array2['list'] .= $style->replaceVar("tpl/invoices/invoice-list-item-client.tpl", array_merge($array, $extra));
 				}
 				$array2['num'] = mysql_num_rows($query);
@@ -115,4 +106,3 @@ class page {
 		}
 	}
 }
-?>
