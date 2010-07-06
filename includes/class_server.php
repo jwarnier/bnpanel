@@ -236,18 +236,19 @@ class server {
 													  '{$main->getvar['phone']}',
 													  '".USER_STATUS_ACTIVE."')");
 													  
-			$rquery = "SELECT * FROM `<PRE>users` WHERE `user` = '{$user_name}' LIMIT 1;";
-			$rdata = $db->query($rquery);
-			$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-													  '{$rquery['userid']}',
-													  '{$main->getvar['username']}',
-													  '{$date}',
-													  'Registered.')");
 			$newSQL = "SELECT * FROM `<PRE>users` WHERE `user` = '{$user_name}' LIMIT 1;";
 			$query = $db->query($newSQL);
+						
 			//If user added
 			if($db->num_rows($query) == 1) {
 				$data = $db->fetch_array($query);
+				
+				//Insert into logs
+				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
+												  '{$data['userid']}',
+												  '{$data['user']}',
+												  '{$date}',
+												  'Registered.')");												  
 				
 				//Creating a new order
 				//@todo this should be moved to a class_order function
@@ -256,7 +257,7 @@ class server {
 													  '{$data['id']}',
 													  '{$main->getvar['package']}',
 													  '{$main->getvar['fdom']}',
-													  '3',
+													  '".ORDER_STATUS_WAITING_VALIDATION."',
 													  '{$date}',
 													  '{$additional}',
 													  '{$billing_cycle_id}')";
