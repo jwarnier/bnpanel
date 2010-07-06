@@ -234,7 +234,7 @@ class server {
 													  '{$main->getvar['zip']}',
 													  '{$main->getvar['country']}',
 													  '{$main->getvar['phone']}',
-													  '3')");
+													  '".USER_STATUS_ACTIVE."')");
 													  
 			$rquery = "SELECT * FROM `<PRE>users` WHERE `user` = '{$user_name}' LIMIT 1;";
 			$rdata = $db->query($rquery);
@@ -368,8 +368,8 @@ class server {
 				
 				$addon_fee = serialize($addon_fee);
 				
-				//3. Creating the invoice				
-				$invoice->create($data['id'], $package_amount, $due, $notes, $addon_fee);
+				//3. Creating the invoice
+				$invoice->create($data['id'], $package_amount, $due, $notes, $addon_fee, INVOICE_STATUS_WAITING_PAYMENT);
 				
 				$serverphp->suspend($main->getvar['username'], $type->determineServer($main->getvar['package']));
 				//change order to waiting payment
