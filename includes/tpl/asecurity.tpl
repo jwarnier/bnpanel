@@ -2,7 +2,7 @@
 <form id="edit" name="edit" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
-  <td><strong>Show THT version in copyright?</strong></td>
+  <td><strong>Show BNPanel version in copyright?</strong></td>
     <td>%SHOW_VERSION_ID%
      <a title="Do you want to show the THT Version you're running in the Copyright?" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
