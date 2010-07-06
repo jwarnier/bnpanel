@@ -7,13 +7,6 @@ if(THT != 1){
 }
 
 class order {
-	var $user_pack_status = array(
-								array('Active', 					ORDER_STATUS_ACTIVE), 
-								array('Suspend', 					ORDER_STATUS_SUSPEND), 
-								array('Waiting admin validation', 	ORDER_STATUS_WAITING_VALIDATION), 
-								array('Waiting payment', 			ORDER_STATUS_WAITING_PAYMENT), 
-								array('Cancelled', 					ORDER_STATUS_CANCELLED)
-							);
 	
 	/** 
 	 * Creates an order
@@ -135,8 +128,8 @@ class order {
 			$query_users 		= $db->query($sql);
 			$user_info  		= $db->fetch_array($query_users);	
 			$array['ID']		= $order_item['id'];
-			//var_dump($order_item);
-			$user_pack_status = array( 1=>'Active', 2 => 'Suspend', 3 => 'Admin', 4 => 'Awaiting Payment', 9 => 'Cancel');
+					
+			$user_pack_status = $main->getOrderStatusList();
 			
 			if (in_array($order_item['status'], array_keys($user_pack_status))) {
 				$array['STATUS'] = $user_pack_status[$order_item['status']];
@@ -299,7 +292,14 @@ class order {
 				}
 			}
 			$array['BILLING_CYCLES'] .= $main->dropDown('billing_cycle_id', $values, $billing_cycle_id, 1,'', array('onchange'=>'loadPackages(this);'));
-			$array['STATUS'] = $main->dropDown('status', $this->user_pack_status, $order_info['status']);	
+			
+			$user_pack_status = $main->getOrderStatusList();
+			$new_order_list = array();
+			foreach($user_pack_status as $key=>$value) {
+				$new_order_list[] = array($value, $key);
+			}
+			
+			$array['STATUS'] = $main->dropDown('status', $new_order_list, $order_info['status']);	
 			return $array;
 		}
 	}
