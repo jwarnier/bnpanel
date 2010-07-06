@@ -13,14 +13,14 @@ class invoice {
 	 * @param	float	amount
 	 * @param	date	expiration date
 	 */
-	public function create($uid, $amount, $due, $notes, $addon_fee) {
+	public function create($uid, $amount, $due, $notes, $addon_fee, $status) {
 		global $db, $email;
 		$client 		= $db->client($uid);		
 		$emailtemp 		= $db->emailTemplate('newinvoice');
 		$array['USER'] 	= $client['user'];
 		$array['DUE'] 	= strftime("%D", $due);
 		$email->send($client['email'], $emailtemp['subject'], $emailtemp['content'], $array);
-		$insert_sql = "INSERT INTO `<PRE>invoices` (uid, amount, due, notes, addon_fee ) VALUES('{$uid}', '{$amount}', '{$due}', '{$notes}','{$addon_fee}' )";
+		$insert_sql = "INSERT INTO `<PRE>invoices` (uid, amount, due, notes, addon_fee, status ) VALUES('{$uid}', '{$amount}', '{$due}', '{$notes}', '{$addon_fee}', '{$status}' )";
 		return $db->query($insert_sql);
 	}
 	
@@ -399,7 +399,7 @@ class invoice {
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest 2010 - Adding the billing cycle feature
 	 */
 	public function cron() {
-		global $db, $main, $server, $billing, $invoice, $email;
+		global $db, $main, $server, $billing, $invoice, $email,$user;
 		$today = time();
 		//For every package 
 		$query = $db->query("SELECT * FROM `<PRE>packages` WHERE `type` = 'paid'");
@@ -529,7 +529,7 @@ class invoice {
 					//var_dump($email_day_count);
 					if ($my_invoice['is_paid'] == 0 && !empty($email_day_count)) {
 					
-						$user_info = $main->userDetails($uid);
+						$user_info = $user->getUserById($uid);
 						$emaildata = $db->emailTemplate('notification');
 						
 						$invoice_info = $this->getInvoice($my_invoice['id'], true); 
