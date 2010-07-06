@@ -40,6 +40,8 @@ class page {
 					}
 				}
 				$files = $main->folderFiles(LINK."servers/");
+				//Abstract class Panel added
+				require_once LINK."servers/panel.php";
 				foreach($files as $value) {
 					include(LINK."servers/".$value);
 					$fname = explode(".", $value);
