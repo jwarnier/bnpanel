@@ -23,8 +23,9 @@ class order {
 		$array['DUE'] 	= strftime("%D", $due);
 		$email->send($client['email'], $emailtemp['subject'], $emailtemp['content'], $array);
 		*/
-		$db->query("INSERT INTO `<PRE>user_pack` (uid, username, domain, pid, signup, status, additional, billing_cycle_id )
-						   VALUES('{$user_id}', '{$username}', '{$domain}', '{$package_id}','{$signup}','{$status}','{$additional}','{$billing_cycle_id}')");
+		$sql = "INSERT INTO `<PRE>user_packs` (userid, username, domain, pid, signup, status, additional, billing_cycle_id )
+				VALUES('{$user_id}', '{$username}', '{$domain}', '{$package_id}','{$signup}','{$status}','{$additional}','{$billing_cycle_id}')";
+		$db->query($sql);
 		$order_id = mysql_insert_id();
 	
 		return	$order_id;
