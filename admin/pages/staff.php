@@ -149,21 +149,24 @@ class page {
 				break;
 			
 			case "delete":
-				$query = $db->query("SELECT * FROM `<PRE>staff`");
+				$user_id = intval($_SESSION['user']);
+				$query = $db->query("SELECT * FROM `<PRE>staff` ");
 				if($main->getvar['do'] && $db->num_rows($query) > 1) {
 					$db->query("DELETE FROM `<PRE>staff` WHERE `user` = '{$main->getvar['do']}'");
 					$main->errors("Staff Account Deleted!");
-				}
-				elseif($main->getvar['do']) {
+				} elseif($main->getvar['do']) {
 					$main->errors("Theres only one staff account!");
 				}
 				if($db->num_rows($query) == 0) {
 					echo "There are no staff accounts to edit!";	
-				}
-				else {
+				} else {
 					echo "<ERRORS>";
 					while($data = $db->fetch_array($query)) {
-						echo $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=delete&do='.$data['user'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
+						if ($data['id'] != $user_id) {
+							echo $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=delete&do='.$data['user'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
+						} else {
+							echo $main->sub("<strong>".$data['user']."</strong>", '<img src="'. URL .'themes/icons/delete_na.png">');
+						}
 					}
 				}
 			break;
