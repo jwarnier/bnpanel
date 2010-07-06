@@ -140,7 +140,7 @@ class type {
 		$this->classes = $classes;
 	}
 	
-	//@todo this should be move to class_package
+	//@todo this should be move or removed to class_package
 	public function determineType($id) { # Returns type of a package
 		global $db;
 		global $main;
@@ -186,6 +186,7 @@ class type {
 			return $data['type'];
 		}
 	}
+		//@todo this should be move or removed to class_package
 	public function determineBackend($id) { # Returns server of a package
 		global $db;
 		global $main;
