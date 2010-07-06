@@ -134,7 +134,7 @@ INSERT INTO `%PRE%config` (`name`, `value`) VALUES
 ('multiple', '1'),
 ('general', '1'),
 ('message', '<p>Signups are currently disabled. Contact your host for more information.</p>'),
-('delacc', '1'),
+('delacc', '0'),
 ('cenabled', '1'),
 ('cmessage', '<p>Client area isn''t enabled. Sorry, contact your host for more details.</p>'),
 ('emailmethod', 'php'),
