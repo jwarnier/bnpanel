@@ -87,8 +87,8 @@ class paypal_class {
    function paypal_class() {
        
       // initialization constructor.  Called when class is created.
-      $test = 'sandbox';
-		if ($test == 'sandbox') {
+      
+		if (SERVER_STATUS == 'test') {
 			$this->paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 		} else {
 			$this->paypal_url = 'https://www.paypal.com/cgi-bin/webscr';
