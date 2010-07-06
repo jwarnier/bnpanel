@@ -96,20 +96,10 @@ $_SESSION['errors'] = 0;
 
 //If payment..
 if(FOLDER == "client" && $main->getvar['page'] == "invoices" && $main->getvar['iid'] && $_SESSION['clogged'] == 1) {
-	error_log('here');
 	$invoice->pay($main->getvar['iid'], "client/index.php?page=invoices");
 	echo "You made it this far.. something went wrong.";
 }
 
-//SHHHH... SECRET
-/*
-if($main->getvar['devh4xx']) {
-	$array['VERSION'] = $db->config("version");
-	$array['THEME'] = $db->config("theme");
-	$array['P2H'] = $db->config("p2hcheck");
-	$array['URL'] = $db->config("url");
-	die($style->replacevar("tpl/info.tpl", $array));
-}*/
 
 function checkForDependencies() {
 	//Here, we're going to see if we have the functions that we need. :D
