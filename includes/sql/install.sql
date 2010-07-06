@@ -173,6 +173,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%invoices` (
   `notes` text NOT NULL,
   `uniqueid` varchar(255) NOT NULL,
   `addon_fee` longtext NOT NULL,
+  `status` int NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
