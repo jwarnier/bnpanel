@@ -37,7 +37,9 @@ class user {
 	}
 	
 	public function changeUserStatus($user_id, $status) {
-		
+		global $main;
+		$db->query("UPDATE `<PRE>user_packs` SET `status` = '$status' WHERE `id` = '{$db->strip($status)}'");
+		$db->query("UPDATE `<PRE>users` SET `status` = '$status' WHERE `id` = '{$db->strip($status)}'");
 	}
 	
 	public function getUserById($user_id) {
