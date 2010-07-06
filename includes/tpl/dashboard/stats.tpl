@@ -9,10 +9,10 @@
 	        <div class="sub">
 	            <strong>At a glance....</strong>
 	            <div class='break'></div>
-                <strong>THT Version:</strong> %VERSION% (%UPDATE%)<br />
-                <strong>THT Theme:</strong> %THEME%<br />
-                <strong>THT Client Area Enabled:</strong> %CENABLED%<br />
-                <strong>Show THT Version in footer:</strong> %SVID%<br />
+                <strong>Version:</strong> %VERSION% (%UPDATE%)<br />
+                <strong>Theme:</strong> %THEME%<br />
+                <strong>Client Area Enabled:</strong> %CENABLED%<br />
+                <strong>Show BNPanel Version in footer:</strong> %SVID%<br />
                 <strong>THT Support Area Enabled:</strong> %SENABLED%<br />
                 <strong>Signups Enabled:</strong> %SIGNENABLE%<br />
                 <strong>Multiple Signups:</strong> %MULTI%<br />
@@ -26,7 +26,7 @@
 	        <div class="sub" style="text-align: right !important" height="auto">
                 <strong>Quick Clicks</strong>
                 <div class='break'></div>
-                <a href="?page=settings">THT Settings</a><br />
+                <a href="?page=settings">BNPanel Settings</a><br />
                 <a href="?page=servers">Manage Servers</a><br />
                 <a href="?page=packages">Manage Packages</a><br />
                 <a href="?page=tickets">Answer Tickets</a><br />
