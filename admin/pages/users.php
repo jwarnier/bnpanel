@@ -105,27 +105,32 @@ class page {
 					$pack = $db->fetch_array($pack2);
 				}
 				if($main->getvar['do'] ) {
-					if($pack['status'] == "2") {
+					if($pack['status'] == USER_STATUS_UNSUSPEND) {
 						$array['SUS'] = "Unsuspend";
 						$array['FUNC'] = "unsus";
 						$array['IMG'] = "accept.png";
 					}
-					elseif($pack['status'] == "1") {
+					elseif($pack['status'] == USER_STATUS_SUSPEND) {
 						$array['SUS'] = "Suspend";
 						$array['FUNC'] = "sus";	
 						$array['IMG'] = "exclamation.png";
 					}
-					elseif($pack['status'] == "3") {
+					elseif($pack['status'] == USER_STATUS_VALIDATED) {
 						$array['SUS'] = "<a href='?page=users&sub=validate'>Validate</a>";
 						$array['FUNC'] = "none";	
 						$array['IMG'] = "user_suit.png";
 					}
-					elseif($pack['status'] == "4") {
+					elseif($pack['status'] == USER_STATUS_WAITING_PAYMENT) {
 						$array['SUS'] = "Awaiting Payment";
 						$array['FUNC'] = "none";	
 						$array['IMG'] = "money.png";
 					}
 					elseif($pack['status'] == "9") {
+						$array['SUS'] = "No Action";
+						$array['FUNC'] = "none";	
+						$array['IMG'] = "cancel.png";
+					}
+					elseif($pack['status'] == USER_STATUS_DELETED) {
 						$array['SUS'] = "No Action";
 						$array['FUNC'] = "none";	
 						$array['IMG'] = "cancel.png";
@@ -156,6 +161,9 @@ class page {
 							$array2['PHONE'] = $client['phone'];
 							$invoicesq = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$db->strip($client['id'])}' AND `is_paid` = '0'");
 							$array2['INVOICES'] = $db->num_rows($invoicesq);
+							
+							$order_status_list = $main->getOrderStatusList();
+							
 							switch($pack['status']) {
 								default:
 									$array2['STATUS'] = "Other";
@@ -325,23 +333,23 @@ class page {
 				echo "</center>";
 				break;
 				
-			case "stats":
+			case 'stats':
 				$query = $db->query("SELECT * FROM `<PRE>users`");
 				$array['CLIENTS'] = $db->num_rows($query);
-				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '1'");
+				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '".USER_STATUS_ACTIVE."'");
 				$array['ACTIVE'] = $db->num_rows($query);
-				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '2'");
+				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '".USER_STATUS_SUSPENDED."'");
 				$array['SUSPENDED'] = $db->num_rows($query);
-				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '3'");
+				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '".USER_STATUS_WAITING_ADMIN_VALIDATION."'");
 				$array['ADMIN'] = $db->num_rows($query);
-				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '4'");
-				$array['WAITING'] = $db->num_rows($query);				
-				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '9'"); 
+				//$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '4'");
+				//$array['WAITING'] = $db->num_rows($query);				
+				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '".USER_STATUS_DELETED."'"); 
 				$array['CANCELLED'] = $db->num_rows($query);
 				echo $style->replaceVar("tpl/clientstats.tpl", $array);
 				break;
 				
-			case "validate":
+			case 'validate':
 				if($main->getvar['do']) {
 					if($main->getvar['accept'] == 1) {
 						if($server->approve($main->getvar['do'])) {
