@@ -30,13 +30,14 @@ class server {
 	}
 	
 	public function signup() { # Echos the result of signup for ajax
-		global $main, $db, $type, $addon, $order, $package;
+		global $main, $db, $type, $addon, $order, $package, $email;
 			
-		//Check details
-		$package_info = $package->getPackage($main->getvar['package']);
+		//Check package details
+		$package_id = intval($main->getvar['package']);
+		$package_info = $package->getPackage($package_id);
 		
 		if ($package_info['is_disable'] == 1) {		
-			echo "Package is disabled.!";
+			echo "Package is disabled!";
 			return;
 		}
 		
@@ -180,7 +181,7 @@ class server {
 			return;
 		}
 		
-		$type2 = $type->createType($type->determineType($main->getvar['package']));
+		$type2 = $type->createType($type->determineType($package_id));
 		
 		if($type2->signup) {
 			$pass = $type2->signup();			
@@ -201,13 +202,14 @@ class server {
 			}
 		}
 		
-		$main->getvar['fplan'] = $type->determineBackend($main->getvar['package']);
-		$serverphp = $this->createServer($main->getvar['package']); # Create server class
+		$main->getvar['fplan'] = $type->determineBackend($package_id);
+		$serverphp = $this->createServer($package_id); # Create server class
 		
-		//$done = $serverphp->signup($type->determineServer($main->getvar['package']), $package_info['reseller']);
+		//Registering to the server
+		//$done = $serverphp->signup($type->determineServer($package_id), $package_info['reseller']);
 		
 		$done = true;
-		if($done == true) { 
+		if($done == true) {
 			// Did the signup pass?
 			$date 				= time();
 			$ip 				= $_SERVER['REMOTE_ADDR'];
@@ -248,39 +250,14 @@ class server {
 												  '{$data['userid']}',
 												  '{$data['user']}',
 												  '{$date}',
-												  'Registered.')");												  
+												  'User registered.')");												  
 				
 				//Creating a new order
-				//@todo this should be moved to a class_order function
-				//If order created status = admin
-				$sql_user_pack = "INSERT INTO `<PRE>user_packs` (userid, pid, domain, status, signup, additional, billing_cycle_id) VALUES(
-													  '{$data['id']}',
-													  '{$main->getvar['package']}',
-													  '{$main->getvar['fdom']}',
-													  '".ORDER_STATUS_WAITING_VALIDATION."',
-													  '{$date}',
-													  '{$additional}',
-													  '{$billing_cycle_id}')";
-				$db->query($sql_user_pack);
-				$order_id = mysql_insert_id();
-								 
-				//Insert into user_pack_addons
-				if (is_array($main->getvar['addon_ids']) && count($main->getvar['addon_ids']) > 0) {
-					foreach ($main->getvar['addon_ids'] as $addon_id) {
-						if (!empty($addon_id) && is_numeric($addon_id)) {
-							$addon_id = intval($addon_id);
-							$sql_insert = "INSERT INTO user_pack_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
-							$db->query(	$sql_insert);					
-						}
-					}
-				} 
+				$order_id = $order->create($data['id'], $main->getvar['username'], $main->getvar['fdom'], $package_id, $date, ORDER_STATUS_WAITING_VALIDATION , $additional, $billing_cycle_id);
+								
+				//Add addons to a new order		
+				$order->addAddons($order_id, $main->getvar['addon_ids']);
 				
-				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-													  '{$data['id']}',
-													  '{$main->getvar['username']}',
-													  '{$date}',
-													  'Package created ({$main->getvar['fdom']})')");
-				global $email;
 				$url = $db->config('url');
 				$array['USER']	= $newusername;
 				$array['PASS'] 	= $main->getvar['password']; 
@@ -296,49 +273,41 @@ class server {
 				
 				//Depends if the package needs an admin validation
 				if($package_info['admin'] == 0) {
-					//No validation
-					$emaildata = $db->emailTemplate("newacc");
+					//No admin validation no suspend of the webhosting
+					$emaildata = $db->emailTemplate('newacc');
 					echo "<strong>Your account has been completed!</strong><br />You may now use the client login bar to see your client area or proceed to your control panel. An email has been dispatched to the address on file.";
-					if($type->determineType($main->getvar['package']) == 'paid') {
-						//Setting the order to Admin
-						//$db->query("UPDATE `<PRE>user_packs` SET `status` = '3' WHERE `id` = '{$order_info['id']}'");
+					if($type->determineType($package_id) == 'paid') {
 						echo " This will apply only when you've made payment.";	
 						$_SESSION['clogged'] = 1;
 						$_SESSION['cuser'] = $data['id'];
 					}
 					$donecorrectly = true;
 				} elseif($package_info['admin'] == 1) {
-					//Needs validation
-					if($serverphp->suspend($main->getvar['username'], $type->determineServer($main->getvar['package'])) == true) {
-						$db->query("UPDATE `<PRE>user_packs` SET `status` = '3' WHERE `id` = '{$order_info['id']}'");
-						$emaildata = $db->emailTemplate("newaccadmin");
-						$emaildata2 = $db->emailTemplate("adminval");
+					//Needs admin validation so we suspend the webhosting -
+					if($serverphp->suspend($main->getvar['username'], $type->determineServer($package_id)) == true) {						
+						$emaildata = $db->emailTemplate('newaccadmin');
+						$emaildata2 = $db->emailTemplate('adminval');
 						$email->staff($emaildata2['subject'], $emaildata2['content']);
 						echo "<strong>Your account is awaiting admin validation!</strong><br />An email has been dispatched to the address on file. You will recieve another email when the admin has overlooked your account.";
 						$donecorrectly = true;
 					} else {
-						echo "Something with admin validation went wrong (suspend). Your account should be running but contact your host!";	
+						echo "Something with admin validation went wrong (suspend). Your account should be running but contact your host administrator!";	
 					}
 				} else {					
-					echo "Something with admin validation went wrong. Your account should be running but contact your host!";	
+					echo "Something with admin validation went wrong. Your account should be running but contact your host administrator.";	
 				}
 				$email->send($array['EMAIL'], $emaildata['subject'], $emaildata['content'], $array);
 			} else {
 				echo "Your username doesn't exist in the system meaning the query failed or it exists more than once!";	
 			}
 			
-			//Generating the order //invoice
-			
-			if($donecorrectly && $type->determineType($main->getvar['package']) == 'paid') {
+			//If the package is paid			
+			if($donecorrectly && $type->determineType($package_id) == 'paid') {
 								
-				global $invoice;
+				global $invoice,$package;
 				//The order was saved with an status of admin validation now we should create an invoice an set the status to wait payment 
 
-				$package_amount = 0;
 				
-				//$amountinfo = $type->additional($main->getvar['package']);
-				$billing_id = $main->getvar['billing_id'];
-				//$amount 	= $amountinfo['monthly'];
 				//$due 		= time()+intval($db->config('suspensiondays')*24*60*60);
 				//$due 		= time()+intval($db->config('suspensiondays')*24*60*60);
 				$due 		= time();
@@ -347,37 +316,22 @@ class server {
 				//$notes 		= "Package: ". $package_info['name'];
 				$notes = '';
 				
-				//1. Calculating amount for the package selon the billing cycle
-								
-				$sql_select = "SELECT amount FROM `<PRE>billing_products` WHERE product_id = {$main->getvar['package']} AND type = '".BILLING_TYPE_PACKAGE."' AND billing_id = $billing_id ";
-								
-				$result 		= $db->query($sql_select);
-				$package_amount = $db->fetch_array($result);
-				//var_dump($data_amount);
-						
-				$package_amount = $package_amount['amount'];
-				
-				//2. Calculating amount for the addon selon the billing cycle
-				$addon_fee = '';
-				//var_dump($main->getvar['addon_ids']);
-				if (is_array($main->getvar['addon_ids']) && count($main->getvar['addon_ids']) > 0) {					
-					$addon_fee = $addon->generateAddonFee($main->getvar['addon_ids'], $billing_id, false);
-					foreach ($addon_fee as $addon_item) {						
-						$addon_fee[] = array('addon_id'=>$addon_id,'billing_id'=>$billing_id, 'amount'=> $addon_item['amount']);
-					}
-				}					
-				
-				$addon_fee = serialize($addon_fee);
+				//1. Calculating the amount for the package depending on the billing cycle
+				$package_amount = 0;
+				$package_billing_info = $package->getPackageByBillingCycle($package_id, $billing_cycle_id);	
+				if (is_array($package_billing_info) && isset($package_billing_info['amount'])) {					
+					$package_amount = $package_billing_info['amount'];
+				}				
+				//2. Generating the addon serialized array
+				$addon_fee = $addon->generateAddonFee($main->getvar['addon_ids'], $billing_cycle_id, true);
 				
 				//3. Creating the invoice
 				$invoice->create($data['id'], $package_amount, $due, $notes, $addon_fee, INVOICE_STATUS_WAITING_PAYMENT);
 				
-				$serverphp->suspend($main->getvar['username'], $type->determineServer($main->getvar['package']));
-				//change order to waiting payment
-				$db->query("UPDATE `<PRE>user_packs` SET `status` = '4' WHERE `id` = '{$data['id']}'");
-				//$iquery = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$data['id']}' AND `due` = '{$due}'");
-				//$idata = $db->fetch_array($iquery);*/
-				
+				//4. Suspend the hosting if is not already suspended
+				if ($package_info['admin'] == 0) { 				
+					$serverphp->suspend($main->getvar['username'], $type->determineServer($package_id));
+				}												
 				echo '<div class="errors"><b>You are being redirected to payment! It will load in a couple of seconds..</b></div>';
 			}
 		}
