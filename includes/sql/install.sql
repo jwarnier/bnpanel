@@ -138,7 +138,7 @@ INSERT INTO `%PRE%config` (`name`, `value`) VALUES
 ('cenabled', '1'),
 ('cmessage', '<p>Client area isn''t enabled. Sorry, contact your host for more details.</p>'),
 ('emailmethod', 'php'),
-('emailfrom', 'The Hosting Tool <admin@bnpanel.com>'),
+('emailfrom', ''),
 ('smtp_host', 'localhost'),
 ('smtp_user', 'user'),
 ('smtp_password', 'password'),
