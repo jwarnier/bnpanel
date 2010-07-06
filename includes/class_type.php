@@ -135,6 +135,7 @@ class type {
 		$this->classes = $classes;
 	}
 	
+	//@todo this should be move to class_package
 	public function determineType($id) { # Returns type of a package
 		global $db;
 		global $main;
@@ -142,10 +143,9 @@ class type {
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That package doesn't exist!";
 			$array['Package ID'] = $id;
-			$main->error($array);
-			return;
-		}
-		else {
+			//$main->error($array);
+			return false;
+		} else {
 			$data = $db->fetch_array($query);
 			return $data['type'];
 		}
@@ -189,9 +189,8 @@ class type {
 			$array['Error'] = "That package doesn't exist!";
 			$array['Package ID'] = $id;
 			$main->error($array);
-			return;	
-		}
-		else {
+			return false;	
+		} else {
 			$data = $db->fetch_array($query);
 			return $data['backend'];
 		}
