@@ -358,8 +358,9 @@ class server {
 													  '{$data2['user']}',
 													  '{$date}',
 													  'Terminated ($reason)')");
-				$db->query("DELETE FROM `<PRE>user_packs` WHERE `id` = '{$data['id']}'");
-				$db->query("DELETE FROM `<PRE>users` WHERE `id` = '{$db->strip($data['userid'])}'");
+				//$db->query("DELETE FROM `<PRE>user_packs` WHERE `id` = '{$data['id']}'");
+				//$db->query("DELETE FROM `<PRE>users` WHERE `id` = '{$db->strip($data['userid'])}'");
+				$user->changeUserStatus($data['id'], USER_STATUS_DELETED);
 				return true;
 			}
 			else {
@@ -369,18 +370,17 @@ class server {
 	}
 	
 	public function cancel($id, $reason = false) { # Deletes a user account from the package ID
-		global $db, $main, $type, $email;
+		global $db, $main, $type, $email, $user;
 		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}' AND `status` != '9'");
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That package doesn't exist or cannot be cancelled! Are you trying to cancel an already cancelled account?";
 			$array['User PID'] = $id;
 			$main->error($array);
 			return;	
-		}
-		else {
-			$data = $db->fetch_array($query);
+		} else {
+			$data 	= $db->fetch_array($query);
 			$query2 = $db->query("SELECT * FROM `<PRE>users` WHERE `id` = '{$db->strip($data['userid'])}'");
-			$data2 = $db->fetch_array($query2);
+			$data2 	= $db->fetch_array($query2);
 			$server = $type->determineServer($data['pid']);
 			if(!is_object($this->servers[$server])) {
 				$this->servers[$server] = $this->createServer($data['pid']); # Create server class
@@ -390,8 +390,10 @@ class server {
 				$emaildata = $db->emailTemplate("cancelacc");
 				$array['REASON'] = "Account Cancelled.";
 				$email->send($data2['email'], $emaildata['subject'], $emaildata['content'], $array);
-				$db->query("UPDATE `<PRE>user_packs` SET `status` = '9' WHERE `id` = '{$data['id']}'");
-				$db->query("UPDATE `<PRE>users` SET `status` = '9' WHERE `id` = '{$db->strip($data['userid'])}'");
+				$user->changeUserStatus($data['id'], USER_STATUS_SUSPENDED);
+				//$db->query("UPDATE `<PRE>user_packs` SET `status` = '9' WHERE `id` = '{$data['id']}'");
+				//$db->query("UPDATE `<PRE>users` SET `status` = '9' WHERE `id` = '{$db->strip($data['userid'])}'");
+				
 				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
 													  '{$db->strip($data['userid'])}',
 													  '{$data2['user']}',
