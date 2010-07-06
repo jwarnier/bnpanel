@@ -118,12 +118,6 @@
     </td>
   </tr>  
   
-  <tr>
-    <td valign="top">Send an email</td>
-    <td>
-       <input name="send_email" type="checkbox" id="send_email"  />
-    </td>
-  </tr> 
   
   
 </table>
