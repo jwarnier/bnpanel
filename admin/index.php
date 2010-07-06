@@ -11,11 +11,7 @@ define("PAGE", "Admin Area");
 
 //Main ACP Function - Creates the ACP basically
 function acp() {
-	global $main;
-	global $db;
-	global $style;
-	global $type;
-	global $email;
+	global $main, $db, $style,$type, $email;
 	ob_start(); # Stop the output buffer
 	
 	if(!$main->getvar['page']) { 
@@ -24,22 +20,21 @@ function acp() {
 	$query = $db->query("SELECT * FROM `<PRE>acpnav` WHERE `link` = '{$main->getvar['page']}'");
 	$page = $db->fetch_array($query);
 	$header = $page['visual'];
-	$link = "pages/". $main->getvar['page'] .".php";
-	if(!file_exists($link)) {
-		$html = "<strong>THT Fatal Error:</strong> Seems like the .php is non existant. Is it deleted?";	
-	}
-	elseif(!$main->checkPerms($page['id']) && $db->num_rows($query) != 0) {
+	$link = "pages/". $main->getvar['page'] .".php";	
+	
+	if(!file_exists($link)) {	
+		$html = "<strong>Fatal Error:</strong> Seems like the .php is non existant. Is it deleted?";	
+	} elseif(!$main->checkPerms($page['id']) && $db->num_rows($query) != 0) {		
 		$html = "You don't have access to this page.";	
-	}
-	else {
+	} else {
 		//If deleting something
 		if(preg_match("/[\.*]/", $main->getvar['page']) == 0) {
 			include($link);
 			$content = new page;
 			// Main Side Bar HTML
-			$nav = "Sidebar Menu";
-		
+			$nav = "Sidebar Menu";		
 			$sub = $db->query("SELECT * FROM `<PRE>acpnav`");
+			
 			while($row = $db->fetch_array($sub)) {
 				if($main->checkPerms($row['id'])) {
 					$array2['IMGURL'] = $row['icon'];
@@ -77,8 +72,7 @@ function acp() {
 			
 			//Page Sidebar
 			if($content->navtitle) {
-				$subnav = $content->navtitle;
-				$sub = $db->query("SELECT * FROM `<PRE>acpnav`");
+				$subnav = $content->navtitle;				
 				foreach($content->navlist as $key => $value) {
 					$array2['IMGURL'] = $value[1];
 					$array2['LINK'] = "?page=".$main->getvar['page']."&sub=".$value[2];
@@ -178,6 +172,7 @@ function acp() {
 	return $data; # Return the HTML
 }
 
+//If user is NOT log in 
 if(!$_SESSION['logged']) {
 	if($main->getvar['page'] == "forgotpass") {
 		define("SUB", "Reset Password");
@@ -210,37 +205,33 @@ if(!$_SESSION['logged']) {
 				}
 			}
 		}
-		echo '<div align="center">'.$main->table("Admin Area - Reset Password", $style->replaceVar("tpl/areset.tpl", $array), "300px").'</div>';
-		
+		echo '<div align="center">'.$main->table("Admin Area - Reset Password", $style->replaceVar("tpl/areset.tpl", $array), "300px").'</div>';		
 		echo $style->get("footer.tpl");
-	}
-	else{
+	} else { 
 		define("SUB", "Login");
 		define("INFO", " ");
-		if($_POST) { # If user submitts form
-		if($main->staffLogin($main->postvar['user'], $main->postvar['pass'])) {
-			$main->redirect("?page=home");	
-		}
-		else {
+		if($_POST) { # If user submitts form		
+			if($main->staffLogin($main->postvar['user'], $main->postvar['pass'])) {
+				$main->redirect("?page=home");	
+			} else {
 			$main->errors("Incorrect username or password!");
-		}
+			}
+		}	
+		echo $style->get("header.tpl");
+		$array[] = "";
+		echo '<div align="center">'.$main->table("Admin Area - Login", $style->replaceVar("tpl/alogin.tpl", $array), "300px").'</div>';
+		echo $style->get("footer.tpl");
 	}
-	
-	echo $style->get("header.tpl");
-	$array[] = "";
-	echo '<div align="center">'.$main->table("Admin Area - Login", $style->replaceVar("tpl/alogin.tpl", $array), "300px").'</div>';
-	echo $style->get("footer.tpl");
-}
-}
-	elseif($_SESSION['logged']) {
+} elseif($_SESSION['logged']) {
+	//Ok user is already in 
 	if(!$main->getvar['page']) {
 		$main->getvar['page'] = "home";
-	}
-	elseif($main->getvar['page'] == "logout") {
+	} elseif($main->getvar['page'] == "logout") {
 		session_destroy();
 		$main->redirect("?page=home");
 	}
 	$content = acp();
+	//exit;
 	echo $style->get("header.tpl");
 	echo $content;
 	echo $style->get("footer.tpl");
@@ -248,4 +239,8 @@ if(!$_SESSION['logged']) {
 
 //End the sctipt
 include(LINK ."output.php");
+//Memory usage
+echo ('MemoryUsage').': '.number_format((memory_get_usage()/1048576), 3, '.', '') .'Mb' ;
+echo '<br />';
+echo ('MemoryUsagePeak').': '.number_format((memory_get_peak_usage()/1048576), 3, '.', '').'Mb';
 ?>
