@@ -467,12 +467,12 @@ class AJAX {
 			global $main, $db;
 			$type = $main->getvar['type'];
 			$id = $main->getvar['server'];
-			include(LINK ."servers/". $type .".php");
+			require_once LINK.'servers/panel.php';
+			require_once LINK ."servers/". $type .".php";
 			$server = new $type;
 			if($server->hash) {
 				echo 0;	
-			}
-			else {
+			} else {
 				echo 1;	
 			}
 			$query = $db->query("SELECT * FROM `<PRE>servers` WHERE `id` = '{$id}'");
