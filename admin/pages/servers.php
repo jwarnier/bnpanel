@@ -40,13 +40,17 @@ class page {
 					}
 				}
 				$files = $main->folderFiles(LINK."servers/");
-				//Abstract class Panel added
-				require_once LINK."servers/panel.php";
-				foreach($files as $value) {
-					include(LINK."servers/".$value);
-					$fname = explode(".", $value);
-					$stype = new $fname[0];
-					$values[] = array($stype->name, $fname[0]);	
+				
+				require_once LINK.'servers/panel.php';
+				if(is_array($files) && count($files) > 0) {
+					foreach($files as $value) {						
+						if ($value != 'panel.php') {
+							require_once LINK."servers/".$value;
+							$fname = explode(".", $value);					
+							$stype = new $fname[0];
+							$values[] = array($stype->name, $fname[0]);	
+						}
+					}
 				}
 				$array['TYPE'] = $main->dropDown("type", $values, 0, 0);
 				echo $style->replaceVar("tpl/addserver.tpl", $array);
