@@ -452,12 +452,12 @@ class AJAX {
 	public function serverhash() {
 		global $main;
 		$type = $main->getvar['type'];
-		include(LINK ."servers/". $type .".php");
+		require_once LINK.'servers/panel.php';
+		require_once LINK ."servers/". $type .".php";
 		$server = new $type;
 		if($server->hash) {
 			echo 0;	
-		}
-		else {
+		} else {
 			echo 1;	
 		}
 	}
