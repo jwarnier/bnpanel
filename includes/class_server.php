@@ -10,7 +10,7 @@ class server {
 		$server = $type->determineServerType($type->determineServer($package)); # Determine server
 		
 		if($this->servers[$server]) {
-			return;	
+			return true;	
 		}
 		//Abstract class Panel added
 		require_once LINK."servers/panel.php";
@@ -20,10 +20,9 @@ class server {
 			$array['Server ID'] = $server;
 			$array['Path'] = $link;
 			$main->error($array);
-			return;	
-		}
-		else {
-			include($link); # Get the server
+			return false;	
+		} else {
+			require_once $link; # Get the server
 			$serverphp = new $server;
 			return $serverphp;
 		}
@@ -36,12 +35,13 @@ class server {
 		$package_id = intval($main->getvar['package']);
 		$package_info = $package->getPackage($package_id);
 		
-		if ($package_info['is_disable'] == 1) {		
-			echo "Package is disabled!";
-			return;
-		}
 		
-		if($main->getvar['domain'] == "dom") { # If Domain
+		if (empty($package_info) || $package_info['is_disable'] == 1) {
+			echo 'Package doesn\'t exist please contact the administrator';
+			return;
+		} 
+				
+		if($main->getvar['domain'] == 'dom') { # If Domain
 			if(!$main->getvar['cdom']) {
 				echo "Please fill in the domain field!";
 				return;
@@ -86,8 +86,7 @@ class server {
 		if((!$main->getvar['password'])) {
 		   echo "Please enter a password!";
 		   return;
-		}
-		else {
+		} else {
 			if($main->getvar['password'] != $main->getvar['confirmp']) {
 				echo "Your passwords don't match!";
 				return;
@@ -100,8 +99,7 @@ class server {
 		if((!$main->check_email($main->getvar['email']))) {
 				echo "Your email is the wrong format!";	
 				return;
-		}
-		else {
+		} else {
 			$query = $db->query("SELECT * FROM `<PRE>users` WHERE `email` = '{$main->getvar['email']}'");
 			if($db->num_rows($query) != 0) {
 				echo "That e-mail address is already in use!";
@@ -181,13 +179,14 @@ class server {
 			return;
 		}
 		
-		$type2 = $type->createType($type->determineType($package_id));
-		
-		if($type2->signup) {
-			$pass = $type2->signup();			
+		// Creates the "paid" or "free" class 
+		$package_type_class = $type->createType($package_info['type']);	
+			
+		if($package_type_class->signup) {
+			$pass = $package_type_class->signup();			
 			if($pass) {
 				echo $pass;	
-				return;
+				return ;
 			}
 		}
 		
@@ -202,7 +201,8 @@ class server {
 			}
 		}
 		
-		$main->getvar['fplan'] = $type->determineBackend($package_id);
+		//useless right now
+		//$main->getvar['fplan'] = $package_info['backend'];
 		$serverphp = $this->createServer($package_id); # Create server class
 		
 		//Registering to the server
@@ -302,18 +302,12 @@ class server {
 			}
 			
 			//If the package is paid			
-			if($donecorrectly && $type->determineType($package_id) == 'paid') {
-								
+			if($donecorrectly && $type->determineType($package_id) == 'paid') {								
 				global $invoice,$package;
 				//The order was saved with an status of admin validation now we should create an invoice an set the status to wait payment 
-
-				
-				//$due 		= time()+intval($db->config('suspensiondays')*24*60*60);
+			
 				//$due 		= time()+intval($db->config('suspensiondays')*24*60*60);
 				$due 		= time();
-				
-				//$notes 		= "Your current hosting package monthly invoice. Package: ". $package_info['name'];
-				//$notes 		= "Package: ". $package_info['name'];
 				$notes = '';
 				
 				//1. Calculating the amount for the package depending on the billing cycle
@@ -324,7 +318,7 @@ class server {
 				}				
 				//2. Generating the addon serialized array
 				$addon_fee = $addon->generateAddonFee($main->getvar['addon_ids'], $billing_cycle_id, true);
-				
+								
 				//3. Creating the invoice
 				$invoice->create($data['id'], $package_amount, $due, $notes, $addon_fee, INVOICE_STATUS_WAITING_PAYMENT);
 				
