@@ -55,4 +55,24 @@ class user {
 			return $data;
 		}
 	}
+	
+	public function searchUser($query) {
+		global $db;
+		$user_list = array();
+		if (!empty($query)) {
+			echo $sql = "SELECT * FROM `<PRE>users` 
+						  WHERE user 		LIKE '%{$db->strip($query)}%' OR 
+								email 		LIKE '%{$db->strip($query)}%'  OR 
+								firstname 	LIKE '%{$db->strip($query)}%'  OR
+								lastname 	LIKE '%{$db->strip($query)}%'";
+			$result = $db->query($sql);
+			
+			if($db->num_rows($result) > 0) {
+				while($data = $db->fetch_array($result)) {
+					$user_list[] = $data;
+				};		
+			}
+		}
+		return $user_list;		
+	}
 }
