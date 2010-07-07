@@ -1281,7 +1281,7 @@ class AJAX {
 				$order_info = $order->getOrderInfo($order_id);
 				$addon_selected_list = $order_info['addons'];
 			}									
-			$result = $addon->generateAddonCheckboxesWithBilling($billing_id, $package_id,array_flip($addon_selected_list));
+			$result = $addon->showAllAddonsByBillingCycleAndPackage($billing_id, $package_id,array_flip($addon_selected_list));
 			echo $result['html'];			
 	   }
 	   

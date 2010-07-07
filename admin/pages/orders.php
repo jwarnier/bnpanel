@@ -195,7 +195,7 @@ class page {
 					$return_array['BILLING_ID'] 	= $billing_id;
 					
 					$addon_list = $addon->getAddonsByPackage($billing_id);
-					$result 	= $addon->generateAddonCheckboxesWithBilling($billing_id, $order_info['pid'], array_flip($order_info['addons']));
+					$result 	= $addon->showAllAddonsByBillingCycleAndPackage($billing_id, $order_info['pid'], array_flip($order_info['addons']));
 					
 					$return_array['ADDON'] 	=  $result['html'];
 
