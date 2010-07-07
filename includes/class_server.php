@@ -253,7 +253,7 @@ class server {
 												  'User registered.')");												  
 				
 				//Creating a new order
-				$order_id = $order->create($data['id'], $main->getvar['username'], $main->getvar['fdom'], $package_id, $date, ORDER_STATUS_WAITING_VALIDATION , $additional, $billing_cycle_id);
+				$order_id = $order->create($data['id'], $main->getvar['username'], $main->getvar['fdom'], $package_id, $date, ORDER_STATUS_WAITING_ADMIN_VALIDATION , $additional, $billing_cycle_id);
 								
 				//Add addons to a new order		
 				$order->addAddons($order_id, $main->getvar['addon_ids']);

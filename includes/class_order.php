@@ -26,8 +26,7 @@ class order {
 		$sql = "INSERT INTO `<PRE>user_packs` (userid, username, domain, pid, signup, status, additional, billing_cycle_id )
 				VALUES('{$user_id}', '{$username}', '{$domain}', '{$package_id}','{$signup}','{$status}','{$additional}','{$billing_cycle_id}')";
 		$db->query($sql);
-		$order_id = mysql_insert_id();
-	
+		$order_id = mysql_insert_id();	
 		return	$order_id;
 	}
 	
@@ -46,6 +45,7 @@ class order {
 			foreach ($addon_list as $addon_id) {
 				if (!empty($addon_id) && is_numeric($addon_id)) {
 					$addon_id = intval($addon_id);
+					$order_id = intval($order_id);					
 					$sql_insert = "INSERT INTO user_pack_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
 					$db->query(	$sql_insert);					
 				}
@@ -68,15 +68,13 @@ class order {
 	 * Deletes an order
 	 */
 	public function delete($id) { # Deletes invoice upon invoice id
-		$this->updateOrderStatus($id, ORDER_STATUS_DELETED);
-		
+		$this->updateOrderStatus($id, ORDER_STATUS_DELETED);		
 		//$query = $db->query("DELETE FROM `<PRE>user_packs` WHERE `userid` = '{$id}'"); //Delete the order
 		return true;
 	}
 	
 	public function edit($order_id) {
-		global $db;
-	
+		global $db;	
 		return ;
 	}
 	
@@ -85,6 +83,7 @@ class order {
 	 */
 	public function getOrderByUser($user_id) {
 		global $db;
+		$user_id = intval($user_id);
 		//Getting the domain info
 		$sql = "SELECT id, pid, domain, billing_cycle_id FROM `<PRE>user_packs` WHERE `userid` = ".$user_id;
 		$result 		= $db->query($sql);
@@ -131,7 +130,7 @@ class order {
 		global $main, $db, $style,$currency;
 		
 		// List invoices. :)
-		$result_order  = $db->query("SELECT * FROM `<PRE>user_packs` ORDER BY id DESC");
+		$result_order  = $db->query("SELECT * FROM `<PRE>user_packs` WHERE status <> '".ORDER_STATUS_DELETED."' ORDER BY id DESC");
 		
 		$query2 = $db->query("SELECT * FROM `<PRE>invoices` WHERE `is_paid` = 0 ");
 		$array2['list'] = "";
@@ -256,9 +255,7 @@ class order {
 		if(empty($order_info)) {
 			echo "That order doesn't exist!";	
 		} else {			
-			$total = 0;
-			
-			//	var_dump($data);
+			$total = 0;			
 			$array['ID'] 		= $order_info['id'];
 			$user_id 			= $order_info['userid'];
 			
@@ -309,8 +306,7 @@ class order {
 			} else {			
 				//$array['PACKAGES'] = $main->dropDown('package_id', $package_list, $package_id, 1 , '', array('onchange'=>'loadAddons(this);'));	
 				
-				$packages = $package->getAllPackagesByBillingCycle($billing_cycle_id);
-					
+				$packages = $package->getAllPackagesByBillingCycle($billing_cycle_id);					
 		   		$package_list = array();
 				foreach($packages as $package) {
 					$package_list[$package['id']] = array($package['name'].' - '.$currency->toCurrency($package['amount']), $package['id']);				
@@ -339,7 +335,4 @@ class order {
 			return $array;
 		}
 	}
-
-
 }
-?>
