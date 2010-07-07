@@ -14,6 +14,7 @@ class page {
 	public function __construct() {
 		$this->navtitle = "Order Sub Menu";
 		$this->navlist[] = array("View all orders", "package_go.png", "all");
+		$this->navlist[] = array("Add a new order", "add.png", "add");
 	}
 	
 	public function description() {
@@ -35,7 +36,49 @@ class page {
 		
 		switch($main->getvar['sub']) {						
 			case 'add':
-				echo $style->replaceVar("tpl/invoices/addorder.tpl");
+				if($_POST) {
+					$signup 		= strtotime($main->postvar['created_at']);
+					$user_id		= $main->postvar['user_id'];
+					$username		= "";
+					$domain			= $main->postvar['domain'];
+					$package_id		= $main->postvar['package_id'];
+					$status			= $main->postvar['status'];
+					$additional 	= '';
+					$billing_cycle_id = $main->postvar['billing_cycle_id'];
+					 
+					$order_id = $order->create($user_id, $username, $domain, $package_id, $signup, $status, $additional, $billing_cycle_id);
+					if (!empty($order_id) && is_numeric($order_id)) {
+						//Add addons
+						$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
+						$new_addon_list = array();
+																			
+						foreach($addon_list as $addon_id=>$value) {																								
+							$variable_name = 'addon_'.$addon_id;
+							//var_dump($variable_name);
+							if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
+								$new_addon_list[] = $addon_id;				
+							}															
+						}												
+						$order->addAddons($order_id, $new_addon_list);
+					} else {
+						
+					}
+															
+				}
+				$array['CREATED_AT'] 	= date('Y-m-d');
+				$billing_list = $billing->getBillingCycles();
+				$new_billing_list = array();
+				foreach($billing_list as $billing_item) {
+					$new_billing_list[$billing_item['id']] =$billing_item['name']; 
+				}
+				
+				$array['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, '', 1,'', array('onchange'=>'loadPackages(this);'));
+				
+				$array['PACKAGES'] 		= '-';
+				$array['ADDON'] 		= '-';
+				$array['STATUS'] 		= $main->createSelect('status', $main->getOrderStatusList());
+					
+				echo $style->replaceVar("tpl/orders/add.tpl", $array);
 			break;
 			case 'edit':
 				if(isset($main->getvar['do'])) {
@@ -68,10 +111,10 @@ class page {
 								$db->query($update_sql);
 								
 								
-								$addong_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
+								$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
 								
 								$new_addon_list = array();																
-								foreach($addong_list as $addon_id=>$value) {																								
+								foreach($addon_list as $addon_id=>$value) {																								
 									$variable_name = 'addon_'.$addon_id;
 									//var_dump($variable_name);
 									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
