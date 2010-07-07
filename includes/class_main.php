@@ -40,41 +40,38 @@ if(THT != 1){die();}class main {
 			}
 		} else {
 			$_SESSION['errors'] = $error;
-		}			}
+		}			}
 	
-	public function table($header, $content = 0, $width = 0, $height = 0) { # Returns the HTML for a THT table
-		global $style;
-		if($width) {
-			$props = "width:".$width.";";	
+	public function table($header, $content = 0, $width = 0, $height = 0) { # Returns the HTML for a THT table
+		global $style;
+		if($width) {
+			$props = "width:".$width.";";		}		
+		if($height) {
+			$props .= "height:".height.";";
 		}
-		if($height) {
-			$props .= "height:".height.";";	
-		}
-		$array['PROPS'] = $props;
-		$array['HEADER'] = $header;
+		$array['PROPS'] = $props;
+		$array['HEADER'] = $header;
 		$array['CONTENT'] = $content;
-		$array['ID'] =rand(0,999999);
-		$link = LINK."../themes/". THEME ."/tpl/table.tpl";
-		if(file_exists($link)) {
-			$tbl = $style->replaceVar("../themes/". THEME ."/tpl/table.tpl", $array);
-		}
-		else {
-			$tbl = $style->replaceVar("tpl/table.tpl", $array);
-		}
-		return $tbl;
+		$array['ID'] =rand(0,999999);
+		$link = LINK."../themes/". THEME ."/tpl/table.tpl";
+		if(file_exists($link)) {
+			$tbl = $style->replaceVar("../themes/". THEME ."/tpl/table.tpl", $array);
+		} else {
+			$tbl = $style->replaceVar("tpl/table.tpl", $array);
+		}
+		return $tbl;
 	}
 	public function sub($left, $right) { # Returns the HTML for a THT table
-		global $style;
-		$array['LEFT'] = $left;
-		$array['RIGHT'] = $right;
-		$link = LINK."../themes/". THEME ."/tpl/sub.tpl";
-		if(file_exists($link)) {
-			$tbl = $style->replaceVar("../themes/". THEME ."/tpl/sub.tpl", $array);
-		}
-		else {
-			$tbl = $style->replaceVar("tpl/sub.tpl", $array);
-		}
-		return $tbl;
+		global $style;
+		$array['LEFT'] = $left;
+		$array['RIGHT'] = $right;
+		$link = LINK."../themes/". THEME ."/tpl/sub.tpl";
+		if(file_exists($link)) {
+			$tbl = $style->replaceVar("../themes/". THEME ."/tpl/sub.tpl", $array);
+		} else {
+			$tbl = $style->replaceVar("tpl/sub.tpl", $array);
+		}
+		return $tbl;
 	}
 	
 	public function evalreturn($code) { # Evals code and then returns it without showing
@@ -168,42 +165,38 @@ if(THT != 1){die();}class main {
 				return true;
 			}		}
 	}
-	
-	public function clientLogin($user, $pass) { # Checks the credentails of the client and logs in, returns true or false
-		global $db, $main;
-		if($user && $pass) {
-			$query = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$main->postvar['user']}' AND (`status` <= '2' OR `status` = '4')");
-			if($db->num_rows($query) == 0) {
-				return false;
-			}
-			else {
-				$data = $db->fetch_array($query);
-				$ip = $_SERVER['REMOTE_ADDR'];
-				if(md5(md5($main->postvar['pass']) . md5($data['salt'])) == $data['password']) {
-					$_SESSION['clogged'] = 1;
-					$_SESSION['cuser'] = $data['id'];
-					$date = time();
+	public function getCurrentUserInfo() {		if (isset($_SESSION['user_information']) && is_array($_SESSION['user_information'])) {			return $_SESSION['user_information'];		}	}	public function getCurrentUserId() {		if (isset($_SESSION['user_information']) && is_array($_SESSION['user_information'])) {			return intval($_SESSION['user_information']['id']);		}	}
+	public function clientLogin($user, $pass) { # Checks the credentails of the client and logs in, returns true or false
+		global $db, $main;
+		if($user && $pass) {
+			$query = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$main->postvar['user']}' AND (`status` <= '2' OR `status` = '4')");
+			if($db->num_rows($query) == 0) {
+				return false;
+			} else {
+				$data = $db->fetch_array($query,'ASSOC');
+				$ip = $_SERVER['REMOTE_ADDR'];
+				if(md5(md5($main->postvar['pass']) . md5($data['salt'])) == $data['password']) {
+					$_SESSION['clogged'] = 1;
+					$_SESSION['cuser'] = $data['id'];										//Save all user in this session 					$data['password'] = null;					$data['salt'] = null;					$_SESSION['user_information'] = $data;					
+					$date = time();
 					$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
 														'{$data['id']}',
 														'{$main->postvar['user']}',
 														'{$date}',
 														'Login successful ($ip)')");
 					return true;
-				}
-				else {
-					$date = time();
-					$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-														'{$data['id']}',
-														'{$main->postvar['user']}',
-														'{$date}',
-														'Login failed ($ip)')");
-					return false;
-				}
-			}
-		}
-		else {
-			return false;
-		}
+				}	else {
+					$date = time();
+					$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
+														'{$data['id']}',
+														'{$main->postvar['user']}',
+														'{$date}',
+														'Login failed ($ip)')");					return false;
+				}
+			}
+		} else {
+			return false;
+		}
 	}
 	
 	public function staffLogin($user, $pass) { # Checks the credentials of a staff member and returns true or false
@@ -216,8 +209,8 @@ if(THT != 1){die();}class main {
 			else {
 				$data = $db->fetch_array($query);
 				if(md5(md5($main->postvar['pass']) . md5($data['salt'])) == $data['password']) {
-					$_SESSION['logged'] = 1;
-					$_SESSION['user'] = $data['id'];
+					$_SESSION['logged'] = 1;
+					$_SESSION['user'] = $data['id'];										$data['password'] = null;					$data['salt'] = null;					$_SESSION['user_information'] = $data;					
 					$date = time();
 					$ip = $_SERVER['REMOTE_ADDR'];
 					$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
@@ -381,6 +374,6 @@ if(THT != 1){die();}class main {
 		
 		//Let's wrap it all up.
 		return true;
-	}		public function getOrderStatusList() {		return array(			ORDER_STATUS_ACTIVE						=> 'Active', 			ORDER_STATUS_WAITING_USER_VALIDATION 	=> 'Waiting user validation',						ORDER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',			ORDER_STATUS_CANCELLED 					=> 'Canceled',  			//ORDER_STATUS_WAITING_PAYMENT	=> 'Waiting payment', 			ORDER_STATUS_DELETED			=> 'Deleted', 			);	}		public function getInvoiceStatusList() {		return array(			INVOICE_STATUS_PAID				=> 'Paid', 			INVOICE_STATUS_CANCELLED		=> 'Cancelled',						INVOICE_STATUS_WAITING_PAYMENT	=> 'Pending', 			INVOICE_STATUS_DELETED			=> 'Deleted'			);	}		public function getUserStatusList() {		return array(			USER_STATUS_ACTIVE						=> 'Active', 			USER_STATUS_SUSPENDED 					=> 'Suspend', 			USER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',  			//USER_STATUS_WAITING_PAYMENT				=> 'Waiting payment',  //should be remove only added for backward comptability			USER_STATUS_DELETED						=> 'Deleted', 			);	}	
+	}		// Order status	public function getOrderStatusList() {		return array(			ORDER_STATUS_ACTIVE						=> 'Active', 			ORDER_STATUS_WAITING_USER_VALIDATION 	=> 'Waiting user validation',						ORDER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',			ORDER_STATUS_CANCELLED 					=> 'Canceled',  			//ORDER_STATUS_WAITING_PAYMENT	=> 'Waiting payment', 			ORDER_STATUS_DELETED			=> 'Deleted', 			);	}		public function getInvoiceStatusList() {		return array(			INVOICE_STATUS_PAID				=> 'Paid', 			INVOICE_STATUS_CANCELLED		=> 'Cancelled',						INVOICE_STATUS_WAITING_PAYMENT	=> 'Pending', 			INVOICE_STATUS_DELETED			=> 'Deleted'			);	}		public function getUserStatusList() {		return array(			USER_STATUS_ACTIVE						=> 'Active', 			USER_STATUS_SUSPENDED 					=> 'Suspend', 			USER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',  			//USER_STATUS_WAITING_PAYMENT				=> 'Waiting payment',  //should be remove only added for backward comptability			USER_STATUS_DELETED						=> 'Deleted', 			);	}	
 }
 ?>
