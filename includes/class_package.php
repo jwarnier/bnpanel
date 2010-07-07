@@ -19,7 +19,7 @@ class package {
 		$addong_list = array();		
 		if (!empty($billing_id)) {		
 			$sql = "SELECT a.id, a.name, amount, bc.name  as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-					ON (bc.id = b.billing_id) WHERE bc.id = {$billing_id} ";
+					ON (bc.id = b.billing_id) WHERE bc.id = {$billing_id} AND b.type= '".BILLING_TYPE_PACKAGE."'";	
 			$addons_billing = $db->query($sql);
 			$addong_list = array();
 			while($data = $db->fetch_array($addons_billing)) {
