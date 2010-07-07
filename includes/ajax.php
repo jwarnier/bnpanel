@@ -1,13 +1,16 @@
 <?php
 /* For licensing terms, see /license.txt */
 
+/**
+ * This class respond the AJAX calls
+ */
+
+
 define("LINK", "./");
 include("compiler.php");
 
 class AJAX {
-
-	public function orderIsUser()
-	{
+	public function orderIsUser() {
 		if(!$_SESSION['clogged']) {
 			echo "0";
 		} else {
@@ -1117,7 +1120,7 @@ class AJAX {
 			if ($db->num_rows($result) > 0) {				
 				while($data = $db->fetch_array($result)) {
 					$amount_to_show  = $currency->toCurrency($data['amount']);			
-			       	$html .= "<tr>	<td width=\"33%\"> {$data['name']}</td>
+			       	$html .= "<tr><td width=\"33%\"> {$data['name']}</td>
 			            <td width=\"33%\" align=\"right\"><strong>{$data['billing_name']}</strong></td>
 			            <td width=\"33%\" align=\"right\">{$amount_to_show}</td>		     
 			        	</tr>";
@@ -1149,7 +1152,6 @@ class AJAX {
 						//@todo setup feee per 	
 						//$setup_fee = '<b>Setup Fee:</b></td><td align="right">'.$addon['setup_fee'];
 						$setup_fee ='';
-					//	$html .='<tr><td width="1%"><input id="addon_ids['.$data['addon_id'].']" name="addon_ids['.$data['addon_id'].']" type="checkbox"></td><td width="20%">'.$addon['name'].'</td><td align="right">'.$setup_fee.'</td><td align="right"><b>'.$addon['billing_name'].'</b></td><td align="right">'.$addon['amount'].'</td></tr>';
 						$html .='<tr><td width="1%"><input id="addon_ids" value="'.$data['addon_id'].'" name="addon_ids" type="checkbox"></td>';
 						$html .='<td width="33%">'.$addon['name'].'</td><td align="right">'.$setup_fee.'</td><td align="right"><strong>'.$addon['billing_name'].'</strong></td>';
 						$html .='<td width="33%" align="right">'.$addon['amount'].'</td></tr>';
@@ -1213,8 +1215,7 @@ class AJAX {
 		            <td></td>
 		        	</tr>";		        	
 		        	$total = $total + $data['amount'];
-			}
-			
+			}			
 			
 			if (!empty($new_addon_list) && !empty($main->getvar['billing_id'])) {
 				$sql = "SELECT a.name, setup_fee, bc.name as billing_name, b.amount FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
@@ -1251,16 +1252,12 @@ class AJAX {
 	   function changeAddons() {
 	   		global $main, $db, $addon, $currency, $order;
 	   		$package_id = $main->getvar['package_id'];
-			$order_id	= $main->getvar['order_id'];	   		
-	   		$order_info = $order->getOrderInfo($order_id);
-	   		
+			$order_id	= $main->getvar['order_id'];	  
+			 		
+	   		$order_info = $order->getOrderInfo($order_id);	   		
 	   		$billing_id = $order_info['billing_cycle_id'];
 	   		
-	   		
-	   		//var_dump($package_id);
-	   		
 	   		$addon_list = $addon->getAddonsByPackage($package_id);
-	   		//var_dump($addon_list);
 	   		
 	   		foreach($addon_list as $addon_item) {
 				$checked = false;
@@ -1283,11 +1280,11 @@ class AJAX {
 			if (!empty($order_id)) {
 				$order_info = $order->getOrderInfo($order_id);
 				$addon_selected_list = $order_info['addons'];
-			}
-									
-			echo $addon->generateAddonCheckboxesWithBilling($billing_id, $package_id,array_flip($addon_selected_list));
-			
+			}									
+			$result = $addon->generateAddonCheckboxesWithBilling($billing_id, $package_id,array_flip($addon_selected_list));
+			echo $result['html'];			
 	   }
+	   
 	   
 	   function searchuser() {
 			global $main, $user;

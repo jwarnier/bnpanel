@@ -9,7 +9,7 @@ if(THT != 1){
 class addon {	
 	
 	/**
-	 * Gets all adddons by billing cycle id
+	 * Gets all adddons by billing cycle id and package id
 	 * @param	int		billing id
 	 * @return 	array	a list with all addons
  	 * @author	Julio Montoya <gugli100@gmail.com> BeezNest 2010 
@@ -28,34 +28,51 @@ class addon {
 		return $addon_list;
 	}
 	
-		/**
-	 * Generate checkboxes depending in a billing id and package id
+	/**
+	 * Show addon information of the selected addons
+	 * @param	int		billing cycle id
+	 * @param	int		package id
+	 * @param	array	list of addon ids
+	 * @param	bool	will generate or not checkboxes
+	 * @return 	array	The return value will have this structure array('html'=>$content, 'total'=>$total) where the $content is a html string, and the total is the addition of all selected addons 
+	 * 
 	 */
-	public function generateAddonCheckboxesWithBilling($billing_id, $package_id, $selected_values = array(), $show_price = false) {
+	public function showAllAddonsByBillingCycleAndPackage($billing_id, $package_id, $selected_addon_list = array(), $generate_checkboxes = true) {
 		global $db, $main,$currency;
 		$values = $this->getAllAddonsByBillingCycleAndPackage($billing_id, $package_id);
 			
 		$return_value = array();
 		$html = '';	
+		$total = 0;
 		if (is_array($values) && count($values) > 0 ){	
 			foreach($values as $value ) {
 					$checked = false;
-					if (isset($selected_values[$value['id']])) {
-						$checked = true;					
-					}	
-					$html .= $main->createCheckbox($value['name'].' - '.$currency->toCurrency($value['amount']), 'addon_'.$value['id'], $checked);					
+					if (isset($selected_addon_list[$value['id']])) {
+						$checked = true;	
+						$total = $total + $value['amount'];		
+						if ($generate_checkboxes == false) {
+							$html .= $value['name'].' - '.$currency->toCurrency($value['amount']).'<br />';
+						}							
+					}
+					if($generate_checkboxes == true) {
+						$html .= $main->createCheckbox($value['name'].' - '.$currency->toCurrency($value['amount']), 'addon_'.$value['id'], $checked);
+					} 				
 			}
 		} else {
 			$html = ' - ';
 		}
-		//$return_value= array('html'=> $html, 'total' => $total);
-		return $html;
+		if(empty($html)) {
+			$html = ' - ';
+		}
+		$return_value= array('html'=> $html, 'total' => $total);
+		return $return_value;
 	}
 	
 	
 	/**
 	 * Gets all addons by billing id
 	 * @param 	int 	billing cycle id
+	 * @return 	array		
 	 */
 	public function getAllAddonsByBillingId($billing_id) {
 		global $db;
