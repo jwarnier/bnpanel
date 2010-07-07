@@ -273,7 +273,7 @@ class invoice {
 					      'amount'		=> string '10.600000'
 				 */
 				 //see also addon::generate function 
-				$invoice_info['addon_fee'] = unserialize($invoice_info['addon_fee']);							
+				$invoice_info['addon_fee'] = unserialize($invoice_info['addon_fee']);
 				
 				if (is_array($invoice_info['addon_fee']) && !empty($invoice_info['addon_fee'])) {							
 					foreach ($invoice_info['addon_fee'] as $addon_item) {
@@ -292,56 +292,19 @@ class invoice {
 			//Addon feature added
 			
 			$array['ADDON'] = ' - ';
-			$addong_result_string = '';
-			/*foreach($addon_list as $invoice_info) {
-				$checked = false;
-				if (in_array($invoice_info['id'], array_keys($addon_selected_list))) {
-					$checked = true;
-					$total = $total + $addon_selected_list[$invoice_info['id']];
-					if ($read_only == true) {
-						if ($show_price) {
-							$addong_result_string .= $invoice_info['name'].' - '.$currency->toCurrency($addon_selected_list[$invoice_info['id']]).'<br />';
-						} else {
-							$addong_result_string .= $invoice_info['name'].'<br />';
-						}
-					}
-				}		
-				
-				if ($read_only == false) {
-					$my_amount = $addon_selected_list[$invoice_info['id']];
-					if (empty($my_amount)) {
-						$my_amount = $addon_list[$invoice_info['id']]['amount'];					 
-					}
-					$my_amount = $currency->toCurrency($my_amount);
-					if ($show_price) {
-						$check_box_name = $invoice_info['name'].' - '.$my_amount;
-					} else {
-						$check_box_name = $invoice_info['name'];
-					}
-					$addong_result_string .= $main->createCheckbox($check_box_name, 'addon_'.$invoice_info['id'], $checked);
-				}					
-			}*/
-			
-			$addon_list = $addon->getAddonsByPackage($package_id);
-			//var_dump($addon_list, $addon_selected_list);
-			//$addong_result_string =  $addon->generateAddonCheckboxesWithBilling($addon_list, $addon_selected_list);
-			//$addong_result_string =  $addon->generateAddonCheckboxesWithBilling($billing_cycle_id, $package_id, $addon_selected_list);
-			
+			$addong_result_string = '';			
+			$addon_list = $addon->getAddonsByPackage($package_id);		
 			$addon_list = $addon->getAllAddonsByBillingId($billing_cycle_id);
 			
 			
 			foreach($addon_selected_list as $addon_id => $addon_amount) {
 				if ($read_only == false) {
-					$array['ADDON'] .= $addon_list[$addon_id]['name'].' - <input id="addon_'.$addon_id.'" name="addon_'.$addon_id.'" value="'.$addon_amount.'"><br />';				
+					$array['ADDON'] = $addon_list[$addon_id]['name'].' - <input id="addon_'.$addon_id.'" name="addon_'.$addon_id.'" value="'.$addon_amount.'"><br />';				
 				} else {
-					$array['ADDON'] .= $addon_list[$addon_id]['name'].' '.$currency->toCurrency($addon_amount).'<br />';
+					$array['ADDON'] = $addon_list[$addon_id]['name'].' '.$currency->toCurrency($addon_amount).'<br />';
 				}
 				$total = $total + $addon_amount;
-			}
-			/*
-			if (!empty($addong_result_string)) {
-				$array['ADDON'] = $addong_result_string;
-			}*/		
+			}	
 			
 			//Packages feature added				
 			$query = $db->query("SELECT * FROM `<PRE>packages`");
@@ -351,21 +314,7 @@ class invoice {
 					$package_list[$data['id']] = array($data['name'], $data['id']);				
 				}
 			}
-			
-			/*
-			if($read_only == true) {		
-				$array['PACKAGES'] = $package_list[$package_id][0];
-			} else {			
-				//$array['PACKAGES'] = $main->dropDown('packages', $package_list, $package_id);					
-				$packages = $package->getAllPackagesByBillingCycle($billing_cycle_id);
-					
-		   		$package_list = array();
-				foreach($packages as $package) {
-					$package_list[$package['id']] = array($package['name'].' - '.$currency->toCurrency($package['amount']), $package['id']);				
-				}				
-				$array['PACKAGES'] = $main->dropDown('packages', $package_list, $package_id, 1, '', array('onchange'=>'loadAddons(this);'));				
-			}*/
-			
+
 			$array['PACKAGE_ID']	 = $package_id;
 			$array['PACKAGE_NAME']	 = $package_list[$package_id][0];
 			if ($read_only) {
