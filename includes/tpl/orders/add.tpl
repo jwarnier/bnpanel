@@ -114,7 +114,7 @@ function fill(thisValue,id) {
 	    <input size="30" id="inputString" onkeyup="lookup(this.value);" type="text" />
 		<div class="suggestionsBox" id="suggestions" style="display: none;">
 			<div class="suggestionList" id="autoSuggestionsList"></div>
-		</div>
+		</div> 		
     </td>
   </tr>
   
