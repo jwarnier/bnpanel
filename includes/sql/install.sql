@@ -102,7 +102,8 @@ INSERT INTO `%PRE%clientnav` (`id`, `visual`, `icon`, `link`) VALUES
 (5, 'Edit Details', 'user_edit.png', 'details'),
 (2, 'Delete Account', 'cross.png', 'delete'),
 (7, 'Invoices', 'script.png', 'invoices'),
-(8, 'Tickets', 'page_white_text.png', 'tickets');
+(8, 'Orders', 'order.png', 'orders'),
+(9, 'Tickets', 'page_white_text.png', 'tickets');
 
 
 -- --------------------------------------------------------
