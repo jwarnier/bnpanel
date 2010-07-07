@@ -53,7 +53,14 @@
   </tr>
   
   
-  
+    
+  <tr>
+    <td valign="top">Status</td>
+    <td>
+    %STATUS%
+    </td>
+  </tr>
+    
 
   
 

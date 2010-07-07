@@ -318,8 +318,13 @@ class order {
 				$array['BILLING_CYCLES'] = $billing_list[$billing_cycle_id];
 			} else {
 				$array['BILLING_CYCLES'] = $main->createSelect('billing_cycle_id', $billing_list, $billing_cycle_id, 1,'', array('onchange'=>'loadPackages(this);'));
-			}									
-			$array['STATUS'] = $main->createSelect('status', $main->getOrderStatusList(), $order_info['status']);			
+			}		
+			$order_status = $main->getOrderStatusList();
+			if($read_only == true) {							
+				$array['STATUS'] = $order_status[$order_info['status']];
+			} else {
+				$array['STATUS'] = $main->createSelect('status', $order_status, $order_info['status']);
+			}
 			$array['TOTAL'] = $currency->toCurrency($total);
 			  	
 			return $array;
