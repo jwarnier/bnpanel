@@ -16,12 +16,7 @@
    %DOMAIN%
     </td>
   </tr>
-     <tr>
-    <td valign="top">Packages</td>
-    <td>
-    %PACKAGES%
-    </td>
-  </tr> 
+  
       <tr>
     <td valign="top">Billing cycles</td>
     <td>
@@ -29,32 +24,29 @@
     </td>
   </tr>
   
-    <tr>
-    <td valign="top">Description:</td>
-    <td>%NOTES%</td>
-  </tr>
-    
-	<tr>
-    <td valign="top">Is paid</td>
+  
+     <tr>
+    <td valign="top">Packages</td>
     <td>
-    %IS_PAID%
+    %PACKAGES%
     </td>
+  </tr> 
+  
+   <tr>
+    <td valign="top">Package amount:</td>
+    <td>%PACKAGE_AMOUNT%</td>
   </tr>
   
   
-       <tr>
+  <tr>
     <td valign="top">Addons</td>
     <td>
     %ADDON%
     </td>
   </tr>
     
-    
-    <tr>
-    <td valign="top">Package amount:</td>
-    <td>%AMOUNT%</td>
-  </tr>
-  
+   
+
    <tr>
     <td valign="top">Total:</td>
     <td>%TOTAL%</td>
