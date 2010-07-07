@@ -8,7 +8,7 @@
 		<strong>Unpaid Invoices:</strong> %numunpaid%
 	</div> -->
 </div>
-
+<ERRORS>
 <table width="100%" border="0" cellspacing="3" cellpadding="0">
 	<tr> 
         <td width="5%"><div align="left"><b>&nbsp;No.</b></div></td>
