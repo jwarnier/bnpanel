@@ -6,8 +6,7 @@ if(THT != 1){
 	die();
 }
 
-class addon {
-	
+class addon {	
 	
 	/**
 	 * Gets all adddons by billing cycle id
@@ -17,26 +16,53 @@ class addon {
 	 */
 	public function getAllAddonsByBillingCycleAndPackage($billing_id, $package_id) {
 		global $db;
-		$addong_list = array();		//&& !empty($package_id)
+		$addon_list = array();		//&& !empty($package_id)
 		if (!empty($billing_id) ) {		
 			$sql = "SELECT a.id, a.name, amount, bc.name  as billing_name  FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 					ON (bc.id = b.billing_id) INNER JOIN `<PRE>package_addons` pa ON (pa.addon_id= a.id) WHERE bc.id = {$billing_id} AND pa.package_id  = {$package_id}";
-			$addons_billing = $db->query($sql);
-			$addong_list = array();
+			$addons_billing = $db->query($sql);			
 			while($data = $db->fetch_array($addons_billing)) {
-				$addong_list[$data['id']] = array('id'=>$data['id'],  'name' => $data['name'], 'amount'=>$data['amount']);									
+				$addon_list[$data['id']] = array('id'=>$data['id'],  'name' => $data['name'], 'amount'=>$data['amount']);									
 			}
 		}
-		return $addong_list;
+		return $addon_list;
+	}
+	
+		/**
+	 * Generate checkboxes depending in a billing id and package id
+	 */
+	public function generateAddonCheckboxesWithBilling($billing_id, $package_id, $selected_values = array(), $show_price = false) {
+		global $db, $main,$currency;
+		$values = $this->getAllAddonsByBillingCycleAndPackage($billing_id, $package_id);
+			
+		$return_value = array();
+		$html = '';	
+		if (is_array($values) && count($values) > 0 ){	
+			foreach($values as $value ) {
+					$checked = false;
+					if (isset($selected_values[$value['id']])) {
+						$checked = true;					
+					}	
+					$html .= $main->createCheckbox($value['name'].' - '.$currency->toCurrency($value['amount']), 'addon_'.$value['id'], $checked);					
+			}
+		} else {
+			$html = ' - ';
+		}
+		//$return_value= array('html'=> $html, 'total' => $total);
+		return $html;
 	}
 	
 	
+	/**
+	 * Gets all addons by billing id
+	 * @param 	int 	billing cycle id
+	 */
 	public function getAllAddonsByBillingId($billing_id) {
 		global $db;
 		$addong_list = array();		
 		if (!empty($billing_id)) {		
 			$sql = "SELECT a.id, a.name, amount, bc.name  as billing_name  FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-					ON (bc.id = b.billing_id) WHERE bc.id = {$billing_id} ";
+					ON (bc.id = b.billing_id) WHERE bc.id = {$billing_id} AND b.type = '".BILLING_TYPE_ADDON."' ";
 			$addons_billing = $db->query($sql);
 			$addong_list = array();
 			while($data = $db->fetch_array($addons_billing)) {
@@ -46,7 +72,6 @@ class addon {
 		return $addong_list;
 	}
 	
-
 	
 	
 	/**
@@ -63,7 +88,7 @@ class addon {
 	 * @param	array	list of addon ids
 	 * @param	int		billing id
 	 * @param	bool	the array will be serialize true or false?
-	 * @return 	mixed 	array or a string 
+	 * @return 	mixed 	an array or a serialized string
 	 * @author	Julio Montoya <gugli100@gmail.com> BeezNest 2010
 	 */
 	public function generateAddonFee($list_of_addons_ids, $billing_id, $serialize = false) {
@@ -86,6 +111,13 @@ class addon {
 		}
 		return $addon_fee;
 	}	
+	/**
+	 * Genererates the addon fee serialized from a given list of addons
+	 * @param	array	list of addons id
+	 * @param	int		billing cycle id
+	 * @param	bool	the array will be serialized or not?
+	 * @return	mixed	an array or a serialized string
+	 */
 	
 	public function generateAddonFeeFromList($list_of_addons, $billing_id, $serialize = false) {
 		global $db, $currency;
@@ -106,7 +138,9 @@ class addon {
 	}	
 	
 	
-	
+	/**
+	 * Updates the user_pack_addons table
+	 */
 	public function updateAddonOrders($list_of_addons_ids, $order_id) {
 		global $db;
 		$addon_fee = array();		
@@ -120,9 +154,11 @@ class addon {
 				}
 			}
 		}
-	}
+	}	
 	
-	
+	/**
+	 * Generates addon checkboxes
+	 */
 	public function generateAddonCheckboxes($selected_values = array()) {
 		global $db, $main;
 		$result = $db->query("SELECT * FROM `<PRE>addons` WHERE status = ".ADDON_STATUS_ACTIVE);
@@ -142,6 +178,9 @@ class addon {
 		return $html;
 	}
 	
+	/**
+	 * Generate addon checkboxes within a given list
+	 */
 	public function generateAddonCheckboxesWithList($values, $selected_values = array(), $billing_id = null) {
 		global $db, $main;
 		$html = '';
@@ -153,32 +192,8 @@ class addon {
 				$html .= $main->createCheckbox($value['name'], 'addon_'.$value['id'], $checked);					
 		}	
 		return $html;
-	}
-	
-	
-	/**
-	 * Generate checkboxes depeding in a billing id and package id
-	 */
-	public function generateAddonCheckboxesWithBilling($billing_id, $package_id, $selected_values = array(), $show_price = false) {
-		global $db, $main,$currency;
-		$values = $this->getAllAddonsByBillingCycleAndPackage($billing_id, $package_id);
-			
-		$return_value = array();
-		$html = '';	
-		if (is_array($values) && count($values) > 0 ){	
-			foreach($values as $value ) {
-					$checked = false;
-					if (isset($selected_values[$value['id']])) {
-						$checked = true;					
-					}	
-					$html .= $main->createCheckbox($value['name'].' - '.$currency->toCurrency($value['amount']), 'addon_'.$value['id'], $checked);					
-			}
-		} else {
-			$html = ' - ';
-		}
-		//$return_value= array('html'=> $html, 'total' => $total);
-		return $html;
-	}
+	}	
+
 	
 	/**
 	 * Gets all addons
@@ -230,9 +245,7 @@ class addon {
 			}								
 		}		
 		return $addon_list;
-	}
-	
-	
+	}	
 	
 	/*
 	public function getAddonByBillingCycleByOrder($addon_id, $billing_id) {
@@ -253,5 +266,3 @@ class addon {
 	
 	
 }
-
-?>
