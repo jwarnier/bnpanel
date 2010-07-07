@@ -53,14 +53,24 @@ class order {
 		}
 	}
 	
+	public function updateOrderStatus($order_id, $status) {
+		global $db,$main;
+		if (in_array($status, array_keys($main->getOrderStatusList())) && !empty($order_id)) {
+			$order_id = intval($order_id);
+			$status = intval($status);			
+			$sql_update = "UPDATE `<PRE>user_packs`  SET status = '{$status}' WHERE id= {$order_id}";
+			$db->query(	$sql_update);
+		}
+	}
 	
 	
 	/**
 	 * Deletes an order
 	 */
 	public function delete($id) { # Deletes invoice upon invoice id
-		global $db;
-		$query = $db->query("DELETE FROM `<PRE>user_packs` WHERE `user_id` = '{$id}'"); //Delete the order
+		$this->updateOrderStatus($id, ORDER_STATUS_DELETED);
+		
+		//$query = $db->query("DELETE FROM `<PRE>user_packs` WHERE `userid` = '{$id}'"); //Delete the order
 		return true;
 	}
 	
@@ -258,12 +268,9 @@ class order {
 			$query_users 		= $db->query($sql);
 			$user_info  		= $db->fetch_array($query_users);
 			$array['USER'] 		=  $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';									
-			$array['CREATED_AT'] 	= date('Y-m-d', $order_info['signup']);
-			
+			$array['CREATED_AT'] 	= date('Y-m-d', $order_info['signup']);			
 		
 			$addon_selected_list = $order_info['addons'];
-			
-			
 			
 			//Billing cycle
 			$sql = "SELECT id, pid, domain, billing_cycle_id FROM `<PRE>user_packs` WHERE `userid` = ".$user_id;
