@@ -44,7 +44,7 @@ class user {
 	
 	public function getUserById($user_id) {
 		global $db, $main;
-		$query = $db->query("SELECT * FROM `<PRE>users` WHERE `id` = '{$db->strip($id)}'");
+		$query = $db->query("SELECT * FROM `<PRE>users` WHERE `id` = '{$db->strip($user_id)}'");
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That user doesn't exist!";
 			$array['User ID'] = $user_id;
