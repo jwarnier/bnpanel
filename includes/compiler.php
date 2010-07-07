@@ -143,9 +143,9 @@ define(BILLING_CYCLE_STATUS_INACTIVE, 			0);
 
 // Relation between packages and users a.k.a Orders 
 define(ORDER_STATUS_ACTIVE, 					1);
-define(ORDER_STATUS_INACTIVE, 					2);
-define(ORDER_STATUS_WAITING_VALIDATION, 		3); //Awaiting Validation
-//define(ORDER_STATUS_WAITING_PAYMENT, 			4); //Awaiting Payment
+define(ORDER_STATUS_WAITING_USER_VALIDATION, 	2); //before ORDER_STATUS_INACTIVE
+define(ORDER_STATUS_WAITING_ADMIN_VALIDATION, 	3); //Awaiting Validation
+define(ORDER_STATUS_CANCELLED, 					4); //Awaiting Payment
 define(ORDER_STATUS_DELETED, 					9);
 
 		
