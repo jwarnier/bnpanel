@@ -124,9 +124,9 @@ class db {
 		return $result; # Return SQL
 	}
 	
-	public function fetch_array($sql) { # Gets a query and returns the rows/columns as array
-		$sql = @mysql_fetch_array($sql); # Fetch the SQL Array, all the data
-		return $sql; # Return SQL
+	public function fetch_array($result, $option = 'BOTH') { # Gets a query and returns the rows/columns as array
+		//$sql = @mysql_fetch_array($result); # Fetch the SQL Array, all the data
+		return $option == 'ASSOC' ? mysql_fetch_array($result, MYSQL_ASSOC) : ($option == 'NUM' ? mysql_fetch_array($result, MYSQL_NUM) : mysql_fetch_array($result));		
 	}
 	
 	public function strip($value) { # Gets a string and returns a value without SQL Injection
