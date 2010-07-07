@@ -52,6 +52,7 @@ class page {
 						$status			= $main->postvar['status'];
 						$additional 	= '';
 						$billing_cycle_id = $main->postvar['billing_cycle_id'];
+						
 						//Creating an order
 						$order_id = $order->create($user_id, $username, $domain, $package_id, $signup, $status, $additional, $billing_cycle_id);
 						if (!empty($order_id) && is_numeric($order_id)) {
@@ -80,9 +81,7 @@ class page {
 				foreach($billing_list as $billing_item) {
 					$new_billing_list[$billing_item['id']] =$billing_item['name']; 
 				}
-				//$array['USERS'] = $user-> 
-				$array['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, '', 1,'', array('onchange'=>'loadPackages(this);'));
-				
+				$array['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, '', 1,'', array('onchange'=>'loadPackages(this);'));				
 				$array['PACKAGES'] 		= '-';
 				$array['ADDON'] 		= '-';
 				$array['STATUS'] 		= $main->createSelect('status', $main->getOrderStatusList());
@@ -106,7 +105,7 @@ class page {
 								}*/
 							}							
 							if(!$n) {
-								//var_dump($main->postvar);exit;
+								//@todo change this to the $order->edit function
 								$signup = strtotime($main->postvar['created_at']);
 								
 								$update_sql = "UPDATE `<PRE>user_packs` SET
@@ -129,10 +128,8 @@ class page {
 									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
 										$new_addon_list[] = $addon_id;				
 									}															
-								}
-								
-								$addon->updateAddonOrders($new_addon_list, $main->postvar['order_id'], true);
-								
+								}								
+								$addon->updateAddonOrders($new_addon_list, $main->postvar['order_id'], true);								
 								$main->errors("Order has been edited!");
 								//$main->done();
 							}
@@ -148,23 +145,20 @@ class page {
 					$main->errors("The order has been deleted!");
 				}			
 				echo '<ERRORS>';		
-			//	$main->redirect("?page=orders&sub=all");						
+				//	$main->redirect("?page=orders&sub=all");						
 			break;			
 			case 'view':				
 				if(isset($main->getvar['do'])) {					
 					$return_array = $order->getOrder($main->getvar['do'], true);									
 					echo $style->replaceVar("tpl/orders/view.tpl", $return_array);					
-				}
-				
-			break;
-			
-			case 'add_invoice':	
-			
-				if(isset($main->getvar['do'])) {					
+				}				
+			break;			
+			case 'add_invoice':			
+				if(isset($main->getvar['do'])) {						
 					$order_info = $order->getOrderInfo($main->getvar['do']);
 					$billing_id = $order_info['billing_cycle_id'];
 															
-					if($_POST) {						
+					if($_POST) {					
 						$due 		= strtotime($main->postvar['due']);
 						$notes		= $main->postvar['notes'];
 						$package_id	= $main->postvar['package_id'];
@@ -195,18 +189,18 @@ class page {
 					
 					
 					$return_array['USER'] 			= $user_info['firstname'].' '.$user_info['lastname'];
-					$return_array['DOMAIN'] 		= $order_info['domain'];
-					
+					$return_array['DOMAIN'] 		= $order_info['domain'];					
 					$billing_info 					= $billing->getBilling($billing_id);
 					$return_array['BILLING_CYCLES'] = $billing_info ['name'];
-					$return_array['BILLING_ID'] = $billing_id;
+					$return_array['BILLING_ID'] 	= $billing_id;
 					
 					$addon_list = $addon->getAddonsByPackage($billing_id);
-										
-					$return_array['ADDON'] 	=  $addon->generateAddonCheckboxesWithBilling($billing_id, $order_info['pid'], array_flip($order_info['addons']));
+					$result 	= $addon->generateAddonCheckboxesWithBilling($billing_id, $order_info['pid'], array_flip($order_info['addons']));
+					
+					$return_array['ADDON'] 	=  $result['html'];
 
 					$packages = $package->getAllPackagesByBillingCycle($billing_id);
-					
+										
 			   		$package_list = array();
 					foreach($packages as $package) {
 						$package_list[$package['id']] = array($package['name'].' - '.$currency->toCurrency($package['amount']), $package['id']);				
@@ -216,14 +210,12 @@ class page {
 					$return_array['DUE'] = date('Y-m-d');					
 					$return_array['ID'] = $main->getvar['do'];					 
 													
-					echo $style->replaceVar("tpl/invoices/addinvoice.tpl", $return_array);
-					
+					echo $style->replaceVar("tpl/invoices/addinvoice.tpl", $return_array);					
 				
 				} else {
 					$main->errors("You need an order before create an invoice!");
 				}			
-			break;	
-			
+			break;		
 			
 			default :	
 			case 'all':
