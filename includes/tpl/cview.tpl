@@ -11,14 +11,16 @@ function check() {
 <ERRORS>
 <form id="edit" name="edit" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
-  <tr>
+ <!--  <tr>
     <td width="20%"><strong>Username:</strong></td>
     <td>%USER%</td>
-  </tr>
+  </tr>  
+   
   <tr>
     <td width="20%"><strong>Date Ordered:</strong></td>
     <td>%SIGNUP%</td>
   </tr>
+  -->
   <tr>
     <td width="20%"><strong>Domain:</strong></td>
     <td>%DOMAIN%</td>
@@ -26,9 +28,8 @@ function check() {
   <tr>
     <td width="20%"><strong>Package:</strong></td>
     <td>%PACKAGE%</td>
-  </tr>
-  
-     <tr>
+  </tr>  
+   <tr>
     <td width="20%"><strong>Addons:</strong></td>
     <td>%ADDON%</td>
   </tr>  
