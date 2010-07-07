@@ -25,23 +25,22 @@ if(THT != 1){die();}class main {
 		echo "<br />";
 	}
 	
-	public function redirect($url, $headers = 0, $long = 0) { # Redirects user, default headers
-		if(!$headers) {
-			header("Location: ". $url);	# Redirect with headers
-		}
-		else {
-			echo '<meta http-equiv="REFRESH" content="'.$long.';url='.$url.'">'; # HTML Headers
+	public function redirect($url, $headers = 0, $long = 0) { # Redirects user, default headers
+		if(!$headers) {
+			header("Location: ". $url);	# Redirect with headers
+		} else {
+			echo '<meta http-equiv="REFRESH" content="'.$long.';url='.$url.'">'; # HTML Headers
 		}
 	}
 		/**	 *  Shows error default, sets error if $error set	 */
-	public function errors($error = 0) {
+	public function errors($error = 0) {		
 		if(!$error) {
 			if($_SESSION['errors']) {
 				return $_SESSION['errors'];
 			}
 		} else {
 			$_SESSION['errors'] = $error;
-		}	}
+		}			}
 	
 	public function table($header, $content = 0, $width = 0, $height = 0) { # Returns the HTML for a THT table
 		global $style;
@@ -86,29 +85,27 @@ if(THT != 1){die();}class main {
 		return $data;
 	}
 	
-	public function done() { # Redirects the user to the right part
-		global $main;
-		foreach($main->getvar as $key => $value) {
-			if($key != "do") {
-				if($i) {
-					$i = "&";	
-				}
-				else {
-					$i = "?";	
-				}
-				$url .= $i . $key . "=" . $value;
-			}
-		}
-		$main->redirect($url);
+	public function done() { # Redirects the user to the right part
+		global $main;
+		foreach($main->getvar as $key => $value) {
+			if($key != "do") {
+				if($i) {
+					$i = "&";
+				} else {
+					$i = "?";
+				}
+				$url .= $i . $key . "=" . $value;
+			}		}
+		$main->redirect($url);
 	}
 	
-	public function check_email($email) {
-		if($this->validEmail($email)) {
-			return true;
-		}
-		else {
-			return false;
-		}
+	public function check_email($email) {
+		if($this->validEmail($email)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}		/*	public function createInput($type, $label, $name, $value) {		switch($type) {			case THT_INPUT:			$html = $label.': <input name="'.$name.'" value="'.$value.'"> <br/>';			break;			case THT_CHECKBOX:								}				return $html;	}		*/
 	/**	 * Creates an input	 * @param string	label	 * @param string	name	 * @param bool		true if the checkbox will be checked	 * @return string html	 * 	 */	public function createInput($label, $name, $value) {		$html = $label.': <input name="'.$name.'" value="'.$value.'"> <br/>';		return $html;	}		/**	 * Creates a checkbox	 * @param string	label	 * @param string	name	 * @param bool		true if the checkbox will be checked	 * @return string html	 * 	 */	public function createCheckbox($label, $name, $checked = false) {		if ($checked == true) {			$checked = 'checked="'.$checked.'"';		} else {			$checked = '';		}		if(empty($label)) {			$label = '';		} else {			$label = $label.':';		}		$html = $label.'<input type="checkbox" name="'.$name.'"  '.$checked.' > <br/>';		return $html;	}		
 	public function dropDown($name, $values, $default = 0, $top = 1, $class = "", $parameter_list = array()) { # Returns HTML for a drop down menu with all values and selected		if($top) {			$extra = '';			foreach($parameter_list as $key=>$parameter) {				$extra .= $key.'="'.$parameter.'"';			}
@@ -149,12 +146,12 @@ if(THT != 1){die();}class main {
 			return true;	
 		}
 	}
-		/**	 * Checks the staff permissions for a nav item	 */	 
+		/**	 * Checks the staff permissions for a nav item	 * @param 	int	user id	 */	 
 	public function checkPerms($id, $user = 0) {
 		global $main, $db;
 		if(!$user) {
 			$user = $_SESSION['user'];
-		}			if (isset($_SESSION['user_permissions'])) {			foreach($_SESSION['user_permissions'] as $value) {				if($value == $id) {					return false;					}			}			return true;		} else {
+		}			//Use now session to avoid useless query calls to the DB		if (isset($_SESSION['user_permissions'])) {			foreach($_SESSION['user_permissions'] as $value) {				if($value == $id) {					return false;					}			}			return true;		} else {
 			$query = $db->query("SELECT * FROM `<PRE>staff` WHERE `id` = '{$user}'");
 			if($db->num_rows($query) == 0) {
 				$array['Error'] = "Staff member not found";
@@ -384,6 +381,6 @@ if(THT != 1){die();}class main {
 		
 		//Let's wrap it all up.
 		return true;
-	}		public function getOrderStatusList() {		return array(			ORDER_STATUS_ACTIVE				=> 'Active', 			ORDER_STATUS_INACTIVE 			=> 'Suspend', 			ORDER_STATUS_WAITING_VALIDATION	=> 'Waiting admin validation', 			//ORDER_STATUS_WAITING_PAYMENT	=> 'Waiting payment', 			ORDER_STATUS_DELETED			=> 'Deleted', 			);	}		public function getInvoiceStatusList() {		return array(			INVOICE_STATUS_PAID				=> 'Paid', 			INVOICE_STATUS_CANCELLED		=> 'Cancelled',						INVOICE_STATUS_WAITING_PAYMENT	=> 'Pending', 			INVOICE_STATUS_DELETED			=> 'Deleted'			);	}		public function getUserStatusList() {		return array(			USER_STATUS_ACTIVE						=> 'Active', 			USER_STATUS_SUSPENDED 					=> 'Suspend', 			USER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',  			//USER_STATUS_WAITING_PAYMENT				=> 'Waiting payment',  //should be remove only added for backward comptability			USER_STATUS_DELETED						=> 'Deleted', 			);	}	
+	}		public function getOrderStatusList() {		return array(			ORDER_STATUS_ACTIVE						=> 'Active', 			ORDER_STATUS_WAITING_USER_VALIDATION 	=> 'Waiting user validation',						ORDER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',			ORDER_STATUS_CANCELLED 					=> 'Canceled',  			//ORDER_STATUS_WAITING_PAYMENT	=> 'Waiting payment', 			ORDER_STATUS_DELETED			=> 'Deleted', 			);	}		public function getInvoiceStatusList() {		return array(			INVOICE_STATUS_PAID				=> 'Paid', 			INVOICE_STATUS_CANCELLED		=> 'Cancelled',						INVOICE_STATUS_WAITING_PAYMENT	=> 'Pending', 			INVOICE_STATUS_DELETED			=> 'Deleted'			);	}		public function getUserStatusList() {		return array(			USER_STATUS_ACTIVE						=> 'Active', 			USER_STATUS_SUSPENDED 					=> 'Suspend', 			USER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',  			//USER_STATUS_WAITING_PAYMENT				=> 'Waiting payment',  //should be remove only added for backward comptability			USER_STATUS_DELETED						=> 'Deleted', 			);	}	
 }
 ?>
