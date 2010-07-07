@@ -79,7 +79,7 @@ class page {
 					}
 				}
 				
-				$billing_cycle_result = $billing->generateBillingSelect();
+				$billing_cycle_result = $billing->generateBillingInputs();
 				$array['BILLING_CYCLE'] = $billing_cycle_result;	
 				
 				
@@ -177,7 +177,7 @@ class page {
 							$myresults [$data['billing_id']] = $data['amount'];				
 						}
 						
-						$billing_cycle_result = $billing->generateBillingSelect($myresults);
+						$billing_cycle_result = $billing->generateBillingInputs($myresults);
 						
 						$array['BILLING_CYCLE'] = $billing_cycle_result;						
 						

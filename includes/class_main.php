@@ -111,23 +111,22 @@ if(THT != 1){die();}class main {
 		}
 	}		/*	public function createInput($type, $label, $name, $value) {		switch($type) {			case THT_INPUT:			$html = $label.': <input name="'.$name.'" value="'.$value.'"> <br/>';			break;			case THT_CHECKBOX:								}				return $html;	}		*/
 	/**	 * Creates an input	 * @param string	label	 * @param string	name	 * @param bool		true if the checkbox will be checked	 * @return string html	 * 	 */	public function createInput($label, $name, $value) {		$html = $label.': <input name="'.$name.'" value="'.$value.'"> <br/>';		return $html;	}		/**	 * Creates a checkbox	 * @param string	label	 * @param string	name	 * @param bool		true if the checkbox will be checked	 * @return string html	 * 	 */	public function createCheckbox($label, $name, $checked = false) {		if ($checked == true) {			$checked = 'checked="'.$checked.'"';		} else {			$checked = '';		}		if(empty($label)) {			$label = '';		} else {			$label = $label.':';		}		$html = $label.'<input type="checkbox" name="'.$name.'"  '.$checked.' > <br/>';		return $html;	}		
-	public function dropDown($name, $values, $default = 0, $top = 1, $class = "",$parameter_list = array()) { # Returns HTML for a drop down menu with all values and selected		if($top) {			$extra = '';			foreach($parameter_list as $key=>$parameter) {				$extra .= $key.'="'.$parameter.'"';			}
+	public function dropDown($name, $values, $default = 0, $top = 1, $class = "", $parameter_list = array()) { # Returns HTML for a drop down menu with all values and selected		if($top) {			$extra = '';			foreach($parameter_list as $key=>$parameter) {				$extra .= $key.'="'.$parameter.'"';			}
 			$html .= '<select name="'.$name.'" id="'.$name.'" class="'.$class.'" '.$extra.'>';
 		}
-		if($values) {
+		if($values) {
 			foreach($values as $key => $value) {
-				$html .= '<option value="'.$value[1].'"';
-				if($default == $value[1]) {
-				$html .= 'selected="selected"';
-				}
-				$html .= '>'.$value[0].'</option>';
-			}
-		}
-		if($top) {
-			$html .= '</select>';
-		}
-		return $html;
-	}	
+				$html .= '<option value="'.$value[1].'"';
+				if($default == $value[1]) {
+					$html .= 'selected="selected"';				}
+				$html .= '>'.$value[0].'</option>';
+			}
+		}
+		if($top) {
+			$html .= '</select>';
+		}
+		return $html;
+	}		/**	 * New simpler version of the dropDown	 */	public function createSelect($name, $values, $default = 0, $top = 1, $class = "",$parameter_list = array()) { # Returns HTML for a drop down menu with all values and selected		if($top) {			$extra = '';			foreach($parameter_list as $key=>$parameter) {				$extra .= $key.'="'.$parameter.'"';			}			$html .= '<select name="'.$name.'" id="'.$name.'" class="'.$class.'" '.$extra.'>';		}		if($values) {			foreach($values as $key => $value) {				$html .= '<option value="'.$key.'"';				if($default == $key) {					$html .= 'selected="selected"';				}				$html .= '>'.$value.'</option>';			}		}		if($top) {			$html .= '</select>';		}		return $html;	}			
 	public function folderFiles($link) { # Returns the filenames of a content in a folder
 		$folder = $link;
 		if ($handle = opendir($folder)) { # Open the folder

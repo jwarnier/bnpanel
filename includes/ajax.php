@@ -1279,12 +1279,24 @@ class AJAX {
 	   		$package_id = $main->getvar['package_id'];
 			$billing_id	= $main->getvar['billing_id'];
 			$order_id	= $main->getvar['order_id'];
-						
-			$order_info = $order->getOrderInfo($order_id);
-			$addon_selected_list = $order_info['addons'];
+			$addon_selected_list = array();
+			if (!empty($order_id)) {
+				$order_info = $order->getOrderInfo($order_id);
+				$addon_selected_list = $order_info['addons'];
+			}
 									
 			echo $addon->generateAddonCheckboxesWithBilling($billing_id, $package_id,array_flip($addon_selected_list));
 			
+	   }
+	   
+	   function searchuser() {
+			global $main, $user;
+	   		$query = $main->postvar['query'];
+	   		$user_list = $user->searchUser($query);
+	   		foreach($user_list as $user) {
+	   			$user_name = $user['firstname']." - ".$user['lastname']." ( ".$user['email'].")";
+	   			echo "<li onclick=\"fill('{$user_name}', '{$user['id']}');\">$user_name</li>";	
+	   		}	       
 	   }
 	   
 	   function loadpackages() {
@@ -1296,9 +1308,11 @@ class AJAX {
 			$packages = $package->getAllPackagesByBillingCycle($billing_id);
 					
 	   		$package_list = array();
+	   		$package_list['0'] = array(' -- Select -- ','0');
 			foreach($packages as $package) {
 				$package_list[$package['id']] = array($package['name'].' - '.$currency->toCurrency($package['amount']), $package['id']);				
-			}			
+			}
+				
 			echo $main->dropDown('package_id', $package_list, $order_info['pid'], 1, '', array('onchange'=>'loadAddons(this);'));	
 						
 			

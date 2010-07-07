@@ -1,7 +1,11 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-//Compile THT
+$mtime = microtime();
+$mtime = explode(" ",$mtime);
+$mtime = $mtime[1] + $mtime[0];
+$starttime = $mtime;
+
 define("LINK", "../includes/");
 define("CRON", 0);
 include(LINK ."compiler.php");
@@ -88,8 +92,7 @@ function acp() {
 						if(!$value[0]) {
 							define("SUB", $main->getvar['page']);	
 							$header = $main->getvar['page'];
-						}
-						else {
+						} else {
 							define("SUB", $value[0]);
 							$header = $value[0];
 						}
@@ -102,8 +105,7 @@ function acp() {
 				}
 				$array['HIDDEN'] .= " ";
 				$html = $style->replaceVar("tpl/warning.tpl", $array);	
-			}
-			elseif($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
+			} elseif($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
 				if($main->postvar['yes']) {
 					foreach($main->getvar as $key => $value) {
 					  if($i) {
@@ -239,8 +241,16 @@ if(!$_SESSION['logged']) {
 
 //End the sctipt
 include(LINK ."output.php");
+
 //Memory usage
 echo ('MemoryUsage').': '.number_format((memory_get_usage()/1048576), 3, '.', '') .'Mb' ;
 echo '<br />';
 echo ('MemoryUsagePeak').': '.number_format((memory_get_peak_usage()/1048576), 3, '.', '').'Mb';
+$mtime = microtime();
+$mtime = explode(" ",$mtime);
+$mtime = $mtime[1] + $mtime[0];
+$endtime = $mtime;
+$totaltime = ($endtime - $starttime);
+echo '<br />'.$totaltime = number_format(($totaltime), 4, '.', '');
+
 ?>
