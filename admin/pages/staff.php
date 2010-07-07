@@ -148,7 +148,7 @@ class page {
 				}
 				break;
 			
-			case "delete":
+			case 'delete':
 				$user_id = intval($_SESSION['user']);
 				$query = $db->query("SELECT * FROM `<PRE>staff` ");
 				if($main->getvar['do'] && $db->num_rows($query) > 1) {
@@ -162,6 +162,7 @@ class page {
 				} else {
 					echo "<ERRORS>";
 					while($data = $db->fetch_array($query)) {
+						//Do not delete my self
 						if ($data['id'] != $user_id) {
 							echo $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=delete&do='.$data['user'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 						} else {
