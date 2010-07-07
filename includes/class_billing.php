@@ -14,7 +14,7 @@ class billing {
 	 * @return 	string	html of the select
 	 * @author	Julio Montoya <gugli100@gmail.com> BeezNest 2010
 	 */
-	public function generateBillingSelect($selected_values = array()) {
+	public function generateBillingInputs($selected_values = array()) {
 		global $db,$main;
 		$sql = "SELECT * FROM `<PRE>billing_cycles` WHERE status = ".BILLING_CYCLE_STATUS_ACTIVE;
 		$query = $db->query($sql);		
@@ -56,7 +56,6 @@ class billing {
 		}		
 		return $data;
 	}
-	
 	
 }
 
