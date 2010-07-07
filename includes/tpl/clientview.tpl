@@ -79,14 +79,14 @@ function kthx() {
         <td width="1%" align="center"><img src="<URL>themes/icons/user_go.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=search&amp;do=%ID%">Client Details</a></td>
       </tr>
-      <tr>
+      <!--  <tr>
         <td width="1%" align="right"><img src="<URL>themes/icons/%IMG%" /></td>
         <td align="left"><a class="suspendIcon" href="javascript:void(0);">%SUS%</a></td>
       </tr>
       <tr>
         <td width="1%" align="center"><img src="<URL>themes/icons/cross.png" /></td>
         <td align="left"><a href="javascript:;" onmousedown="document.getElementById('1').style.display = 'block';">Terminate User</a></td>
-      </tr>
+      </tr> -->
       <tr>
         <td width="1%" align="center"><img src="<URL>themes/icons/email.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=search&amp;do=%ID%&amp;func=email">Email User</a></td>
