@@ -1,8 +1,5 @@
 <?php
-//////////////////////
-// TheHostingTool
-// By Jonny H
-//////////////////////
+/* For licensing terms, see /license.txt */
 
 class page{
 	public function content(){
