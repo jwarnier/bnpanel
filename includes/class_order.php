@@ -311,7 +311,7 @@ class order {
 			}		
 			
 			//Billing cycle
-			$billing_list = $billing->getBillingCycles();
+			$billing_list = $billing->getAllBillingCycles();
 			foreach($billing_list as $billing_item) {
 				$billing_list[$billing_item['id']] = $billing_item['name'];
 			}						

@@ -73,7 +73,7 @@ class page {
 						$db->query("INSERT INTO `<PRE>packages` (name, backend, description, type, server, admin, is_hidden, is_disabled, additional, reseller) VALUES('{$main->postvar['name']}', '{$main->postvar['backend']}', '{$main->postvar['description']}', '{$main->postvar['type']}', '{$main->postvar['server']}', '{$main->postvar['admin']}', '{$main->postvar['hidden']}', '{$main->postvar['disabled']}', '{$additional}', '{$main->postvar['reseller']}')");
 						$product_id = mysql_insert_id();
 						
-						$billing_list = $billing->getBillingCycles();
+						$billing_list = $billing->getAllBillingCycles();
 						
 						foreach($billing_list as $billing_id=>$value) {
 							$variable_name = 'billing_cycle_'.$billing_id;
@@ -192,7 +192,7 @@ class page {
 								}*/
 								
 								
-								$billing_list = $billing->getBillingCycles();
+								$billing_list = $billing->getAllBillingCycles();
 								foreach($billing_list as $billing_id=>$value) {
 									$variable_name = 'billing_cycle_'.$billing_id;
 									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {

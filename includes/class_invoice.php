@@ -36,9 +36,11 @@ class invoice extends model {
 	}
 	
 	public function delete($id) { # Deletes invoice upon invoice id
-		global $db;
-		$query = $db->query("DELETE FROM `<PRE>invoices` WHERE `id` = '{$id}'"); //Delete the invoice
-		return $query;
+		//global $db;
+		//$query = $db->query("DELETE FROM `<PRE>invoices` WHERE `id` = '{$id}'"); //Delete the invoice
+		//return $query;
+		
+		$this->updateInvoiceStatus($id, INVOICE_STATUS_DELETED);
 	}
 	
 	public function edit($iid, $uid, $amount, $due, $notes) { # Edit an invoice. Fields created can only be edited?
@@ -143,49 +145,31 @@ class invoice extends model {
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
 	 */	 
 	public function getAllInvoicesToArray($user_id = 0 ) {
-		global $main, $db, $style,$currency, $order;
+		global $main, $db, $style,$currency, $order, $package, $billing, $addon, $user;
 		
-		
+		/*	
 		if (empty($user_id)) {
-			$query2 = $db->query("SELECT * FROM `<PRE>invoices`");
+			$sql = "SELECT * FROM `<PRE>invoices` WHERE status <> ".INVOICE_STATUS_DELETED."";
 		}	else {
 			$user_id = intval($user_id);
-			$query2 = $db->query("SELECT * FROM `<PRE>invoices` WHERE uid = $user_id");
-		}
+			$sql = "SELECT * FROM `<PRE>invoices` WHERE status <> ".INVOICE_STATUS_DELETED." AND uid = $user_id";
+		}		
+		$query2 = $db->query($sql); */
 		$array2['list'] = "";
 		
 		//Package info
-		$sql 		= "SELECT id, name  FROM `<PRE>packages`";
-		$packages	= $db->query($sql);
-		while ($data= $db->fetch_array($packages)) {
-			$package_name_list[$data['id']] = $data['name'];
-		}
-		
+		$package_list 	= $package->getAllPackages();				
 		//Billing cycles
-		$sql = "SELECT id, name  FROM `<PRE>billing_cycles`  WHERE status = ".BILLING_CYCLE_STATUS_ACTIVE;
-		$billings 	= $db->query($sql);
-		while ($data = $db->fetch_array($billings)) {
-			$billing_cycle_name_list[$data['id']] = $data['name'];
-		}
+		$billing_list 	= $billing->getAllBillingCycles();		
+		//Addons		
+		$addon_list		= $addon->getAllAddons();
 		
-		//Selecting addons
-		$sql 	= "SELECT id, name  FROM `<PRE>addons` WHERE status = ".ADDON_STATUS_ACTIVE;
-		$addons	= $db->query($sql);
-		
-		while ($data = $db->fetch_array($addons)) {
-			$addons_list[$data['id']] = $data['name'];
-		}
-		
-		$total_amount = 0;
-		                
-    	$query  = $db->query("SELECT * FROM `<PRE>invoices` ORDER BY id DESC");
-    	
-		while($array = $db->fetch_array($query)) {
+		$total_amount = 0;		           
+		$invoice_list	=$this->getAllInvoices();    	    	
+		foreach($invoice_list as $array) {
 			
 			//Getting the user info
-			$sql = "SELECT id, user, firstname, lastname FROM `<PRE>users` WHERE `id` = ".$array["uid"];
-			$query_users 		= $db->query($sql);
-			$user_info  		= $db->fetch_array($query_users);			
+			$user_info = $user->getUserById($array["uid"]);						
 			
 			$array['userinfo']  = '<a href="index.php?page=users&sub=search&do='.$user_info['id'].'" >'.$user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')</a>';
 			$array['due'] 		= strftime("%D", $array['due']);						
@@ -204,7 +188,7 @@ class invoice extends model {
 				///var_dump($array['addon_fee']);
 				if (is_array($array['addon_fee']) && count($array['addon_fee']) > 0) {					
 					foreach($array['addon_fee'] as $addon) {
-						$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';
+						$addon_fee_string.= $addon_list[$addon['addon_id']]['name'].' - '.$addon['amount'].'<br />';
 						$total_amount = $total_amount + $addon['amount'];					
 					}
 				}					
@@ -240,8 +224,8 @@ class invoice extends model {
 				break;				
 			}													
 						
-			$array['package']		 = $package_name_list[$package_id];
-			$array['billing_cycle']  = $billing_cycle_name_list[$billing_cycle_id];
+			$array['package']		 = $package_list[$package_id]['name'];
+			$array['billing_cycle']  = $billing_list[$billing_cycle_id]['name'];
 			
 			$array['edit']  	= '<a href="index.php?page=invoices&sub=edit&do='.$array['id'].'"><img src="../themes/icons/note_edit.png" alt="Edit" /></a>';			
 			$array['delete']  	= '<a href="index.php?page=invoices&sub=delete&do='.$array['id'].'"><img src="../themes/icons/delete.png" alt="Delete" /></a>';
@@ -249,17 +233,17 @@ class invoice extends model {
 			$array2['list'] .= $style->replaceVar("tpl/invoices/invoice-list-item.tpl", $array);
 		}
 				
-		$array2['num'] 			= mysql_num_rows($query);
+		/*$array2['num'] 			= mysql_num_rows($query);
 		$array2['numpaid'] 		= intval($array2['num']-mysql_num_rows($query2));
 		$array2['numunpaid'] 	= mysql_num_rows($query2);
-		
+		*/
 		return $array2;		
 	}
 	
-	public function getAllInvoices() {
+	public function getAllInvoices($status = INVOICE_STATUS_DELETED) {
 		global $db;
-		
-		$result = $db->query("SELECT * FROM `<PRE>invoices`");
+		$status = intval($status);
+		$result = $db->query("SELECT * FROM `<PRE>invoices` WHERE status <> '".$status."'");
 		$invoice_list = array();
 		if($db->num_rows($result) >  0) {
 			while($data = $db->fetch_array($result)) {

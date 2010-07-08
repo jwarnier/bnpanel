@@ -32,7 +32,7 @@ class paid {
 				}						
 			}
 			
-			$billing_list = $billing->getBillingCycles();	
+			$billing_list = $billing->getAllBillingCycles();	
 			if (is_array($billing_list) && count($billing_list) > 0) {		
 				foreach ($billing_list as $billing_id=>$data) {
 					$amount = '';

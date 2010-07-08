@@ -76,7 +76,7 @@ class page {
 																		
 				}
 				$array['CREATED_AT'] 	= date('Y-m-d');
-				$billing_list = $billing->getBillingCycles();
+				$billing_list = $billing->getAllBillingCycles();
 				$new_billing_list = array();
 				foreach($billing_list as $billing_item) {
 					$new_billing_list[$billing_item['id']] =$billing_item['name']; 
