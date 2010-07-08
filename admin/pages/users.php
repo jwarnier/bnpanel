@@ -11,8 +11,8 @@ class page {
 							
 	public function __construct() {
 		$this->navtitle = "Clients Sub Menu";
-		$this->navlist[] = array("Add client", "add.png", "add");
-		$this->navlist[] = array("Search Clients", "magnifier.png", "search");
+		$this->navlist[] = array("Client List", "magnifier.png", "search");
+		$this->navlist[] = array("Add Client", "add.png", "add");		
 		$this->navlist[] = array("Client Statistics", "book.png", "stats");
 		
 		//$this->navlist[] = array("Admin Validate", "user_suit.png", "validate");
@@ -30,16 +30,134 @@ class page {
 	}
 	
 	public function content() { # Displays the page 
-		global $main;
-		global $style;
-		global $db;
+		global $main, $style, $db, $order,$package, $invoice;
 		global $server;
 		global $email;
-		global $type;
 		global $user;
 		switch($main->getvar['sub']) {
+			case 'search':
+				if($main->getvar['do'] ) {
+					
+					$client = $user->getUserById($main->getvar['do']);
+					$array2['DATE'] 	= strftime("%D", $client['signup']);
+					$array2['EMAIL'] 	= $client['email'];
+					$array2['USER'] 	= $client['user'];
+					$array2['DOMAIN'] 	= $client['domain'];
+					$array2['CLIENTIP'] = $client['ip'];
+					$array2['FIRSTNAME']= $client['firstname'];
+					$array2['LASTNAME'] = $client['lastname'];
+					$array2['ADDRESS'] 	= $client['address'];
+					$array2['CITY'] 	= $client['city'];
+					$array2['STATE'] 	= $client['state'];
+					$array2['ZIP'] 		= $client['zip'];
+					$array2['COUNTRY'] 	= $client['country'];
+					$array2['PHONE'] 	= $client['phone'];			
+					
+					$user_status_list 	= $main->getUserStatusList();										
+					$array2['STATUS']  	= $user_status_list[$client['status']];					
+					$array['CONTENT'] 	= $style->replaceVar("tpl/clientdetails.tpl", $array2);					
+					$array['URL'] 		= URL;
+					$array['ID'] 		= $client['id'];
+					echo $style->replaceVar("tpl/clientview.tpl", $array);
+					
+				} else {
+					//selecting all clients
+					$array['NAME'] = $db->config("name");
+					$array['URL'] = $db->config("url");
+					$values[] = array("Admin Area", "admin");
+					$values[] = array("Order Form", "order");
+					$values[] = array("Client Area", "client");
+					$array['DROPDOWN'] = $main->dropDown("default", $values, $db->config("default"));
+					echo $style->replaceVar("tpl/clientsearch.tpl", $array);			
+				}
+			break;
+			
+			case 'orders':
+				if($main->getvar['do'] ) {
+					$orders 			= $order->getOrderByUser($main->getvar['do']);					
+					$package_info 		= $package->getPackage($orders['pid']);
+					
+					$array['DOMAIN'] 	= $orders['domain'];
+					$array['PACKAGE'] 	= $package_info['name'];				
+					$array['BOX'] 		= "";
+					$array['CONTENT'] 	= $style->replaceVar("tpl/user/clientorders.tpl", $array);					
+					$array['URL'] 		= URL;
+					$array['ID'] 		= $main->getvar['do'];
+					echo $style->replaceVar("tpl/clientview.tpl", $array);	
+				}			
+			break;
+			
+			case 'invoices':
+				if($main->getvar['do'] ) {
+					$invoice_list		= $invoice->getInvoicesByUser($main->getvar['do']);
+					
+					foreach($invoice_list as $invoice_item) {
+						$invoice_array = $invoice->getInvoice($invoice_item['id'], true);
+						$array['CONTENT'] 	.= $style->replaceVar("tpl/invoices/viewinvoice.tpl", $invoice_array);	
+					}				
+					$array['BOX'] 		= "";										
+					$array['URL'] 		= URL;
+					$array['ID'] 		= $main->getvar['do'];
+					
+					echo $style->replaceVar("tpl/clientview.tpl", $array);	
+				}			
+			break;			
+			case 'edit':
+				if($main->getvar['do']) {
+					if ($_POST) {
+						$user->edit($main->getvar['do'], $main->postvar);
+					}
+					$array = $user->getUserById($main->getvar['do']);
+					$array['status'] = $main->createSelect('status', $main->getUserStatusList(), $array['status'], 1);	
+					$main_array['CONTENT'] =  $style->replaceVar("tpl/user/edit.tpl", $array);
+					$main_array['BOX'] 		= "";
+					$main_array['ID'] 		= $main->getvar['do'];
+					echo $style->replaceVar("tpl/clientview.tpl", $main_array);	
+						
+				}											
+			break;
+			
+			case 'email':
+				if($main->getvar['do']) {
+					if($_POST) {
+						global $email;
+						$email->send($client['email'] ,$main->postvar['subject'], $main->postvar['content']);
+						$main->errors("Email sent!");
+					}
+					$array['BOX'] = "";
+					$array['CONTENT'] = $style->replaceVar("tpl/emailclient.tpl");
+					$array['ID'] 	  = $main->getvar['do'];
+					echo $style->replaceVar("tpl/clientview.tpl", $array);
+				}
+			break;
+			
+			case 'passwd':
+				if($main->getvar['do']) {
+							
+					if($_POST) {
+						if(empty($main->postvar['passwd'])) {
+							$main->errors('A password was not provided.');
+							$array['BOX'] = "";
+							$array['CONTENT'] = $style->replaceVar("tpl/clientpwd.tpl");
+						} else {						
+							$command = $main->changeClientPassword($main->getvar['do'], $main->postvar['passwd']);
+							if($command === true) {
+								$main->errors('Password changed!');
+							} else {
+								$main->errors((string)$command);
+							}
+						}
+					}
+					$array['ID'] 		= $main->getvar['do'];
+					$array['BOX'] = "";
+					$array['CONTENT'] = $style->replaceVar("tpl/clientpwd.tpl");
+					echo $style->replaceVar("tpl/clientview.tpl", $array);
+				}
+			break;	
+			
 			default:
 				if($main->getvar['do'] ) {
+					
 					$client = $db->client($main->getvar['do']);
 					$pack2 = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$main->getvar['do']}'");
 					$pack = $db->fetch_array($pack2);
@@ -102,139 +220,9 @@ class page {
 							break;
 					}
 				}
-				if($main->getvar['do'] ) {
-					$client = $db->client($main->getvar['do']);
-					$pack2 = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$main->getvar['do']}'");
-					$pack = $db->fetch_array($pack2);
-				}
-				if($main->getvar['do'] ) {
-					if($pack['status'] == USER_STATUS_UNSUSPEND) {
-						$array['SUS'] = "Unsuspend";
-						$array['FUNC'] = "unsus";
-						$array['IMG'] = "accept.png";
-					}
-					elseif($pack['status'] == USER_STATUS_SUSPEND) {
-						$array['SUS'] = "Suspend";
-						$array['FUNC'] = "sus";	
-						$array['IMG'] = "exclamation.png";
-					}
-					elseif($pack['status'] == USER_STATUS_VALIDATED) {
-						$array['SUS'] = "<a href='?page=users&sub=validate'>Validate</a>";
-						$array['FUNC'] = "none";	
-						$array['IMG'] = "user_suit.png";
-					}
-					elseif($pack['status'] == USER_STATUS_WAITING_PAYMENT) {
-						$array['SUS'] = "Awaiting Payment";
-						$array['FUNC'] = "none";	
-						$array['IMG'] = "money.png";
-					}
-					elseif($pack['status'] == "9") {
-						$array['SUS'] = "No Action";
-						$array['FUNC'] = "none";	
-						$array['IMG'] = "cancel.png";
-					}
-					elseif($pack['status'] == USER_STATUS_DELETED) {
-						$array['SUS'] = "No Action";
-						$array['FUNC'] = "none";	
-						$array['IMG'] = "cancel.png";
-					}
-					else {
-						$array['SUS'] = "Other Status";
-						$array['FUNC'] = "none";	
-						$array['IMG'] = "help.png";	
-					}
-					$array['ID'] = $main->getvar['do'];
-					switch($main->getvar['func']) {
-						default:
-							$array2['DATE'] = strftime("%D", $client['signup']);
-							$array2['EMAIL'] = $client['email'];
-							$query = $db->query("SELECT * FROM `<PRE>packages` WHERE `id` = '{$db->strip($pack['pid'])}'");
-							$data2 = $db->fetch_array($query);
-							$array2['PACKAGE'] = $data2['name'];
-							$array2['USER'] = $client['user'];
-							$array2['DOMAIN'] = $client['domain'];
-							$array2['CLIENTIP'] = $client['ip'];
-							$array2['FIRSTNAME'] = $client['firstname'];
-							$array2['LASTNAME'] = $client['lastname'];
-							$array2['ADDRESS'] = $client['address'];
-							$array2['CITY'] = $client['city'];
-							$array2['STATE'] = $client['state'];
-							$array2['ZIP'] = $client['zip'];
-							$array2['COUNTRY'] = $client['country'];
-							$array2['PHONE'] = $client['phone'];
-							$invoicesq = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$db->strip($client['id'])}' AND `is_paid` = '0'");
-							$array2['INVOICES'] = $db->num_rows($invoicesq);
-							
-							$order_status_list = $main->getOrderStatusList();
-							
-							switch($pack['status']) {
-								default:
-									$array2['STATUS'] = "Other";
-									break;
-									
-								case "1":
-									$array2['STATUS'] = "Active";
-									break;
-									
-								case "2":
-									$array2['STATUS'] = "Suspended";
-									break;
-									
-								case "3":
-									$array2['STATUS'] = "Awaiting Validation";
-									break;
-								
-								case "4":
-									$array2['STATUS'] = "Awaiting Payment";
-									break;
-								
-								case "9":
-									$array2['STATUS'] = "Cancelled";
-									break;
-							}
-							$class = $type->determineType($pack['pid']);
-							$phptype = $type->classes[$class];
-							if($phptype->acpBox) {
-								$box = $phptype->acpBox();	
-								$array['BOX'] = $main->sub($box[0], $box[1]);
-							}
-							else {
-								$array['BOX'] = "";	
-							}
-							$array['CONTENT'] = $style->replaceVar("tpl/clientdetails.tpl", $array2);
-							break;
-							
-						case "email":
-							if($_POST) {
-								global $email;
-								$email->send($client['email'] ,$main->postvar['subject'], $main->postvar['content']);
-								$main->errors("Email sent!");
-							}
-							$array['BOX'] = "";
-							$array['CONTENT'] = $style->replaceVar("tpl/emailclient.tpl");
-							break;
-						case "passwd":
-							if($_POST) {
-								if(empty($main->postvar['passwd'])) {
-									$main->errors('A password was not provided.');
-									$array['BOX'] = "";
-									$array['CONTENT'] = $style->replaceVar("tpl/clientpwd.tpl");
-								}
-								else {
-									$command = $main->changeClientPassword($pack['id'], $main->postvar['passwd']);
-									if($command === true) {
-										$main->errors('Password changed!');
-									}
-									else {
-										$main->errors((string)$command);
-									}
-								}
-							}
-							$array['BOX'] = "";
-							$array['CONTENT'] = $style->replaceVar("tpl/clientpwd.tpl");
-							break;						
-					}
-                                        $array["URL"] = URL;
+				break;
+			case 'search':
+				if($main->getvar['do'] ) {					
 					echo $style->replaceVar("tpl/clientview.tpl", $array);
 				} else {
 					$array['NAME'] = $db->config("name");
@@ -248,7 +236,7 @@ class page {
 				break;
 			
 			//Displays a list of users based on account status.
-			case "list":
+			case 'list':
 				echo "<div class=\"subborder\"><form id=\"filter\" name=\"filter\" method=\"post\" action=\"\"><select size=\"1\" name=\"show\"><option value=\"all\">ALL</option><option value=\"1\">Active</option><option value=\"0\">Awaiting Validation</option><option value=\"2\">Suspended</option><option value=\"4\">Awaiting Payment</option><option value=\"9\">Cancelled</option></select><input type=\"submit\" name=\"filter\" id=\"filter\" value=\"Filter Accounts\" /></form><table width=\"100%\" cellspacing=\"2\" cellpadding=\"2\" border=\"1\" style=\"border-collapse: collapse\" bordercolor=\"#000000\"><tr bgcolor=\"#EEEEEE\">";
 				echo "<td width=\"100\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Date Registered</td><td width=\"100\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Username</td><td align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">E-mail</td></tr>";
 				$l = $main->getvar['l'];
@@ -365,18 +353,8 @@ class page {
 				}			
 				$array['status'] = $main->createSelect('status', $main->getUserStatusList(), '', 1);				
 				echo $style->replaceVar("tpl/user/add.tpl", $array);				
-			break;
+			break;			
 			
-			case 'edit':
-				if($main->getvar['do']) {
-					if ($_POST) {
-						$user->edit($main->getvar['do'], $main->postvar);
-					}
-					$array = $user->getUserById($main->getvar['do']);
-					$array['status'] = $main->createSelect('status', $main->getUserStatusList(), $array['status'], 1);	
-					echo $style->replaceVar("tpl/user/edit.tpl", $array);	
-				}											
-			break;
 			
 			case 'validate':
 				if($main->getvar['do']) {
@@ -403,8 +381,7 @@ class page {
 				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '3'");
 				if($db->num_rows($query) == 0) {
 					echo "No clients are awaiting validation!";	
-				}
-				else {
+				} else {
 					$tpl .= "<ERRORS>";
 					while($data = $db->fetch_array($query)) {
 						$client = $db->client($data['userid']);
@@ -418,7 +395,9 @@ class page {
 					echo $tpl;
 				}
 				break;
+					
 		}
+		
 	}
 }
 ?>
