@@ -1,5 +1,5 @@
-<p>From here you can see all invoices in your BNPanel installation and some simple statistics.</p>
-<div class="subborder">
+<p>From here you can see all invoices in your BNPanel installation.</p>
+<!--  <div class="subborder">
 	<div class="sub">
 		<strong>Invoice Statistics</strong>
 		<div class='break'></div>
@@ -7,7 +7,7 @@
 		<strong>Invoices Paid:</strong> %numpaid%<br />
 		<strong>Unpaid Invoices:</strong> %numunpaid%
 	</div>
-</div>
+</div> -->
 
 <table width="100%" border="0" cellspacing="3" cellpadding="0">
 	<tr> 

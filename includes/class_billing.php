@@ -29,7 +29,7 @@ class billing {
 		return $billing_cycle_result;
 	}
 	
-	public function getBillingCycles($status = BILLING_CYCLE_STATUS_ACTIVE) {
+	public function getAllBillingCycles($status = BILLING_CYCLE_STATUS_ACTIVE) {
 		global $db;
 		if (!in_array($status, array(BILLING_CYCLE_STATUS_ACTIVE, BILLING_CYCLE_STATUS_INACTIVE))) {
 			$status = BILLING_CYCLE_STATUS_ACTIVE;

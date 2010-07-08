@@ -64,4 +64,19 @@ class package {
 		}
 		return $data;
 	}
+	
+	public function getAllPackages($status = 0) {
+		global $db;
+		$status = intval($status);
+		$sql = "SELECT * FROM `<PRE>packages` WHERE `is_hidden` = '{$status}'";
+		$result = $db->query($sql);
+		$data = array();
+		if ($db->num_rows($result)> 0) {
+			while($package= $db->fetch_array($result)) {
+				$data[$package['id']]=$package; 
+			}
+		}
+		return $data;
+	}
+	
 }
