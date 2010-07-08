@@ -89,12 +89,13 @@
     </td>
   </tr>
   
-  	<tr>
-    <td valign="top">Is paid</td>
+       <tr>
+    <td valign="top">Status</td>
     <td>
-       <input name="is_paid" type="checkbox" id="is_paid"  />
+      %STATUS%
     </td>
-  </tr> 
+  </tr>
+
 
     <!--
     <tr>

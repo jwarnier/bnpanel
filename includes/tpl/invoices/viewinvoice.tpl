@@ -1,9 +1,15 @@
 <form id="addpackage" name="addpackage" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
-    <td width="20%">Id:</td>
+    <td width="20%">Invoice id:</td>
     <td><input name="name" type="text" id="name" value="%ID%" readonly /></a></td>
   </tr>
+  
+  <tr>
+    <td width="20%">Order id:</td>
+    <td><input name="name" type="text" id="name" value="%ORDER_ID%" readonly /></a></td>
+  </tr>
+  
      <tr>
     <td valign="top">User</td>
     <td>
@@ -53,30 +59,17 @@
     
     
 	<tr>
-    <td valign="top">Is paid</td>
+    <td valign="top">Status</td>
     <td>
-    %IS_PAID%
+    %STATUS%
     </td>
-  </tr>
-  
-
-    
- 
+  </tr> 
   
    <tr>
     <td valign="top">Total:</td>
     <td>%TOTAL%</td>
   </tr>
-  
-  
-  
-
-  
-
- 
     
- 
-  
 </table>
 
 
