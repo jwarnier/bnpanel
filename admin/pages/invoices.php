@@ -29,10 +29,11 @@ class page {
 	public function content() {		
 		global $style, $db, $main, $invoice,$addon, $package;
 		
-		if(isset($_GET['iid']) && isset($_GET['pay'])){			
+		if(isset($_GET['iid']) && isset($_GET['pay'])) {
+						
 			$invoice->set_paid($_GET['iid']);
 			echo "<span style='color:green'>Invoice #{$_GET['iid']} marked as paid. <a href='index.php?page=invoices&iid={$_GET['iid']}&unpay=true'>Undo this action</a></span>";
-		} elseif(isset($_GET['iid']) && isset($_GET['unpay'])){		
+		} elseif(isset($_GET['iid']) && isset($_GET['unpay'])){	
 			$invoice->set_unpaid($_GET['iid']);
 			echo "<span style='color:red'>Invoice {$_GET['iid']} marked as unpaid. <a href='index.php?page=invoices&iid={$_GET['iid']}&pay=true'>Undo this action</a></span>";
 		}
@@ -56,9 +57,8 @@ class page {
 									$n++;
 								}*/
 							}							
-							if(!$n) {								
-								//var_dump($main->postvar);								var_dump($main->getvar);
-								if ($main->postvar['is_paid'] == 'on') {
+							if(!$n) {
+								if ($main->postvar['status'] == INVOICE_STATUS_PAID) {
 									$invoice->set_paid($main->getvar['do']);
 								} else {
 									$invoice->set_unpaid($main->getvar['do']);
@@ -74,17 +74,15 @@ class page {
 										$new_addon_list[$addon_id] = $main->postvar[$variable_name];				
 									}															
 								}
-								//var_dump($new_addon_list);
-								
-														
-								$new_addon_list_serialized = $addon->generateAddonFeeFromList($new_addon_list, $main->postvar['billing_id'], true);
-								
+													
+								$new_addon_list_serialized = $addon->generateAddonFeeFromList($new_addon_list, $main->postvar['billing_id'], true);								
 								$main->postvar['due'] = strtotime($main->postvar['due']);
 								
 								//`amount` = '{$main->postvar['amount']}',
 								
 								$update_sql = "UPDATE `<PRE>invoices` SET
 										   `notes` = '{$main->postvar['notes']}',
+										    `status` = '{$main->postvar['status']}',
 										    `due` = '{$main->postvar['due']}',
 										   `amount` = '{$main->postvar['amount']}',
 										   `addon_fee` = '{$new_addon_list_serialized}'
