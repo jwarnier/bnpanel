@@ -58,13 +58,12 @@ class invoice extends model {
 	 */
 	public function pay($invoice_id, $returnURL = "order/index.php") {
 		global $db;
-		require_once("paypal/paypal.class.php");
-
+		require_once "paypal/paypal.class.php";
 		$paypal 		= new paypal_class;
 		$invoice_info 	= $this->getInvoiceInfo($invoice_id);
 		
 		if($_SESSION['cuser'] == $invoice_info['uid']) {
-
+			
 			if (SERVER_STATUS == 'test') {
 				$paypal->paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 			} else {
@@ -74,7 +73,7 @@ class invoice extends model {
 			$paypal->add_field('return', 			urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
 			$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
 			$paypal->add_field('notify_url',  		urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
-			$paypal->add_field('item_name', 		$db->config('name').' Order: '.$invoice_info['notes']);
+			$paypal->add_field('item_name', 		$db->config('name').' Invoice id: '.$invoice_id);
 			$paypal->add_field('amount', 			$invoice_info['total_amount']);
 			$paypal->add_field('currency_code', 	$db->config('currency'));
 			$paypal->submit_paypal_post(); // submit the fields to paypal
@@ -143,12 +142,16 @@ class invoice extends model {
 	 * @return	array 
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
 	 */	 
-	public function getAllInvoicesToArray() {
+	public function getAllInvoicesToArray($user_id = 0 ) {
 		global $main, $db, $style,$currency, $order;
 		
-		// List invoices. :)
 		
-		$query2 = $db->query("SELECT * FROM `<PRE>invoices` WHERE `is_paid` = 0 ");
+		if (empty($user_id)) {
+			$query2 = $db->query("SELECT * FROM `<PRE>invoices`");
+		}	else {
+			$user_id = intval($user_id);
+			$query2 = $db->query("SELECT * FROM `<PRE>invoices` WHERE uid = $user_id");
+		}
 		$array2['list'] = "";
 		
 		//Package info
@@ -318,7 +321,7 @@ class invoice extends model {
 			//$array['ADDON_FEE'] = $invoice_info['addon_fee'];
 			$addon_selected_list = array();
 			if (!empty($invoice_info['addon_fee'])) {				
-				/* 
+				/**
 				 * Addon_fee structure
 				 * array
 					  0 => 
@@ -402,7 +405,6 @@ class invoice extends model {
 			} else {
 				$array['ORDER_ID'] = ' - ';
 			}
-
 			$array['TOTAL'] = $currency->toCurrency($total);
 			return $array;
 		}
@@ -503,8 +505,7 @@ class invoice extends model {
 						} else {
 							//echo 'Not created';
 						}
-					}
-															
+					}															
 					// Generate warning messages		
 								
 					switch ($billing_info['number_months']) {
@@ -520,14 +521,12 @@ class invoice extends model {
 						case  $billing_info['number_months'] >=  4 :
 							$before_list_of_days = array(7, 30, 60, 120);
 						break;						
-					}
-									
-					sort($before_list_of_days);
-					
+					}									
+					sort($before_list_of_days);					
 					$email_day_count = '';
 										
 					//$my_invoice['due'] = '1280451661';
-					//$my_invoice['due'] = '1278378061';					
+							
 					
 					//echo date('Y-m-d', $my_invoice['due']);
 					foreach($before_list_of_days as $days) {
@@ -599,7 +598,7 @@ class invoice extends model {
 	public function set_paid($invoice_id) { # Pay the invoice by giving invoice id
 		global  $server, $invoice;
 		$this->updateInvoiceStatus($invoice_id, INVOICE_STATUS_PAID);
-		$order_id = $invoice->getOrderByInvoiceId($invoice_id);
+		$order_id = $this->getOrderByInvoiceId($invoice_id);
 		/*
 		$query2 = $db->query("SELECT * FROM `<PRE>invoices` WHERE `id` = '{$iid}' LIMIT 1");
 		$data2 = $db->fetch_array($query2);
@@ -610,8 +609,9 @@ class invoice extends model {
 	}
 	
 	public function set_unpaid($invoice_id) { # UnPay the invoice by giving invoice id - Don't think this will be useful
+		global $server;
 		$this->updateInvoiceStatus($invoice_id, INVOICE_STATUS_WAITING_PAYMENT);
-		$order_id = $invoice->getOrderByInvoiceId($invoice_id);	
+		$order_id = $this->getOrderByInvoiceId($invoice_id);	
 		$server->suspend($order_id);	
 	}
 	
@@ -622,8 +622,6 @@ class invoice extends model {
 		$data = $db->fetch_array($query);
 		return $data['order_id'];
 	}
-	
-
 	
 	public function is_paid($id) { # Is the invoice paid - True = Paid / False = Not
 		global $db;
@@ -644,6 +642,4 @@ class invoice extends model {
 			$this->update($params);
 		}		
 	}
-	
 }
-?>
