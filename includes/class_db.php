@@ -259,18 +259,5 @@ class db {
 	 
 	public static function insert_id($connection = null) {
 		return self::use_default_connection($connection) ? mysql_insert_id() : mysql_insert_id($connection);
-	}
-	
-	public function filterParams($params, $attributes) {		
-		$filtered_params = array();
-		foreach($params as $key=>$param) {
-			if (in_array($key, $attributes)) {
-				$filtered_params[$key]= "'".$this->strip($param)."'";
-			}
-		}
-		//Only accept values with something there		
-		$filtered_params = array_diff($filtered_params, array(''));
-		return $filtered_params;
-	}
-	
+	}	
 }
