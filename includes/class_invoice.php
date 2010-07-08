@@ -6,14 +6,17 @@ if(THT != 1){
 	die();
 }
 
-class invoice {
+class invoice extends model {
+	
+	public $columns 	= array('id', 'uid','amount', 'is_paid','created', 'due', 'is_suspended', 'notes', 'uniqueid', 'addon_fee', 'status');	
+	public $table_name 	= 'invoices';	
 	
 	/**
 	 * @param 	int		User id
 	 * @param	float	amount
 	 * @param	date	expiration date
 	 */
-	public function create($uid, $amount, $due, $notes, $addon_fee, $status) {
+	public function create($uid, $amount, $due, $notes, $addon_fee, $status, $order_id) {
 		global $db, $email;
 		$client 		= $db->client($uid);		
 		$emailtemp 		= $db->emailTemplate('newinvoice');
@@ -21,7 +24,15 @@ class invoice {
 		$array['DUE'] 	= strftime("%D", $due);
 		$email->send($client['email'], $emailtemp['subject'], $emailtemp['content'], $array);
 		$insert_sql = "INSERT INTO `<PRE>invoices` (uid, amount, due, notes, addon_fee, status ) VALUES('{$uid}', '{$amount}', '{$due}', '{$notes}', '{$addon_fee}', '{$status}' )";
-		return $db->query($insert_sql);
+		$db->query($insert_sql);
+		$invoice_id = $db->insert_id();			
+		if (!empty($invoice_id ) && is_numeric($invoice_id )) {			
+			if (!empty($order_id)) {
+				$insert_sql = "INSERT INTO `<PRE>order_invoices` (order_id, invoice_id) VALUES('{$order_id}', '{$invoice_id}')";				
+				$db->query($insert_sql);		
+			}
+			return 	$invoice_id;
+		}		
 	}
 	
 	public function delete($id) { # Deletes invoice upon invoice id
@@ -102,6 +113,31 @@ class invoice {
 		return $array;
 	}
 	
+	public function getInvoicesByUser($user_id) {
+		global $db;		
+		$user_id = intval($user_id);		
+		$query = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$user_id}'");
+		$invoice_list = array();
+		while ($array = $db->fetch_array($query, 'ASSOC')) {				
+			$total_amount = 0;		
+			//Getting addon information
+			if (!empty($array['addon_fee'])) {
+				//the addon_fee is a serialize string			
+				$array['addon_fee'] = unserialize($array['addon_fee']);			
+				foreach($array['addon_fee'] as $addon) {					
+					//$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';
+					$total_amount +=$addon['amount'];					
+				}			
+				$array['addon_fee'] = serialize($array['addon_fee']);					
+			}
+			$total_amount = $total_amount + $array['amount']; 
+			$array['total_amount'] = $total_amount;		
+			$invoice_list[] = $array;
+		}	
+		return $invoice_list;
+	}
+	
+	
 	/**
 	 * Gets all invoices 
 	 * @return	array 
@@ -149,8 +185,7 @@ class invoice {
 			$user_info  		= $db->fetch_array($query_users);			
 			
 			$array['userinfo']  = '<a href="index.php?page=users&sub=search&do='.$user_info['id'].'" >'.$user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')</a>';
-			$array['due'] 		= strftime("%D", $array['due']);
-						
+			$array['due'] 		= strftime("%D", $array['due']);						
 			
 			//Getting the domain info
 			$domain_info = $order->getOrderByUser($array['uid']);			
@@ -173,25 +208,37 @@ class invoice {
 				}					
 			}
 			
-			$array['addon_fee'] = $addon_fee_string;		
-				
-			$total_amount = $total_amount + $array['amount'];
-			
+			$array['addon_fee'] = $addon_fee_string;	
+			$total_amount = $total_amount + $array['amount'];			
 			
 			//Get the amount info
 			//$array['amount'] = $total_amount." ".$db->config('currency');
 			$array['amount'] = $currency->toCurrency($total_amount);			
 
+
 			//Paid configuration links
-			$array['paid'] = ($array["is_paid"] == 1 ? "<span style='color:green'>Already Paid</span>" :
-													   "<span style='color:red'>Unpaid</span>");
-														
-			$array['pay'] = ($array["is_paid"] == 0 ? 
-			"<a href='index.php?sub=all&page=invoices&iid={$array['id']}&pay=true' title='Mark as paid'> <img src='../themes/icons/money_add.png' width=\"18px\" alt='Mark as paid' title='Mark as paid' /></a>" :
-			"<a href='index.php?sub=all&page=invoices&iid={$array['id']}&unpay=true' title='Mark as unpaid'> <img src='../themes/icons/money_delete.png'  width=\"18px\" alt='Mark as unpaid'title='Mark as unpaid' /> </a>");
-			
-			$array['due'] =  ($array["is_paid"] == 1 ? '<span style="color:green">'.$array['due'].'</span>' :  '<span style="color:red">'.$array['due'].'</span>');
-			
+			switch ($array['status']) {
+				case INVOICE_STATUS_PAID:
+					$array['paid']	= "<span style='color:green'>Already Paid</span>";
+					$array['pay']	=  "<a href='index.php?sub=all&page=invoices&iid={$array['id']}&unpay=true' title='Mark as unpaid'> <img src='../themes/icons/money_delete.png'  width=\"18px\" alt='Mark as unpaid'title='Mark as unpaid' /> </a>";
+					$array['due']	=  '<span style="color:green">'.$array['due'].'</span>' ;
+					  
+				break;
+				case INVOICE_STATUS_CANCELLED:
+					$array['paid'] 	= "<span style='color:red'>Canceled</span>";
+					$array['pay'] 	= "<a href='index.php?sub=all&page=invoices&iid={$array['id']}&pay=true' title='Mark as paid'> <img src='../themes/icons/money_add.png' width=\"18px\" alt='Mark as paid' title='Mark as paid' /></a>";
+					$array['due']	=  '<span style="color:red">'.$array['due'].'</span>';		
+				break;
+				case INVOICE_STATUS_WAITING_PAYMENT:
+					$array['paid'] = "<span style='color:red'>Pending</span>";
+					$array['pay'] = "<a href='index.php?sub=all&page=invoices&iid={$array['id']}&pay=true' title='Mark as paid'> <img src='../themes/icons/money_add.png' width=\"18px\" alt='Mark as paid' title='Mark as paid' /></a>";
+					$array['due']	=  '<span style="color:red">'.$array['due'].'</span>';		
+				break;
+				case INVOICE_STATUS_DELETED:
+					///	$array['paid'] = "<span style='color:green'>Already Paid</span>";
+				break;				
+			}													
+						
 			$array['package']		 = $package_name_list[$package_id];
 			$array['billing_cycle']  = $billing_cycle_name_list[$billing_cycle_id];
 			
@@ -249,12 +296,20 @@ class invoice {
 			$user_info  		= $db->fetch_array($query_users);
 			$array['USER'] 		=  $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';				
 
-			
+			/*
 			if ($read_only == true) {
 				$array['IS_PAID']  = ($invoice_info['is_paid'] == 1) ? 'yes' : 'no';
 			} else {
 				$array['IS_PAID']  = $main->createCheckbox('', 'is_paid', $invoice_info['is_paid']);
-			}				
+			}				*/
+			
+			$invoice_status = $main->getInvoiceStatusList();
+			if ($read_only == true) {
+				$array['STATUS'] 	= $invoice_status[$invoice_info['status']];
+			} else {
+				$array['STATUS'] 	= $main->createSelect('status', $invoice_status, $invoice_info['status'],1);
+			}
+			
 			
 			$array['CREATED'] 	= $invoice_info['created'];
 			$array['NOTES'] 	= $invoice_info['notes'];	
@@ -289,8 +344,7 @@ class invoice {
 			$billing_cycle_id 	= $domain_info['billing_cycle_id'];					
 			
 			
-			//Addon feature added
-			
+			//Addon feature added			
 			$array['ADDON'] = ' - ';
 			$addong_result_string = '';			
 			$addon_list = $addon->getAddonsByPackage($package_id);		
@@ -317,6 +371,7 @@ class invoice {
 
 			$array['PACKAGE_ID']	 = $package_id;
 			$array['PACKAGE_NAME']	 = $package_list[$package_id][0];
+			
 			if ($read_only) {
 				$array['PACKAGE_AMOUNT'] = $currency->toCurrency($invoice_info['amount']);
 			} else {
@@ -332,10 +387,20 @@ class invoice {
 				}
 				//$array['BILLING_CYCLES'] .= $main->dropDown('billing_cycles', $values, $billing_cycle_id);
 			}
+			
 			if ($read_only) {
 				$array['BILLING_CYCLES'] = $values[$billing_cycle_id][0];
 			} else {
 				$array['BILLING_CYCLES'] = $values[$billing_cycle_id][0].'<input type="hidden" id="billing_id" name="billing_id" value="'.$billing_cycle_id.'">';
+			}
+			
+			$query = $db->query("SELECT * FROM `<PRE>order_invoices` WHERE `invoice_id` = '{$invoice_id}'");
+			$order_item = $db->fetch_array($query);
+			
+			if (!empty($order_item['order_id'])) {
+				$array['ORDER_ID'] = $order_item['order_id'];
+			} else {
+				$array['ORDER_ID'] = ' - ';
 			}
 
 			$array['TOTAL'] = $currency->toCurrency($total);
@@ -531,33 +596,54 @@ class invoice {
 		return $invoice;
 	}
 	
-	public function set_paid($iid) { # Pay the invoice by giving invoice id
-		global $db, $server;
-		
-		$query = $db->query("UPDATE `<PRE>invoices` SET `is_paid` = '1' WHERE `id` = '{$iid}'");
+	public function set_paid($invoice_id) { # Pay the invoice by giving invoice id
+		global  $server, $invoice;
+		$this->updateInvoiceStatus($invoice_id, INVOICE_STATUS_PAID);
+		$order_id = $invoice->getOrderByInvoiceId($invoice_id);
+		/*
 		$query2 = $db->query("SELECT * FROM `<PRE>invoices` WHERE `id` = '{$iid}' LIMIT 1");
 		$data2 = $db->fetch_array($query2);
 		$query3 = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$data2['uid']}'");
 		$data3 = $db->fetch_array($query3);
-		$server->unsuspend($data3['id']);
-		return $query;
+		*/
+		$server->unsuspend($order_id);		
 	}
 	
-	public function set_unpaid($iid) { # UnPay the invoice by giving invoice id - Don't think this will be useful
-		global $db;
-		$query = $db->query("UPDATE `<PRE>invoices` SET `is_paid` = '0' WHERE `id` = '{$iid}'");
-		return $query;
+	public function set_unpaid($invoice_id) { # UnPay the invoice by giving invoice id - Don't think this will be useful
+		$this->updateInvoiceStatus($invoice_id, INVOICE_STATUS_WAITING_PAYMENT);
+		$order_id = $invoice->getOrderByInvoiceId($invoice_id);	
+		$server->suspend($order_id);	
 	}
+	
+	
+	public function getOrderByInvoiceId($invoice_id) {
+		global $db;
+		$query = $db->query("SELECT order_id FROM `<PRE>order_invoices` WHERE `invoice_id` = '{$invoice_id}' LIMIT 1");
+		$data = $db->fetch_array($query);
+		return $data['order_id'];
+	}
+	
+
 	
 	public function is_paid($id) { # Is the invoice paid - True = Paid / False = Not
 		global $db;
-		$data = $db->fetch_array($db->query("SELECT is_paid FROM `<PRE>invoices` WHERE `id` = '{$id}'"));
-		if($data['is_paid']) {
+		$data = $db->fetch_array($db->query("SELECT status FROM `<PRE>invoices` WHERE `id` = '{$id}'"));
+		if($data['status'] == INVOICE_STATUS_PAID) {
 			return true;	
-		}
-		else {
+		} else {
 			return false;	
 		}
 	}
+	
+	public function updateInvoiceStatus($invoice_id, $status) {
+		global $main;		
+		$this->setPrimaryKey($invoice_id);
+		$invoice_status = array_keys($main->getInvoiceStatusList());		
+		if (in_array($status, $invoice_status)) {		
+			$params['status'] = $status;
+			$this->update($params);
+		}		
+	}
+	
 }
 ?>

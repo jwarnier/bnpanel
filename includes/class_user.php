@@ -8,8 +8,8 @@ if(THT != 1){
 
 class user extends model {
 	
-	public $columns = array('id', 'user','email', 'password','salt', 'signup', 'ip', 'firstname', 'lastname', 'address', 'city', 'zip', 'state', 'country', 'phone', 'status');
-	public $table_name = "`<PRE>users`";
+	public $columns 	= array('id', 'user','email', 'password','salt', 'signup', 'ip', 'firstname', 'lastname', 'address', 'city', 'zip', 'state', 'country', 'phone', 'status');
+	public $table_name 	= 'users';
 	
 	/** 
 	 * Creates an user
@@ -41,8 +41,6 @@ class user extends model {
 		$this->setPrimaryKey($id);
 		$this->update($params);
 	}
-	
-
 	
 	/**
 	 * Checks if the username is taken or not

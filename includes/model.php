@@ -17,7 +17,7 @@ class model {
 	    return $db->insert_id();
 	}
 	
-	public function update ($attributes) {
+	public function update($attributes) {
 		global $db;
 		//Remove the primary key id
 		unset($attributes['id']);		
@@ -27,8 +27,13 @@ class model {
        	$db->query($sql); 
 	}
 	
-	public function getTableName() {
-		return $this->table_name;		
+	
+	public function get() {
+		
+	}
+	
+	public function getTableName() {			
+		return "`<PRE>".$this->table_name."`";		
 	}
 	
 	public function getPrimaryKey() {
