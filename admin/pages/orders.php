@@ -162,6 +162,7 @@ class page {
 						$due 		= strtotime($main->postvar['due']);
 						$notes		= $main->postvar['notes'];
 						$package_id	= $main->postvar['package_id'];
+						$status		= $main->postvar['status'];
 						
 						$addong_list = $addon->getAllAddonsByBillingCycleAndPackage($billing_id, $package_id);
 						
@@ -178,15 +179,15 @@ class page {
 						$addon_serialized = $addon->generateAddonFee($new_addon_list, $billing_id, true);
 						
 						$package_info = $package->getPackageByBillingCycle($package_id, $billing_id);
-						$amount = $package_info['amount'];						
-						$invoice->create($order_info['userid'], $amount, $due, $notes, $addon_serialized);
+						$amount = $package_info['amount'];	
+											
+						$invoice->create($order_info['userid'], $amount, $due, $notes, $addon_serialized, $status, $main->getvar['do']);
 						
 						$main->errors("Invoice created!");	
 						$main->redirect("?page=invoices&sub=all");									
 					}
 					
-					$user_info  =  $user->getUserById($order_info['userid']);
-					
+					$user_info  =  $user->getUserById($order_info['userid']);				
 					
 					$return_array['USER'] 			= $user_info['firstname'].' '.$user_info['lastname'];
 					$return_array['DOMAIN'] 		= $order_info['domain'];					
@@ -208,7 +209,11 @@ class page {
 					$return_array['PACKAGES']  =  $main->dropDown('package_id', $package_list, $order_info['pid'], 1, '', array('onchange'=>'loadAddons(this);'));
 									
 					$return_array['DUE'] = date('Y-m-d');					
-					$return_array['ID'] = $main->getvar['do'];					 
+					$return_array['ID'] = $main->getvar['do'];		
+					
+					$invoice_status = $main->getInvoiceStatusList();
+					$return_array['STATUS'] = $main->createSelect('status', $invoice_status);
+					 
 													
 					echo $style->replaceVar("tpl/invoices/addinvoice.tpl", $return_array);					
 				
