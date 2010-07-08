@@ -21,6 +21,7 @@ To get started, select an action in the Sidebar. Here's an overview of your acco
       </table>
 	</div>
 </div>
+<!-- 
 <div class="subborder">
 	<div class="sub">
 	  <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -52,7 +53,7 @@ To get started, select an action in the Sidebar. Here's an overview of your acco
         </tr>
       </table>
 	</div>
-</div>
+</div>  -->
 <div class="subborder">
 	<div class="sub">
     	<table width="100%" border="0" cellspacing="2" cellpadding="0">

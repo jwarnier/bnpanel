@@ -22,18 +22,20 @@ class page {
 		$array['LASTTIME'] = strftime("%T", $ldata['logtime']);
 		$array['EMAIL'] = $data['email'];
 		$array['ALERTS'] = $db->config('alerts');
+		/*
 		$query2 = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$db->strip($data['id'])}'");
 		$data3 = $db->fetch_array($query2);
 		$query = $db->query("SELECT * FROM `<PRE>packages` WHERE `id` = '{$db->strip($data3['pid'])}'");
 		$data2 = $db->fetch_array($query);
 		$array['PACKAGE'] = $data2['name'];
+		
+		
 		$invoicesq = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$db->strip($data['id'])}' AND `is_paid` = '0'");
+		
+		$invoice_list = $invoice->getInvoicesByUser($data['id']);
+		
 		$array['INVOICES'] = $db->num_rows($invoicesq);
-		switch($data3['status']) {
-			default:
-				$array['STATUS'] = "Other";
-				break;
-				
+		switch($data3['status']) {			
 			case "1":
 				$array['STATUS'] = "Active";
 				break;
@@ -62,7 +64,8 @@ class page {
 		}
 		else {
 			$array['BOX'] = "";	
-		}
+		}*/
+		$array['BOX'] = "";	
 		echo $style->replaceVar("tpl/clienthome.tpl", $array);
 	}
 }
