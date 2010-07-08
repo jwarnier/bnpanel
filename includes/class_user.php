@@ -61,20 +61,17 @@ class user extends model {
 	 * Deletes a user
 	 */
 	public function delete($id) { # Deletes a user
+		$this->updateUserStatus($id,USER_STATUS_DELETED);
+		
 		/*global $db;
-		$this->changeUserStatus($id, )
+		
 		$db->query("UPDATE `<PRE>user_packs` SET `status` = '$status' WHERE `id` = '{$db->strip($status)}'");*/
 	/*	global $db;
 		$query = $db->query("DELETE FROM `<PRE>user_packs` WHERE `id` = '{$id}'"); //Delete the invoice
 		$query = $db->query("DELETE FROM `<PRE>user_pack_addons` WHERE `order_id` = '{$id}'"); //Delete the invoice*/
 		return true;
 	}
-	
-	public function changeUserStatus($user_id, $status) {
-		global $db;		
-		$db->query("UPDATE `<PRE>users` SET `status` = '$status' WHERE `id` = '{$db->strip($status)}'");
-	}
-	
+		
 	/**
 	 * Gets user information by id
 	 * @param	int		user id
@@ -116,4 +113,16 @@ class user extends model {
 		}
 		return $user_list;		
 	}
+	
+	
+	public function updateUserStatus($user_id, $status) {
+		global $main;		
+		$this->setPrimaryKey($user_id);
+		$user_status_list = array_keys($main->getUserStatusList());		
+		if (in_array($status, $user_status_list)) {		
+			$params['status'] = $status;
+			$this->update($params);
+		}		
+	}
+	
 }
