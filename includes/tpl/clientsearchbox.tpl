@@ -3,7 +3,8 @@
         <table width="100%" border="0" cellspacing="2" cellpadding="0">
           <tr>
             <td width="250px"><a href="?page=users&sub=search&do=%ID%"><b>%USER%</b></a></td>
-            <td><img src="%URL%themes/icons/world.png" /> <a href="http://%DOMAIN%" target="_blank">%DOMAIN%</a></td>
+            <td width="250px"><a href="?page=users&sub=search&do=%ID%"><b>%STATUS%</b></a></td>
+            <!--  <td><img src="%URL%themes/icons/world.png" /> <a href="http://%DOMAIN%" target="_blank">%DOMAIN%</a></td> -->
             
             <td rowspan="2" align="right">
             	<a href="?page=users&sub=search&do=%ID%" class="tooltip" title="View user details."><img src="%URL%themes/icons/application_view_detail.png" /></a>
