@@ -11,9 +11,11 @@ class page {
 							
 	public function __construct() {
 		$this->navtitle = "Clients Sub Menu";
+		$this->navlist[] = array("Add client", "add.png", "add");
 		$this->navlist[] = array("Search Clients", "magnifier.png", "search");
 		$this->navlist[] = array("Client Statistics", "book.png", "stats");
-		$this->navlist[] = array("Admin Validate", "user_suit.png", "validate");
+		
+		//$this->navlist[] = array("Admin Validate", "user_suit.png", "validate");
 	}
 	
 	public function description() {
@@ -34,6 +36,7 @@ class page {
 		global $server;
 		global $email;
 		global $type;
+		global $user;
 		switch($main->getvar['sub']) {
 			default:
 				if($main->getvar['do'] ) {
@@ -229,12 +232,11 @@ class page {
 							}
 							$array['BOX'] = "";
 							$array['CONTENT'] = $style->replaceVar("tpl/clientpwd.tpl");
-							break;
+							break;						
 					}
                                         $array["URL"] = URL;
 					echo $style->replaceVar("tpl/clientview.tpl", $array);
-				}
-				else {
+				} else {
 					$array['NAME'] = $db->config("name");
 					$array['URL'] = $db->config("url");
 					$values[] = array("Admin Area", "admin");
@@ -348,7 +350,32 @@ class page {
 				$array['CANCELLED'] = $db->num_rows($query);
 				echo $style->replaceVar("tpl/clientstats.tpl", $array);
 				break;
-				
+			
+			case 'add':
+				$array = $user->setDefaults();				
+				if ($_POST) {					
+					$user_id = $user->create($main->postvar);					
+					if (!empty($user_id) && is_numeric($user_id)) {
+						$main->errors("Account added!");
+												
+					} else {
+						$main->errors("Account NOT added!");
+						$array = $main->postvar;						
+					}					
+				}			
+				echo $style->replaceVar("tpl/user/add.tpl", $array);				
+			break;
+			
+			case 'edit':
+				if($main->getvar['do']) {
+					if ($_POST) {
+						$user->edit($main->getvar['do'], $main->postvar);
+					}
+					$array = $user->getUserById($main->getvar['do']);
+					echo $style->replaceVar("tpl/user/edit.tpl", $array);	
+				}											
+			break;
+			
 			case 'validate':
 				if($main->getvar['do']) {
 					if($main->getvar['accept'] == 1) {
