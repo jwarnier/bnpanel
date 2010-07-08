@@ -239,10 +239,10 @@ class invoice extends model {
 		return $array2;		
 	}
 	
-	public function getAllInvoices($status = INVOICE_STATUS_DELETED) {
+	public function getAllInvoices() {
 		global $db;
 		$status = intval($status);
-		$result = $db->query("SELECT * FROM `<PRE>invoices` WHERE status <> '".$status."'");
+		$result = $db->query("SELECT * FROM `<PRE>invoices` WHERE status <> '".INVOICE_STATUS_DELETED."'");
 		$invoice_list = array();
 		if($db->num_rows($result) >  0) {
 			while($data = $db->fetch_array($result)) {
