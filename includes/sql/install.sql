@@ -547,3 +547,11 @@ CREATE TABLE `%PRE%user_pack_addons` (
   PRIMARY KEY (`id`)
 );
 
+
+
+CREATE TABLE `%PRE%order_invoices` (
+  `id` INT  NOT NULL,
+  `order_id` INT  NOT NULL,
+  `invoice_id` INT  NOT NULL,
+  PRIMARY KEY (`id`)
+);
