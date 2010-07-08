@@ -351,66 +351,103 @@ class AJAX {
 			$value = $main->getvar['value'];
 			if($main->getvar['num']) {
 				$show = $main->getvar['num'];
-			}
-			else {
+			} else {
 				$show = 10;	
 			}
 			if($main->getvar['page'] != 1) {
 				$lower = $main->getvar['page'] * $show;
 				$lower = $lower - $show;
 				$upper = $lower + $show;
-			}
-			else {
+			} else {
 				$lower = 0;
 				$upper = $show;
 			}
-			$sql = "SELECT * FROM `<PRE>users` u, `<PRE>user_packs` WHERE u.{$type} LIKE '%{$value}%' AND user_packs.userid = u.id ORDER BY u.{$type} ASC LIMIT {$lower}, {$upper}";
+			$sql = "SELECT * FROM `<PRE>users` u WHERE u.{$type} LIKE '%{$value}%' ORDER BY u.{$type} ASC LIMIT {$lower}, {$upper}";
 			$query = $db->query($sql);
 			$rownum = $db->num_rows($query);
+			echo '
+			
+		        <table width="100%" border="0" cellpadding="0" cellspacing="2">
+		          <tbody><tr>
+		            <td width="250px"><h3>User</h3></td>
+		            <td width="250px">Status</td>
+		            <td rowspan="2" align="right">
+		            	Actions
+		            </td>
+		          </tr>
+		          
+		        </tbody></table>
+		    ';
+					
 			if($db->num_rows($query) == 0) {
 				echo "No clients found!";	
-			}
-			else {
+			} else {
 				while($data = $db->fetch_array($query)) {
 					if($n != $show) {
-						$client = $db->client($data['userid']);
-						$array['ID'] = $data['userid'];
-						$array['USER'] = $data['user'];
-						$array['DOMAIN'] = $client['domain'];
-						$array['URL'] = URL;
-						if($client['status'] == "2") {
+						//$client = $db->client($data['userid']);
+						$array['ID']	= $data['id'];
+						$array['USER'] 	= $data['user'];
+						$array['URL'] 	= URL;
+						$user_status = $main->getUserStatusList();
+						$array['STATUS'] = $user_status[$data['status']];
+						/*
+						//$array['DOMAIN'] = $client['domain'];
+						switch($data['status']) {
+							case USER_STATUS_ACTIVE:
+								$array['TEXT'] = "Unsuspend";
+								$array['FUNC'] = "unsus";
+								$array['IMG'] = "accept.png";
+							break;							
+							case USER_STATUS_SUSPENDED:
+								$array['TEXT'] = "Unsuspend";
+								$array['FUNC'] = "unsus";
+								$array['IMG'] = "accept.png";
+							break;							
+							case USER_STATUS_WAITING_ADMIN_VALIDATION:
+								$array['TEXT'] = "Unsuspend";
+								$array['FUNC'] = "unsus";
+								$array['IMG'] = "accept.png";
+							break;							
+							case USER_STATUS_DELETED:
+								$array['TEXT'] = "Unsuspend";
+								$array['FUNC'] = "unsus";
+								$array['IMG'] = "accept.png";
+							break;
+						}
+						
+						/*
+						if($data['status'] == "2") {
 							$array['TEXT'] = "Unsuspend";
 							$array['FUNC'] = "unsus";
 							$array['IMG'] = "accept.png";
 						}
-						elseif($client['status'] == "1") {
+						elseif($data['status'] == "1") {
 							$array['TEXT'] = "Suspend";
 							$array['FUNC'] = "sus";	
 							$array['IMG'] = "exclamation.png";
 						}
-						elseif($client['status'] == "3") {
+						elseif($data['status'] == "3") {
 							//Fixes caption added by J.Montoya
 							$array['TEXT'] = "Validate";
 							$array['FUNC'] = "none";	
 							$array['IMG'] = "user_suit.png";
 						}
-						elseif($client['status'] == "4") {
+						elseif($data['status'] == "4") {
 							$array['TEXT'] = "Awaiting Payment";
 							$array['FUNC'] = "none";	
 							$array['IMG'] = "money.png";
-						}
-						else {
+						} else {
 							$array['TEXT'] = "Other Status";
 							$array['FUNC'] = "none";	
 							$array['IMG'] = "help.png";	
-						}
+						}*/
 						echo $style->replaceVar("tpl/clientsearchbox.tpl", $array);	
 						$n++;
 					}
 				}
 				echo '<div class="break"></div>';
 				echo '<div align="center">';
-				$query = $db->query("SELECT * FROM `<PRE>users` u, `<PRE>user_packs` WHERE u.{$type} LIKE '%{$value}%' AND user_packs.userid = u.id ORDER BY u.{$type} ASC");
+				$query = $db->query("SELECT * FROM `<PRE>users` u  WHERE u.{$type} LIKE '%{$value}%' ORDER BY u.{$type} ASC");
 				$num = $db->num_rows($query);
 				$pages = ceil($num/$show);
 				echo "Page..";
