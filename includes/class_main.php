@@ -336,16 +336,16 @@ if(THT != 1){die();}class main {
 	   return $isValid;
 	}
 	
-	/*
+	/**
 	 * A more or less centralized function for changing a client's
 	 * password. This updates both the cPanel/WHM and THT password.
 	 * Will return true ONLY on success. Any other returned value should
 	 * be treated as a failure. If the return value happens to be a
-	 * string, it is an error message.
+	 * string, it is an error message.	 * @todo this function should be moved to the class_user.php file
 	 */
 	function changeClientPassword($clientid, $newpass) {
 		global $db, $server;
-		//Making sure the $clientid is a reference to a valid id.
+		//Making sure the $clientid is a reference to a valid id.		var_dump($clientid, $newpass);
 		$query = $db->query("SELECT * FROM `<PRE>users` WHERE `id` = {$db->strip($clientid)}");
 		if($db->num_rows($query) == 0) {
 			return "That client does not exist.";
