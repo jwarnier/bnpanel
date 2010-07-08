@@ -29,7 +29,7 @@ class server {
 	}
 	
 	public function signup() { # Echos the result of signup for ajax
-		global $main, $db, $type, $addon, $order, $package, $email;
+		global $main, $db, $type, $addon, $order, $package, $email,$user;
 			
 		//Check package details
 		$package_id = intval($main->getvar['package']);
@@ -211,32 +211,19 @@ class server {
 		$done = true;
 		if($done == true) {
 			// Did the signup pass?
-			$date 				= time();
-			$ip 				= $_SERVER['REMOTE_ADDR'];
-			$salt 				= md5(rand(0,9999999));
-			$password 			= md5(md5($main->getvar['password']).md5($salt));
-			$user_name 			= $main->getvar['username'];
-			$newusername 		= $main->getvar['username'];	
-			$billing_cycle_id 	= $main->getvar['billing_id'];
-			
-			//@todo this should be moved to a class_user function
-			//Creating a user
-			$db->query("INSERT INTO `<PRE>users` (user, email, password, salt, signup, ip, firstname, lastname, address, city, state, zip, country, phone, status) VALUES(
-													  '{$main->getvar['username']}',
-													  '{$main->getvar['email']}',
-													  '{$password}',
-													  '{$salt}',
-													  '{$date}',
-													  '{$ip}',
-													  '{$main->getvar['firstname']}',
-													  '{$main->getvar['lastname']}',
-													  '{$main->getvar['address']}',
-													  '{$main->getvar['city']}',
-													  '{$main->getvar['state']}',
-													  '{$main->getvar['zip']}',
-													  '{$main->getvar['country']}',
-													  '{$main->getvar['phone']}',
-													  '".USER_STATUS_ACTIVE."')");
+			//Creating a new user
+			$date 				= time();								
+			$user_name 			= $main->getvar['username'];				
+			$billing_cycle_id 	= $main->getvar['billing_id'];		
+
+			$main->getvar['signup'] 	= $_SERVER['REMOTE_ADDR'];
+			$main->getvar['ip'] 		= time();
+			$main->getvar['salt'] 		= md5(rand(0,9999999));
+			$main->getvar['password'] 	= md5(md5($main->getvar['password']).md5($main->getvar['salt']));
+			$main->getvar['user'] 		= $main->getvar['username'];			
+			$main->getvar['status'] 	= USER_STATUS_ACTIVE;
+							  
+			$user_id = $user->create($main->getvar);
 													  
 			$newSQL = "SELECT * FROM `<PRE>users` WHERE `user` = '{$user_name}' LIMIT 1;";
 			$query = $db->query($newSQL);
@@ -259,11 +246,11 @@ class server {
 				$order->addAddons($order_id, $main->getvar['addon_ids']);
 				
 				$url = $db->config('url');
-				$array['USER']	= $newusername;
+				$array['USER']	= $user_name;
 				$array['PASS'] 	= $main->getvar['password']; 
 				$array['EMAIL'] = $main->getvar['email'];
 				$array['DOMAIN'] = $main->getvar['fdom'];
-				$array['CONFIRM'] = $url . "client/confirm.php?u=" . $newusername . "&c=" . $date;
+				$array['CONFIRM'] = $url . "client/confirm.php?u=" . $user_name . "&c=" . $date;
 				
 				//Get plan email friendly name				
 				$array['PACKAGE'] = $package_info['name'];
