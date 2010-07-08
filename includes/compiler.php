@@ -43,6 +43,7 @@ if($sql['install']) {
 }
 
 $folder = LINK;
+require_once LINK."/model.php"; # Get the file
 if ($handle = opendir($folder)) { # Open the folder
 	while (false !== ($file = readdir($handle))) { # Read the files
 		if($file != "." && $file != "..") { # Check aren't these names
