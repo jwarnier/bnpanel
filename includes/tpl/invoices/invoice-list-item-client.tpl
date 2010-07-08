@@ -15,5 +15,5 @@ function doswirl(id) {
 
   	<td>%paid%</td>
   	<td>%due%</td>
-  	<td> <div id="swirl%id%">%pay%</div>  %edit% %delete% </td>  	           
+  	<td> <div id="swirl%id%">%pay%</div></td>  	           
 </tr>                
