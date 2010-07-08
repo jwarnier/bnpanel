@@ -200,11 +200,10 @@ class invoice extends model {
 			$addon_fee_string = '';
 			if (!empty($array['addon_fee'])) {
 				
-				$array['addon_fee'] = unserialize($array['addon_fee']);
+				$array['addon_fee'] = unserialize($array['addon_fee']);				
 				///var_dump($array['addon_fee']);
-				if (is_array($array['addon_fee']) && count($array['addon_fee']) > 1) {
-					
-					foreach($array['addon_fee'] as $addon) {					
+				if (is_array($array['addon_fee']) && count($array['addon_fee']) > 0) {					
+					foreach($array['addon_fee'] as $addon) {
 						$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';
 						$total_amount = $total_amount + $addon['amount'];					
 					}
@@ -215,7 +214,6 @@ class invoice extends model {
 			$total_amount = $total_amount + $array['amount'];			
 			
 			//Get the amount info
-			//$array['amount'] = $total_amount." ".$db->config('currency');
 			$array['amount'] = $currency->toCurrency($total_amount);			
 
 
