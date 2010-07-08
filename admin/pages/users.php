@@ -363,6 +363,7 @@ class page {
 						$array = $main->postvar;						
 					}					
 				}			
+				$array['status'] = $main->createSelect('status', $main->getUserStatusList(), '', 1);				
 				echo $style->replaceVar("tpl/user/add.tpl", $array);				
 			break;
 			
@@ -372,6 +373,7 @@ class page {
 						$user->edit($main->getvar['do'], $main->postvar);
 					}
 					$array = $user->getUserById($main->getvar['do']);
+					$array['status'] = $main->createSelect('status', $main->getUserStatusList(), $array['status'], 1);	
 					echo $style->replaceVar("tpl/user/edit.tpl", $array);	
 				}											
 			break;

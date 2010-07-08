@@ -96,6 +96,13 @@ var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></di
               </tr>
               
               <tr>
+                <td>Status:</td>
+                <td>%STATUS%</td>
+                <td align="left"><a title="User status" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>                
+              </tr>
+              
+              
+              <tr>
     			<td colspan="2" align="center"><input type="submit" name="edit" id="edit" value="Edit client" /></td>
     			</tr>
       

@@ -95,6 +95,12 @@ var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></di
                 <td id="phonecheck" align="left">&nbsp;</td>
               </tr>
               
+               <tr>
+                <td>Status:</td>
+                <td>%STATUS%</td>
+                <td align="left"><a title="User status" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>                
+              </tr>
+              
               <tr>
     			<td colspan="2" align="center"><input type="submit" name="add" id="add" value="Create client" /></td>
     			</tr>
