@@ -347,7 +347,7 @@ class server {
 													  'Terminated ($reason)')");
 				//$db->query("DELETE FROM `<PRE>user_packs` WHERE `id` = '{$data['id']}'");
 				//$db->query("DELETE FROM `<PRE>users` WHERE `id` = '{$db->strip($data['userid'])}'");
-				$user->changeUserStatus($data['id'], USER_STATUS_DELETED);
+				$user->updateUserStatus($data['id'], USER_STATUS_DELETED);
 				return true;
 			}
 			else {
@@ -377,7 +377,7 @@ class server {
 				$emaildata = $db->emailTemplate("cancelacc");
 				$array['REASON'] = "Account Cancelled.";
 				$email->send($data2['email'], $emaildata['subject'], $emaildata['content'], $array);
-				$user->changeUserStatus($data['id'], USER_STATUS_SUSPENDED);
+				$user->updateUserStatus($data['id'], USER_STATUS_SUSPENDED);
 				//$db->query("UPDATE `<PRE>user_packs` SET `status` = '9' WHERE `id` = '{$data['id']}'");
 				//$db->query("UPDATE `<PRE>users` SET `status` = '9' WHERE `id` = '{$db->strip($data['userid'])}'");
 				

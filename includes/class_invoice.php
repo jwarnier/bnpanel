@@ -38,8 +38,7 @@ class invoice extends model {
 	public function delete($id) { # Deletes invoice upon invoice id
 		//global $db;
 		//$query = $db->query("DELETE FROM `<PRE>invoices` WHERE `id` = '{$id}'"); //Delete the invoice
-		//return $query;
-		
+		//return $query;		
 		$this->updateInvoiceStatus($id, INVOICE_STATUS_DELETED);
 	}
 	
