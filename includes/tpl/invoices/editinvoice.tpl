@@ -38,6 +38,10 @@
     <td><input name="name" type="text" id="name" value="%ID%" readonly /></td>
   </tr>
   
+    <tr>
+    <td width="20%">Order id:</td>
+    <td><input name="order_id" type="text" id="order_id" value="%ORDER_ID%" readonly /></td>
+  </tr>
      <tr>
     <td valign="top">User</td>
     <td>
@@ -87,9 +91,9 @@
   </tr>
   
     	<tr>
-    <td valign="top">Is paid</td>
+    <td valign="top">Status</td>
     <td>
-    %IS_PAID%
+    %STATUS%
     </td>
   </tr> 
     
