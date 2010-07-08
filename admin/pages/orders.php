@@ -105,8 +105,8 @@ class page {
 								}*/
 							}							
 							if(!$n) {
-								//@todo change this to the $order->edit function
-								$signup = strtotime($main->postvar['created_at']);
+								/*
+								$signup = 
 								
 								$update_sql = "UPDATE `<PRE>user_packs` SET
 										  		`domain` = '{$main->postvar['domain']}',
@@ -117,10 +117,13 @@ class page {
 										   		`pid` = '{$main->postvar['package_id']}'
 										   		WHERE `id` = '{$main->getvar['do']}'";										   
 								$db->query($update_sql);
-								
+								*/
+								$main->postvar['signup'] = strtotime($main->postvar['created_at']);
+								$main->postvar['pid'] 	 = $main->postvar['package_id'];								
+								$order->edit($main->getvar['do'], $main->postvar);								
 								
 								$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
-								
+																
 								$new_addon_list = array();																
 								foreach($addon_list as $addon_id=>$value) {																								
 									$variable_name = 'addon_'.$addon_id;
@@ -128,7 +131,8 @@ class page {
 									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
 										$new_addon_list[] = $addon_id;				
 									}															
-								}								
+								}		
+													
 								$addon->updateAddonOrders($new_addon_list, $main->postvar['order_id'], true);								
 								$main->errors("Order has been edited!");
 								//$main->done();
@@ -136,6 +140,7 @@ class page {
 						}						
 					}					
 					$return_array = $order->getOrder($main->getvar['do'], false, false);
+					
 					echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);
 				}
 			break;

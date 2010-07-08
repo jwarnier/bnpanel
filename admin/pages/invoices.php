@@ -73,28 +73,25 @@ class page {
 									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
 										$new_addon_list[$addon_id] = $main->postvar[$variable_name];				
 									}															
-								}
-													
+								}		
+																	
 								$new_addon_list_serialized = $addon->generateAddonFeeFromList($new_addon_list, $main->postvar['billing_id'], true);								
-								$main->postvar['due'] = strtotime($main->postvar['due']);
-								
-								//`amount` = '{$main->postvar['amount']}',
-								
-								$update_sql = "UPDATE `<PRE>invoices` SET
-										   `notes` = '{$main->postvar['notes']}',
-										    `status` = '{$main->postvar['status']}',
-										    `due` = '{$main->postvar['due']}',
-										   `amount` = '{$main->postvar['amount']}',
-										   `addon_fee` = '{$new_addon_list_serialized}'
-										   	WHERE `id` = '{$main->getvar['do']}'";										   
-								$db->query($update_sql);						
-										
+								$main->postvar['due'] 		= strtotime($main->postvar['due']);
+								$main->postvar['addon_fee'] = $new_addon_list_serialized;
+								//Editing the invoice
+								$invoice->edit($main->getvar['do'], $main->postvar);
 								$main->errors("Invoice has been edited!");
-								//$main->done();
+								$main->redirect('?page=invoices&sub=all');
+								if ($main->postvar['status'] == INVOICE_STATUS_DELETED) {
+									$main->redirect();	
+								} 
+								
 							}
 						}						
 					}					
 					$return_array = $invoice->getInvoice($main->getvar['do']);
+					
+					
 					$return_array['DUE'] = substr($return_array['DUE'], 0, 10);
 					
 					echo $style->replaceVar("tpl/invoices/editinvoice.tpl", $return_array);

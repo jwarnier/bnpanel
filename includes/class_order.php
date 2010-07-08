@@ -6,7 +6,11 @@ if(THT != 1){
 	die();
 }
 
-class order {
+class order extends model {
+	
+	public $columns 	= array('id', 'userid','username', 'domain','pid', 'signup', 'status', 'additional', 'billing_cycle_id');	
+	public $table_name 	= 'user_packs';	
+	
 	
 	/** 
 	 * Creates an order
@@ -54,14 +58,14 @@ class order {
 	}
 	
 	public function updateOrderStatus($order_id, $status) {
-		global $db,$main;
-		if (in_array($status, array_keys($main->getOrderStatusList())) && !empty($order_id)) {
-			$order_id = intval($order_id);
-			$status = intval($status);			
-			$sql_update = "UPDATE `<PRE>user_packs`  SET status = '{$status}' WHERE id= {$order_id}";
-			$db->query(	$sql_update);
-		}
-	}
+		global $main;		
+		$this->setPrimaryKey($order_id);
+		$invoice_status = array_keys($main->getOrderStatusList());		
+		if (in_array($status, $invoice_status)) {		
+			$params['status'] = $status;
+			$this->update($params);
+		}		
+	}	
 	
 	
 	/**
@@ -69,13 +73,12 @@ class order {
 	 */
 	public function delete($id) { # Deletes invoice upon invoice id
 		$this->updateOrderStatus($id, ORDER_STATUS_DELETED);		
-		//$query = $db->query("DELETE FROM `<PRE>user_packs` WHERE `userid` = '{$id}'"); //Delete the order
 		return true;
 	}
 	
-	public function edit($order_id) {
-		global $db;	
-		return ;
+	public function edit($id, $params) { # Edit an invoice. Fields created can only be edited?
+		$this->setPrimaryKey($id);
+		$this->update($params);
 	}
 	
 	/**
@@ -109,7 +112,7 @@ class order {
 		if ($db->num_rows($result) > 0 ) {
 			$array = $db->fetch_array($result);
 						
-			$sql = "SELECT addon_id FROM  `<PRE>user_pack_addons` WHERE order_id = '{$id}'";
+			echo $sql = "SELECT addon_id FROM  `<PRE>user_pack_addons` WHERE order_id = '{$id}'";
 			$result_addons = $db->query($sql);
 			$addon_list = array();
 			while ($addon = $db->fetch_array($result_addons)) {
@@ -267,6 +270,7 @@ class order {
 			$billing_cycle_id 	= $order_info['billing_cycle_id'];
 			$addon_selected_list= $order_info['addons'];	
 			
+			
 			//User info
 			$user_info = $user->getUserById($user_id);
 						
@@ -279,7 +283,9 @@ class order {
 			} else {
 				$show_checkboxes = true;	
 			}
+			
 			$result = $addon->showAllAddonsByBillingCycleAndPackage($billing_cycle_id, $package_id, array_flip($addon_selected_list), $show_checkboxes);
+			
 			$array['ADDON'] = $result['html'];
 						 				
 			$total = $total + $result['total'];

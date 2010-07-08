@@ -17,11 +17,11 @@ class addon {
 	public function getAllAddonsByBillingCycleAndPackage($billing_id, $package_id) {
 		global $db;
 		$addon_list = array();		//&& !empty($package_id)
-		if (!empty($billing_id) ) {		
+		if (!empty($billing_id) && !empty($package_id) ) {		
 			$sql = "SELECT a.id, a.name, amount, bc.name  as billing_name  FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 					ON (bc.id = b.billing_id) INNER JOIN `<PRE>package_addons` pa ON (pa.addon_id= a.id) WHERE bc.id = {$billing_id} AND pa.package_id  = {$package_id}";
-			$addons_billing = $db->query($sql);			
-			while($data = $db->fetch_array($addons_billing)) {
+			$result = $db->query($sql);			
+			while($data = $db->fetch_array($result)) {
 				$addon_list[$data['id']] = array('id'=>$data['id'],  'name' => $data['name'], 'amount'=>$data['amount']);									
 			}
 		}
@@ -38,12 +38,11 @@ class addon {
 	 * 
 	 */
 	public function showAllAddonsByBillingCycleAndPackage($billing_id, $package_id, $selected_addon_list = array(), $generate_checkboxes = true) {
-		global $db, $main,$currency;
+		global $db, $main,$currency;		
 		$values = $this->getAllAddonsByBillingCycleAndPackage($billing_id, $package_id);
-			
 		$return_value = array();
 		$html = '';	
-		$total = 0;
+		$total = 0;		
 		if (is_array($values) && count($values) > 0 ){	
 			foreach($values as $value ) {
 					$checked = false;

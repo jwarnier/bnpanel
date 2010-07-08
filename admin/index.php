@@ -8,7 +8,7 @@ $starttime = $mtime;
 
 define("LINK", "../includes/");
 define("CRON", 0);
-include(LINK ."compiler.php");
+require_once LINK ."compiler.php";
 
 //THT Variables
 define("PAGE", "Admin Area");
@@ -240,7 +240,7 @@ if(!$_SESSION['logged']) {
 }
 
 //End the sctipt
-include(LINK ."output.php");
+require_once LINK ."output.php";
 
 //Memory usage
 echo ('MemoryUsage').': '.number_format((memory_get_usage()/1048576), 3, '.', '') .'Mb' ;

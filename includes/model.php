@@ -26,8 +26,7 @@ class model {
         		"WHERE id ='".$this->getPrimaryKey()."'";
        	$db->query($sql); 
 	}
-	
-	
+		
 	public function get() {
 		
 	}

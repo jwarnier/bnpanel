@@ -45,22 +45,18 @@ class page {
 				}
 			break;					
 			case 'all':
-			default :	
+			default :
 					
-				//Package info
-				$sql = "SELECT id, name  FROM `<PRE>packages`";
-				$packages 		= $db->query($sql);
-				while ($data = $db->fetch_array($packages)) {
-					$package_name_list[$data['id']] = $data['name'];
-				}
-				
 				$billing_cycle_name_list = $billing->getAllBillingCycles();
 				
 				//Addons
 				$addons_list = $addon->getAllAddons();				
 				
 				// List of invoices. :)
-				$query = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$_SESSION['cuser']}' ORDER BY `id` ASC");
+				$query = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$_SESSION['cuser']}' AND status <> '".INVOICE_STATUS_DELETED."' ORDER BY `id` ASC");
+				
+				
+				
 				$userdata = mysql_fetch_row($db->query("SELECT `user`,`firstname`,`lastname` FROM `<PRE>users` WHERE `id` = {$_SESSION['cuser']}"));
 				$domain = mysql_fetch_row($db->query("SELECT domain, pid, billing_cycle_id  FROM `<PRE>user_packs` WHERE `userid` = {$_SESSION['cuser']}"));
 				$extra = array(					
@@ -112,18 +108,17 @@ class page {
 						$array['addon_fee'] = unserialize($array['addon_fee']);
 						if (is_array($array['addon_fee']) && count($array['addon_fee']) > 0 ) {
 							foreach($array['addon_fee'] as $addon) {					
-								$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';
+								//$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';
 								$total_amount = $total_amount + $addon['amount'];					
 							}
 						}					
 					}
+					$array['addon_fee'] = null;
 					
-					$array['addon_fee'] = $addon_fee_string;
+					//$array['addon_fee'] = $addon_fee_string;
 					$total_amount 		= $total_amount + $array['amount'];
-					$array['amount'] 	= $total_amount." ".$db->config('currency');
+					$array['amount'] 	= $total_amount." ".$db->config('currency');					
 					
-					$array['edit']  	= '';			
-					$array['delete']  	= '';
 					$array2['list'] .= $style->replaceVar("tpl/invoices/invoice-list-item-client.tpl", array_merge($array, $extra));
 				}
 				$array2['num'] = mysql_num_rows($query);

@@ -42,15 +42,9 @@ class invoice extends model {
 		$this->updateInvoiceStatus($id, INVOICE_STATUS_DELETED);
 	}
 	
-	public function edit($iid, $uid, $amount, $due, $notes) { # Edit an invoice. Fields created can only be edited?
-		global $db;
-		$query = $db->query("UPDATE `<PRE>invoices` SET
-						   `uid` = '{$uid}',
-						   `amount` = '{$amount}',
-						   `due` = '{$due}',
-						   `notes` = '{$notes}',
-						   WHERE `id` = '{$iid}'");
-		return $query;
+	public function edit($id, $params) { # Edit an invoice. Fields created can only be edited?
+		$this->setPrimaryKey($id);
+		$this->update($params);
 	}
 	
 	/**
@@ -259,7 +253,7 @@ class invoice extends model {
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
 	 */
 	public function getInvoice($invoice_id, $read_only = false, $show_price = true) {
-		global $main, $db, $currency, $addon, $email, $package, $order;	
+		global $main, $db, $currency, $addon, $email, $package, $order, $user;	
 		
 		$query = $db->query("SELECT * FROM `<PRE>invoices` WHERE `id` = '{$invoice_id}'");
 		if($db->num_rows($query) == 0) {
@@ -268,26 +262,20 @@ class invoice extends model {
 			
 			$total = 0;			
 			$invoice_info = $db->fetch_array($query);
+			
 			//	var_dump($data);
 			$array['ID'] 		= $invoice_info['id'];
 			$user_id 			= $invoice_info['uid'];
 			$total				= $total + $invoice_info['amount'];
 			
 			//User info
-			$sql = "SELECT id, user, firstname, lastname FROM `<PRE>users` WHERE `id` = ".$user_id;
-			
-			$query_users 		= $db->query($sql);
-			$user_info  		= $db->fetch_array($query_users);
-			$array['USER'] 		=  $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';				
-
-			/*
-			if ($read_only == true) {
-				$array['IS_PAID']  = ($invoice_info['is_paid'] == 1) ? 'yes' : 'no';
-			} else {
-				$array['IS_PAID']  = $main->createCheckbox('', 'is_paid', $invoice_info['is_paid']);
-			}				*/
-			
+			$user_info = $user->getUserById($user_id);
+			//Invoice status list
 			$invoice_status = $main->getInvoiceStatusList();
+						
+			$array['USER'] 		=  $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';				
+			
+			
 			if ($read_only == true) {
 				$array['STATUS'] 	= $invoice_status[$invoice_info['status']];
 			} else {
@@ -315,13 +303,11 @@ class invoice extends model {
 				$invoice_info['addon_fee'] = unserialize($invoice_info['addon_fee']);
 				
 				if (is_array($invoice_info['addon_fee']) && !empty($invoice_info['addon_fee'])) {							
-					foreach ($invoice_info['addon_fee'] as $addon_item) {
-						//var_dump($addon);
+					foreach ($invoice_info['addon_fee'] as $addon_item) {						
 						$addon_selected_list[$addon_item['addon_id']]= $addon_item['amount'];
 					}							
 				}
-			}			
-					
+			}							
 			$domain_info = $order->getOrderByUser($user_id);				
 			$array['domain'] 	= $domain_info['domain'];
 			$package_id 	  	= $domain_info['pid'];
@@ -334,27 +320,20 @@ class invoice extends model {
 			$addon_list = $addon->getAddonsByPackage($package_id);		
 			$addon_list = $addon->getAllAddonsByBillingId($billing_cycle_id);
 			
-			
 			foreach($addon_selected_list as $addon_id => $addon_amount) {
 				if ($read_only == false) {
-					$array['ADDON'] = $addon_list[$addon_id]['name'].' - <input id="addon_'.$addon_id.'" name="addon_'.$addon_id.'" value="'.$addon_amount.'"><br />';				
+					$array['ADDON'] .= $addon_list[$addon_id]['name'].' - <input id="addon_'.$addon_id.'" name="addon_'.$addon_id.'" value="'.$addon_amount.'"><br />';				
 				} else {
-					$array['ADDON'] = $addon_list[$addon_id]['name'].' '.$currency->toCurrency($addon_amount).'<br />';
+					$array['ADDON'] .= $addon_list[$addon_id]['name'].' '.$currency->toCurrency($addon_amount).'<br />';
 				}
 				$total = $total + $addon_amount;
 			}	
-			
-			//Packages feature added				
-			$query = $db->query("SELECT * FROM `<PRE>packages`");
-			$package_list = array();
-			if($db->num_rows($query) > 0) {
-				while($data = $db->fetch_array($query)) {
-					$package_list[$data['id']] = array($data['name'], $data['id']);				
-				}
-			}
-
+						
+			//Packages feature added	
+			$package_list = $package->getAllPackages();			
+	
 			$array['PACKAGE_ID']	 = $package_id;
-			$array['PACKAGE_NAME']	 = $package_list[$package_id][0];
+			$array['PACKAGE_NAME']	 = $package_list[$package_id]['name'];
 			
 			if ($read_only) {
 				$array['PACKAGE_AMOUNT'] = $currency->toCurrency($invoice_info['amount']);
@@ -521,7 +500,7 @@ class invoice extends model {
 					}
 					
 					//var_dump($email_day_count);
-					if ($my_invoice['is_paid'] == 0 && !empty($email_day_count)) {
+					if ($my_invoice['status'] != INVOICE_STATUS_PAID && !empty($email_day_count)) {
 					
 						$user_info = $user->getUserById($uid);
 						$emaildata = $db->emailTemplate('notification');
