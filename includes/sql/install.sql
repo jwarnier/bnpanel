@@ -550,8 +550,9 @@ CREATE TABLE `%PRE%user_pack_addons` (
 
 
 CREATE TABLE `%PRE%order_invoices` (
-  `id` INT  NOT NULL,
+  `id` INT  NOT NULL AUTO_INCREMENT,
   `order_id` INT  NOT NULL,
   `invoice_id` INT  NOT NULL,
   PRIMARY KEY (`id`)
 );
+
