@@ -81,6 +81,9 @@ class model {
     	return "'".$db->strip($v)."'";    	
     }
     
+    /**
+     * Set defaults 
+     */
     public function setDefaults() {
     	$columns = $this->getColumns();
 		$default_list = array();
@@ -90,12 +93,15 @@ class model {
 		return $default_list;		
 	}
 	
-		
-	public function filterParams($params, $attributes) {		
+	/**
+	 * Filter params, remove empty attributes and strips the value
+	 */	
+	public function filterParams($params, $attributes) {
+		global $db;		
 		$filtered_params = array();
 		foreach($params as $key=>$param) {
 			if (in_array($key, $attributes)) {
-				$filtered_params[$key]= "'".$this->strip($param)."'";
+				$filtered_params[$key]= "'".$db->strip($param)."'";
 			}
 		}
 		//Only accept values with something there		
