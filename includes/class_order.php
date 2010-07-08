@@ -79,7 +79,8 @@ class order {
 	}
 	
 	/**
-	 * Gets an order by user
+	 * Gets an order by user 
+	 * IMPORTANT only 1 order per user
 	 */
 	public function getOrderByUser($user_id) {
 		global $db;
@@ -87,7 +88,7 @@ class order {
 		//Getting the domain info
 		$sql = "SELECT id, pid, domain, billing_cycle_id FROM `<PRE>user_packs` WHERE `userid` = ".$user_id;
 		$result 		= $db->query($sql);
-		$order_info  	= $db->fetch_array($result);
+		$order_info  	= $db->fetch_array($result, 'ASSOC');
 		return $order_info;
 	}
 
@@ -135,7 +136,7 @@ class order {
 		}
 		
 		
-		$query2 = $db->query("SELECT * FROM `<PRE>invoices` WHERE `is_paid` = 0 ");
+		$query2 = $db->query("SELECT * FROM `<PRE>invoices` ");
 		$array2['list'] = "";
 		
 		//Package info
