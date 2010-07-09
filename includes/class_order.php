@@ -112,7 +112,7 @@ class order extends model {
 		if ($db->num_rows($result) > 0 ) {
 			$array = $db->fetch_array($result);
 						
-			echo $sql = "SELECT addon_id FROM  `<PRE>user_pack_addons` WHERE order_id = '{$id}'";
+			$sql = "SELECT addon_id FROM  `<PRE>user_pack_addons` WHERE order_id = '{$id}'";
 			$result_addons = $db->query($sql);
 			$addon_list = array();
 			while ($addon = $db->fetch_array($result_addons)) {
@@ -129,7 +129,7 @@ class order extends model {
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
 	 */	 
 	public function getAllOrdersToArray($user_id = 0) {
-		global $main, $db, $style,$currency;
+		global $main, $db, $style, $currency, $package, $billing, $addon, $user;
 		
 		if (empty($user_id)) {
 			$result_order  = $db->query("SELECT * FROM `<PRE>user_packs` WHERE status <> '".ORDER_STATUS_DELETED."' ORDER BY id DESC");	
@@ -139,41 +139,26 @@ class order extends model {
 		}
 		
 		
-		$query2 = $db->query("SELECT * FROM `<PRE>invoices` ");
+		//$query2 = $db->query("SELECT * FROM `<PRE>invoices` ");
 		$array2['list'] = "";
 		
 		//Package info
-		$sql 		= "SELECT id, name  FROM `<PRE>packages`";
-		$packages	= $db->query($sql);
-		while ($data= $db->fetch_array($packages)) {
-			$package_name_list[$data['id']] = $data['name'];
-		}
-		
+		$package_list		= $package->getAllPackages();
+				
 		//Billing cycles
-		$sql = "SELECT id, name  FROM `<PRE>billing_cycles`  WHERE status = ".BILLING_CYCLE_STATUS_ACTIVE;
-		$billings 	= $db->query($sql);
-		while ($data = $db->fetch_array($billings)) {
-			$billing_cycle_name_list[$data['id']] = $data['name'];
-		}
-		
+		$billing_cycle_list = $billing->getAllBillingCycles();
+				
 		//Selecting addons
-		$sql 	= "SELECT id, name  FROM `<PRE>addons` WHERE status = ".ADDON_STATUS_ACTIVE;
-		$addons	= $db->query($sql);
-		
-		while ($data = $db->fetch_array($addons)) {
-			$addons_list[$data['id']] = $data['name'];
-		}
+		$addons_list 		= $addon->getAllAddons();
 		
 		$total_amount = 0;                
-    
+    	$user_pack_status = $main->getOrderStatusList();
+    	
 		while($order_item = $db->fetch_array($result_order)) {
 			//Getting the user info
-			$sql = "SELECT id, user, firstname, lastname FROM `<PRE>users` WHERE `id` = ".$order_item['userid'];
-			$query_users 		= $db->query($sql);
-			$user_info  		= $db->fetch_array($query_users);	
+			$user_info = $user->getUserById($order_item['userid']);
+			
 			$array['ID']		= $order_item['id'];
-					
-			$user_pack_status = $main->getOrderStatusList();
 			
 			if (in_array($order_item['status'], array_keys($user_pack_status))) {
 				$array['STATUS'] = $user_pack_status[$order_item['status']];
@@ -197,7 +182,7 @@ class order extends model {
 						 WHERE type='addon' AND billing_id = $billing_cycle_id AND `order_id` = ".$order_item['id'];
 			$query_addon 	= $db->query($sql);			
 			while($addon_info = $db->fetch_array($query_addon)){				
-				$addon_fee_string.= $addons_list[$addon_info['addon_id']].' - '.$addon_info['amount'].'<br />';
+				$addon_fee_string.= $addons_list[$addon_info['addon_id']]['name'].' - '.$addon_info['amount'].'<br />';
 				$total_amount = $total_amount + $addon_info['amount'];	
 			}
 				
@@ -212,8 +197,8 @@ class order extends model {
 														"<span style='color:red'>Unpaid</span>");
 			$array['due'] =  ($array["is_paid"] == 1 ? '<span style="color:green">'.$array['due'].'</span>' :  '<span style="color:red">'.$array['due'].'</span>');
 			
-			$array['PACKAGE']		 = $package_name_list[$package_id];
-			$array['billing_cycle']  = $billing_cycle_name_list[$billing_cycle_id];
+			$array['PACKAGE']		 = $package_list[$package_id]['name'];
+			$array['billing_cycle']  = $billing_cycle_list[$billing_cycle_id]['name'];
 			if (empty($user_id)) {
 				$array['EDIT']  	= '<a href="index.php?page=orders&sub=edit&do='.$order_item['id'].'"><img src="../themes/icons/note_edit.png" title="Edit" alt="Edit" /></a>';			
 				$array['DELETE']  	= '<a href="index.php?page=orders&sub=delete&do='.$order_item['id'].'"><img src="../themes/icons/delete.png" title="Delete"  alt="Delete" /></a>';
@@ -223,8 +208,7 @@ class order extends model {
 				//This is for the client view
 				$array2['list'] .= $style->replaceVar("tpl/orders/list-item-client.tpl", $array);
 			}
-		}
-				
+		}				
 		//$array2['num'] 			= mysql_num_rows($query);
 		//$array2['numpaid'] 		= intval($array2['num']-mysql_num_rows($query2));
 		//$array2['numunpaid'] 	= mysql_num_rows($query2);
@@ -289,35 +273,27 @@ class order extends model {
 			$array['ADDON'] = $result['html'];
 						 				
 			$total = $total + $result['total'];
+
+			//Package info
+			$package_list		= $package->getAllPackages();
+		
+			$package_with_amount = $package->getAllPackagesByBillingCycle($billing_cycle_id);				
 			
-			//Packages feature added				
-			$query = $db->query("SELECT * FROM `<PRE>packages`");
-			if($db->num_rows($query) == 0) {
-				echo "There are no packages, you need to add a package first!";
-				return;
-			}
-			
-			$package_list = array();		
-			while($package_data = $db->fetch_array($query)) {
-				$package_list[$package_data['id']] = array($package_data['name'], $package_data['id']);				
-			}			
-			$packages = $package->getAllPackagesByBillingCycle($billing_cycle_id);				
-			
-			$total = $total + $packages[$package_id]['amount'];
+			$total = $total + $package_with_amount[$package_id]['amount'];
 			
 			if($read_only == true) {		
-				$array['PACKAGES'] = $package_list[$package_id][0];
-				$array['PACKAGE_AMOUNT'] = $currency->toCurrency($packages[$package_id]['amount']);									
-			} else {		
-		   		$package_list = array();
-				foreach($packages as $package) {
-					$package_list[$package['id']] = array($package['name'].' - '.$currency->toCurrency($package['amount']), $package['id']);									
+				$array['PACKAGES'] 		 = $package_list[$package_id]['name'];
+				$array['PACKAGE_AMOUNT'] = $currency->toCurrency($package_with_amount[$package_id]['amount']);									
+			} else {
+				foreach($package_list as $package_item) {
+					$package_list[$package_item['id']] = $package_item['name'].' - '.$currency->toCurrency($package_with_amount[$package_item['id']]['amount']);									
 				}				
-				$array['PACKAGES'] = $main->dropDown('package_id', $package_list, $package_id, 1, '', array('onchange'=>'loadAddons(this);'));				
+				$array['PACKAGES'] = $main->createSelect('package_id', $package_list, $package_id, 1, '', array('onchange'=>'loadAddons(this);'));				
 			}		
 			
 			//Billing cycle
 			$billing_list = $billing->getAllBillingCycles();
+			
 			foreach($billing_list as $billing_item) {
 				$billing_list[$billing_item['id']] = $billing_item['name'];
 			}						
@@ -326,6 +302,7 @@ class order extends model {
 			} else {
 				$array['BILLING_CYCLES'] = $main->createSelect('billing_cycle_id', $billing_list, $billing_cycle_id, 1,'', array('onchange'=>'loadPackages(this);'));
 			}		
+			
 			$order_status = $main->getOrderStatusList();
 			if($read_only == true) {							
 				$array['STATUS'] = $order_status[$order_info['status']];
