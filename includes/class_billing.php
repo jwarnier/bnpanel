@@ -8,7 +8,21 @@ if(THT != 1){
 
 class billing extends model {
 	
+	public $columns 	= array('id', 'number_months','name', 'status');
 	public $table_name = 'billing_cycles';
+	
+	public function create($params) { 
+		$billing_id = $this->save($params);
+		return $billing_id;
+	}
+	
+	public function edit($id, $params) {		
+		$this->setPrimaryKey($id);		
+		$this->update($params);
+	}
+	public function delete() {
+		parent::delete();
+	}	
 	
 	/**
 	 * Generates a select menu with the available addons
