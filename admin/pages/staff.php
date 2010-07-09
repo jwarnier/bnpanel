@@ -164,9 +164,9 @@ class page {
 					while($data = $db->fetch_array($query)) {
 						//Do not delete my self
 						if ($data['id'] != $user_id) {
-							echo $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=delete&do='.$data['user'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
+							echo $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=delete&do='.$data['user'].'"><img title="Delete" src="'. URL .'themes/icons/delete.png"></a>');
 						} else {
-							echo $main->sub("<strong>".$data['user']."</strong>", '<img src="'. URL .'themes/icons/delete_na.png">');
+							echo $main->sub("<strong>".$data['user']."</strong>", '<img title="You can\'t delete yourself" src="'. URL .'themes/icons/delete_na.png">');
 						}
 					}
 				}
