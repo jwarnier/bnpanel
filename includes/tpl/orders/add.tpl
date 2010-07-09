@@ -62,9 +62,14 @@ function lookup(inputString) {
 function fill(thisValue,id) {
     $('#inputString').val(thisValue);
     $('#user_id').val(id);
-   	$('#suggestions').hide();
+   	$('#suggestions').hide();   	
+   	$('#inputString').attr('disabled', 'disabled');
 }
 
+function reset() {	
+	$('#inputString').removeAttr('disabled');
+	$('#inputString').val('');	
+}
 </script>
 
 <ERRORS>
@@ -74,33 +79,25 @@ function fill(thisValue,id) {
 .suggestionsBox {
     position: relative;
    /* left: 30px; */
-    margin: 10px 0px 0px 0px;
+    margin: 0px 0px 5px 0px;
     width: 350px;
-    background-color: #fff;
-    -moz-border-radius: 7px;
-    -webkit-border-radius: 7px;
-    border: 2px solid #000;
+    background-color: #fff;    
+    border: 2px solid #CFD0D2;
     color: #000;
 }
 .suggestionList {
-    -moz-border-radius: 7px;
-    -webkit-border-radius: 7px;
     margin: 0px;
     padding: 0px;
     list-style-type:none;
 }
 .suggestionList li {
-    -moz-border-radius: 7px;
-    -webkit-border-radius: 7px;
-    margin: 0px 0px 3px 0px;
-    padding: 3px;
-    cursor: pointer;
+	cursor: pointer;
+	padding:3px;
 }
 
 .suggestionList li:hover {
-    -moz-border-radius: 7px;
-    -webkit-border-radius: 7px;
-    background-color: #659CD8;
+    background-color: #D2E0F9;
+    padding:3px;
 }
 </style>
     
@@ -111,7 +108,7 @@ function fill(thisValue,id) {
     <td width="20%" valign="top">User</td>
     <td >            
 	    <input name="user_id" type="hidden" id="user_id" />    
-	    <input size="30" id="inputString" onkeyup="lookup(this.value);" type="text" />
+	    <input size="30" id="inputString" onkeyup="lookup(this.value);" type="text" /> <img onclick="reset();" src="<URL>themes/icons/arrow_refresh.png">
 		<div class="suggestionsBox" id="suggestions" style="display: none;">
 			<div class="suggestionList" id="autoSuggestionsList"></div>
 		</div> 		
