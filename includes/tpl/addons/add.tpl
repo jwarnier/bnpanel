@@ -21,12 +21,7 @@
     <td><textarea name="description" id="description" cols="45" rows="5"></textarea></td>
   </tr>
   
-      <tr>
-    <td valign="top">Active</td>
-    <td>
-	 %STATUS%	
-    </td>
-  </tr>
+
   
     
   <!--
@@ -43,6 +38,14 @@
     </td>
   </tr>
    
+   
+         <tr>
+    <td valign="top">Active</td>
+    <td>
+	 %STATUS%	
+    </td>
+  </tr>
+  
 
 </table>
 <table width="100%" border="0" cellspacing="2" cellpadding="0">

@@ -32,7 +32,7 @@ class page {
 	
 	public function content() { 
 		# Displays the page 
-		global $main, $style, $db, $billing;
+		global $main, $style, $db, $billing, $addon;
 		
 		switch($main->getvar['sub']) {
 			default:
@@ -54,16 +54,15 @@ class page {
 								$n++;
 							}
 						}
-						//var_dump($main->postvar);
-						$status = ADDON_STATUS_INACTIVE;
 						if ($main->postvar['status'] == 'on') {
-							$status = ADDON_STATUS_ACTIVE;
+							$main->postvar['status'] = ADDON_STATUS_ACTIVE;
+						} else {
+							$main->postvar['status'] = ADDON_STATUS_INACTIVE;
 						}
-						
-						$db->query("INSERT INTO `<PRE>addons` (name, setup_fee, description, status) VALUES('{$main->postvar['name']}', '{$main->postvar['setup_fee']}', '{$main->postvar['description']}', '{$status}')");
-						//echo "SELECT * FROM `<PRE>billing_cycles`";
+						//Addon creation
+						$product_id = $addon->create($main->postvar);												
 						$query = $db->query("SELECT * FROM `<PRE>billing_cycles` WHERE status = ".BILLING_CYCLE_STATUS_ACTIVE);
-						$product_id = mysql_insert_id();
+						 
 						if($db->num_rows($query) > 0) {											
 							$billing_cycle_result = '';
 							while($data = $db->fetch_array($query)) {										
@@ -80,11 +79,9 @@ class page {
 				}
 				
 				$billing_cycle_result = $billing->generateBillingInputs();
-				$array['BILLING_CYCLE'] = $billing_cycle_result;	
+				$array['BILLING_CYCLE'] = $billing_cycle_result;				
 				
-				
-				$array['STATUS'] = $main->createCheckbox('', 'status');						
-									
+				$array['STATUS'] = $main->createCheckbox('', 'status');
 	
 				//----- Finish billing cycle					
 				echo $style->replaceVar("tpl/addons/add.tpl", $array);
@@ -98,7 +95,7 @@ class page {
 					if($db->num_rows($query) == 0) {
 						echo "That Addon doesn't exist!";	
 					} else {
-						if($_POST) {							
+						if($_POST) {					
 							foreach($main->postvar as $key => $value) {
 								//if($value == "" && !$n && $key != "admin") {
 								if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle") {
@@ -117,45 +114,43 @@ class page {
 									}
 								}
 									
-								$status = ADDON_STATUS_INACTIVE;
 								if ($main->postvar['status'] == 'on') {
-									$status = ADDON_STATUS_ACTIVE;
+									$main->postvar['status'] = ADDON_STATUS_ACTIVE;
+								} else {
+									$main->postvar['status'] = ADDON_STATUS_INACTIVE;
 								}
-															
-										   
-								$db->query("UPDATE `<PRE>addons` SET
-										   `name`			= '{$main->postvar['name']}',
-										   `description` 	= '{$main->postvar['description']}',
-										   `status` 		= '{$status}',
-										   `setup_fee` 		= '{$main->postvar['setup_fee']}'
-										   WHERE `id` 		= '{$main->getvar['do']}'");								
 								
+								//Editing addon											
+								$addon->edit($main->getvar['do'], $main->postvar);
+							
+								var_dump($main->postvar);
 								//-----Adding billing cycles 
 								
 								//Deleting all billing_products relationship							
 								$query = $db->query("DELETE FROM `<PRE>billing_products` WHERE product_id = {$main->getvar['do']} AND type='".BILLING_TYPE_ADDON."' ");
 								   
-								$query = $db->query("SELECT * FROM `<PRE>billing_cycles` WHERE status = ".BILLING_CYCLE_STATUS_ACTIVE);
+								
+								$billing_list = $billing->getAllBillingCycles();
+								
 								$product_id = $main->getvar['do'];
-								if($db->num_rows($query) > 0) {										
-									$billing_cycle_result = '';
+								$billing_cycle_result = '';
 									
-									//Add new relations
-									while($data = $db->fetch_array($query)) {												
-										$variable_name = 'billing_cycle_'.$data['id'];
-										//var_dump($variable_name);
-										if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {
-											$sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$data['id']}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_ADDON."')";
-											$db->query($sql_insert);									
-										}
-									}						
-								}
-								//-----Finish billing cycles
-						
+								//Add new relations
+								foreach($billing_list as $data) {												
+									$variable_name = 'billing_cycle_'.$data['id'];
+									//var_dump($variable_name);
+									if (isset($main->postvar[$variable_name]) && !empty($main->postvar[$variable_name]) ) {
+										echo $sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$data['id']}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_ADDON."')";
+										$db->query($sql_insert);									
+									}
+								}						
+							
+								//-----Finish billing cycles						
 								$main->errors("Package has been edited!");
 								$main->done();
 							}
 						}
+						
 						$data = $db->fetch_array($query);
 						
 						$array['BACKEND'] = $data['backend'];
@@ -165,7 +160,7 @@ class page {
 						
 						$array['ID'] = $data['id'];
 						
-						global $type;
+						//global $type;
 						//$array['FORM'] = $type->acpPedit($data['type'], $cform);
 			
 						
@@ -201,13 +196,7 @@ class page {
 				
 			case 'delete':
 				if($main->getvar['do']) {
-					//Deleting addons
-					$db->query("DELETE FROM `<PRE>addons` WHERE `id` = '{$main->getvar['do']}'");					
-					//$db->query("DELETE FROM `<PRE>billing_products` WHERE `product_id` = '{$main->getvar['do']}' AND type = '".BILLING_TYPE_ADDON."'");
-					
-					//Deleting relation between addons and packages 
-					$db->query("DELETE FROM `<PRE>package_addons` WHERE `addon_id` = '{$main->getvar['do']}'");
-					
+					$addon->delete($main->getvar['do']);
 					$main->errors("The addon has been Deleted!");		
 				}
 				$query = $db->query("SELECT * FROM `<PRE>addons`");

@@ -6,7 +6,30 @@ if(THT != 1){
 	die();
 }
 
-class addon {	
+class addon extends model {
+	
+	public $columns 	= array('id', 'name','setup_fee', 'description','status');
+	public $table_name = 'addons';
+	
+	public function create($params) {
+		$addon_id = $this->save($params);
+		return $addon_id;
+	}	
+	
+	public function edit($id, $params) {		
+		$this->setPrimaryKey($id);
+		$this->update($params);
+	}
+	
+	
+	public function delete($id) {
+		//Deleting addons
+		$db->query("DELETE FROM `<PRE>addons` WHERE `id` = '{$id}'");					
+		
+		//Deleting relation between addons and packages 
+		$db->query("DELETE FROM `<PRE>package_addons` WHERE `addon_id` = '{$id}'");
+		
+	}
 	
 	/**
 	 * Gets all adddons by billing cycle id and package id

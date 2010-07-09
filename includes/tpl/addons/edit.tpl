@@ -20,18 +20,20 @@
     <td><textarea name="description" id="description" cols="45" rows="5">%DESCRIPTION%</textarea></td>
   </tr>
 
-      <tr>
-    <td valign="top">Active</td>
-    <td>
-	 %STATUS%	
-    </td>
-  </tr>
+
   
  <tr> 
    <td valign="top">Billing cycle:</td>
     <td>
 	%BILLING_CYCLE%  
   	</td>
+  </tr>
+  
+        <tr>
+    <td valign="top">Active</td>
+    <td>
+	 %STATUS%	
+    </td>
   </tr>
   
   

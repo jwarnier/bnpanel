@@ -43,7 +43,7 @@ class page {
 							$n++;
 						}
 					}							
-					if(!$n) {						
+					if(!$n) {			
 						
 						//Creating an order		
 						$params['userid'] 		= $main->postvar['user_id'];
@@ -56,10 +56,9 @@ class page {
 						$params['billing_cycle_id'] = $main->postvar['billing_cycle_id'];
 						
 						if (!empty($params['userid']) && !empty($params['pid'])) {
-							$order_id = $order->create($params);
-							//Add addons to a new order		
+							$order_id = $order->create($params);	
 						}
-						
+						//Add addons to a new order	
 						if (!empty($order_id) && is_numeric($order_id)) {
 							//Add addons
 							$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
@@ -112,6 +111,7 @@ class page {
 							if(!$n) {			
 								$main->postvar['signup'] = strtotime($main->postvar['created_at']);
 								$main->postvar['pid'] 	 = $main->postvar['package_id'];
+								
 								//Editing the Order								
 								$order->edit($main->getvar['do'], $main->postvar);
 								$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
@@ -125,9 +125,12 @@ class page {
 									}															
 								}
 								//Updating addons of an Order													
-								$addon->updateAddonOrders($new_addon_list, $main->postvar['order_id'], true);								
+								$addon->updateAddonOrders($new_addon_list, $main->postvar['order_id'], true);		
 								$main->errors("Order has been edited!");
-								//$main->done();
+								
+								if ($main->postvar['status'] == ORDER_STATUS_DELETED) {
+									$main->redirect('?page=orders&sub=all');	
+								}
 							}
 						}						
 					}					

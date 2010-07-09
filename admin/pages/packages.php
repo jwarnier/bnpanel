@@ -192,7 +192,7 @@ class page {
 								//-----Adding addons cycles 
 								
 								//Deleting all billing_products relationship							
-								echo "DELETE FROM `<PRE>package_addons` WHERE package_id = {$main->getvar['do']} ";
+								
 								$query = $db->query("DELETE FROM `<PRE>package_addons` WHERE package_id = {$main->getvar['do']} ");
 								   
 								$query = $db->query("SELECT * FROM `<PRE>addons`");
