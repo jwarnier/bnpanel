@@ -38,8 +38,11 @@ class model {
        	$db->query($sql); 
 	}
 		
-	public function get() {
-		
+	public function delete() {
+		global $db;
+		$sql = 'DELETE FROM '.$this->getTableName().' '.        		
+        		"WHERE id ='".$this->getPrimaryKey()."'";
+       	$db->query($sql);
 	}
 	
 	public function getTableName() {			
