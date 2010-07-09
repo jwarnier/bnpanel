@@ -35,10 +35,7 @@ class invoice extends model {
 		}		
 	}
 	
-	public function delete($id) { # Deletes invoice upon invoice id
-		//global $db;
-		//$query = $db->query("DELETE FROM `<PRE>invoices` WHERE `id` = '{$id}'"); //Delete the invoice
-		//return $query;		
+	public function delete($id) { # Deletes invoice upon invoice id	
 		$this->updateInvoiceStatus($id, INVOICE_STATUS_DELETED);
 	}
 	
@@ -503,7 +500,7 @@ class invoice extends model {
 					if ($my_invoice['status'] != INVOICE_STATUS_PAID && !empty($email_day_count)) {
 					
 						$user_info = $user->getUserById($uid);
-						$emaildata = $db->emailTemplate('notification');
+						$emaildata = $db->emailTemplate('renewalnotice');
 						
 						$invoice_info = $this->getInvoice($my_invoice['id'], true); 
 											
