@@ -49,7 +49,7 @@ class user extends model {
 	 */
 	public function userNameExists($username) {
 		global $db;
-		$query = $db->query("SELECT * FROM ".$this->table_name." WHERE `user` = '{$username}'");
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `user` = '{$username}'");
 		if($db->num_rows($query) > 0) {
 			return true;
 		} else {	
@@ -79,7 +79,7 @@ class user extends model {
 	 */
 	public function getUserById($user_id) {
 		global $db, $main;
-		$query = $db->query("SELECT * FROM `<PRE>users` WHERE `id` = '{$db->strip($user_id)}'");
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `id` = '{$db->strip($user_id)}'");
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That user doesn't exist!";
 			$array['User ID'] = $user_id;
@@ -98,7 +98,7 @@ class user extends model {
 		global $db;
 		$user_list = array();
 		if (!empty($query)) {
-			$sql = "SELECT * FROM `<PRE>users` 
+			$sql = "SELECT * FROM ".$this->getTableName()." 
 						  WHERE user 		LIKE '%{$db->strip($query)}%' OR 
 								email 		LIKE '%{$db->strip($query)}%'  OR 
 								firstname 	LIKE '%{$db->strip($query)}%'  OR

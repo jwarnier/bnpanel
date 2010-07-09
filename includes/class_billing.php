@@ -6,7 +6,9 @@ if(THT != 1){
 	die();
 }
 
-class billing {
+class billing extends model {
+	
+	public $table_name = 'billing_cycles';
 	
 	/**
 	 * Generates a select menu with the available addons
@@ -16,7 +18,7 @@ class billing {
 	 */
 	public function generateBillingInputs($selected_values = array()) {
 		global $db,$main;
-		$sql = "SELECT * FROM `<PRE>billing_cycles` WHERE status = ".BILLING_CYCLE_STATUS_ACTIVE;
+		$sql = "SELECT * FROM ".$this->getTableName()." WHERE status = ".BILLING_CYCLE_STATUS_ACTIVE;
 		$query = $db->query($sql);		
 		$billing_cycle_result = '';
 		while($data = $db->fetch_array($query)) {
@@ -34,7 +36,7 @@ class billing {
 		if (!in_array($status, array(BILLING_CYCLE_STATUS_ACTIVE, BILLING_CYCLE_STATUS_INACTIVE))) {
 			$status = BILLING_CYCLE_STATUS_ACTIVE;
 		}		
-		$query = $db->query("SELECT * FROM `<PRE>billing_cycles` WHERE status = ".$status);
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE status = ".$status);
 		$billing_list = array();				
 		if($db->num_rows($query) > 0) {											
 			$billing_cycle_result = '';
@@ -48,7 +50,7 @@ class billing {
 	public function getBilling($id) {
 		global $db;
 		$id = intval($id);
-		$sql = "SELECT * FROM `<PRE>billing_cycles` WHERE id = ".$id;
+		$sql = "SELECT * FROM ".$this->getTableName()." WHERE id = ".$id;
 		$result = $db->query($sql);
 		$data = array();		
 		if ($db->num_rows($result) > 0) {
