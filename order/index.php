@@ -19,6 +19,9 @@ if($main->getvar['do'] == "logout") {
 echo $style->get("header.tpl"); #Output Header
 $ip = $_SERVER['REMOTE_ADDR'];
 
+//Deleting check  
+unset($_SESSION['check']);
+
 #Check stuff
 if($db->config("general") == 0) {
 	$maincontent = $main->table("Signups Closed", $db->config("message"));
@@ -33,14 +36,18 @@ else {
 	$_SESSION['orderform'] = true;	
 }
 
+
+global $billing; 
+
 echo '<div id="ajaxwrapper">'; #Ajax wrapper, for steps
 
 //Get all packages
 if(!$main->getvar['id']) {
-$packages2 = $db->query("SELECT * FROM `<PRE>packages` WHERE `is_hidden` = 0 AND `is_disabled` = 0 ORDER BY `order` ASC"); 
+	$packages2 = $db->query("SELECT * FROM `<PRE>packages` WHERE `is_hidden` = 0 AND `is_disabled` = 0 ORDER BY `order` ASC"); 
 } else {
 	$packages2 = $db->query("SELECT * FROM `<PRE>packages` WHERE `is_disabled` = 0 AND `id` = '{$main->getvar['id']}'");
 }
+
 if($db->num_rows($packages2) == 0) {
 	echo $main->table("No packages", "Sorry there are no available packages!");
 } else {
@@ -51,7 +58,8 @@ if($db->num_rows($packages2) == 0) {
 		$array2['NAME'] 		= $data['name'];
 		$array2['DESCRIPTION'] 	= $data['description'];
 		$array2['ID']			= $data['id'];
-		$array['PACKAGES'] .= $style->replaceVar("tpl/orderpackages.tpl", $array2);	
+		$array2['PACKAGE_TYPE']	= $data['type'];
+		$array['PACKAGES'] 	   .= $style->replaceVar("tpl/orderpackages.tpl", $array2);	
 		$n++;
 		if($n == 1) {
 			$array['PACKAGES'] .= '<td width="2%"></td>';	
@@ -62,21 +70,20 @@ if($db->num_rows($packages2) == 0) {
 		}
 		
 		//Selecting billing cycles
-		$billing_cycles = $db->query("SELECT * FROM `<PRE>billing_cycles` WHERE status = ".BILLING_CYCLE_STATUS_ACTIVE);
+		$billing_cycle_data = $billing->getAllBillingCycles();	
 		$array['BILLING_CYCLE'] = '';
-		while($billing_cycle_data = $db->fetch_array($billing_cycles)) {
-			$array['BILLING_CYCLE'].= '<option value="'.$billing_cycle_data['id'].'">'.$billing_cycle_data['name'].'</option>';
-		}
-			
+		foreach($billing_cycle_data as $billing_data) {
+			$array['BILLING_CYCLE'].= '<option value="'.$billing_data['id'].'">'.$billing_data['name'].'</option>';
+		}		
 	}
+	$array['COUNTRY_SELECT'] = $main->countrySelect();			
 	$array['TOS'] = $db->config('tos');
 	$array['USER'] = "";
 	$array['DOMAIN'] = '<input name="cdom" id="cdom" type="text" />';
 	$sub = $db->query("SELECT * FROM `<PRE>subdomains`");
 	if($db->num_rows($sub) == 0) {
 		$array["CANHASSUBDOMAIN"] = "";
-	}
-	else {
+	} else {
 		$array["CANHASSUBDOMAIN"] = '<option value="sub">Subdomain</option>';
 	}
 	while($sub2 = $db->fetch_array($sub)) {
@@ -101,10 +108,6 @@ if($db->num_rows($packages2) == 0) {
 
 }
 echo '</div>'; #End it
-
 echo $style->get("footer.tpl"); #Output Footer
-
 //Output
 include(LINK ."output.php");
-
-?>
