@@ -19,18 +19,19 @@ class order extends model {
 	 * @param	float	amount
 	 * @param	date	expiration date
 	 */
-	public function create($user_id, $username, $domain, $package_id, $signup, $status, $additional, $billing_cycle_id) {
-		global $db, $email;
+	public function create($params) {
+		$order_id = $this->save($params);	     
 		/*
+	
 		$emailtemp 		= $db->emailTemplate('neworder');
 		$array['USER'] 	= $client['user'];
 		$array['DUE'] 	= strftime("%D", $due);
 		$email->send($client['email'], $emailtemp['subject'], $emailtemp['content'], $array);
-		*/
+	
 		$sql = "INSERT INTO `<PRE>user_packs` (userid, username, domain, pid, signup, status, additional, billing_cycle_id )
 				VALUES('{$user_id}', '{$username}', '{$domain}', '{$package_id}','{$signup}','{$status}','{$additional}','{$billing_cycle_id}')";
 		$db->query($sql);
-		$order_id = mysql_insert_id();	
+		$order_id = mysql_insert_id();*/	
 		return	$order_id;
 	}
 	
