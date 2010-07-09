@@ -233,9 +233,8 @@ class AJAX {
 	public function clientcheck() {
 		if($_SESSION['check']['email'] == true && $_SESSION['check']['user'] == true && $_SESSION['check']['pass'] == true && $_SESSION['check']['human'] == true && $_SESSION['check']['address'] == true && $_SESSION['check']['state'] == true && $_SESSION['check']['zip'] == true && $_SESSION['check']['phone'] == true) {
 			echo 1;	
-		}
-		else {
-			echo 1;	
+		} else {
+			echo 0;	
 		}
 	}
 	
@@ -265,6 +264,7 @@ class AJAX {
 		global $type;
 		global $main;
 		$ptype = $type->determineType($main->getvar['package']);
+		
 		echo $type->orderForm($ptype);
 	}
 	
