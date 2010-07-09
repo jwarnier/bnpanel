@@ -23,9 +23,7 @@ class page {
 	}
 	
 	public function content() { # Displays the page 
-		global $main;
-		global $style;
-		global $db;
+		global $main, $style, $db, $billing;
 		switch($main->getvar['sub']) {
 			default:
 				if($_POST) {
@@ -45,12 +43,13 @@ class page {
 								$n++;
 							}
 						}
-						$status = BILLING_CYCLE_STATUS_INACTIVE;
-						if ($main->postvar['status'] == 'on') {
-							$status = BILLING_CYCLE_STATUS_ACTIVE;
-						}
-						$sql = "INSERT INTO `<PRE>billing_cycles` (name, number_months, status) VALUES('{$main->postvar['name']}', '{$main->postvar['number_months']}' , '$status')";
-						$db->query($sql);						
+						
+						if ($main->postvar['status'] == 'on') {							
+							$main->postvar['status'] = BILLING_CYCLE_STATUS_ACTIVE;
+						} else {
+							$main->postvar['status'] = BILLING_CYCLE_STATUS_INACTIVE;
+						}												
+						$billing->create($main->postvar);					
 						$main->errors("Biiling cycle has been added!");
 					}
 				}
@@ -86,26 +85,21 @@ class page {
 										$n++;
 									}
 								}
-								$status = BILLING_CYCLE_STATUS_INACTIVE;
-								if ($main->postvar['status'] == 'on') {
-									$status = BILLING_CYCLE_STATUS_ACTIVE;
+								if ($main->postvar['status'] == 'on') {							
+									$main->postvar['status'] = BILLING_CYCLE_STATUS_ACTIVE;
+								} else {
+									$main->postvar['status'] = BILLING_CYCLE_STATUS_INACTIVE;
 								}
-								
-								$sql = "UPDATE `<PRE>billing_cycles` SET
-										   `name` = '{$main->postvar['name']}',
-										    `status` = '{$status}',
-										   `number_months` = '{$main->postvar['number_months']}'										  
-										   WHERE `id` = '{$main->getvar['do']}'";
-								$db->query($sql);
+								$billing->edit($main->getvar['do'],$main->postvar);								
 								$main->errors('Billing cycle has been edited!');
-							}
-							
+								$main->done();
+							}							
 						}
+						
 						$data = $db->fetch_array($query);
 						$array['ID'] = $data['id'];					
 						$array['NAME'] = $data['name'];
-						
-						
+												
 						for($i = 1; $i<=48; $i++) {
 							$values[] = array($i,$i);
 						}						
@@ -131,7 +125,8 @@ class page {
 				
 			case 'delete':
 				if($main->getvar['do']) {
-					$db->query("DELETE FROM `<PRE>billing_cycles` WHERE `id` = '{$main->getvar['do']}'");
+					$billing->setPrimaryKey($main->getvar['do']);
+					$billing->delete();
 					$main->errors("Billing cycles has been Deleted!");		
 				}
 				$query = $db->query("SELECT * FROM `<PRE>billing_cycles`");
