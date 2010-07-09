@@ -108,13 +108,17 @@ class page {
 						$user->edit($main->getvar['do'], $main->postvar);
 					}
 					$array = $user->getUserById($main->getvar['do']);
-					$array['status'] = $main->createSelect('status', $main->getUserStatusList(), $array['status'], 1);	
+					
+					$array['status'] = $main->createSelect('status', $main->getUserStatusList(), $array['status'], 1);
+					
+					$array['country']  = $main->countrySelect($array['country']);
+						
 					$main_array['CONTENT'] =  $style->replaceVar("tpl/user/edit.tpl", $array);
 					$main_array['BOX'] 		= "";
 					$main_array['ID'] 		= $main->getvar['do'];
-					echo $style->replaceVar("tpl/clientview.tpl", $main_array);	
-						
-				}											
+					
+					echo $style->replaceVar("tpl/clientview.tpl", $main_array);							
+				}
 			break;
 			
 			case 'email':
