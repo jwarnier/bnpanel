@@ -44,17 +44,22 @@ class page {
 						}
 					}							
 					if(!$n) {						
-						$signup 		= strtotime($main->postvar['created_at']);
-						$user_id		= $main->postvar['user_id'];
-						$username		= "";
-						$domain			= $main->postvar['domain'];
-						$package_id		= $main->postvar['package_id'];
-						$status			= $main->postvar['status'];
-						$additional 	= '';
-						$billing_cycle_id = $main->postvar['billing_cycle_id'];
 						
-						//Creating an order
-						$order_id = $order->create($user_id, $username, $domain, $package_id, $signup, $status, $additional, $billing_cycle_id);
+						//Creating an order		
+						$params['userid'] 		= $main->postvar['user_id'];
+						$params['username'] 	= '';
+						$params['domain'] 		= $main->postvar['domain'];
+						$params['pid'] 			= $main->postvar['package_id'];
+						$params['signup'] 		= strtotime($main->postvar['created_at']);
+						$params['status'] 		= $main->postvar['status'];
+						$params['additional']	= '';
+						$params['billing_cycle_id'] = $main->postvar['billing_cycle_id'];
+						
+						if (!empty($params['userid']) && !empty($params['pid'])) {
+							$order_id = $order->create($params);
+							//Add addons to a new order		
+						}
+						
 						if (!empty($order_id) && is_numeric($order_id)) {
 							//Add addons
 							$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
@@ -104,24 +109,11 @@ class page {
 									$n++;
 								}*/
 							}							
-							if(!$n) {
-								/*
-								$signup = 
-								
-								$update_sql = "UPDATE `<PRE>user_packs` SET
-										  		`domain` = '{$main->postvar['domain']}',
-										   		`signup` = '{$signup}',
-										   		`status` = '{$main->postvar['status']}',
-										   		`additional` = '{$main->postvar['additional']}',
-										   		`billing_cycle_id` = '{$main->postvar['billing_cycle_id']}',
-										   		`pid` = '{$main->postvar['package_id']}'
-										   		WHERE `id` = '{$main->getvar['do']}'";										   
-								$db->query($update_sql);
-								*/
+							if(!$n) {			
 								$main->postvar['signup'] = strtotime($main->postvar['created_at']);
-								$main->postvar['pid'] 	 = $main->postvar['package_id'];								
-								$order->edit($main->getvar['do'], $main->postvar);								
-								
+								$main->postvar['pid'] 	 = $main->postvar['package_id'];
+								//Editing the Order								
+								$order->edit($main->getvar['do'], $main->postvar);
 								$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
 																
 								$new_addon_list = array();																
@@ -131,16 +123,15 @@ class page {
 									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
 										$new_addon_list[] = $addon_id;				
 									}															
-								}		
-													
+								}
+								//Updating addons of an Order													
 								$addon->updateAddonOrders($new_addon_list, $main->postvar['order_id'], true);								
 								$main->errors("Order has been edited!");
 								//$main->done();
 							}
 						}						
 					}					
-					$return_array = $order->getOrder($main->getvar['do'], false, false);
-					
+					$return_array = $order->getOrder($main->getvar['do'], false, false);					
 					echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);
 				}
 			break;
@@ -232,8 +223,7 @@ class page {
 				$return_array = $order->getAllOrdersToArray();		
 				echo '<ERRORS>';		
 				echo $style->replaceVar("tpl/orders/admin-page.tpl", $return_array);				
-			break;	
-			
+			break;			
 		}
 	}
 }

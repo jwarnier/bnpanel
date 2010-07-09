@@ -240,11 +240,21 @@ class server {
 												  'User registered.')");												  
 				
 				//Creating a new order
-				$order_id = $order->create($data['id'], $main->getvar['username'], $main->getvar['fdom'], $package_id, $date, ORDER_STATUS_WAITING_ADMIN_VALIDATION , $additional, $billing_cycle_id);
-								
-				//Add addons to a new order		
-				$order->addAddons($order_id, $main->getvar['addon_ids']);
+				$params['userid'] 		= $data['id'];
+				$params['username'] 	= $main->getvar['username'];
+				$params['domain'] 		= $main->getvar['fdom'];
+				$params['pid'] 			= $package_id;
+				$params['signup'] 		= $date;
+				$params['status'] 		= ORDER_STATUS_WAITING_ADMIN_VALIDATION;
+				$params['additional']	= $additional;
+				$params['billing_cycle_id'] = $billing_cycle_id;
 				
+				if (!empty($params['userid']) && !empty($params['pid'])) {
+					$order_id = $order->create($params);
+					//Add addons to a new order		
+					$order->addAddons($order_id, $main->getvar['addon_ids']);
+				}
+								
 				$url = $db->config('url');
 				$array['USER']	= $user_name;
 				$array['PASS'] 	= $main->getvar['password']; 
