@@ -66,8 +66,8 @@
   </tr> 
   
    <tr>
-    <td valign="top">Total:</td>
-    <td>%TOTAL%</td>
+    <td >Total:</td>
+    <td valign="top" ><h2>%TOTAL%</h2></td>
   </tr>
     
 </table>
