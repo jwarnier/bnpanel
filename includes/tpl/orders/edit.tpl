@@ -7,13 +7,24 @@
 	});
 
 	$(function() {
-		$( "#created_at" ).datepicker({ 
+		$( "#created_at" ).datepicker({
 			dateFormat: 'yy-mm-dd',
 			showOn: 'button',
 			buttonImage: '<URL>themes/icons/calendar_add.png'			 
-			});
+		});
+
+		$("#show_preview").dialog({ autoOpen: false, width: '400px' });
+
 	});
-	
+
+	function send(template, id) {		
+		$.get("<AJAX>?function=sendtemplate&template="+template+"&order_id="+id,  function(data) {
+			$("#show_preview").html(data);				
+		});						
+		$("#show_preview").dialog('open');
+	}
+
+
 </script>
 
 <script type="text/javascript">
@@ -102,13 +113,28 @@ function loadAddons(obj) {
     </td>
   </tr>
   
+
+  
 <tr>
     <td valign="top">Creation date</td>
     <td>  		
   		<input name="created_at" type="text" id="created_at" value="%CREATED_AT%"/>
     </td>
   </tr>  
- 
+  
+  <tr>
+    <td valign="top">Email center</td>
+    
+    <td>
+    <div id="show_preview" ></div>  	
+    	<ul>	
+  		<li><a href="#"  onclick="send('neworder', %ID%);" >Send Order Confirmation email</a> <a href="?page=email&sub=templates"><img src="<URL>themes/icons/pencil.png"</a></li>
+  		<li><a href="#"  onclick="send('orderactivation', %ID%);"  >Send Activation email<a href="?page=email&sub=templates"><img src="<URL>themes/icons/pencil.png"</a></li>
+  		<li><a href="#"  onclick="send('ordersuspension', %ID%);"  > Send Suspension email<a href="?page=email&sub=templates"><img src="<URL>themes/icons/pencil.png"</a></li>
+  		</ul>
+    </td>    
+  </tr>  
+  
   
 </table>
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
