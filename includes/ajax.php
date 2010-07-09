@@ -1277,8 +1277,8 @@ class AJAX {
 			$html .="<tr>
 			            <td></td>
 			            <td></td>
-			            <td><b>Total</b></td>
-			            <td align=\"right\">{$total_to_show}</td>
+			            <td><b><h2>Total</h2></b></td>
+			            <td align=\"right\"><h2>{$total_to_show}</h2></td>
 			            <td></td>
 			        </tr>";
 			$html .='</table>';
@@ -1347,67 +1347,35 @@ class AJAX {
 				$package_list[$package['id']] = array($package['name'].' - '.$currency->toCurrency($package['amount']), $package['id']);				
 			}
 				
-			echo $main->dropDown('package_id', $package_list, $order_info['pid'], 1, '', array('onchange'=>'loadAddons(this);'));	
-						
-			
+			echo $main->dropDown('package_id', $package_list, $order_info['pid'], 1, '', array('onchange'=>'loadAddons(this);'));
 	   }
 	   
-	   //function loadpackages() {
-	   	/*
-	   		global $main, $db, $addon, $currency, $order;
-	   	
-	   		$billing_id = $main->getvar['billing_id'];
-	   		$order_id	= $main->getvar['order_id'];
-	   		$order_info = $order->getOrderInfo($order_id);
-	   		
-	   		$addon_selected_list = array();
-	   		if (is_array($order_info['addons'])) {
-	   			$addon_selected_list = $order_info['addons'];	
-	   		}
-	   			   		
-	   		$addon_list = $addon->getAllAddonsByBillingCycle($billing_id);
-	   			   		
-	   		$addong_result_string = '';			
+	   function sendtemplate() {
+			global $db, $main, $email,$user, $order;	
+				
+			$template = $main->getvar['template'];
+			$order_id = $main->getvar['order_id'];
 			
-			foreach($addon_list as $data) {
-				$checked = false;
-				if (in_array($data['id'], $addon_selected_list)) {
-					$checked = true;	
-				}
-				$my_amount = $addon_selected_list[$data['id']];
-				if (empty($my_amount)) {
-					$my_amount = $addon_list[$data['id']]['amount'];					 
-				}
-				$my_amount = $currency->toCurrency($my_amount);				
-				$check_box_name = $data['name'].' - '.$my_amount;
-				$check_box_name = $data['name'];				
-				$addong_result_string .= $main->createCheckbox($check_box_name, 'addon_'.$data['id'], $checked);								
-			}
-			//Packages
+			$order_info 			= $order->getOrder($order_id, true);		
 			
-			
-			//Packages feature added				
-			$query = $db->query("SELECT * FROM `<PRE>packages`");
-			if($db->num_rows($query) == 0) {
-				echo "There are no packages, you need to add a package first!";
-				return;
-			}
-			$package_id = $order_info['pid'];
-			
-			$package_list = array();		
-			while($data = $db->fetch_array($query)) {
-				$package_list[$data['id']] = array($data['name'], $data['id']);				
-			}
-			
-			echo $main->dropDown('packages', $package_list, $package_id);	
+			$emailtemp 				= $db->emailTemplate($template);
+			$user_info 				= $user->getUserById($order_info['USER_ID']);			
 						
-			//Addons
-			echo $addong_result_string;
+			$array['FIRSTNAME']		= $user_info['firstname'];
+			$array['LASTNAME'] 		= $user_info['lastname'];			
+			$array['SITENAME'] 		= $db->config('name');
+			$array['ORDER_ID'] 		= $order_id;
+			$array['PACKAGE'] 		= $order_info['PACKAGES'];
+			$array['ADDONS'] 		= $order_info['ADDON'];
+			$array['DOMAIN'] 		= $order_info['domain'];
+			$array['BILLING_CYCLE'] = $order_info['BILLING_CYCLES'];
+			$array['TOTAL'] 		= $order_info['TOTAL'];
+			$array['TOS'] 		    = $db->config('TOS');
+			//$array['ADMIN_EMAIL'] 	= $db->config('EMAIL');
 			
-			*/
-	   		
-	   		
-	  
+			$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+			echo 'Email sent';		
+	   }
 }
 
 if(isset($_GET['function']) and $_GET['function'] != "") {
