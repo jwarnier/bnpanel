@@ -81,9 +81,9 @@ class page {
 								//Editing the invoice
 								$invoice->edit($main->getvar['do'], $main->postvar);
 								$main->errors('Invoice has been edited!');
-								$main->redirect('?page=invoices&sub=all');
+								
 								if ($main->postvar['status'] == INVOICE_STATUS_DELETED) {
-									$main->redirect();	
+									$main->redirect('?page=invoices&sub=all');	
 								}								
 							}
 						}						
