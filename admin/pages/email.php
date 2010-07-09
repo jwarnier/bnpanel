@@ -24,7 +24,7 @@ class page {
 		
 		switch($main->getvar['sub']) {
 		
-			case "templates": #email templates
+			case 'templates': #email templates
 				if($_POST) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n) {
@@ -44,7 +44,9 @@ class page {
 				while($data = $db->fetch_array($query)) {
 					$values[] = array($data['acpvisual'], $data['id']);	
 				}
-				$array['TEMPLATES'] = $main->dropDown("LOL", $values, $dID, 0, 1);
+				$selected_id = $main->getvar['do'];		
+				$array['TEMPLATES'] = $main->dropDown("LOL", $values, $selected_id, 0, 1);
+				
 				echo $style->replaceVar("tpl/emailtemplates.tpl", $array);
 			break;
 			
