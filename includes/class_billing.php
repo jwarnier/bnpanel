@@ -26,7 +26,7 @@ class billing extends model {
 			if (isset($selected_values[$data['id']])) {
 				$amount = $selected_values[$data['id']];
 			}		
-			$billing_cycle_result.= $main->createInput($data['name'].' ('.$db->config('currency').')', 'billing_cycle_'.$data['id'], $amount);													
+			$billing_cycle_result.= $main->createInput($data['name'].' ('.$db->config('currency').') <br />', 'billing_cycle_'.$data['id'], $amount);													
 		}
 		return $billing_cycle_result;
 	}

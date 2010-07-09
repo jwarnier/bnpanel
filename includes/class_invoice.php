@@ -319,16 +319,16 @@ class invoice extends model {
 			$addong_result_string = '';			
 			$addon_list = $addon->getAddonsByPackage($package_id);		
 			$addon_list = $addon->getAllAddonsByBillingId($billing_cycle_id);
-			
+			$array['ADDON']='<fieldset style="width:200px">';
 			foreach($addon_selected_list as $addon_id => $addon_amount) {
 				if ($read_only == false) {
-					$array['ADDON'] .= $addon_list[$addon_id]['name'].' - <input id="addon_'.$addon_id.'" name="addon_'.$addon_id.'" value="'.$addon_amount.'"><br />';				
+					$array['ADDON'] .= $addon_list[$addon_id]['name'].'<br /><input id="addon_'.$addon_id.'" name="addon_'.$addon_id.'" value="'.$addon_amount.'"><br />';				
 				} else {
-					$array['ADDON'] .= $addon_list[$addon_id]['name'].' '.$currency->toCurrency($addon_amount).'<br />';
+					$array['ADDON'] .= $addon_list[$addon_id]['name'].' - '.$currency->toCurrency($addon_amount).'<br />';
 				}
 				$total = $total + $addon_amount;
 			}	
-						
+			$array['ADDON'].='</fieldset>';			
 			//Packages feature added	
 			$package_list = $package->getAllPackages();			
 	
