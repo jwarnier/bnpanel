@@ -72,11 +72,16 @@ class email {
 		$this->email['to'] = strtolower($to);
 		if($array != 0) {
 			$this->email['content'] = $this->parseEmail($content, $array);
-		}
-		else {
+		} else {
 			$this->email['content'] = $content;	
 		}
-		//echo '<pre>';print_r($this->email['content']);
+		if (SERVER_STATUS == 'test') {
+			echo 'Email log: <br />';
+			echo 'Email sent to :'.$to;
+			echo '<br />Email content :<br />';			
+			echo '<pre>';print_r($this->email['content']);			
+		}
+
 		$this->email['subject'] = $subject;
 		$method = $this->method;
 		if($method == "php") {
