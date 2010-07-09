@@ -1,4 +1,9 @@
 <?php
+/* For licensing terms, see /license.txt */
+
+/**
+ * Object model  
+ */
 
 class model {
 	
@@ -7,6 +12,9 @@ class model {
 	public $table_name;
 	public $primary_key;
 	
+	/**
+	 * Prepares a INSERT query to the database
+	 */
 	public function save($attributes) {
 		global $db; 
 		$new_attributes = $this->filterParams($attributes, $this->getColumns());
@@ -17,6 +25,9 @@ class model {
 	    return $db->insert_id();
 	}
 	
+	/**
+	 * Builds an update query to hit the DB
+	 */
 	public function update($attributes) {
 		global $db;
 		//Remove the primary key id
@@ -41,9 +52,16 @@ class model {
         }
         return $this->primary_key;
 	}
+	/**
+	 * Sets a primary key
+	 */
 	public function setPrimaryKey($id) {
 		$this->primary_key = intval($id);
 	}
+	
+	/**
+	 * Get columns
+	 */
 	public function getColumns() {
 		return $this->columns;
 	}
@@ -72,6 +90,10 @@ class model {
         }        
         return $result;    	
     }    
+    /**
+     * Checks if a column name exists
+     * @param	string	column name
+     */
     public function hasColumn($column_name) {
     	if(in_array($column_name, $this->getColumns())) {
     		return true;
