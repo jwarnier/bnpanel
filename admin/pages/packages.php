@@ -80,23 +80,7 @@ class page {
 								$db->query($sql_insert);									
 							}
 						}
-						
-						/*
-						$query = $db->query("SELECT * FROM `<PRE>billing_cycles` WHERE status = ".BILLING_CYCLE_STATUS_ACTIVE);												
-						if($db->num_rows($query) > 0) {											
-							$billing_cycle_result = '';
-							while($data = $db->fetch_array($query)) {		
-										
-								$variable_name = 'billing_cycle_'.$data['id'];
-								//var_dump($variable_name);
-								if (isset($main->postvar[$variable_name])) {
-									echo $sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$data['id']}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_PACKAGE."')";
-									$db->query($sql_insert);									
-								}
-							}						
-						}*/
-						
-						//var_dump($main->postvar);
+
 						$query = $db->query("SELECT * FROM `<PRE>addons` WHERE status = ".ADDON_STATUS_ACTIVE);
 						
 						if($db->num_rows($query) > 0) {
@@ -104,7 +88,7 @@ class page {
 										
 								$variable_name = 'addon_'.$data['id'];
 								if (isset($main->postvar[$variable_name]) && $main->postvar[$variable_name] == 'on') {
-									echo $sql_insert ="INSERT INTO `<PRE>package_addons` (addon_id, package_id) VALUES('{$data['id']}', '{$product_id}')";
+									$sql_insert ="INSERT INTO `<PRE>package_addons` (addon_id, package_id) VALUES('{$data['id']}', '{$product_id}')";
 									$db->query($sql_insert);									
 								}
 							}						
