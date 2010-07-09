@@ -55,9 +55,7 @@ class page {
 					if ($main->postvar['type'] == 'paid' && $exist_billing_cycle == false) {
 						$main->errors("Please add a billing cycle first");			
 						$n++;	
-					}
-					 
-					 	
+					}	
 						
 					if(!$n) {
 						foreach($main->postvar as $key => $value) {
@@ -178,19 +176,7 @@ class page {
 								$query = $db->query("DELETE FROM `<PRE>billing_products` WHERE product_id = {$main->getvar['do']} AND type='".BILLING_TYPE_PACKAGE."' ");
 								
 								$product_id = $main->getvar['do'];
-								/*
-								if($db->num_rows($query) > 0) {										
-									//Add new relations
-									while($data = $db->fetch_array($query)) {												
-										$variable_name = 'billing_cycle_'.$data['id'];
-										//var_dump($variable_name);
-										if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {
-											$sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$data['id']}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_PACKAGE."')";
-											$db->query($sql_insert);									
-										}
-									}						
-								}*/
-								
+											
 								
 								$billing_list = $billing->getAllBillingCycles();
 								foreach($billing_list as $billing_id=>$value) {
@@ -216,7 +202,6 @@ class page {
 									//Add new relations
 									while($data = $db->fetch_array($query)) {												
 										$variable_name = 'addon_'.$data['id'];
-										//var_dump($variable_name);
 										if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {
 											$sql_insert ="INSERT INTO `<PRE>package_addons` (addon_id, package_id) VALUES('{$data['id']}', '{$product_id}')";
 											$db->query($sql_insert);									
@@ -281,29 +266,6 @@ class page {
 							$myresults[$data['addon_id']]= 1;				
 						}						
 						$array['ADDON'] = $addon->generateAddonCheckboxes($myresults);						
-						//finish 
-						
-														
-						/*//----- Adding billing cycle						
-						$sql = "SELECT billing_id, b.name, amount FROM `<PRE>billing_cycles`  b INNER JOIN `<PRE>billing_products` bp on (bp.billing_id = b.id) WHERE product_id =".$data['id'];
-						$query = $db->query($sql);		
-						
-						while($data = $db->fetch_array($query)) {
-							$myresults [$data['billing_id']] = $data['amount'];				
-						}
-						$sql = "SELECT * FROM billing_cycles";
-						$query = $db->query($sql);		
-						$billing_cycle_result = '';
-						while($data = $db->fetch_array($query)) {
-							$amount = '';
-							if (isset($myresults[$data['id']])) {
-								$amount = $myresults[$data['id']];
-							}		
-							$billing_cycle_result.= $main->createInput($data['name'], 'billing_cycle_'.$data['id'], $amount);													
-						}
-						//$array['BILLING_CYCLE'] = $billing_cycle_result;						
-						*/
-						//----- Finish billing cycle						
 						
 						echo $style->replaceVar("tpl/editpackage.tpl", $array);
 					}
