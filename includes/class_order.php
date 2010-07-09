@@ -11,7 +11,6 @@ class order extends model {
 	public $columns 	= array('id', 'userid','username', 'domain','pid', 'signup', 'status', 'additional', 'billing_cycle_id');	
 	public $table_name 	= 'user_packs';	
 	
-	
 	/** 
 	 * Creates an order
 	 * 
@@ -20,18 +19,28 @@ class order extends model {
 	 * @param	date	expiration date
 	 */
 	public function create($params) {
-		$order_id = $this->save($params);	     
-		/*
-	
-		$emailtemp 		= $db->emailTemplate('neworder');
-		$array['USER'] 	= $client['user'];
-		$array['DUE'] 	= strftime("%D", $due);
-		$email->send($client['email'], $emailtemp['subject'], $emailtemp['content'], $array);
-	
-		$sql = "INSERT INTO `<PRE>user_packs` (userid, username, domain, pid, signup, status, additional, billing_cycle_id )
-				VALUES('{$user_id}', '{$username}', '{$domain}', '{$package_id}','{$signup}','{$status}','{$additional}','{$billing_cycle_id}')";
-		$db->query($sql);
-		$order_id = mysql_insert_id();*/	
+		global $main, $db, $email, $user;
+		$order_id = $this->save($params);
+		if (!empty($order_id) && is_numeric($order_id )) {
+			/*
+			$emailtemp 				= $db->emailTemplate('neworder');
+			$user_info 				= $user->getUserById($params['userid']);			
+			$order_info 			= $this->getOrder($order_id, true);
+						
+			$array['FIRSTNAME']		= $user_info['firstname'];
+			$array['LASTNAME'] 		= $user_info['lastname'];			
+			$array['SITENAME'] 		= $db->config('name');
+			$array['ORDER_ID'] 		= $order_id;
+			$array['PACKAGE'] 		= $order_info['PACKAGES'];
+			$array['ADDONS'] 		= $order_info['ADDON'];
+			$array['DOMAIN'] 		= $order_info['domain'];
+			$array['BILLING_CYCLE'] = $order_info['BILLING_CYCLES'];
+			$array['TOTAL'] 		= $order_info['TOTAL'];
+			$array['TOS'] 		    = $db->config('TOS');
+			$array['ADMIN_EMAIL'] 	= $db->config('EMAIL');
+			
+			$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);*/
+		}
 		return	$order_id;
 	}
 	
@@ -250,7 +259,8 @@ class order extends model {
 			$total = 0;			
 			$array['ID'] 		= $order_info['id'];
 			$array['domain'] 	= $order_info['domain'];
-			$user_id 			= $order_info['userid'];			
+			$user_id 			= $order_info['userid'];
+			$array['USER_ID'] 	= $user_id;			
 			$package_id 	  	= $order_info['pid'];
 			$billing_cycle_id 	= $order_info['billing_cycle_id'];
 			$addon_selected_list= $order_info['addons'];	
