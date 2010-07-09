@@ -47,11 +47,6 @@
     
    
 
-   <tr>
-    <td valign="top">Total:</td>
-    <td>%TOTAL%</td>
-  </tr>
-  
   
     
   <tr>
@@ -62,7 +57,10 @@
   </tr>
     
 
-  
+   <tr>
+    <td >Total:</td>
+    <td valign="top" ><h2>%TOTAL%</h2></td>
+  </tr>
 
  
     
