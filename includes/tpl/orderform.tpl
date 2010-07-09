@@ -39,51 +39,54 @@ function check(name, value) {
 	},500);
 }
 
-function orderstepme(id) {
+function orderstepme(id, type) {
 	pid = id;
 	document.getElementById("package").value = id;
 	document.getElementById("order"+id).disabled = true;
+	
 	if(document.getElementById("domain").value == "sub") {
 		document.getElementById("dom").style.display = 'none';
 		document.getElementById("sub").style.display = '';
 		$.get("<AJAX>?function=sub&pack="+document.getElementById("package").value, function(data) {
 			document.getElementById("dropdownboxsub").innerHTML = data;
-																	});
+		});
 	} else if(document.getElementById("domain").value == "dom") {
 		document.getElementById("sub").style.display = 'none';
 		document.getElementById("dom").style.display = '';
-	}
+	}	
 	$.get('<AJAX>?function=orderForm&package='+ document.getElementById("package").value, function(stuff) {
-		$("#custom").html('<table width="100%" border="0" cellspacing="2" cellpadding="0" id="custom">'+stuff+'</table>');
-																								   });
-	showhide(step, step + 1)
+		$("#custom").html('<table width="100%" border="0" cellspacing="2" cellpadding="0" id="custom">'+stuff+'</table>');		
+	});
+	var step_hide = step;
+	if (type != 'paid') {		
+		step = 3;
+	}
+	showhide(step_hide, step + 1)
 	step = step + 1;
-	//alert('orderstepme'+step);
 }
+
 function showhide(hide, show) {
-	//alert('hide' + hide + ' - show '+ show);
 	document.getElementById("next").disabled = true;
 	document.getElementById("back").disabled = true;
-	document.getElementById("verify").innerHTML = ""
+	document.getElementById("verify").innerHTML = "";
+	
 	$("#"+hide).fadeOut(1000, function() {
 		$("#steps").fadeIn(1000);
 		$("#"+show).fadeIn(1000, function() {
-		document.getElementById("next").disabled = false;
-		document.getElementById("back").disabled = false;
-										  });
+			document.getElementById("next").disabled = false;
+			document.getElementById("back").disabled = false;
+		});
      });
 }
 
 function nextstep() {
-	//alert(step);
+	
 	switch(step) {
 		//addon info
 		/*case 2:
-			if(1) {
-			
+			if(1) {			
 				showhide(step, step + 1);
-				step = step + 1;
-				
+				step = step + 1;				
 			}
 			else {
 				document.getElementById("verify").innerHTML = wrong
@@ -91,9 +94,10 @@ function nextstep() {
 		break;*/
 		
 		//Resume
-		case 2:		
-			if(1) {		
-				var addon_list = '';
+		case 2:			
+			if(document.getElementById("billing_id").value != 0) {
+				var addon_list = '';				
+				
 				// If no addons
 				if (document.getElementById("addon_ids") != null) {
 					//Only one addon present
@@ -113,20 +117,16 @@ function nextstep() {
 				
 				var billing_id  = document.getElementById("billing_id").value;
 				showhide(step, step + 1);
-				step = step + 1;
-		
+				step = step + 1;		
 				$.get("<AJAX>?function=getSummary&billing_id="+billing_id +"&addon_list="+addon_list +"&package_id="+document.getElementById("package").value, function(data) {
 					document.getElementById("show_summary").innerHTML = data;
-				});
-				
+				});				
 			} else  {
-				document.getElementById("verify").innerHTML = wrong
+				$("#verify").html("<strong>You must select a Billing Cycle</strong> "+wrong);
 			}
-		break;
+		break;		
 		
-		
-		case 3:
-		
+		case 3:		
 			//After selecting the payment mode
 			showhide(step, step + 1);
 			step = step + 1;
@@ -150,42 +150,41 @@ function nextstep() {
 			break;
 			
 		case 4:
-			//License text
-				
-			if(document.getElementById("agree").checked == true) {
+			//TOS				
+			if(document.getElementById("agree").checked == true) {								
 				$.get("<AJAX>?function=orderIsUser", function(data) {
 					if (data == "1") {
 						showhide(step, step + 2)
 						step = step + 2
-					}
-					else {
+					} else {						
 						showhide(step, step + 1)
 						step = step + 1
 					}
 				});
-			}
-			else {
-				document.getElementById("verify").innerHTML = wrong
-			}
-			
+			} else {
+				$("#verify").html("<strong>You must agree the Terms of Service</strong> "+wrong);
+			}			
 			break;
-		
-		
 			
-		case 5:
+		case 5:			
+			//User form
 			$.get("<AJAX>?function=clientcheck", function(data) {
-			if(data == "1") {
-				document.getElementById("verify").innerHTML = right;
-				showhide(step, step + 1)
-				step = step + 1
-			}
-			else {
-				document.getElementById("verify").innerHTML = wrong;
-			}													
-																		});
+				if(data == "1") {					
+					if (document.getElementById("username").value != '' ) {
+						document.getElementById("verify").innerHTML = right;
+						showhide(step, step + 1)
+						step = step + 1;
+					} else {
+						$("#verify").html("<strong>You must fill all the fields</strong> "+wrong);
+					}	
+				} else {
+					$("#verify").html("<strong>You must fill all the fields</strong> "+wrong);
+				}													
+			});
 			break;
 			
 		case 6:
+			
 			final(step, step + 1)
 			step = step + 1
 			var url = "?function=create";
@@ -271,6 +270,7 @@ function previousstep() {
 }
 function showAddons(obj) {	
 //	step = step + 1;
+	$("#verify").html('');
 	var billing_id=obj.options[obj.selectedIndex].value;	
 	$.get("<AJAX>?function=getAddons&billing_id="+billing_id +"&package_id="+document.getElementById("package").value, function(data) {
 		document.getElementById("showaddons").innerHTML = data;
@@ -351,11 +351,6 @@ function showAddons(obj) {
             </table>
         </div>
     </div>    
-    
-    
-    
-    
-   
     
     
     <div class="table" id="4" style="display:none">
