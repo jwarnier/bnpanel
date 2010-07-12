@@ -1376,6 +1376,20 @@ class AJAX {
 			$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
 			echo 'Email sent';		
 	   }
+	   
+	   function getOrders() {
+	   		global	$main, $order;
+	   		$page = $main->getvar['page'];	   			   		
+			$array = $order->getAllOrdersToArray('', $page);
+			echo $array['list'];
+	   }
+	   
+	   function getInvoices() {
+	   		global	$main, $invoice;
+	   		$page = $main->getvar['page'];	   			   		
+			$array = $invoice->getAllInvoicesToArray('', $page);
+			echo $array['list'];
+	   }
 }
 
 if(isset($_GET['function']) and $_GET['function'] != "") {

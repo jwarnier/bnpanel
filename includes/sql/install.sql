@@ -155,7 +155,8 @@ INSERT INTO `%PRE%config` (`name`, `value`) VALUES
 ('suspensiondays', '14'),
 ('tldonly', '0'),
 ('currency', 'USD'),
-('ui-theme', 'cupertino');
+('ui-theme', 'cupertino'),
+('rows_per_page', '5');
 
 -- --------------------------------------------------------
 
