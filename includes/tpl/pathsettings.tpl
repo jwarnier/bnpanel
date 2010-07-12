@@ -19,6 +19,15 @@
     <td>Default Page:</td>
     <td>%DROPDOWN%    <a title="The Default page shown when accessing the root directory." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
   </tr>
+  
+  <tr>
+    <td width="20%">Rows per page</td>
+    <td>
+      <input name="rows_per_page" type="text" id="rows_per_page" value="%ROWS_PER_PAGE%" />
+      <a title="Rows per page " class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+    </td>
+  </tr>
+  
   <tr>
     <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Edit Settings" /></td>
   </tr>
