@@ -55,8 +55,6 @@ class page {
 				// List of invoices. :)
 				$query = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$_SESSION['cuser']}' AND status <> '".INVOICE_STATUS_DELETED."' ORDER BY `id` ASC");
 				
-				
-				
 				$userdata = mysql_fetch_row($db->query("SELECT `user`,`firstname`,`lastname` FROM `<PRE>users` WHERE `id` = {$_SESSION['cuser']}"));
 				$domain = mysql_fetch_row($db->query("SELECT domain, pid, billing_cycle_id  FROM `<PRE>user_packs` WHERE `userid` = {$_SESSION['cuser']}"));
 				$extra = array(					
@@ -68,18 +66,12 @@ class page {
 				while($array = $db->fetch_array($query)) {
 					$total_amount = 0;				
 					
-					$array['due'] = strftime("%D", $array['due']);			
-							/*
-					$array['paid'] = ($array["is_paid"] == 1 ? "<span style='color:green;font-size:20px;'>Paid</span>" :
-					"<span style='color:red;font-size:20px;'>Unpaid</span>");
-					$array['pay'] = ($array["is_paid"] == 0 ? 
-					'<input type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$array['id'].'\')" />' : 'Already paid');
-					*/
+					$array['due'] = strftime("%D", $array['due']);
 					
 					switch ($array['status']) {
 						case INVOICE_STATUS_PAID:
-							$array['paid']	= "<span style='color:green'>Already Paid</span>";
-							$array['pay']	=  "<span style='color:green'>Already Paid</span>";
+							$array['paid']	=  '<span style="color:green">Already Paid</span>';
+							$array['pay']	=  '<span style="color:green">Already Paid</span>';
 							$array['due']	=  '<span style="color:green">'.$array['due'].'</span>' ;
 							  
 						break;
@@ -95,7 +87,13 @@ class page {
 						break;
 						case INVOICE_STATUS_DELETED:
 							///	$array['paid'] = "<span style='color:green'>Already Paid</span>";
-						break;				
+						break;		
+						default:
+							//This is weird an invoice with no status?
+							$array['paid']= '-';
+							$array['pay']=  '-';
+							//$array['due']=  '<span>'.$array['due'].'</span>';		
+									
 					}
 					
 					
