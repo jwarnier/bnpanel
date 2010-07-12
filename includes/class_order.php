@@ -99,7 +99,7 @@ class order extends model {
 		global $db;
 		$user_id = intval($user_id);
 		//Getting the domain info
-		$sql = "SELECT id, pid, domain, billing_cycle_id FROM `<PRE>user_packs` WHERE `userid` = ".$user_id;
+		$sql = "SELECT id, pid, domain, billing_cycle_id FROM ".$this->getTableName()." WHERE `userid` = ".$user_id;
 		$result 		= $db->query($sql);
 		$order_info  	= $db->fetch_array($result, 'ASSOC');
 		return $order_info;
@@ -116,7 +116,7 @@ class order extends model {
 		global $db;
 		
 		$id = intval($id);
-		$sql = "SELECT * FROM `<PRE>user_packs` up WHERE up.id = '{$id}'";
+		$sql = "SELECT * FROM ".$this->getTableName()." up WHERE up.id = '{$id}'";
 		$result = $db->query($sql);
 		$array = array(); 
 		if ($db->num_rows($result) > 0 ) {
@@ -152,10 +152,10 @@ class order extends model {
 		}		
 		
 		if (empty($user_id)) {
-			$sql =  "SELECT * FROM `<PRE>user_packs` WHERE status <> '".ORDER_STATUS_DELETED."' ORDER BY id DESC  $limit ";	
+			$sql =  "SELECT * FROM ".$this->getTableName()." WHERE status <> '".ORDER_STATUS_DELETED."' ORDER BY id DESC  $limit ";	
 		} else {
 			$user_id = intval($user_id);
-			$sql = "SELECT * FROM `<PRE>user_packs` WHERE status <> '".ORDER_STATUS_DELETED."' AND userid = '".$user_id."' ORDER BY id DESC $limit ";
+			$sql = "SELECT * FROM ".$this->getTableName()." WHERE status <> '".ORDER_STATUS_DELETED."' AND userid = '".$user_id."' ORDER BY id DESC $limit ";
 		}	
 		
 		$result_order  = $db->query($sql);
@@ -238,7 +238,7 @@ class order extends model {
 	 public function getAllOrders() {
 		global $db;
 		
-		$result = $db->query("SELECT * FROM `<PRE>user_packs`");
+		$result = $db->query("SELECT * FROM ".$this->getTableName()." ");
 		$invoice_list = array();
 		if($db->num_rows($result) >  0) {
 			while($data = $db->fetch_array($result)) {
