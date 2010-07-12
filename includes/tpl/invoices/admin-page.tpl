@@ -10,7 +10,7 @@ $(document).ready(function() {
 	//Display Loading Image
 	function Display_Load() {
     	$("#loading").fadeIn(900,0);
-		$("#loading").html("<img src='bigLoader.gif' />");
+		$("#loading").html("<img src='<URL>themes/icons/ajax-loader2.gif' />");
 	}
 	
 	//Hide Loading Image
