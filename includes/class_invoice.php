@@ -240,7 +240,7 @@ class invoice extends model {
 		global $db;
 		$status = intval($status);
 		if (!empty($user_id)) {
-			$user_where = " AND user_id = $user_id ";
+			$user_where = " AND uid = $user_id ";
 		}
 		$limit = '';
 		if (!empty($page)) {
