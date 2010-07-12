@@ -133,24 +133,34 @@ class order extends model {
 		return $array;
 	}
 	
+		
 	/**
 	 * Gets all orders (use only with template) 
 	 * @return	array 
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
 	 */	 
-	public function getAllOrdersToArray($user_id = 0) {
+	public function getAllOrdersToArray($user_id = 0, $page = 0) {
 		global $main, $db, $style, $currency, $package, $billing, $addon, $user;
 		
+		$limit = '';
+		if (empty($page)) {
+			$page = 0;
+		} else {			
+			$per_page = $db->config('rows_per_page');
+			$start = ($page-1)*$per_page;	
+			$limit = " LIMIT $start, $per_page";
+		}		
+		
 		if (empty($user_id)) {
-			$result_order  = $db->query("SELECT * FROM `<PRE>user_packs` WHERE status <> '".ORDER_STATUS_DELETED."' ORDER BY id DESC");	
+			$sql =  "SELECT * FROM `<PRE>user_packs` WHERE status <> '".ORDER_STATUS_DELETED."' ORDER BY id DESC  $limit ";	
 		} else {
 			$user_id = intval($user_id);
-			$result_order  = $db->query("SELECT * FROM `<PRE>user_packs` WHERE status <> '".ORDER_STATUS_DELETED."' AND userid = '".$user_id."' ORDER BY id DESC");
-		}
+			$sql = "SELECT * FROM `<PRE>user_packs` WHERE status <> '".ORDER_STATUS_DELETED."' AND userid = '".$user_id."' ORDER BY id DESC $limit ";
+		}	
 		
+		$result_order  = $db->query($sql);
 		
-		//$query2 = $db->query("SELECT * FROM `<PRE>invoices` ");
-		$array2['list'] = "";
+		$result['list'] = '';
 		
 		//Package info
 		$package_list		= $package->getAllPackages();
@@ -213,17 +223,13 @@ class order extends model {
 				$array['EDIT']  	= '<a href="index.php?page=orders&sub=edit&do='.$order_item['id'].'"><img src="../themes/icons/note_edit.png" title="Edit" alt="Edit" /></a>';			
 				$array['DELETE']  	= '<a href="index.php?page=orders&sub=delete&do='.$order_item['id'].'"><img src="../themes/icons/delete.png" title="Delete"  alt="Delete" /></a>';
 				$array['ADD_INVOICE']='<a href="index.php?page=orders&sub=add_invoice&do='.$order_item['id'].'"><img src="../themes/icons/note_add.png" title="Add invoice"  alt="Add invoice" /></a>';
-				$array2['list'] .= $style->replaceVar("tpl/orders/list-item.tpl", $array);
+				$result['list'] .= $style->replaceVar("tpl/orders/list-item.tpl", $array);
 			} else {
 				//This is for the client view
-				$array2['list'] .= $style->replaceVar("tpl/orders/list-item-client.tpl", $array);
+				$result['list'] .= $style->replaceVar("tpl/orders/list-item-client.tpl", $array);
 			}
-		}				
-		//$array2['num'] 			= mysql_num_rows($query);
-		//$array2['numpaid'] 		= intval($array2['num']-mysql_num_rows($query2));
-		//$array2['numunpaid'] 	= mysql_num_rows($query2);
-		
-		return $array2;		
+		}	
+		return $result;		
 	}
 	
 	/**

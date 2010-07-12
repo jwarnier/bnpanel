@@ -79,6 +79,7 @@ class page {
 								$main->postvar['due'] 		= strtotime($main->postvar['due']);
 								$main->postvar['addon_fee'] = $new_addon_list_serialized;
 								//Editing the invoice
+								
 								$invoice->edit($main->getvar['do'], $main->postvar);
 								$main->errors('Invoice has been edited!');
 								
@@ -108,7 +109,24 @@ class page {
 			break;			
 			case 'all':
 			default :				
-				$return_array = $invoice->getAllInvoicesToArray();
+				//$return_array = $invoice->getAllInvoicesToArray();
+				
+				$per_page = $db->config('rows_per_page');
+				$count_sql = "SELECT count(*)  as count FROM ".$invoice->getTableName()." WHERE status <> '".INVOICE_STATUS_DELETED."'";
+				$result_max = $db->query($count_sql);		
+				$count = $db->fetch_array($result_max);
+				$count = $count['count'];
+				$quantity = ceil($count / $per_page);
+				$pagination = '';
+				if ($quantity > 1){
+					$pagination = '<ul id="pagination">';
+					for ($i = 1 ; $i<= $quantity; $i++) {
+						$pagination .=  '<li id="'.$i.'">'.$i.'</li>';	
+					}
+					$pagination .= '</ul>';
+				}						
+				$return_array['pagination'] =$pagination; 
+					
 				echo $style->replaceVar("tpl/invoices/admin-page.tpl", $return_array);				
 			break;	
 			

@@ -50,7 +50,9 @@ class page {
 			default:
 				$array['NAME'] = $db->config("name");
 				$array['URL'] = $db->config("url");
+				$array['ROWS_PER_PAGE'] = $db->config('rows_per_page');
 				$array['RECURL'] = $_SERVER['HTTP_HOST'];
+				
 				$values[] = array("Admin Area", "admin");
 				$values[] = array("Order Form", "order");
 				$values[] = array("Client Area", "client");

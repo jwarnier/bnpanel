@@ -117,6 +117,15 @@
     </td>
   </tr>  
  
+ 
+  <tr>
+    <td valign="top">Email center</td>
+    <td>  	
+    	<ul>	
+  		<li><a href="">Send Invoice Notice</a></li>  		
+  		</ul>
+    </td>    
+  </tr>  
   
 </table>
 <table width="100%" border="0" cellspacing="2" cellpadding="0">

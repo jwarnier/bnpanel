@@ -134,18 +134,22 @@ class invoice extends model {
 	 * @return	array 
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
 	 */	 
-	public function getAllInvoicesToArray($user_id = 0 ) {
+	public function getAllInvoicesToArray($user_id = 0 , $page = 0) {
 		global $main, $db, $style,$currency, $order, $package, $billing, $addon, $user;
 		
-		/*	
+		$limit = '';
+		if (empty($page)) {
+			$page = 0;
+		}
+		
 		if (empty($user_id)) {
-			$sql = "SELECT * FROM `<PRE>invoices` WHERE status <> ".INVOICE_STATUS_DELETED."";
-		}	else {
+			$invoice_list	=$this->getAllInvoices('', $page);  
+		} else {
 			$user_id = intval($user_id);
-			$sql = "SELECT * FROM `<PRE>invoices` WHERE status <> ".INVOICE_STATUS_DELETED." AND uid = $user_id";
-		}		
-		$query2 = $db->query($sql); */
-		$array2['list'] = "";
+			$invoice_list	=$this->getAllInvoices($user_id, $page);  
+		}	
+		
+		$result['list'] = "";
 		
 		//Package info
 		$package_list 	= $package->getAllPackages();				
@@ -155,14 +159,18 @@ class invoice extends model {
 		$addon_list		= $addon->getAllAddons();
 		
 		$total_amount = 0;		           
-		$invoice_list	=$this->getAllInvoices();    	    	
+		 	    	
 		foreach($invoice_list as $array) {
 			
 			//Getting the user info
 			$user_info = $user->getUserById($array["uid"]);						
 			
 			$array['userinfo']  = '<a href="index.php?page=users&sub=search&do='.$user_info['id'].'" >'.$user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')</a>';
-			$array['due'] 		= strftime("%D", $array['due']);						
+			if( !empty($array['due'])) {
+				$array['due'] 		= strftime("%D", $array['due']);
+			} else {
+				$array['due'] = '-';
+			}				
 			
 			//Getting the domain info
 			$domain_info = $order->getOrderByUser($array['uid']);			
@@ -205,35 +213,45 @@ class invoice extends model {
 					$array['due']	=  '<span style="color:red">'.$array['due'].'</span>';		
 				break;
 				case INVOICE_STATUS_WAITING_PAYMENT:
-					$array['paid'] = "<span style='color:red'>Pending</span>";
-					$array['pay'] = "<a href='index.php?sub=all&page=invoices&iid={$array['id']}&pay=true' title='Mark as Paid'> <img src='../themes/icons/money_add.png' width=\"18px\" alt='Mark as Paid' title='Mark as Paid' /></a>";
-					$array['due']	=  '<span style="color:red">'.$array['due'].'</span>';		
+					$array['paid'] 	= "<span style='color:red'>Pending</span>";
+					$array['pay']  	= "<a href='index.php?sub=all&page=invoices&iid={$array['id']}&pay=true' title='Mark as Paid'> <img src='../themes/icons/money_add.png' width=\"18px\" alt='Mark as Paid' title='Mark as Paid' /></a>";
+					$array['due']	= '<span style="color:red">'.$array['due'].'</span>';		
 				break;
 				case INVOICE_STATUS_DELETED:
 					///	$array['paid'] = "<span style='color:green'>Already Paid</span>";
-				break;				
-			}													
-						
+				break;
+				default:
+					$array['paid']= '-';
+					$array['pay']=  ' <img src="../themes/icons/money_add_na.png" width="18px" alt="Mark as Paid" title="Mark as Paid" /> ';
+					$array['due']=  '<span>'.$array['due'].'</span>';						
+			}
 			$array['package']		 = $package_list[$package_id]['name'];
 			$array['billing_cycle']  = $billing_list[$billing_cycle_id]['name'];
 			
 			$array['edit']  	= '<a href="index.php?page=invoices&sub=edit&do='.$array['id'].'"><img src="../themes/icons/note_edit.png" alt="Edit" /></a>';			
 			$array['delete']  	= '<a href="index.php?page=invoices&sub=delete&do='.$array['id'].'"><img src="../themes/icons/delete.png" alt="Delete" /></a>';
 			
-			$array2['list'] .= $style->replaceVar("tpl/invoices/invoice-list-item.tpl", $array);
+			$result['list'] .= $style->replaceVar("tpl/invoices/invoice-list-item.tpl", $array);
 		}
-				
-		/*$array2['num'] 			= mysql_num_rows($query);
-		$array2['numpaid'] 		= intval($array2['num']-mysql_num_rows($query2));
-		$array2['numunpaid'] 	= mysql_num_rows($query2);
-		*/
-		return $array2;		
+		return $result;		
 	}
 	
-	public function getAllInvoices() {
+	public function getAllInvoices($user_id = '', $page = 0) {
 		global $db;
 		$status = intval($status);
-		$result = $db->query("SELECT * FROM `<PRE>invoices` WHERE status <> '".INVOICE_STATUS_DELETED."'");
+		if (!empty($user_id)) {
+			$user_where = " AND user_id = $user_id ";
+		}
+		$limit = '';
+		if (!empty($page)) {
+			$page = intval($page);
+			$per_page = $db->config('rows_per_page');
+			$start = ($page-1)*$per_page;
+			$limit = "LIMIT $start , $per_page";
+		}
+		
+		$sql = "SELECT * FROM ".$this->getTableName()." WHERE status <> '".INVOICE_STATUS_DELETED."' $user_where ORDER BY id DESC $limit  ";
+		$result = $db->query($sql);
 		$invoice_list = array();
 		if($db->num_rows($result) >  0) {
 			while($data = $db->fetch_array($result)) {
@@ -252,7 +270,7 @@ class invoice extends model {
 	public function getInvoice($invoice_id, $read_only = false, $show_price = true) {
 		global $main, $db, $currency, $addon, $email, $package, $order, $user;	
 		
-		$query = $db->query("SELECT * FROM `<PRE>invoices` WHERE `id` = '{$invoice_id}'");
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `id` = '{$invoice_id}'");
 		if($db->num_rows($query) == 0) {
 			echo "That invoice doesn't exist!";	
 		} else {
@@ -542,7 +560,7 @@ class invoice extends model {
 	public function getLastInvoiceByUser($user_id) {
 		global $db;
 		$user_id = intval($user_id);
-		$sql = "SELECT id FROM `<PRE>invoices` WHERE `uid` = ".$user_id." ORDER BY id DESC LIMIT 1";
+		$sql = "SELECT id FROM ".$this->getTableName()." WHERE `uid` = ".$user_id." ORDER BY id DESC LIMIT 1";
 		
 		$result	= $db->query($sql);
 		$invoice = array();
@@ -582,7 +600,7 @@ class invoice extends model {
 	
 	public function is_paid($id) { # Is the invoice paid - True = Paid / False = Not
 		global $db;
-		$data = $db->fetch_array($db->query("SELECT status FROM `<PRE>invoices` WHERE `id` = '{$id}'"));
+		$data = $db->fetch_array($db->query("SELECT status FROM ".$this->getTableName()." WHERE `id` = '{$id}'"));
 		if($data['status'] == INVOICE_STATUS_PAID) {
 			return true;	
 		} else {
