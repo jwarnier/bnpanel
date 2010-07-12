@@ -157,33 +157,36 @@ class page {
 					$order_info = $order->getOrderInfo($main->getvar['do']);
 					$billing_id = $order_info['billing_cycle_id'];
 															
-					if($_POST) {					
-						$due 		= strtotime($main->postvar['due']);
-						$notes		= $main->postvar['notes'];
-						$package_id	= $main->postvar['package_id'];
-						$status		= $main->postvar['status'];
-						
-						$addong_list = $addon->getAllAddonsByBillingCycleAndPackage($billing_id, $package_id);
-						
-						
-						$new_addon_list = array();																						
-						foreach($addong_list as $addon_id=>$value) {																								
-							$variable_name = 'addon_'.$addon_id;
-							//var_dump($variable_name);
-							if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
-								$new_addon_list[] = $addon_id;				
-							}															
+					if($_POST) {
+						if ($main->postvar['status'] != 0 ) {
+							$due 		= strtotime($main->postvar['due']);
+							$notes		= $main->postvar['notes'];
+							$package_id	= $main->postvar['package_id'];
+							$status		= $main->postvar['status'];
+							
+							$addong_list = $addon->getAllAddonsByBillingCycleAndPackage($billing_id, $package_id);							
+							
+							$new_addon_list = array();																						
+							foreach($addong_list as $addon_id=>$value) {																								
+								$variable_name = 'addon_'.$addon_id;
+								//var_dump($variable_name);
+								if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
+									$new_addon_list[] = $addon_id;				
+								}															
+							}						
+							$amount = 0;								
+							$addon_serialized = $addon->generateAddonFee($new_addon_list, $billing_id, true);
+							
+							$package_info = $package->getPackageByBillingCycle($package_id, $billing_id);
+							$amount = $package_info['amount'];	
+												
+							$invoice->create($order_info['userid'], $amount, $due, $notes, $addon_serialized, $status, $main->getvar['do']);
+							
+							$main->errors("Invoice created!");	
+							$main->redirect("?page=invoices&sub=all");
+						} else {
+							$main->errors("Please fill the Status order");
 						}						
-						$amount = 0;								
-						$addon_serialized = $addon->generateAddonFee($new_addon_list, $billing_id, true);
-						
-						$package_info = $package->getPackageByBillingCycle($package_id, $billing_id);
-						$amount = $package_info['amount'];	
-											
-						$invoice->create($order_info['userid'], $amount, $due, $notes, $addon_serialized, $status, $main->getvar['do']);
-						
-						$main->errors("Invoice created!");	
-						$main->redirect("?page=invoices&sub=all");									
 					}
 					
 					$user_info  =  $user->getUserById($order_info['userid']);				
