@@ -224,8 +224,7 @@ class page {
 			default :	
 			case 'all':
 				//$return_array = $order->getAllOrdersToArray();		
-				echo '<ERRORS>';
-						
+				echo '<ERRORS>';					
 					
 					$per_page = $db->config('rows_per_page');
 					$count_sql = "SELECT count(*)  as count FROM ".$order->getTableName()." WHERE status <> '".ORDER_STATUS_DELETED."'";
@@ -233,15 +232,7 @@ class page {
 					$count = $db->fetch_array($result_max);
 					$count = $count['count'];					
 					$quantity = ceil($count / $per_page);
-					$pagination = '';
-					if ($quantity > 1){
-						$pagination = '<ul id="pagination">';
-						for ($i = 1 ; $i<= $quantity; $i++) {
-							$pagination .=  '<li id="'.$i.'">'.$i.'</li>';	
-						}
-						$pagination .= '</ul>';
-					}						
-					$return_array['pagination'] =$pagination; 
+					$return_array['COUNT'] = $quantity;
 					
 				echo $style->replaceVar("tpl/orders/admin-page.tpl", $return_array);				
 			break;			
