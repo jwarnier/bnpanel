@@ -73,28 +73,20 @@ class page {
 			break;
 			
 			case 'orders':
-				if($main->getvar['do'] ) {
-					$orders 			= $order->getOrderByUser($main->getvar['do']);					
-					$package_info 		= $package->getPackage($orders['pid']);
-					
-					$array['DOMAIN'] 	= $orders['domain'];
-					$array['PACKAGE'] 	= $package_info['name'];				
-					$array['BOX'] 		= "";
-					$array['CONTENT'] 	= $style->replaceVar("tpl/user/clientorders.tpl", $array);					
+				if($main->getvar['do'] ) {					
+					$return_array  		= $order->getAllOrdersToArray($main->getvar['do']);	
+					$array['CONTENT'] 	=  $style->replaceVar("tpl/orders/client-page.tpl", $return_array);		
+					$array['BOX'] 		= "";										
 					$array['URL'] 		= URL;
-					$array['ID'] 		= $main->getvar['do'];
-					echo $style->replaceVar("tpl/clientview.tpl", $array);	
+					$array['ID'] 		= $main->getvar['do'];			
+					echo $style->replaceVar("tpl/clientview.tpl", $array);											
 				}			
 			break;
 			
 			case 'invoices':
 				if($main->getvar['do'] ) {
-					$invoice_list		= $invoice->getInvoicesByUser($main->getvar['do']);
-					
-					foreach($invoice_list as $invoice_item) {
-						$invoice_array = $invoice->getInvoice($invoice_item['id'], true);
-						$array['CONTENT'] 	.= $style->replaceVar("tpl/invoices/viewinvoice.tpl", $invoice_array);	
-					}				
+					$return_array  		= $invoice->getAllInvoicesToArray($main->getvar['do']);					
+					$array['CONTENT'] 	=  $style->replaceVar("tpl/invoices/client-page.tpl", $return_array);
 					$array['BOX'] 		= "";										
 					$array['URL'] 		= URL;
 					$array['ID'] 		= $main->getvar['do'];
