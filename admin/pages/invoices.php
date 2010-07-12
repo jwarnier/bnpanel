@@ -116,17 +116,8 @@ class page {
 				$result_max = $db->query($count_sql);		
 				$count = $db->fetch_array($result_max);
 				$count = $count['count'];
-				$quantity = ceil($count / $per_page);
-				$pagination = '';
-				if ($quantity > 1){
-					$pagination = '<ul id="pagination">';
-					for ($i = 1 ; $i<= $quantity; $i++) {
-						$pagination .=  '<li id="'.$i.'">'.$i.'</li>';	
-					}
-					$pagination .= '</ul>';
-				}						
-				$return_array['pagination'] =$pagination; 
-					
+				$quantity = ceil($count / $per_page);							
+				$return_array['COUNT'] = $quantity;
 				echo $style->replaceVar("tpl/invoices/admin-page.tpl", $return_array);				
 			break;	
 			

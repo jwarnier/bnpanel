@@ -1,30 +1,6 @@
-<style>
-a:hover {
-	color:#DF3D82;
-	text-decoration:underline;
-}
-#loading { 
-	width: 100%; 
-	position: absolute;
-}
-#pagination {
-	text-align:center;
-	margin-left:auto;
-	margin-right:auto;
-}
-#pagination li {	
-	list-style: none; 
-	float: left; 
-	margin-right: 16px; 
-	padding:5px; 
-	border:solid 1px #dddddd;
-	color:#0063DC; 
-}
-#pagination li:hover { 
-	color:#FF0084; 
-	cursor: pointer; 
-}
-</style>
+<script type="text/javascript" src="<URL>includes/javascript/jpaginate/jquery.paginate.js"></script>
+<link rel="stylesheet" href="<URL>includes/javascript/jpaginate/css/style.css" type="text/css" />
+
 
 
 <script type="text/javascript">
@@ -33,7 +9,7 @@ $(document).ready(function() {
 	
 	//Display Loading Image
 	function Display_Load() {
-	    $("#loading").fadeIn(900,0);
+    	$("#loading").fadeIn(900,0);
 		$("#loading").html("<img src='bigLoader.gif' />");
 	}
 	
@@ -42,33 +18,29 @@ $(document).ready(function() {
 		$("#loading").fadeOut('slow');
 	};
 	
-
-   //Default Starting Page Results   
-	$("#pagination li:first").css({'color' : '#FF0084'}).css({'border' : 'none'});
-	
 	Display_Load();
 	
 	$("#tbody").load("<AJAX>?function=getInvoices&page=1", Hide_Load());
 
-	//Pagination Click
-	$("#pagination li").click(function(){
-			
-		Display_Load();
-		
-		//CSS Styles
-		$("#pagination li")
-		.css({'border' : 'solid #dddddd 1px'})
-		.css({'color' : '#0063DC'});
-		
-		$(this)
-		.css({'color' : '#FF0084'})
-		.css({'border' : 'none'});
-
-		//Loading Data
-		var pageNum = this.id;
-		
-		$("#tbody").load("<AJAX>?function=getInvoices&page=" + pageNum, Hide_Load());
-	});	
+	$("#pagination").paginate({
+		count 		: %COUNT%,
+		start 		: 1,
+		display     : 5,
+		border					: true,
+		border_color			: '#fff',
+		text_color  			: '#fff',
+		background_color    	: 'black',	
+		border_hover_color		: '#ccc',
+		text_hover_color  		: '#000',
+		background_hover_color	: '#fff', 
+		images					: false,
+		mouse					: 'press',
+		onChange     			: function(page){
+									var pageNum = page;
+									Display_Load();
+									$("#tbody").load("<AJAX>?function=getInvoices&page=" + pageNum, Hide_Load());
+	  							}
+	 });	
 });
 </script>
 
@@ -82,6 +54,7 @@ $(document).ready(function() {
 		<strong>Unpaid Invoices:</strong> %numunpaid%
 	</div>
 </div> -->
+
 
 <table width="100%" border="0" cellspacing="3" cellpadding="0">
 	<thead>
@@ -102,7 +75,9 @@ $(document).ready(function() {
 	<tbody id="tbody"></tbody>
 	<tfoot>
 		<tr>
-			<td colspan="7" align="center">	%pagination%</td>
+		<td colspan="7">	
+			<div id="pagination"></div>
+			</td>
 		</tr>
 	</tfoot>
 	
