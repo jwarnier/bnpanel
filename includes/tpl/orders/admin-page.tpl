@@ -14,8 +14,7 @@ $(document).ready(function() {
 	//Hide Loading Image
 	function Hide_Load() {
 		$("#loading").fadeOut('slow');
-	};
-	
+	};	
 	
 	Display_Load();
 	
