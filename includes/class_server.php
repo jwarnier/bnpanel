@@ -32,15 +32,17 @@ class server {
 		global $main, $db, $type, $addon, $order, $package, $email,$user;
 			
 		//Check package details
-		$package_id = intval($main->getvar['package']);
-		$package_info = $package->getPackage($package_id);
-		
+		$package_id 	= intval($main->getvar['package']);
+		$package_info 	= $package->getPackage($package_id);		
 		
 		if (empty($package_info) || $package_info['is_disable'] == 1) {
 			echo 'Package doesn\'t exist please contact the administrator';
 			return;
 		} 
-				
+		$user_id = '';
+		
+		//If user doesn't exist	
+			
 		if($main->getvar['domain'] == 'dom') { # If Domain
 			if(!$main->getvar['cdom']) {
 				echo "Please fill in the domain field!";
@@ -65,6 +67,7 @@ class server {
 			}
 			$main->getvar['fdom'] = $main->getvar['cdom'];
 		}
+		
 		if($main->getvar['domain'] == "sub") { # If Subdomain
 			if(!$main->getvar['csub']) {
 				echo "Please fill in the subdomain field!";
@@ -73,111 +76,124 @@ class server {
 			$main->getvar['fdom'] = $main->getvar['csub'].".".$main->getvar['csub2'];
 		}
 		
-		if((!$main->getvar['username'])) {
-			echo "Please enter a username!";
-			return;
-		} else {
-			$query = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$main->getvar['username']}'");
-			if($db->num_rows($query) != 0) {
-				echo "That username already exists!";
+		$user_already_registered = false;
+		
+		if ($main->getCurrentUserId() === false) {
+			
+			if((!$main->getvar['username'])) {
+				echo "Please enter a username!";
+				return;
+			} else {
+				$query = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$main->getvar['username']}'");
+				if($db->num_rows($query) != 0) {
+					echo "That username already exists!";
+					return;
+				}
+			}
+			if((!$main->getvar['password'])) {
+			   echo "Please enter a password!";
+			   return;
+			} else {
+				if($main->getvar['password'] != $main->getvar['confirmp']) {
+					echo "Your passwords don't match!";
+					return;
+				}
+			}
+			if((!$main->getvar['email'])) {
+			   echo "Please enter a email!";
+			   return;
+			}
+			if((!$main->check_email($main->getvar['email']))) {
+					echo "Your email is the wrong format!";	
+					return;
+			} else {
+				$query = $db->query("SELECT * FROM `<PRE>users` WHERE `email` = '{$main->getvar['email']}'");
+				if($db->num_rows($query) != 0) {
+					echo "That e-mail address is already in use!";
+					return;
+				}
+			}
+			if(($main->getvar['human'] != $_SESSION["pass"])) {
+			   echo "Human test failed!";
+			   //return;
+			}
+			if((!$main->getvar['firstname'])) {
+			   echo "Please enter a valid first name!";
+			   return;
+			}
+			if((!$main->getvar['lastname'])) {
+			   echo "Please enter a valid last name!";
+			   return;
+			}
+			if((!$main->getvar['address'])) {
+			   echo "Please enter a valid address!";
+			   return;
+			}
+			if((!$main->getvar['city'])) {
+			   echo "Please enter a valid city!";
+			   return;
+			}
+			if((!$main->getvar['zip'])) {
+			   echo "Please enter a valid zip code!";
+			   return;
+			}
+			if((!$main->getvar['state'])) {
+			   echo "Please enter a valid state!";
+			   return;
+			}
+			if((!$main->getvar['state'])) {
+			   echo "Please enter a valid state!";
+			   return;
+			}
+			if((!$main->getvar['country'])) {
+			   echo "Please select a country!";
+			   return;
+			}
+			if ((!preg_match("/^([a-zA-Z\.\'\ \-])+$/",$main->getvar['firstname']))) {
+				echo "Please enter a valid first name!";
+				return;			
+			}
+			if ((!preg_match("/^([a-zA-Z\.\'\ \-])+$/",$main->getvar['lastname']))) {
+				echo "Please enter a valid last name!";
+				return;			
+			}
+			if ((!preg_match("/^([0-9a-zA-Z\.\ \-])+$/",$main->getvar['address']))) {
+				echo "Please enter a valid address!";
 				return;
 			}
-		}
-		if((!$main->getvar['password'])) {
-		   echo "Please enter a password!";
-		   return;
-		} else {
-			if($main->getvar['password'] != $main->getvar['confirmp']) {
-				echo "Your passwords don't match!";
+			if ((!preg_match("/^([a-zA-Z ])+$/",$main->getvar['city']))) {
+				echo "Please enter a valid city!";
+				return;			
+			}
+			if ((!preg_match("/^([a-zA-Z\.\ -])+$/",$main->getvar['state']))) {
+				echo "Please enter a valid state!";
 				return;
 			}
-		}
-		if((!$main->getvar['email'])) {
-		   echo "Please enter a email!";
-		   return;
-		}
-		if((!$main->check_email($main->getvar['email']))) {
-				echo "Your email is the wrong format!";	
-				return;
-		} else {
-			$query = $db->query("SELECT * FROM `<PRE>users` WHERE `email` = '{$main->getvar['email']}'");
-			if($db->num_rows($query) != 0) {
-				echo "That e-mail address is already in use!";
+			if((strlen($main->getvar['zip']) > 7)) {
+				echo "Please enter a valid zip/postal code!";
 				return;
 			}
-		}
-		if(($main->getvar['human'] != $_SESSION["pass"])) {
-		   echo "Human test failed!";
-		   //return;
-		}
-		if((!$main->getvar['firstname'])) {
-		   echo "Please enter a valid first name!";
-		   return;
-		}
-		if((!$main->getvar['lastname'])) {
-		   echo "Please enter a valid last name!";
-		   return;
-		}
-		if((!$main->getvar['address'])) {
-		   echo "Please enter a valid address!";
-		   return;
-		}
-		if((!$main->getvar['city'])) {
-		   echo "Please enter a valid city!";
-		   return;
-		}
-		if((!$main->getvar['zip'])) {
-		   echo "Please enter a valid zip code!";
-		   return;
-		}
-		if((!$main->getvar['state'])) {
-		   echo "Please enter a valid state!";
-		   return;
-		}
-		if((!$main->getvar['state'])) {
-		   echo "Please enter a valid state!";
-		   return;
-		}
-		if((!$main->getvar['country'])) {
-		   echo "Please select a country!";
-		   return;
-		}
-		if ((!preg_match("/^([a-zA-Z\.\'\ \-])+$/",$main->getvar['firstname']))) {
-			echo "Please enter a valid first name!";
-			return;			
-		}
-		if ((!preg_match("/^([a-zA-Z\.\'\ \-])+$/",$main->getvar['lastname']))) {
-			echo "Please enter a valid last name!";
-			return;			
-		}
-		if ((!preg_match("/^([0-9a-zA-Z\.\ \-])+$/",$main->getvar['address']))) {
-			echo "Please enter a valid address!";
-			return;
-		}
-		if ((!preg_match("/^([a-zA-Z ])+$/",$main->getvar['city']))) {
-			echo "Please enter a valid city!";
-			return;			
-		}
-		if ((!preg_match("/^([a-zA-Z\.\ -])+$/",$main->getvar['state']))) {
-			echo "Please enter a valid state!";
-			return;
-		}
-		if((strlen($main->getvar['zip']) > 7)) {
-			echo "Please enter a valid zip/postal code!";
-			return;
-		}
-		if ((!preg_match("/^([0-9a-zA-Z\ \-])+$/",$main->getvar['zip']))) {
-			echo "Please enter a valid zip/postal code!";
-			return;
-		}
-		if((strlen($main->getvar['phone']) > 15)) {
-			echo "Please enter a valid phone number!";
-			return;
-		}
-		if ((!preg_match("/^([0-9\-])+$/",$main->getvar['phone']))) {
-			echo "Please enter a valid phone number!";
-			return;
-		}
+			if ((!preg_match("/^([0-9a-zA-Z\ \-])+$/",$main->getvar['zip']))) {
+				echo "Please enter a valid zip/postal code!";
+				return;
+			}
+			if((strlen($main->getvar['phone']) > 15)) {
+				echo "Please enter a valid phone number!";
+				return;
+			}
+			if ((!preg_match("/^([0-9\-])+$/",$main->getvar['phone']))) {
+				echo "Please enter a valid phone number!";
+				return;
+			}
+		} else {
+			//Setting current user info
+			$user_already_registered = true;
+			$user_id 	= $main->getCurrentUserId();
+			$user_info 	= $main->getCurrentUserInfo();			
+			$user_name 	= $user_info['user'];
+			$password	= $user_info['password']; 
+			$user_email = $user_info['email'];			
+		}		
 		
 		// Creates the "paid" or "free" class 
 		$package_type_class = $type->createType($package_info['type']);	
@@ -211,91 +227,107 @@ class server {
 		$done = true;
 		if($done == true) {
 			// Did the signup pass?
-			//Creating a new user
-			$date 				= time();								
-			$user_name 			= $main->getvar['username'];				
-			$billing_cycle_id 	= $main->getvar['billing_id'];		
-
-			$main->getvar['signup'] 	= $_SERVER['REMOTE_ADDR'];
-			$main->getvar['ip'] 		= time();
-			$main->getvar['salt'] 		= md5(rand(0,9999999));
-			$main->getvar['password'] 	= md5(md5($main->getvar['password']).md5($main->getvar['salt']));
-			$main->getvar['user'] 		= $main->getvar['username'];			
-			$main->getvar['status'] 	= USER_STATUS_ACTIVE;
-							  
-			$user_id = $user->create($main->getvar);
-													  
-			$newSQL = "SELECT * FROM `<PRE>users` WHERE `user` = '{$user_name}' LIMIT 1;";
-			$query = $db->query($newSQL);
+			$date 				= time();
+			$billing_cycle_id 	= $main->getvar['billing_id'];
 						
-			//If user added
-			if($db->num_rows($query) == 1) {
-				$data = $db->fetch_array($query);
+			if($user_already_registered == false) {
+				//Creating a new user												
+				$user_name 					= $main->getvar['username'];	
+				$main->getvar['signup'] 	= $_SERVER['REMOTE_ADDR'];
+				$main->getvar['ip'] 		= time();
+				$main->getvar['salt'] 		= md5(rand(0,9999999));
+				$main->getvar['password'] 	= md5(md5($main->getvar['password']).md5($main->getvar['salt']));
+				$main->getvar['confirmp'] 	= md5(md5($main->getvar['confirmp']).md5($main->getvar['salt']));
+				$main->getvar['user'] 		= $main->getvar['username'];			
+				$main->getvar['status'] 	= USER_STATUS_WAITING_USER_VALIDATION; //
 				
+				var_dump($main->getvar);
+				//Create a new user
+				$user_id 					= $user->create($main->getvar);				
+				
+				$password					= $main->getvar['password']; 
+				$user_email					= $main->getvar['email'];
+								
 				//Insert into logs
+				/* Replace this thing with some cool class_log.php or something like that
 				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
 												  '{$data['userid']}',
 												  '{$data['user']}',
 												  '{$date}',
-												  'User registered.')");												  
+												  'User registered.')");*/												  
+			} 
 				
-				//Creating a new order
-				$params['userid'] 		= $data['id'];
-				$params['username'] 	= $main->getvar['username'];
+			if ($user_already_registered == true) {
+				//Creating a new order because the user is already registered
+				$params['userid'] 		= $user_id;				
+				$params['username'] 	= $user_name;				
 				$params['domain'] 		= $main->getvar['fdom'];
 				$params['pid'] 			= $package_id;
 				$params['signup'] 		= $date;
-				$params['status'] 		= ORDER_STATUS_WAITING_ADMIN_VALIDATION;
+				
+				//Change the order status depending of the package
+				if ($package_info['admin'] == 1)
+					$params['status'] 		= ORDER_STATUS_WAITING_ADMIN_VALIDATION;
+				else {
+					$params['status'] 		= ORDER_STATUS_ACTIVE;
+				}
+				
 				$params['additional']	= $additional;
 				$params['billing_cycle_id'] = $billing_cycle_id;
 				
-				if (!empty($params['userid']) && !empty($params['pid'])) {
+				if (!empty($params['userid']) && !empty($params['pid'])) {					
 					$order_id = $order->create($params);
 					//Add addons to a new order		
 					$order->addAddons($order_id, $main->getvar['addon_ids']);
 				}
+				
+				$array['USER']		= $user_name;				
+				$array['PASS'] 		= $password; 
+				$array['EMAIL'] 	= $user_email;
+				$array['DOMAIN'] 	= $main->getvar['fdom'];	
+				
+				if ($user_already_registered == true && $user_info['status'] == USER_STATUS_ACTIVE) {			
+					$array['CONFIRM'] 	= '';
+				} else {
+					$array['CONFIRM'] 	= '<span style="font-weight: bold;">Confirmation Link: </span>'.$db->config('url') . "client/confirm.php?u=" . $user_name . "&c=" . $date;	
+				}
+				$array['PACKAGE'] 	= $package_info['name'];
 								
-				$url = $db->config('url');
-				$array['USER']	= $user_name;
-				$array['PASS'] 	= $main->getvar['password']; 
-				$array['EMAIL'] = $main->getvar['email'];
-				$array['DOMAIN'] = $main->getvar['fdom'];
-				$array['CONFIRM'] = $url . "client/confirm.php?u=" . $user_name . "&c=" . $date;
-				
-				//Get plan email friendly name				
-				$array['PACKAGE'] = $package_info['name'];
-				
-				//Getting the order info
-				$order_info = $order->getOrderByUser($data['id']);
-				
 				//Depends if the package needs an admin validation
+				var_dump($package_info);
 				if($package_info['admin'] == 0) {
-					//No admin validation no suspend of the webhosting
+					//New hosting account just waiting for *user* validation
 					$emaildata = $db->emailTemplate('newacc');
 					echo "<strong>Your account has been completed!</strong><br />You may now use the client login bar to see your client area or proceed to your control panel. An email has been dispatched to the address on file.";
 					if($type->determineType($package_id) == 'paid') {
 						echo " This will apply only when you've made payment.";	
-						$_SESSION['clogged'] = 1;
-						$_SESSION['cuser'] = $data['id'];
+						//$main->clientLogin($user_name, $password);		
+						//$_SESSION['clogged'] = 1;
+						//$_SESSION['cuser'] = $user_id;
 					}
 					$donecorrectly = true;
 				} elseif($package_info['admin'] == 1) {
 					//Needs admin validation so we suspend the webhosting -
-					if($serverphp->suspend($main->getvar['username'], $type->determineServer($package_id)) == true) {						
-						$emaildata = $db->emailTemplate('newaccadmin');
-						$emaildata2 = $db->emailTemplate('adminval');
-						$email->staff($emaildata2['subject'], $emaildata2['content']);
+					if($serverphp->suspend($main->getvar['username'], $type->determineServer($package_id)) == true) {
+						
+						//User is waiting for admin validation						
+						$emaildata 	= $db->emailTemplate('newaccadmin');
+						
+						//Email sent to all admins 
+						$email_to_admin = $db->emailTemplate('adminval');
+						$email->staff($email_to_admin['subject'], $email_to_admin['content']);
+						
 						echo "<strong>Your account is awaiting admin validation!</strong><br />An email has been dispatched to the address on file. You will recieve another email when the admin has overlooked your account.";
 						$donecorrectly = true;
 					} else {
 						echo "Something with admin validation went wrong (suspend). Your account should be running but contact your host administrator!";	
 					}
-				} else {					
+				} else {				
 					echo "Something with admin validation went wrong. Your account should be running but contact your host administrator.";	
 				}
 				$email->send($array['EMAIL'], $emaildata['subject'], $emaildata['content'], $array);
 			} else {
-				echo "Your username doesn't exist in the system meaning the query failed or it exists more than once!";	
+				echo "There was a problem when creating a user. Please contact the system administratior.";	
 			}
 			
 			//If the package is paid			
@@ -310,6 +342,7 @@ class server {
 				//1. Calculating the amount for the package depending on the billing cycle
 				$package_amount = 0;
 				$package_billing_info = $package->getPackageByBillingCycle($package_id, $billing_cycle_id);	
+				
 				if (is_array($package_billing_info) && isset($package_billing_info['amount'])) {					
 					$package_amount = $package_billing_info['amount'];
 				}				
@@ -317,7 +350,8 @@ class server {
 				$addon_fee = $addon->generateAddonFee($main->getvar['addon_ids'], $billing_cycle_id, true);
 								
 				//3. Creating the invoice
-				$invoice->create($data['id'], $package_amount, $due, $notes, $addon_fee, INVOICE_STATUS_WAITING_PAYMENT);
+				$invoice_id = $invoice->create($user_id, $package_amount, $due, $notes, $addon_fee, INVOICE_STATUS_WAITING_PAYMENT, $order_id);
+				$_SESSION['last_invoice_id'] = $invoice_id;
 				
 				//4. Suspend the hosting if is not already suspended
 				if ($package_info['admin'] == 0) { 				
@@ -591,26 +625,40 @@ class server {
 			}
 		}
 	}
-	
-	public function confirm($username, $confirm) { # Set's user's account to Active when the unique link is visited.
+	/**
+	 * Sets user's account to Active when the unique link is visited.
+	 */
+	public function confirm($username, $confirm) {
 		global $db, $main, $type, $email;
-		$query = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$username}' AND `signup` = {$confirm} AND `status` = '3'");
+		$query = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$username}'");
+		// AND `status` = '".USER_STATUS_WAITING_ADMIN_VALIDATION."'");
 		if($db->num_rows($query) == 0) {
-			$array['Error'] = "That package doesn't exist or cannot be confirmed!";
+			$array['Error'] = "The user doesn't exist";
 			$main->error($array);
 			return false;	
-		}
-		else {
+		} else {
 			$data = $db->fetch_array($query);
-			$date = time();
-			$db->query("UPDATE `<PRE>users` SET `status` = '1' WHERE `user` = '{$username}'");
-			$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-												  '{$db->strip($data['userid'])}',
-												  '{$data['user']}',
-												  '{$date}',
-												  'Account/E-mail Confirmed.')");
-			return true;
+			
+			switch($data['status']) {
+				case USER_STATUS_WAITING_ADMIN_VALIDATION:
+					//$date = time();
+					//$db->query("UPDATE `<PRE>users` SET `status` = '".USER_STATUS_ACTIVE."' WHERE `user` = '{$username}'");
+					$user->updateUserStatus($data['id'], USER_STATUS_ACTIVE);
+					
+					$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
+														  '{$db->strip($data['userid'])}',
+														  '{$data['user']}',
+														  '{$date}',
+														  'Account/E-mail Confirmed.')");
+					return true;
+				break;
+				case USER_STATUS_ACTIVE:				
+				return true;
+				
+				default:				
+				return false;
+			}
 		}
 	}
+	
 }
-?>

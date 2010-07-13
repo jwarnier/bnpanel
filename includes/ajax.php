@@ -255,7 +255,6 @@ class AJAX {
 	}
 	
 	public function create() { 
-		global $main;
 		global $server;
 		$server->signup();
 	}
@@ -1119,13 +1118,12 @@ class AJAX {
        }
 	   
 	   function ispaid() {
-			global $db, $main;
-			$package = $db->fetch_array($db->query("SELECT * FROM `<PRE>packages` WHERE `id` = '{$main->getvar['pid']}'"));
-			if($package['type'] == 'paid') {
-				$username = $db->fetch_array($db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$main->getvar['uname']}'"));
-				$id = $username['id'];
-				$invoice = $db->fetch_array($db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$id}'"));
-				echo $invoice['id'];
+			global $db, $main, $invoice;
+			if (isset($_SESSION['last_invoice_id']) && !empty($_SESSION['last_invoice_id']) && is_numeric($_SESSION['last_invoice_id'])) {
+				//$invoice_info = $invoice->getInvoiceInfo($_SESSION['last_invoice_id']);
+				echo intval($_SESSION['last_invoice_id']);					
+			} else {
+				echo 0;
 			}
 	   }
 	   
@@ -1151,7 +1149,7 @@ class AJAX {
 	   		$html = '<fieldset style="width: 90%;"><legend><b>Package Order</b></legend><table width="100%" >';
 	   		
 	   		$sql = "SELECT a.name, amount, bc.name  as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-					ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = {$main->getvar['billing_id']} ";
+					ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = {$main->getvar['billing_id']}  AND b.type = '".BILLING_TYPE_PACKAGE."' ";
 			$result = $db->query($sql); 
 			$package_billing_info_exist = false;
 			if ($db->num_rows($result) > 0) {				
@@ -1179,7 +1177,7 @@ class AJAX {
 		   		
 		   		while($data = $db->fetch_array($result)) {		   			
 		   			$sql = "SELECT a.name, description, setup_fee, bc.name as billing_name, b.amount FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-							ON (bc.id = b.billing_id) WHERE a.status = ".ADDON_STATUS_ACTIVE." AND a.id = {$data['addon_id']} AND bc.id = {$main->getvar['billing_id']} ORDER BY a.name";
+							ON (bc.id = b.billing_id) WHERE a.status = ".ADDON_STATUS_ACTIVE." AND a.id = {$data['addon_id']} AND bc.id = {$main->getvar['billing_id']}  AND b.type = '".BILLING_TYPE_ADDON."' ORDER BY a.name";
 					$addon_result = $db->query($sql);
 					if ($db->num_rows($addon_result) > 0) {
 						$addon = $db->fetch_array($addon_result);
@@ -1226,8 +1224,8 @@ class AJAX {
 			}
 			$new_addon_list = implode(',', $new_addon_list);
 			
-			$sql = "SELECT a.name, amount , bc.name as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-					ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = {$main->getvar['billing_id']} ";
+			echo $sql = "SELECT a.name, amount , bc.name as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
+					ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = {$main->getvar['billing_id']} AND b.type = '".BILLING_TYPE_PACKAGE."'";
 			$result = $db->query($sql); 
 			$html = '';
 			$total = 0;
@@ -1242,7 +1240,7 @@ class AJAX {
 					            <td width="2%"></td>
 					        </tr>';
 					        					        
-			while($data = $db->fetch_array($result)) {	
+			while($data = $db->fetch_array($result,'ASSOC')) {	
 				$amount_to_show  = $currency->toCurrency($data['amount']);			
 		       	$html .= "<tr>
 		            <td></td>
@@ -1256,7 +1254,7 @@ class AJAX {
 			
 			if (!empty($new_addon_list) && !empty($main->getvar['billing_id'])) {
 				$sql = "SELECT a.name, setup_fee, bc.name as billing_name, b.amount FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-						ON (bc.id = b.billing_id) WHERE a.id IN ({$new_addon_list}) AND bc.id = {$main->getvar['billing_id']} ORDER BY a.name";
+						ON (bc.id = b.billing_id) WHERE a.id IN ({$new_addon_list}) AND bc.id = {$main->getvar['billing_id']} AND b.type = '".BILLING_TYPE_ADDON."' ORDER BY a.name";
 				$result = $db->query($sql); 
 			
 				while($data = $db->fetch_array($result)) {
