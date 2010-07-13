@@ -12,7 +12,7 @@ class page {
 		}
 		else {
 			$_SESSION['cdelete'] = true;
-			$array['USER'] = $_SESSION['cuser'];
+			$array['USER'] = $main->getCurrentUserId();
 			echo $style->replaceVar("tpl/cdelete.tpl", $array);
 		}
 	}

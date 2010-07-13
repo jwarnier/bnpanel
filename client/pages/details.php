@@ -8,7 +8,7 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $style, $db, $main;
-		$data = $db->client($_SESSION['cuser']);
+		$data = $db->client($main->getCurrentUserId());
 		$array['USER'] = $data['user'];
 		$array['EMAIL'] = $data['email'];
 		$array['DOMAIN'] = $data['domain'];
@@ -27,7 +27,7 @@ class page {
 					echo $style->replaceVar("tpl/cedit.tpl", $array);
 					return;
 				}
-				$query = $db->query("SELECT * FROM `<PRE>users` WHERE `email` = '{$main->postvar['email']}' AND `id` != '{$_SESSION['cuser']}'");
+				$query = $db->query("SELECT * FROM `<PRE>users` WHERE `email` = '{$main->postvar['email']}' AND `id` != '{$data['id']}'");
 				if($db->num_rows($query) != 0) {
 					$main->errors("That e-mail address is already in use!");
 					echo $style->replaceVar("tpl/cedit.tpl", $array);
@@ -93,17 +93,17 @@ class page {
 					echo $style->replaceVar("tpl/cedit.tpl", $array);
 					return;
 				}
-				$db->query("UPDATE `<PRE>users` SET `email` = '{$main->postvar['email']}' WHERE `id` = '{$_SESSION['cuser']}'");
-				$db->query("UPDATE `<PRE>users` SET `state` = '{$main->postvar['state']}' WHERE `id` = '{$_SESSION['cuser']}'");
-				$db->query("UPDATE `<PRE>users` SET `address` = '{$main->postvar['address']}' WHERE `id` = '{$_SESSION['cuser']}'");	
-				$db->query("UPDATE `<PRE>users` SET `phone` = '{$main->postvar['phone']}' WHERE `id` = '{$_SESSION['cuser']}'");
-				$db->query("UPDATE `<PRE>users` SET `zip` = '{$main->postvar['zip']}' WHERE `id` = '{$_SESSION['cuser']}'");
-				$db->query("UPDATE `<PRE>users` SET `city` = '{$main->postvar['city']}' WHERE `id` = '{$_SESSION['cuser']}'");
+				$db->query("UPDATE `<PRE>users` SET `email` = '{$main->postvar['email']}' WHERE `id` = '{$data['id']}'");
+				$db->query("UPDATE `<PRE>users` SET `state` = '{$main->postvar['state']}' WHERE `id` = '{$data['id']}'");
+				$db->query("UPDATE `<PRE>users` SET `address` = '{$main->postvar['address']}' WHERE `id` = '{$data['id']}'");	
+				$db->query("UPDATE `<PRE>users` SET `phone` = '{$main->postvar['phone']}' WHERE `id` = '{$data['id']}'");
+				$db->query("UPDATE `<PRE>users` SET `zip` = '{$main->postvar['zip']}' WHERE `id` = '{$data['id']}'");
+				$db->query("UPDATE `<PRE>users` SET `city` = '{$main->postvar['city']}' WHERE `id` = '{$data['id']}'");
 				if($main->postvar['change']) {
-					$data = $db->client($_SESSION['cuser']);
+					$data = $db->client($data['id']);
 					if(md5(md5($main->postvar['currentpass']) . md5($data['salt'])) == $data['password']) {
 						if($main->postvar['newpass'] === $main->postvar['cpass']) {
-						$cmd = $main->changeClientPassword($_SESSION['cuser'], $main->postvar['newpass']);
+						$cmd = $main->changeClientPassword($data['id'], $main->postvar['newpass']);
 						if($cmd === true) {
 							$main->errors("Details updated!");
 						}

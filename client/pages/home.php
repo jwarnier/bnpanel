@@ -7,15 +7,16 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $style, $db, $main, $type;
-		$data = $db->client($_SESSION['cuser']);
-		$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `reply` = '0' AND `userid` = '{$_SESSION['cuser']}'");
+		$user_id = $main->getCurrentUserId()
+		$data = $db->client($user_id);
+		$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `reply` = '0' AND `userid` = '{$user_id}'");
 		$array['TICKETS'] = $db->num_rows($query);
-		$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `reply` = '0' AND `userid` = '{$_SESSION['cuser']}' AND `status` = '1'");
+		$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `reply` = '0' AND `userid` = '{$user_id}' AND `status` = '1'");
 		$array['OPENTICKETS'] = $db->num_rows($query);
-		$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `reply` = '0' AND `userid` = '{$_SESSION['cuser']}' AND `status` = '3'");
+		$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `reply` = '0' AND `userid` = '{$user_id}' AND `status` = '3'");
 		$array['CLOSEDTICKETS'] = $db->num_rows($query);
 		$array['DATE'] = strftime("%D", $data['signup']);
-		$lquery = $db->query("SELECT * FROM `<PRE>logs` WHERE `uid` = '{$_SESSION['cuser']}' AND `message` LIKE 'Login%' ORDER BY `id` DESC LIMIT 2,1");
+		$lquery = $db->query("SELECT * FROM `<PRE>logs` WHERE `uid` = '{$user_id}' AND `message` LIKE 'Login%' ORDER BY `id` DESC LIMIT 2,1");
 		$ldata = $db->fetch_array($lquery);
 		$array['LASTLOGIN'] = $ldata['message'];
 		$array['LASTDATE'] = strftime("%m/%d/%Y", $ldata['logtime']);
