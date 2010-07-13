@@ -152,7 +152,7 @@ function acp() {
 			$email->staff("Possible Hacking Attempt", "A user has been logged trying to hack your copy of THT, their IP is: ". $_SERVER['REMOTE_ADDR']);
 		}
 	}
-	$staffuser = $db->staff($_SESSION['user']);
+	$staffuser = $db->staff( $main->getCurrentStaffId());
 	define("SUB", $header);
 	define("INFO", '<b>Welcome back, '. strip_tags($staffuser['name']) .'</b><br />'. SUB);
 	

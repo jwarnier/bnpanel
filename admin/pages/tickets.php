@@ -131,10 +131,11 @@ class page {
 					}
 					if(!$n) {
 						$time = time();
-						$db->query("INSERT INTO `<PRE>tickets` (title, content, time, userid, reply, ticketid, staff) VALUES('{$main->postvar['title']}', '{$main->postvar['content']}', '{$time}', '{$_SESSION['user']}', '1', '{$main->getvar['do']}', '1')");
+						$staff_id = $main->getCurrentStaffId();
+						$db->query("INSERT INTO `<PRE>tickets` (title, content, time, userid, reply, ticketid, staff) VALUES('{$main->postvar['title']}', '{$main->postvar['content']}', '{$time}', '{$staff_id}', '1', '{$main->getvar['do']}', '1')");
 						$main->errors("Reply has been added!");
 						$data = $db->fetch_array($query);
-						$client = $db->staff($_SESSION['user']);
+						$client = $db->staff($staff_id);
 						$user = $db->client($data['userid']);
 						$template = $db->emailTemplate("clientresponse");
 						$array['TITLE'] = $data['title'];

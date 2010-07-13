@@ -18,23 +18,21 @@ class page {
 				}
 			}
 			if(!$n) {
-				$user = $db->staff($_SESSION['user']);
+				$staff_id = $main->getCurrentStaffId();
+				$user = $db->staff($staff_id);
 				if(!$user['password']) {
 					$main->errors("Wrong username!?");
-				}
-				else {
+				} else {
 					$data = $user;
 					if(md5(md5($main->postvar['old']) . md5($data['salt'])) == $data['password']) {
 						if($main->postvar['new'] != $main->postvar['confirm']) {
 							$main->errors("Your passwords don't match!");
-						}
-						else {
+						} else {
 							$newpass = 	md5(md5($main->postvar['new']) . md5($data['salt']));
-							$db->query("UPDATE `<PRE>staff` SET `password` = '{$newpass}' WHERE `id` = '{$_SESSION['user']}'");
+							$db->query("UPDATE `<PRE>staff` SET `password` = '{$newpass}' WHERE `id` = '{$staff_id}'");
 							$main->errors("Password changed!");
 						}
-					}
-					else {
+					} else {
 						$main->errors("Your old password was wrong!");
 					}
 				}

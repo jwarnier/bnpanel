@@ -16,7 +16,7 @@ class page {
 		if(!$main->getvar['type'] || !$main->getvar['sub']) {
 			echo "Not all variables set!";	
 		}
-		$user = $_SESSION['user'];
+		$user = $main->getCurrentStaffId();
 		if($user == 1) {
 			$php = $type->classes[$main->getvar['type']];
 			$php->acpPage();
