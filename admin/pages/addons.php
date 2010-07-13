@@ -153,19 +153,16 @@ class page {
 						
 						$data = $db->fetch_array($query);
 						
-						$array['BACKEND'] = $data['backend'];
-						$array['DESCRIPTION'] = $data['description'];						
-						$array['STATUS'] = $main->createCheckbox('', 'status', $data['status']);						
-						$array['NAME'] = $data['name'];
+						$array['BACKEND'] 		= $data['backend'];
+						$array['DESCRIPTION']	= $data['description'];						
+						$array['STATUS'] 		= $main->createCheckbox('', 'status', $data['status']);						
+						$array['NAME'] 			= $data['name'];
 						
 						$array['ID'] = $data['id'];
 						
-						//global $type;
-						//$array['FORM'] = $type->acpPedit($data['type'], $cform);
-			
 						
 						//----- Adding billing cycle						
-						$sql = "SELECT billing_id, b.name, amount FROM `<PRE>billing_cycles`  b INNER JOIN `<PRE>billing_products` bp on (bp.billing_id = b.id) WHERE product_id =".$data['id'];
+						$sql = "SELECT billing_id, b.name, amount FROM `<PRE>billing_cycles`  b INNER JOIN `<PRE>billing_products` bp on (bp.billing_id = b.id) WHERE product_id =".$data['id']." AND bp.type = '".BILLING_TYPE_ADDON."' ";
 						$query = $db->query($sql);		
 						
 						while($data = $db->fetch_array($query)) {
