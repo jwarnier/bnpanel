@@ -49,12 +49,13 @@ class invoice extends model {
 	 * 
 	 */
 	public function pay($invoice_id, $returnURL = "order/index.php") {
-		global $db;
+		global $db, $main;
 		require_once "paypal/paypal.class.php";
 		$paypal 		= new paypal_class;
 		$invoice_info 	= $this->getInvoiceInfo($invoice_id);
+		$user_id = $main->getCurrentUserId();
 		
-		if($_SESSION['cuser'] == $invoice_info['uid']) {
+		if($user_id == $invoice_info['uid']) {
 			
 			if (SERVER_STATUS == 'test') {
 				$paypal->paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
