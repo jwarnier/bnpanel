@@ -32,7 +32,7 @@ class addon extends model {
 	}
 	
 	/**
-	 * Gets all adddons by billing cycle id and package id
+	 * Gets all addons by billing cycle id and package id
 	 * @param	int		billing id
 	 * @return 	array	a list with all addons
  	 * @author	Julio Montoya <gugli100@gmail.com> BeezNest 2010 
@@ -42,7 +42,7 @@ class addon extends model {
 		$addon_list = array();		//&& !empty($package_id)
 		if (!empty($billing_id) && !empty($package_id) ) {		
 			$sql = "SELECT a.id, a.name, amount, bc.name  as billing_name  FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-					ON (bc.id = b.billing_id) INNER JOIN `<PRE>package_addons` pa ON (pa.addon_id= a.id) WHERE bc.id = {$billing_id} AND pa.package_id  = {$package_id}";
+					ON (bc.id = b.billing_id) INNER JOIN `<PRE>package_addons` pa ON (pa.addon_id= a.id) WHERE bc.id = {$billing_id} AND pa.package_id  = {$package_id} AND b.type = '".BILLING_TYPE_ADDON."' ";
 			$result = $db->query($sql);			
 			while($data = $db->fetch_array($result)) {
 				$addon_list[$data['id']] = array('id'=>$data['id'],  'name' => $data['name'], 'amount'=>$data['amount']);									
