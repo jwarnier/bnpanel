@@ -106,6 +106,8 @@ class page {
 		$content_notepad = $style->replaceVar('tpl/notepad.tpl', $array);
 		echo '<br />'; //br it, br it
 		echo $main->table('Admin Notepad', $content_notepad, 'auto', 'auto');
+		/*
+		
 		require_once(LINK.'rss/rss_fetch.inc');
 		$url = "http://thehostingtool.com/forum/syndication.php?fid=2&limit=3";
 		$rss = fetch_rss($url);
@@ -119,7 +121,7 @@ class page {
 			$news .= $style->replaceVar('tpl/newsitem.tpl', $array);
 		}
 		echo "<br />";
-		echo $main->table('THT News & Updates', $news);
+		echo $main->table('THT News & Updates', $news);*/
 	}
 }
 ?>
