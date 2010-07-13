@@ -4,7 +4,7 @@
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 
 #Define the main THT
-define("THT", 1);
+define('THT', 1);
 
 //Billing types
 define('BILLING_TYPE_ADDON', 					'addon');
@@ -42,6 +42,7 @@ define('SERVER_STATUS', 'test');
 define('USER_STATUS_ACTIVE', 					1);// Active users
 define('USER_STATUS_SUSPENDED', 				2);// Suspend users can't login
 define('USER_STATUS_WAITING_ADMIN_VALIDATION',	3);// Waiting can't login till admin validation 
+define('USER_STATUS_WAITING_USER_VALIDATION', 	4); //before ORDER_STATUS_INACTIVE
 //define(USER_STATUS_WAITING_PAYMENT, 			4); //should not be use is useless!! 
 define('USER_STATUS_DELETED', 					9); //cancelled deleted users
 
