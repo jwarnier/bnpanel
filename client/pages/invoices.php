@@ -28,7 +28,8 @@ class page {
 					if($paypal->validate_ipn()) {
 						$invoice->set_paid(intval($_GET['invoiceID']));
 						$main->errors("Your invoice has been paid!");
-						$client = $db->fetch_array($db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$_SESSION['cuser']}'"));
+						$user_id = $main->getCurrentUserId();
+						$client = $db->fetch_array($db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$user_id}'"));
 						if($client['status'] == 2) {
 							$server->unsuspend($client['id']);
 						}
@@ -46,17 +47,18 @@ class page {
 			break;					
 			case 'all':
 			default :
-					
+				$user_id = $main->getCurrentUserId();
+				
 				$billing_cycle_name_list = $billing->getAllBillingCycles();
 				
 				//Addons
 				$addons_list = $addon->getAllAddons();				
 				
 				// List of invoices. :)
-				$query = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$_SESSION['cuser']}' AND status <> '".INVOICE_STATUS_DELETED."' ORDER BY `id` ASC");
+				$query = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$user_id}' AND status <> '".INVOICE_STATUS_DELETED."' ORDER BY `id` DESC");
 				
-				$userdata = mysql_fetch_row($db->query("SELECT `user`,`firstname`,`lastname` FROM `<PRE>users` WHERE `id` = {$_SESSION['cuser']}"));
-				$domain = mysql_fetch_row($db->query("SELECT domain, pid, billing_cycle_id  FROM `<PRE>user_packs` WHERE `userid` = {$_SESSION['cuser']}"));
+				$userdata = mysql_fetch_row($db->query("SELECT `user`,`firstname`,`lastname` FROM `<PRE>users` WHERE `id` = {$user_id}"));
+				$domain = mysql_fetch_row($db->query("SELECT domain, pid, billing_cycle_id  FROM `<PRE>user_packs` WHERE `userid` = {$user_id}"));
 				$extra = array(					
 					"domain"	=> $domain[0],
 					"pid"	=> $domain[1],

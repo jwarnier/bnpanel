@@ -92,10 +92,11 @@ class page {
 	}
 	
 	public function content() { # Displays the page 
-	global $main;
-	global $style;
-	global $db;
-	global $email;
+		global $main;
+		global $style;
+		global $db;
+		global $email;
+		$user_id = $main->getCurrentUserId();
 		switch($main->getvar['sub']) {
 			default:
 				if($_POST) {
@@ -107,7 +108,7 @@ class page {
 					}
 					if(!$n) {
 						$time = time();
-						$db->query("INSERT INTO `<PRE>tickets` (title, content, urgency, time, userid) VALUES('{$main->postvar['title']}', '{$main->postvar['content']}', '{$main->postvar['urgency']}', '{$time}', '{$_SESSION['cuser']}')");
+						$db->query("INSERT INTO `<PRE>tickets` (title, content, urgency, time, userid) VALUES('{$main->postvar['title']}', '{$main->postvar['content']}', '{$main->postvar['urgency']}', '{$time}', '{$user_id}')");
 						$main->errors("Ticket has been added!");
 						$template = $db->emailTemplate("new ticket");
 						$array['TITLE'] = $main->postvar['title'];
@@ -121,7 +122,7 @@ class page {
 			
 			case "view":
 				if(!$main->getvar['do']) {
-					$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `userid` = '{$_SESSION['cuser']}' AND `reply` = '0'");
+					$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `userid` = '{$user_id}' AND `reply` = '0'");
 					if(!$db->num_rows($query)) {
 						echo "You currently have no tickets!";	
 					}
@@ -149,10 +150,10 @@ class page {
 							}
 							if(!$n) {
 								$time = time();
-								$db->query("INSERT INTO `<PRE>tickets` (title, content, time, userid, reply, ticketid) VALUES('{$main->postvar['title']}', '{$main->postvar['content']}', '{$time}', '{$_SESSION['cuser']}', '1', '{$main->getvar['do']}')");
+								$db->query("INSERT INTO `<PRE>tickets` (title, content, time, userid, reply, ticketid) VALUES('{$main->postvar['title']}', '{$main->postvar['content']}', '{$time}', '{$user_id}', '1', '{$main->getvar['do']}')");
 								$main->errors("Reply has been added!");
 								$data = $db->fetch_array($query);
-								$client = $db->client($_SESSION['cuser']);
+								$client = $db->client($user_id);
 								$template = $db->emailTemplate("new response");
 								$array['TITLE'] = $data['title'];
 								$array['USER'] = $client['user'];
