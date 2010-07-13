@@ -143,11 +143,11 @@ if(THT != 1){die();}class main {
 			return true;	
 		}
 	}
-		/**	 * Checks the staff permissions for a nav item	 * @param 	int	user id	 */	 
+		/**	 * Checks the staff permissions for a nav item	 * @param	int		permission id	 * @param 	int		user id	 */	 
 	public function checkPerms($id, $user = 0) {
 		global $main, $db;
 		if(!$user) {
-			$user = $_SESSION['user'];
+			$user =  $main->getCurrentStaffId();
 		}			//Use now session to avoid useless query calls to the DB		if (isset($_SESSION['user_permissions'])) {			foreach($_SESSION['user_permissions'] as $value) {				if($value == $id) {					return false;					}			}			return true;		} else {
 			$query = $db->query("SELECT * FROM `<PRE>staff` WHERE `id` = '{$user}'");
 			if($db->num_rows($query) == 0) {
