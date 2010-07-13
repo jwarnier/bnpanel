@@ -156,7 +156,7 @@ INSERT INTO `%PRE%config` (`name`, `value`) VALUES
 ('tldonly', '0'),
 ('currency', 'USD'),
 ('ui-theme', 'cupertino'),
-('rows_per_page', '5');
+('rows_per_page', '20');
 
 -- --------------------------------------------------------
 
