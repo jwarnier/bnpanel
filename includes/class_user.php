@@ -21,18 +21,25 @@ class user extends model {
 	public function create($params) {
 		global $db, $main;		
 		//Password is the same, email and username is not empty
-		if ($params['password'] == $params['confirmp'] && !empty($params['user']) &&  !empty($params['email'])) {
-			if ($this->userNameExists($params['user']) == false) {				
-				$params['salt']			= md5(rand(0,9999999)); 
-				$params['signup']		= time();
-				$params['password'] 	= md5(md5($params['password']).md5($params['salt']));
-				$params['ip'] 			= $_SERVER['REMOTE_ADDR'];
-				$user_id = $this->save($params);	        	
-	      		return $user_id;
+		
+		if ($params['password'] == $params['confirmp']) {
+			if (!empty($params['user']) &&  !empty($params['email'])) {
+				if ($this->userNameExists($params['user']) == false) {			
+					$params['salt']			= md5(rand(0,9999999)); 
+					$params['signup']		= time();
+					$params['password'] 	= md5(md5($params['password']).md5($params['salt']));
+					$params['ip'] 			= $_SERVER['REMOTE_ADDR'];
+					$user_id = $this->save($params);	        	
+		      		return $user_id;
+				} else {
+					//$array['Error'] = "That username already exist!";				
+					$main->errors( "That username already exist!");
+				}
 			} else {
-				//$array['Error'] = "That username already exist!";				
-				$main->errors( "That username already exist!");
+				$main->errors('Please field the username and email');
 			}
+		} else {
+			$main->errors('Passwords do not match');
 		}
 		return false;
 	}
