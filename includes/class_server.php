@@ -55,8 +55,7 @@ class server {
 				}
 				if ($db->config("tldonly")) { # Are we alowing TLD's Only?
 					$ttlparts = count($data);
-					if ($ttlparts > 2)
-					{
+					if ($ttlparts > 2) {
 						$dmndata = array('com', 'net', 'co', 'uk', 'org');
 						if (!in_array($data[$ttlparts - 2], $dmndata)) {
 							echo "We only allow Top Level Domains (.com/.net/.org, etc)";
@@ -68,14 +67,16 @@ class server {
 			$main->getvar['fdom'] = $main->getvar['cdom'];
 		}
 		
-		if($main->getvar['domain'] == "sub") { # If Subdomain
+		if($main->getvar['domain'] == 'sub') { # If Subdomain
 			if(!$main->getvar['csub']) {
 				echo "Please fill in the subdomain field!";
 				return;
-			}
-			$main->getvar['fdom'] = $main->getvar['csub'].".".$main->getvar['csub2'];
+			}			
+			$subdomain_list = $main->getSubDomainByServer($package_info['server']);			
+			$subdomain = $subdomain_list[$main->getvar['csub2']];			
+			$main->getvar['fdom'] = $main->getvar['csub'].".".$subdomain;
 		}
-		
+				
 		$user_already_registered = false;
 		
 		if ($main->getCurrentUserId() === false) {
@@ -190,8 +191,7 @@ class server {
 			$user_already_registered = true;
 			$user_id 	= $main->getCurrentUserId();
 			$user_info 	= $main->getCurrentUserInfo();			
-			$user_name 	= $user_info['user'];
-			$password	= $user_info['password']; 
+			$user_name 	= $user_info['user'];			
 			$user_email = $user_info['email'];			
 		}		
 		
@@ -234,17 +234,15 @@ class server {
 				//Creating a new user												
 				$user_name 					= $main->getvar['username'];	
 				$main->getvar['signup'] 	= $_SERVER['REMOTE_ADDR'];
-				$main->getvar['ip'] 		= time();
-				$main->getvar['salt'] 		= md5(rand(0,9999999));
-				$main->getvar['password'] 	= md5(md5($main->getvar['password']).md5($main->getvar['salt']));
-				$main->getvar['confirmp'] 	= md5(md5($main->getvar['confirmp']).md5($main->getvar['salt']));
+				$main->getvar['ip'] 		= time();				
 				$main->getvar['user'] 		= $main->getvar['username'];			
-				$main->getvar['status'] 	= USER_STATUS_WAITING_USER_VALIDATION; //
-				
-				var_dump($main->getvar);
+				$main->getvar['status'] 	= USER_STATUS_ACTIVE; 
 				//Create a new user
-				$user_id 					= $user->create($main->getvar);				
-				
+				$user_id 					= $user->create($main->getvar);
+				if (!empty($user_id) && is_numeric($user_id)){
+					$user_already_registered = true;										
+					$login = $main->clientLogin($user_name, $main->getvar['password']);
+				}				
 				$password					= $main->getvar['password']; 
 				$user_email					= $main->getvar['email'];
 								
@@ -272,7 +270,7 @@ class server {
 					$params['status'] 		= ORDER_STATUS_ACTIVE;
 				}
 				
-				$params['additional']	= $additional;
+				$params['additional']		= $additional;
 				$params['billing_cycle_id'] = $billing_cycle_id;
 				
 				if (!empty($params['userid']) && !empty($params['pid'])) {					
@@ -289,19 +287,19 @@ class server {
 				if ($user_already_registered == true && $user_info['status'] == USER_STATUS_ACTIVE) {			
 					$array['CONFIRM'] 	= '';
 				} else {
-					$array['CONFIRM'] 	= '<span style="font-weight: bold;">Confirmation Link: </span>'.$db->config('url') . "client/confirm.php?u=" . $user_name . "&c=" . $date;	
+				//	$array['CONFIRM'] 	= '<span style="font-weight: bold;">Confirmation Link: </span>'.$db->config('url') . "client/confirm.php?u=" . $user_name . "&c=" . $date;	
+					$array['CONFIRM'] 	= '';
 				}
 				$array['PACKAGE'] 	= $package_info['name'];
 								
 				//Depends if the package needs an admin validation
-				var_dump($package_info);
 				if($package_info['admin'] == 0) {
 					//New hosting account just waiting for *user* validation
 					$emaildata = $db->emailTemplate('newacc');
-					echo "<strong>Your account has been completed!</strong><br />You may now use the client login bar to see your client area or proceed to your control panel. An email has been dispatched to the address on file.";
+					echo "<strong>Your account has been completed!</strong><br />You may now use the client login bar to see your client area or proceed to your control panel. An email has been dispatched to confirm you email address";
 					if($type->determineType($package_id) == 'paid') {
 						echo " This will apply only when you've made payment.";	
-						//$main->clientLogin($user_name, $password);		
+								
 						//$_SESSION['clogged'] = 1;
 						//$_SESSION['cuser'] = $user_id;
 					}
@@ -327,11 +325,11 @@ class server {
 				}
 				$email->send($array['EMAIL'], $emaildata['subject'], $emaildata['content'], $array);
 			} else {
-				echo "There was a problem when creating a user. Please contact the system administratior.";	
+				echo "There was a problem when creating a user. Please contact the system administrator.";	
 			}
 			
 			//If the package is paid			
-			if($donecorrectly && $type->determineType($package_id) == 'paid') {								
+			if($donecorrectly && $type->determineType($package_id) == 'paid') {							
 				global $invoice,$package;
 				//The order was saved with an status of admin validation now we should create an invoice an set the status to wait payment 
 			
@@ -483,8 +481,7 @@ class server {
 			$array['User PID'] = $id;
 			$main->error($array);
 			return;	
-		}
-		else {
+		} else {
 			$data = $db->fetch_array($query);
 			$query2 = $db->query("SELECT * FROM `<PRE>users` WHERE `id` = '{$db->strip($data['userid'])}'");
 			$data2 = $db->fetch_array($query2);
@@ -500,7 +497,7 @@ class server {
 			if($donestuff == true) {
 				$date = time();
 				$db->query("UPDATE `<PRE>user_packs` SET `status` = '2' WHERE `id` = '{$data['id']}'");
-				$db->query("UPDATE `<PRE>users` SET `status` = '2' WHERE `id` = '{$db->strip($data['userid'])}'");
+				//$db->query("UPDATE `<PRE>users` SET `status` = '2' WHERE `id` = '{$db->strip($data['userid'])}'");
 				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
 													  '{$db->strip($data['userid'])}',
 													  '{$data2['user']}',
@@ -638,7 +635,7 @@ class server {
 			return false;	
 		} else {
 			$data = $db->fetch_array($query);
-			
+			var_dump($data['status']);
 			switch($data['status']) {
 				case USER_STATUS_WAITING_ADMIN_VALIDATION:
 					//$date = time();

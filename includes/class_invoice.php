@@ -270,7 +270,7 @@ class invoice extends model {
 		$result = $db->query($sql);
 		$invoice_list = array();
 		if($db->num_rows($result) >  0) {
-			while($data = $db->fetch_array($result)) {
+			while($data = $db->fetch_array($result,'ASSOC')) {
 				$invoice_list[$data['id']] = $data;
 			}
 		}
@@ -310,8 +310,7 @@ class invoice extends model {
 				$array['STATUS'] 	= $invoice_status[$invoice_info['status']];
 			} else {
 				$array['STATUS'] 	= $main->createSelect('status', $invoice_status, $invoice_info['status'],1);
-			}
-			
+			}			
 			
 			$array['CREATED'] 	= $invoice_info['created'];
 			$array['NOTES'] 	= $invoice_info['notes'];	
