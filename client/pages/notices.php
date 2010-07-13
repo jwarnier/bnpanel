@@ -10,7 +10,7 @@ class page{
 			echo $style->replaceVar('tpl/cannouncements.tpl', $array);
 		} #closes if
 		else{
-			echo 'No Announcements Avaliable';
+			echo 'No Announcements Available';
 		}
 	}
 }
