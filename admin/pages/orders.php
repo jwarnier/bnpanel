@@ -137,14 +137,6 @@ class page {
 					$return_array = $order->getOrder($main->getvar['do'], false, false);					
 					echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);
 				}
-			break;
-			case 'delete':			
-				if (isset($main->getvar['do'])) { 
-					$order->delete($main->getvar['do']);					
-					$main->errors("The order has been deleted!");
-				}			
-				echo '<ERRORS>';		
-				//	$main->redirect("?page=orders&sub=all");						
 			break;			
 			case 'view':				
 				if(isset($main->getvar['do'])) {					
@@ -223,20 +215,26 @@ class page {
 					$main->errors("You need an order before create an invoice!");
 				}			
 			break;		
-			
+			case 'delete':			
+				if (isset($main->getvar['do'])) { 
+					$order->delete($main->getvar['do']);
+								
+				} else {
+					$main->redirect("?page=orders&sub=all");										
+				}		
+				if (isset($main->getvar['confirm']) && $main->getvar['confirm'] == 1) {
+					$main->errors("The order #".$main->getvar['do']." has been  deleted!");
+				}		
 			default :	
-			case 'all':
-				//$return_array = $order->getAllOrdersToArray();		
-				echo '<ERRORS>';					
-					
-					$per_page = $db->config('rows_per_page');
-					$count_sql = "SELECT count(*)  as count FROM ".$order->getTableName()." WHERE status <> '".ORDER_STATUS_DELETED."'";
-					$result_max = $db->query($count_sql);		
-					$count = $db->fetch_array($result_max);
-					$count = $count['count'];					
-					$quantity = ceil($count / $per_page);
-					$return_array['COUNT'] = $quantity;
-					
+			case 'all':									
+				$per_page = $db->config('rows_per_page');
+				$count_sql = "SELECT count(*)  as count FROM ".$order->getTableName()." WHERE status <> '".ORDER_STATUS_DELETED."'";
+				$result_max = $db->query($count_sql);		
+				$count = $db->fetch_array($result_max);
+				$count = $count['count'];					
+				$quantity = ceil($count / $per_page);
+				$return_array['COUNT'] = $quantity;
+				
 				echo $style->replaceVar("tpl/orders/admin-page.tpl", $return_array);				
 			break;			
 		}

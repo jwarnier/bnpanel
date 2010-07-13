@@ -1,19 +1,21 @@
 <script type="text/javascript" src="<URL>includes/javascript/jpaginate/jquery.paginate.js"></script>
 <link rel="stylesheet" href="<URL>includes/javascript/jpaginate/css/style.css" type="text/css" />
+<style>
 
+</style>
 <script type="text/javascript">
 
 $(document).ready(function() {
 	
 	//Display Loading Image
 	function Display_Load() {
-	    $("#loading").fadeIn(900,0);
-		$("#loading").html("<img src='<URL>themes/icons/ajax-loader2.gif' />");
+	    $("#pagination_loading").fadeIn(900,0);
+		$("#pagination_loading").html("<img src='<URL>themes/icons/ajax-loader2.gif' />");
 	}
 	
 	//Hide Loading Image
 	function Hide_Load() {
-		$("#loading").fadeOut('slow');
+		$("#pagination_loading").fadeOut('slow');
 	};	
 	
 	Display_Load();
@@ -43,11 +45,11 @@ $(document).ready(function() {
 });
 </script>
 
-<div id="loading" ></div>
+
 	
 <p>From here you can see all orders in your BNPanel installation</p>
 <ERRORS>
-
+<div id="pagination_loading" ></div>
 <table width="100%" border="0" cellspacing="3" cellpadding="0">
 	<thead>
 		<tr> 
@@ -60,6 +62,7 @@ $(document).ready(function() {
 	        <td width="150px"><strong>Actions</strong></td>                
 		</tr>
 	</thead>	
+
 	<tbody id="tbody"></tbody>
 	<tfoot>
 		<tr>

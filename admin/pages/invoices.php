@@ -93,24 +93,22 @@ class page {
 					$return_array['DUE'] = substr($return_array['DUE'], 0, 10);					
 					echo $style->replaceVar("tpl/invoices/editinvoice.tpl", $return_array);
 				}
-			break;
-			case 'delete':			
-				if (isset($main->getvar['do'])) { 
-					$invoice->delete($main->getvar['do']);
-					$main->errors("The invoice has been deleted!");
-				}
-				echo "<ERRORS>";							
 			break;			
 			case 'view':				
 				if(isset($main->getvar['do'])) {					
 					$return_array = $invoice->getInvoice($main->getvar['do'], true);									
 					echo $style->replaceVar("tpl/invoices/viewinvoice.tpl", $return_array);					
 				}
-			break;			
+			break;
+			case 'delete':			
+				if (isset($main->getvar['do'])) { 
+					$invoice->delete($main->getvar['do']);					
+				}
+				if (isset($main->getvar['confirm']) && $main->getvar['confirm'] == 1) {
+					$main->errors("The invoice #".$main->getvar['do']." has been  deleted!");
+				}
 			case 'all':
 			default :				
-				//$return_array = $invoice->getAllInvoicesToArray();
-				
 				$per_page = $db->config('rows_per_page');
 				$count_sql = "SELECT count(*)  as count FROM ".$invoice->getTableName()." WHERE status <> '".INVOICE_STATUS_DELETED."'";
 				$result_max = $db->query($count_sql);		

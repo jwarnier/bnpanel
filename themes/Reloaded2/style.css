@@ -241,4 +241,7 @@ input, option {
      -webkit-border-radius: "4px";
      }
     
+#pagination_loading {
+	position: absolute;	
+}    
     
