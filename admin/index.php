@@ -19,10 +19,11 @@ function acp() {
 	ob_start(); # Stop the output buffer
 	
 	if(!$main->getvar['page']) { 
-		$main->getvar['page'] = "home";
+		$main->getvar['page'] = 'home';
 	}
-	$query = $db->query("SELECT * FROM `<PRE>acpnav` WHERE `link` = '{$main->getvar['page']}'");
-	$page = $db->fetch_array($query);
+	$query = $db->query("SELECT id, visual FROM `<PRE>acpnav` WHERE `link` = '{$main->getvar['page']}'");
+	$page = $db->fetch_array($query,'ASSOC');
+	
 	$header = $page['visual'];
 	$link = "pages/". $main->getvar['page'] .".php";	
 	
@@ -31,10 +32,12 @@ function acp() {
 	} elseif(!$main->checkPerms($page['id']) && $db->num_rows($query) != 0) {		
 		$html = "You don't have access to this page.";	
 	} else {
+		
 		//If deleting something
-		if(preg_match("/[\.*]/", $main->getvar['page']) == 0) {
+		//&& $main->linkAdminMenuExists($main->getvar['page']) == true
+		if(preg_match("/[\.*]/", $main->getvar['page']) == 0  ) {			
 			include($link);
-			$content = new page;
+			$content = new page();
 			// Main Side Bar HTML
 			$nav = "Sidebar Menu";		
 			$sub = $db->query("SELECT * FROM `<PRE>acpnav`");
@@ -47,6 +50,7 @@ function acp() {
 					$array['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);
 				}
 			}
+			
 			# Types Navbar
 			/*
 			 * When Working on the navbar, to make a spacer use this:
@@ -99,6 +103,7 @@ function acp() {
 					}
 				}
 			}
+			
 			if($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {
 				foreach($main->postvar as $key => $value) {
 					$array['HIDDEN'] .= '<input name="'.$key.'" type="hidden" value="'.$value.'" />';
@@ -118,8 +123,7 @@ function acp() {
 					}
 					$url .= "&confirm=1";
 					$main->redirect($url);
-				}
-				elseif($main->postvar['no']) {
+				} elseif($main->postvar['no']) {
 					$main->done();	
 				}
 			}
@@ -146,12 +150,12 @@ function acp() {
 					ob_clean(); # Flush the HTML
 				}
 			}
-		}
-		else {
+		} else {
 			$html = "You trying to hack me? You've been warned. An email has been sent.. May I say, Owned?";
-			$email->staff("Possible Hacking Attempt", "A user has been logged trying to hack your copy of THT, their IP is: ". $_SERVER['REMOTE_ADDR']);
+			$email->staff("Possible Hacking Attempt", "A user has been logged trying to hack your copy of BNPanel, their IP is: ". $_SERVER['REMOTE_ADDR']);
 		}
 	}
+	
 	$staffuser = $db->staff( $main->getCurrentStaffId());
 	define("SUB", $header);
 	define("INFO", '<b>Welcome back, '. strip_tags($staffuser['name']) .'</b><br />'. SUB);
