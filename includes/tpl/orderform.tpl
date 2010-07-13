@@ -96,8 +96,7 @@ function nextstep() {
 		//Resume
 		case 2:			
 			if(document.getElementById("billing_id").value != 0) {
-				var addon_list = '';				
-				
+				var addon_list = '';
 				// If no addons
 				if (document.getElementById("addon_ids") != null) {
 					//Only one addon present
@@ -113,8 +112,7 @@ function nextstep() {
 							}
 						}						
 					}
-				}
-				
+				}				
 				var billing_id  = document.getElementById("billing_id").value;
 				showhide(step, step + 1);
 				step = step + 1;		
@@ -218,10 +216,9 @@ function nextstep() {
 				document.getElementById("verify").innerHTML = "";
 				
 				//check if an invoice is generated
-				$.get("<AJAX>?function=ispaid&pid="+ document.getElementById("package").value +"&uname="+ document.getElementById("username").value, function(data2) {							
-					document.getElementById("finished").innerHTML = data2;					
-					if(data2 != "") {
-						window.location = "../client/?page=invoices&iid="+data2;	
+				$.get("<AJAX>?function=ispaid&pid="+ document.getElementById("package").value +"&uname="+ document.getElementById("username").value, function(invoice_id) {
+					if(invoice_id != "") {
+						window.location = "../client/?page=invoices&iid="+invoice_id;				
 					}
 				});
 			});
