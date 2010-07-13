@@ -55,37 +55,31 @@ class page {
 				$addons_list = $addon->getAllAddons();				
 				
 				// List of invoices. :)
-				$query = $db->query("SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$user_id}' AND status <> '".INVOICE_STATUS_DELETED."' ORDER BY `id` DESC");
-				
-				$userdata = mysql_fetch_row($db->query("SELECT `user`,`firstname`,`lastname` FROM `<PRE>users` WHERE `id` = {$user_id}"));
-				$domain = mysql_fetch_row($db->query("SELECT domain, pid, billing_cycle_id  FROM `<PRE>user_packs` WHERE `userid` = {$user_id}"));
-				$extra = array(					
-					"domain"	=> $domain[0],
-					"pid"	=> $domain[1],
-					"billing_cycle_id"	=> $domain[2]			
-				);
+				$invoice_list = $invoice->getAllInvoices($user_id);
+							
 				$array2['list'] = "";
-				while($array = $db->fetch_array($query)) {
+				foreach($invoice_list as $invoice_item) {			
+							
 					$total_amount = 0;				
+					$array['id'] = $invoice_item['id'];
+					$array['due'] = strftime("%D", $invoice_item['due']);
 					
-					$array['due'] = strftime("%D", $array['due']);
-					
-					switch ($array['status']) {
+					switch ($invoice_item['status']) {
 						case INVOICE_STATUS_PAID:
 							$array['paid']	=  '<span style="color:green">Already Paid</span>';
 							$array['pay']	=  '<span style="color:green">Already Paid</span>';
-							$array['due']	=  '<span style="color:green">'.$array['due'].'</span>' ;
+							$array['due']	=  '<span style="color:green">'.$invoice_item['due'].'</span>' ;
 							  
 						break;
 						case INVOICE_STATUS_CANCELLED:
 							$array['paid'] 	= "<span style='color:red'>Canceled</span>";
-							$array['pay'] 	= '<input type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$array['id'].'\')" />';
-							$array['due']	=  '<span style="color:red">'.$array['due'].'</span>';		
+							$array['pay'] 	= '<input type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$invoice_item['id'].'\')" />';
+							$array['due']	=  '<span style="color:red">'.$invoice_item['due'].'</span>';		
 						break;
 						case INVOICE_STATUS_WAITING_PAYMENT:
 							$array['paid'] = "<span style='color:red'>Pending</span>";
-							$array['pay'] 	= '<input type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$array['id'].'\')" />';
-							$array['due']	=  '<span style="color:red">'.$array['due'].'</span>';		
+							$array['pay'] 	= '<input type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$invoice_item['id'].'\')" />';
+							$array['due']	=  '<span style="color:red">'.$invoice_item['due'].'</span>';		
 						break;
 						case INVOICE_STATUS_DELETED:
 							///	$array['paid'] = "<span style='color:green'>Already Paid</span>";
@@ -94,20 +88,17 @@ class page {
 							//This is weird an invoice with no status?
 							$array['paid']= '-';
 							$array['pay']=  '-';
-							//$array['due']=  '<span>'.$array['due'].'</span>';		
-									
+							//$array['due']=  '<span>'.$array['due'].'</span>';
 					}
-					
-					
-					$package_id 	  = $extra['pid'];
-					$billing_cycle_id = $extra['billing_cycle_id'];
+					$package_id 	  = $invoice_item['pid'];
+					$billing_cycle_id = $invoice_item['billing_cycle_id'];
 					
 					$addon_fee_string = '';
-					if (!empty($array['addon_fee'])) {
+					if (!empty($invoice_item['addon_fee'])) {
 						
-						$array['addon_fee'] = unserialize($array['addon_fee']);
-						if (is_array($array['addon_fee']) && count($array['addon_fee']) > 0 ) {
-							foreach($array['addon_fee'] as $addon) {					
+						$invoice_item['addon_fee'] = unserialize($invoice_item['addon_fee']);
+						if (is_array($invoice_item['addon_fee']) && count($invoice_item['addon_fee']) > 0 ) {
+							foreach($invoice_item['addon_fee'] as $addon) {					
 								//$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';
 								$total_amount = $total_amount + $addon['amount'];					
 							}
@@ -116,13 +107,10 @@ class page {
 					$array['addon_fee'] = null;
 					
 					//$array['addon_fee'] = $addon_fee_string;
-					$total_amount 		= $total_amount + $array['amount'];
-					$array['amount'] 	= $total_amount." ".$db->config('currency');					
-					
-					$array2['list'] .= $style->replaceVar("tpl/invoices/invoice-list-item-client.tpl", array_merge($array, $extra));
+					$total_amount 		= $total_amount + $invoice_item['amount'];
+					$array['amount'] 	= $total_amount." ".$db->config('currency');		
+					$array2['list'] .= $style->replaceVar("tpl/invoices/invoice-list-item-client.tpl", $array);
 				}
-				$array2['num'] = mysql_num_rows($query);
-				
 				echo $style->replaceVar("tpl/invoices/client-page.tpl", $array2);
 				break;		
 		}
