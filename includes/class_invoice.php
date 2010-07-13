@@ -175,9 +175,13 @@ class invoice extends model {
 		foreach($invoice_list as $array) {
 			
 			//Getting the user info
-			$user_info = $user->getUserById($array["uid"]);						
+			if(!empty($array['uid'])) {
+				$user_info = $user->getUserById($array['uid']);
+				$array['userinfo']  = '<a href="index.php?page=users&sub=search&do='.$user_info['id'].'" >'.$user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')</a>';
+			} else {
+				$array['userinfo']  = '-';
+			}
 			
-			$array['userinfo']  = '<a href="index.php?page=users&sub=search&do='.$user_info['id'].'" >'.$user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')</a>';
 			if( !empty($array['due'])) {
 				$array['due'] 		= strftime("%D", $array['due']);
 			} else {
