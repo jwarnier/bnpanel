@@ -87,15 +87,12 @@ class user extends model {
 	public function getUserById($user_id) {
 		global $db, $main;
 		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `id` = '{$db->strip($user_id)}'");
-		if($db->num_rows($query) == 0) {
-			$array['Error'] = "That user doesn't exist!";
-			$array['User ID'] = $user_id;
-			$main->error($array);
-			return;
-		} else {
-			$data = $db->fetch_array($query);
-			return $data;
+		$data = array();
+		if($db->num_rows($query) > 0) {
+			$data = $db->fetch_array($query,'ASSOC');			
 		}
+		return $data;
+		
 	}
 	
 	/**
@@ -113,7 +110,7 @@ class user extends model {
 			$result = $db->query($sql);
 			
 			if($db->num_rows($result) > 0) {
-				while($data = $db->fetch_array($result)) {
+				while($data = $db->fetch_array($result,'ASSOC')) {
 					$user_list[] = $data;
 				};		
 			}
