@@ -149,7 +149,8 @@ class page {
 				break;
 			
 			case 'delete':
-				$user_id = intval($_SESSION['user']);
+				
+				$user_id = $main->getCurrentStaffId();
 				$query = $db->query("SELECT * FROM `<PRE>staff` ");
 				if($main->getvar['do'] && $db->num_rows($query) > 1) {
 					$db->query("DELETE FROM `<PRE>staff` WHERE `user` = '{$main->getvar['do']}'");
