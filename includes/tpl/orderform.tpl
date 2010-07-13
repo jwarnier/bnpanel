@@ -104,7 +104,6 @@ function nextstep() {
 						addon_list  = document.order.addon_ids.value;
 					} else {				
 						for (var i=0; i < document.order.addon_ids.length; i++) {	
-							//alert(document.order.addon_ids[i].value);				
 							if (document.order.addon_ids[i].checked) {
 						   		if (document.order.addon_ids[i].value != 'undefined' ) { 
 						      		addon_list = addon_list + document.order.addon_ids[i].value + '-';
@@ -187,6 +186,9 @@ function nextstep() {
 			step = step + 1
 			var url = "?function=create";
 			var i;
+			
+			
+			
 			for(i="0"; i < document.order.length; i++) {
 				if(document.order.elements[i].type == "checkbox") {
 					if (document.order.elements[i].id != null && document.order.elements[i].value != null) {
@@ -196,14 +198,19 @@ function nextstep() {
 						} else {
 							url = url+"&"+document.order.elements[i].id+"="+document.order.elements[i].checked;
 						}
-					}
-					
+					}					
 				} else {
 					url = url+"&"+document.order.elements[i].id+"="+document.order.elements[i].value;
 				}
 				//alert(document.order.elements[i].id + ' - '. document.order.elements[i].value + ' - '. document.order.elements[i].checked);
 			}
 			
+			//adding subdomain
+			if (document.getElementById("domain").value == 'sub') {
+				var subdomain = document.getElementById("csub2");			
+				var subdomain_id = subdomain.options[subdomain.selectedIndex].value;
+				url = url + "&csub2="+subdomain_id;
+			}
 			 
 			document.getElementById("finished").innerHTML = working;
 			document.getElementById("next").disabled = true;
@@ -213,9 +220,8 @@ function nextstep() {
 			$.get("<AJAX>"+url, function(data) {
 				document.getElementById("finished").innerHTML = data;
 				document.getElementById("back").disabled = false;
-				document.getElementById("verify").innerHTML = "";
-				
-				//check if an invoice is generated
+				document.getElementById("verify").innerHTML = "";				
+				//Check if an invoice is generated
 				$.get("<AJAX>?function=ispaid&pid="+ document.getElementById("package").value +"&uname="+ document.getElementById("username").value, function(invoice_id) {
 					if(invoice_id != "") {
 						window.location = "../client/?page=invoices&iid="+invoice_id;				
@@ -332,22 +338,15 @@ function showAddons(obj) {
               <tr>
                 <td colspan="2">
                 	<div class="subborder">
-                		<div class="sub" id="description">               		
-					     
-					             <div id="show_summary"></div>
-					       
-					   	</table>
-                
-	              			
-
-              		  </div>
-              		  
-                    </div>
+                		<div class="sub" id="description">
+							<div id="show_summary"></div>					       
+					   	</div>
+              		</div>
 				</td>
               </tr>
             </table>
         </div>
-    </div>    
+    </div>
     
     
     <div class="table" id="4" style="display:none">
@@ -355,11 +354,13 @@ function showAddons(obj) {
         <div class="text">
         	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
-                <td colspan="2"><div class="subborder">
-                <div class="sub" id="description">
-                %TOS%
-                </div>
-                    </div></td>
+                <td colspan="2">
+                	<div class="subborder">
+                		<div class="sub" id="description">
+                		%TOS%
+                		</div>
+                    </div>
+				</td>
               </tr>
               <tr>
                 <td width="330"><input name="agree" id="agree" type="checkbox" value="1" /> Do you agree to the <NAME> Terms of Service?</td>
@@ -463,8 +464,13 @@ function showAddons(obj) {
               </tr>
               <tr id="sub">
                 <td width="20%" id="domtitle">Subdomain:</td>
+                
                 <td id="domcontent"><input name="csub" id="csub" type="text" />.<span id="dropdownboxsub"></span></td>
-                <td id="domaincheck" align="left"><a title="Your subdomain, this must be in the format: <strong>subdomain.desiredsuffix.com</strong>" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td id="domaincheck" align="left">
+                	<a title="Your subdomain, this must be in the format: <strong>subdomain.example.com</strong>" class="tooltip">
+                		<img src="<URL>themes/icons/information.png" />
+                	</a>
+                </td>
               </tr>
             </table>
             <div id="custom">
