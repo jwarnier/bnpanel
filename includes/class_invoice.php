@@ -53,7 +53,7 @@ class invoice extends model {
 		require_once "paypal/paypal.class.php";
 		$paypal 		= new paypal_class;
 		$invoice_info 	= $this->getInvoiceInfo($invoice_id);
-		$user_id = $main->getCurrentUserId();
+		$user_id 		= $main->getCurrentUserId();
 		
 		if($user_id == $invoice_info['uid']) {
 			
@@ -62,11 +62,22 @@ class invoice extends model {
 			} else {
 				$paypal->paypal_url = 'https://www.paypal.com/cgi-bin/webscr';
 			}
+			//More infor for paypal variables : https://www.paypal.com/cgi-bin/webscr?cmd=p/pdn/howto_checkout-outside
+			
 			$paypal->add_field('business', 			$db->config('paypalemail'));					
 			$paypal->add_field('return', 			urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
 			$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
 			$paypal->add_field('notify_url',  		urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
+			
 			$paypal->add_field('item_name', 		$db->config('name').' Invoice id: '.$invoice_id);
+			//$paypal->add_field('item_number', 		$invoice_id);
+			$paypal->add_field('invoice', 			$invoice_id);
+			$paypal->add_field('no_note', 			0);
+			
+			$paypal->add_field('no_shipping', 		1);			
+			//Image is 150*50
+			$paypal->add_field('image_url', 		'http://www.beeznest.com/sites/all/themes/beeznest/images/logo-beez.png');
+
 			$paypal->add_field('amount', 			$invoice_info['total_amount']);
 			$paypal->add_field('currency_code', 	$db->config('currency'));
 			$paypal->submit_paypal_post(); // submit the fields to paypal
