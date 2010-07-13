@@ -6,7 +6,9 @@ if(THT != 1){
 	die();
 }
 
-class package {
+class package extends model {
+	
+	public $table_name 	= 'packages';	
 	
 	/**
 	 * Gets all package information by billing cycle
@@ -56,11 +58,11 @@ class package {
 	 */	 
 	public function getPackage($package_id) {
 		global $db;
-		$sql = "SELECT * FROM `<PRE>packages` WHERE `id` = '{$package_id}'";
+		$sql = "SELECT * FROM ".$this->getTableName()." WHERE `id` = '{$package_id}'";
 		$result = $db->query($sql);
 		$data = array();
 		if ($db->num_rows($result)> 0) {
-			$data = $db->fetch_array($result);
+			$data = $db->fetch_array($result, 'ASSOC');
 		}
 		return $data;
 	}
@@ -68,11 +70,11 @@ class package {
 	public function getAllPackages($status = 0) {
 		global $db;
 		$status = intval($status);
-		$sql = "SELECT * FROM `<PRE>packages` WHERE `is_hidden` = '{$status}'";
+		$sql = "SELECT * FROM ".$this->getTableName()." WHERE `is_hidden` = '{$status}'";
 		$result = $db->query($sql);
 		$data = array();
 		if ($db->num_rows($result)> 0) {
-			while($package= $db->fetch_array($result)) {
+			while($package= $db->fetch_array($result, 'ASSOC')) {
 				$data[$package['id']]=$package; 
 			}
 		}
