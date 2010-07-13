@@ -457,15 +457,16 @@ class AJAX {
 			}
 		}
 	}
+	
+	/**
+	 * Gets the select of subdomains
+	 */
 	public function sub() {
 		global $main, $db, $type;
 		$pack = $main->getvar['pack'];
-		$server = $type->determineServer($pack);
-		$select = $db->query("SELECT * FROM `<PRE>subdomains` WHERE `server` = '{$server}'");
-		while($select = $db->fetch_array($select)) {
-			$values[] = array($select['subdomain'], $select['subdomain']);	
-		}
-		echo $main->dropdown("csub2", $values);
+		$server = $type->determineServer($pack);	
+		$values = $main->getSubDomainByServer($server);
+		echo $main->createSelect('csub2', $values);		
 	}
 	
 	public function phpinfo() {
@@ -1393,7 +1394,7 @@ class AJAX {
 }
 
 if(isset($_GET['function']) and $_GET['function'] != "") {
-	$ajax = new AJAX;
+	$ajax = new AJAX();
 	if(method_exists($ajax, $_GET['function'])) {
 		$ajax->{$_GET['function']}();
 		include(LINK."output.php");
