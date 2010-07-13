@@ -95,15 +95,15 @@ CREATE TABLE IF NOT EXISTS `%PRE%clientnav` (
 -- Dumping data for table `%PRE%clientnav`
 --
 
-INSERT INTO `%PRE%clientnav` (`id`, `visual`, `icon`, `link`) VALUES
-(1, 'Home', 'house.png', 'home'),
-(3, 'Announcements', 'bell.png', 'notices'),
-(4, 'View Package', 'package.png', 'view'),
-(5, 'Edit Details', 'user_edit.png', 'details'),
-(2, 'Delete Account', 'cross.png', 'delete'),
-(7, 'Invoices', 'script.png', 'invoices'),
-(8, 'Orders', 'order.png', 'orders'),
-(9, 'Tickets', 'page_white_text.png', 'tickets');
+INSERT INTO `%PRE%clientnav` (`visual`, `icon`, `link`) VALUES
+('Home', 'house.png', 'home'),
+('Announcements', 'bell.png', 'notices'),
+-- (4, 'View Package', 'package.png', 'view'), 
+('Edit Details', 'user_edit.png', 'details'),
+('Delete Account', 'cross.png', 'delete'),
+('Invoices', 'script.png', 'invoices'),
+('Orders', 'order.png', 'orders'),
+('Tickets', 'page_white_text.png', 'tickets');
 
 
 -- --------------------------------------------------------
