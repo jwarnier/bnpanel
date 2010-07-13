@@ -1121,7 +1121,9 @@ class AJAX {
 			global $db, $main, $invoice;
 			if (isset($_SESSION['last_invoice_id']) && !empty($_SESSION['last_invoice_id']) && is_numeric($_SESSION['last_invoice_id'])) {
 				//$invoice_info = $invoice->getInvoiceInfo($_SESSION['last_invoice_id']);
-				echo intval($_SESSION['last_invoice_id']);					
+				echo intval($_SESSION['last_invoice_id']);
+				//Deleting session	
+				unset($_SESSION['last_invoice_id']);				
 			} else {
 				echo 0;
 			}
@@ -1224,7 +1226,7 @@ class AJAX {
 			}
 			$new_addon_list = implode(',', $new_addon_list);
 			
-			echo $sql = "SELECT a.name, amount , bc.name as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
+			$sql = "SELECT a.name, amount , bc.name as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 					ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = {$main->getvar['billing_id']} AND b.type = '".BILLING_TYPE_PACKAGE."'";
 			$result = $db->query($sql); 
 			$html = '';
