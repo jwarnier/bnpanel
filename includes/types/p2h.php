@@ -282,7 +282,7 @@ class p2h {
 	public function clientBox() {
 		global $main, $db, $type;
 		$box[0] = "Forum Posting:<br />";
-		$user = $_SESSION['cuser'];
+		$user = $main->getCurrentUserId();		
 		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$user}'");
 		$data = $db->fetch_array($query);
 		$forum = $this->determineForum($data['pid']);
@@ -296,7 +296,7 @@ class p2h {
 
 	public function clientPage() {
 		global $main, $db, $type, $style;
-		$user = $_SESSION['cuser'];
+		$user = $main->getCurrentUserId();;
 		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$user}'");
 		$data = $db->fetch_array($query);
 		$forum = $this->determineForum($data['pid']);
