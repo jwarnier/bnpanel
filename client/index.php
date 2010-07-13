@@ -46,7 +46,8 @@ function client() {
 				$array['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);
 			}
 			# Types Navbar
-			$sql = "SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$_SESSION['cuser']}'";
+			$user_id = $main->getCurrentUserId();
+			$sql = "SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$user_id}'";
 			$navquery = $db->query($sql);
 			$navdata = $db->fetch_array($navquery);
 			
@@ -145,7 +146,7 @@ function client() {
 			}
 		}
 	}
-	$staffuser = $db->client($_SESSION['cuser']);
+	$staffuser = $db->client($main->getCurrentUserId());
 	define("SUB", $header);
 	define("INFO", '<b>Welcome back, '. $staffuser['user'] .'</b><br />'. SUB);
 	
