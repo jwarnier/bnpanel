@@ -167,17 +167,14 @@ if(THT != 1){die();}class main {
 	}	
 	public function clientLogin($user, $pass) { # Checks the credentails of the client and logs in, returns true or false
 		global $db, $main;
-		if($user && $pass) {
-			$query = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$main->postvar['user']}' AND (`status` <= '2' OR `status` = '4')");
+		if(isset($user) && isset($pass)) {			$sql = "SELECT * FROM `<PRE>users` WHERE `user` = '{$user}' AND status IN ('".USER_STATUS_ACTIVE."') ";			
+			$query = $db->query($sql);
 			if($db->num_rows($query) == 0) {
 				return false;
-			} else {
+			} else {				$date = time();
 				$data = $db->fetch_array($query,'ASSOC');
-				$ip = $_SERVER['REMOTE_ADDR'];
-				if(md5(md5($main->postvar['pass']) . md5($data['salt'])) == $data['password']) {
-					$_SESSION['clogged'] = 1;
-					//$_SESSION['cuser'] = $data['id'];															//Save all user in this session 					$data['password'] = null;					$data['salt'] = null;					$_SESSION['cuser'] = $data;					
-					$date = time();
+				$ip   = $_SERVER['REMOTE_ADDR'];				
+				if(md5(md5($pass).md5($data['salt'])) == $data['password']) {					$_SESSION['clogged'] 	= 1;										$data['password'] 		= null;					$data['salt'] 			= null;					//Save all user in this session					$_SESSION['cuser'] 		= $data;
 					$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
 														'{$data['id']}',
 														'{$main->postvar['user']}',
@@ -185,7 +182,7 @@ if(THT != 1){die();}class main {
 														'Login successful ($ip)')");
 					return true;
 				}	else {
-					$date = time();
+					
 					$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
 														'{$data['id']}',
 														'{$main->postvar['user']}',
@@ -197,7 +194,6 @@ if(THT != 1){die();}class main {
 			return false;
 		}
 	}
-	
 	public function staffLogin($user, $pass) { # Checks the credentials of a staff member and returns true or false
 		global $db, $main;
 		if($user && $pass) {
@@ -370,4 +366,4 @@ if(THT != 1){die();}class main {
 		
 		//Let's wrap it all up.
 		return true;
-	}		public function	countrySelect($selected_item = '') {		//@todo this will be move into other place something like includes/library/text.lib.php		require_once 'text.php';		$selected_item = strtoupper($selected_item);		return $this->createSelect('country', $country, $selected_item);	}		// Order status	public function getOrderStatusList() {		return array(			ORDER_STATUS_ACTIVE						=> 'Active', 			ORDER_STATUS_WAITING_USER_VALIDATION 	=> 'Waiting user validation',						ORDER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',			ORDER_STATUS_CANCELLED 					=> 'Canceled',  			//ORDER_STATUS_WAITING_PAYMENT	=> 'Waiting payment', 			ORDER_STATUS_DELETED			=> 'Deleted', 			);	}		public function getInvoiceStatusList() {		return array(			INVOICE_STATUS_PAID				=> 'Paid', 			INVOICE_STATUS_CANCELLED		=> 'Cancelled',						INVOICE_STATUS_WAITING_PAYMENT	=> 'Pending', 			INVOICE_STATUS_DELETED			=> 'Deleted'			);	}		public function getUserStatusList() {		return array(			USER_STATUS_ACTIVE						=> 'Active', 			USER_STATUS_SUSPENDED 					=> 'Suspend', 			USER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',  			//USER_STATUS_WAITING_PAYMENT				=> 'Waiting payment',  //should be remove only added for backward comptability			USER_STATUS_DELETED						=> 'Deleted', 			);	}		/**	 * Gets current user info 	 */	public function getCurrentUserInfo() {		if (isset($_SESSION['cuser']) && is_array($_SESSION['cuser'])) {			return $_SESSION['cuser'];		} else {			return false;		}	}		/**	 * Gets the curren user id 	 */	public function getCurrentUserId() {		if (isset($_SESSION['cuser']) && is_array($_SESSION['cuser'])) {			return intval($_SESSION['cuser']['id']);		} else {			return false;		}	}			/**	 * Gets current staff info 	 */	public function getCurrentStaffInfo() {		if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {			return $_SESSION['user'];		} else {			return false;		}	}		/**	 * Gets the curren staff id 	 */	public function getCurrentStaffId() {		if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {			return intval($_SESSION['user']['id']);		} else {			return false;		}	}}
+	}		public function	countrySelect($selected_item = '') {		//@todo this will be move into other place something like includes/library/text.lib.php		require_once 'text.php';		$selected_item = strtoupper($selected_item);		return $this->createSelect('country', $country, $selected_item);	}		// Order status	public function getOrderStatusList() {		return array(			ORDER_STATUS_ACTIVE						=> 'Active', 			ORDER_STATUS_WAITING_USER_VALIDATION 	=> 'Waiting user validation',						ORDER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',			ORDER_STATUS_CANCELLED 					=> 'Canceled',  			//ORDER_STATUS_WAITING_PAYMENT	=> 'Waiting payment', 			ORDER_STATUS_DELETED			=> 'Deleted', 			);	}		public function getInvoiceStatusList() {		return array(			INVOICE_STATUS_PAID				=> 'Paid', 			INVOICE_STATUS_CANCELLED		=> 'Cancelled',						INVOICE_STATUS_WAITING_PAYMENT	=> 'Pending', 			INVOICE_STATUS_DELETED			=> 'Deleted'			);	}		public function getUserStatusList() {		return array(			USER_STATUS_ACTIVE						=> 'Active', 			USER_STATUS_SUSPENDED 					=> 'Suspend', 			USER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',  			//USER_STATUS_WAITING_PAYMENT				=> 'Waiting payment',  //should be remove only added for backward comptability			USER_STATUS_DELETED						=> 'Deleted', 			);	}		/**	 * Gets current user info 	 */	public function getCurrentUserInfo() {		if (isset($_SESSION['cuser']) && is_array($_SESSION['cuser'])) {			return $_SESSION['cuser'];		} else {			return false;		}	}		/**	 * Gets the curren user id 	 */	public function getCurrentUserId() {		if (isset($_SESSION['cuser']) && is_array($_SESSION['cuser'])) {			return intval($_SESSION['cuser']['id']);		} else {			return false;		}	}			/**	 * Gets current staff info 	 */	public function getCurrentStaffInfo() {		if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {			return $_SESSION['user'];		} else {			return false;		}	}		/**	 * Gets the curren staff id 	 */	public function getCurrentStaffId() {		if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {			return intval($_SESSION['user']['id']);		} else {			return false;		}	}		/**	 * Gets the admin menu 	 */	public function getAdminMenu() {				if (isset($_SESSION['admin_menu']) && count($_SESSION['admin_menu']) > 0 ) {			return $_SESSION['admin_menu'];					} else {			global $db;						$result = $db->query("SELECT * FROM `<PRE>acpnav`");			$menu_list = $db->store_result($result);			$new_menu_list = array();			foreach($menu_list as $menu) {				$new_menu_list[$menu['link']] = $menu;			}						$_SESSION['admin_menu'] = $new_menu_list;			return $menu_list;		}	}		/**	 * Check if the link exist in the admin menu	 * @param	string	link 	 * @return  bool	true if sucess		 */	public function linkAdminMenuExists($link) {		$list = $this->getAdminMenu();		if (isset($list[$link]) && $list[$link]['link'] == $link) {			return true;		} else {			//somebody is trying to hack			return false;		}	}}
