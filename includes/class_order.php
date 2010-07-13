@@ -189,9 +189,9 @@ class order extends model {
     	$user_pack_status = $main->getOrderStatusList();
     	
 		while($order_item = $db->fetch_array($result_order)) {
-			//Getting the user info
+			//Getting the user info			
 			$user_info = $user->getUserById($order_item['userid']);
-			
+						
 			$array['ID']		= $order_item['id'];
 			
 			if (in_array($order_item['status'], array_keys($user_pack_status))) {
@@ -204,7 +204,12 @@ class order extends model {
 			} else {
 				$array['DUE'] = '-';
 			}
-			$array['USERINFO']  = '<a href="index.php?page=users&sub=search&do='.$user_info['id'].'" >'.$user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')</a>';
+			
+			if (!empty($user_info)) {
+				$array['USERINFO']  = '<a href="index.php?page=users&sub=search&do='.$user_info['id'].'" >'.$user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')</a>';
+			} else {
+				$array['USERINFO']  = ' - ';
+			}
 			//$array['due'] 		= strftime("%D", $array['due']);
 			
 			//Getting the domain info
