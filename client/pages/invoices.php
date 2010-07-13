@@ -30,7 +30,7 @@ class page {
 						$main->errors("Your invoice has been paid!");
 						$user_id = $main->getCurrentUserId();
 						$client = $db->fetch_array($db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$user_id}'"));
-						if($client['status'] == 2) {
+						if($client['status'] == USER_STATUS_SUSPENDED) {
 							$server->unsuspend($client['id']);
 						}
 					} else {						
