@@ -7,7 +7,7 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $style, $db, $main, $type;
-		$user_id = $main->getCurrentUserId()
+		$user_id = $main->getCurrentUserId();
 		$data = $db->client($user_id);
 		$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `reply` = '0' AND `userid` = '{$user_id}'");
 		$array['TICKETS'] = $db->num_rows($query);
