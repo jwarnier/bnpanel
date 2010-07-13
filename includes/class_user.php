@@ -19,7 +19,7 @@ class user extends model {
 	 * @param	date	expiration date
 	 */
 	public function create($params) {
-		global $db, $main;		
+		global $db, $main;		 
 		//Password is the same, email and username is not empty
 		
 		if ($params['password'] == $params['confirmp']) {
