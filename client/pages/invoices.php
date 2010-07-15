@@ -42,7 +42,7 @@ class page {
 			case 'view':				
 				if(isset($main->getvar['do'])) {					
 					$return_array = $invoice->getInvoice($main->getvar['do'], true);									
-					echo $style->replaceVar("tpl/invoices/viewinvoice.tpl", $return_array);					
+					echo $style->replaceVar('tpl/invoices/viewinvoice.tpl', $return_array);					
 				}
 			break;					
 			case 'all':
@@ -68,18 +68,18 @@ class page {
 						case INVOICE_STATUS_PAID:
 							$array['paid']	=  '<span style="color:green">Already Paid</span>';
 							$array['pay']	=  '<span style="color:green">Already Paid</span>';
-							$array['due']	=  '<span style="color:green">'.$invoice_item['due'].'</span>' ;
+							$array['due']	=  '<span style="color:green">'.$array['due'].'</span>' ;
 							  
 						break;
 						case INVOICE_STATUS_CANCELLED:
 							$array['paid'] 	= "<span style='color:red'>Canceled</span>";
 							$array['pay'] 	= '<input type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$invoice_item['id'].'\')" />';
-							$array['due']	=  '<span style="color:red">'.$invoice_item['due'].'</span>';		
+							$array['due']	=  '<span style="color:red">'.$array['due'].'</span>';		
 						break;
 						case INVOICE_STATUS_WAITING_PAYMENT:
 							$array['paid'] = "<span style='color:red'>Pending</span>";
 							$array['pay'] 	= '<input type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$invoice_item['id'].'\')" />';
-							$array['due']	=  '<span style="color:red">'.$invoice_item['due'].'</span>';		
+							$array['due']	=  '<span style="color:red">'.$array['due'].'</span>';		
 						break;
 						case INVOICE_STATUS_DELETED:
 							///	$array['paid'] = "<span style='color:green'>Already Paid</span>";
@@ -111,7 +111,7 @@ class page {
 					$array['amount'] 	= $total_amount." ".$db->config('currency');		
 					$array2['list'] .= $style->replaceVar("tpl/invoices/invoice-list-item-client.tpl", $array);
 				}
-				echo $style->replaceVar("tpl/invoices/client-page.tpl", $array2);
+				echo $style->replaceVar('tpl/invoices/client-page.tpl', $array2);
 				break;		
 		}
 	}

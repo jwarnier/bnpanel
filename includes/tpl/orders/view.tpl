@@ -43,30 +43,23 @@
     <td>
     %ADDON%
     </td>
-  </tr>
-    
-   
-
-  
-    
+  </tr>   
   <tr>
     <td valign="top">Status</td>
     <td>
     %STATUS%
     </td>
   </tr>
-    
+      <tr>
+    <td valign="top">Creation date</td>
+    <td>
+    %CREATED_AT%
+    </td>
+  </tr>
 
    <tr>
     <td >Total:</td>
     <td valign="top" ><h2>%TOTAL%</h2></td>
-  </tr>
-
- 
-    
- 
-  
+  </tr>  
 </table>
-
-
 </form>

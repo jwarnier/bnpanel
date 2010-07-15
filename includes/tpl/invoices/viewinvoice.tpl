@@ -8,8 +8,7 @@
   <tr>
     <td width="20%">Order id:</td>
     <td><input name="name" type="text" id="name" value="%ORDER_ID%" readonly /></a></td>
-  </tr>
-  
+  </tr>  
      <tr>
     <td valign="top">User</td>
     <td>
@@ -21,8 +20,7 @@
     <td>
    %DOMAIN%
     </td>
-  </tr>
-  
+  </tr>  
       <tr>
     <td valign="top">Description:</td>
     <td>%NOTES%</td>
@@ -64,6 +62,14 @@
     %STATUS%
     </td>
   </tr> 
+      
+	<tr>
+    <td valign="top">Due date</td>
+    <td>
+    %DUE%
+    </td>
+  </tr> 
+  
   
    <tr>
     <td >Total:</td>

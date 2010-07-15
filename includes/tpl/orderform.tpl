@@ -187,8 +187,6 @@ function nextstep() {
 			var url = "?function=create";
 			var i;
 			
-			
-			
 			for(i="0"; i < document.order.length; i++) {
 				if(document.order.elements[i].type == "checkbox") {
 					if (document.order.elements[i].id != null && document.order.elements[i].value != null) {
@@ -293,10 +291,11 @@ function showAddons(obj) {
                   <tr>
                     <td width="20%">Domain/Subdomain:</td>
                     <td>
-                    <select name="domain" id="domain">
-                      <option value="dom" selected="selected">Domain</option>
-                      %CANHASSUBDOMAIN%
-                    </select></td>
+                    	<select name="domain" id="domain">
+                      		<option value="dom" selected="selected">Domain</option>
+                      		%CANHASSUBDOMAIN%
+                    	</select>
+                    </td>
                     <td width="70%"><a title="Choose the type of hosting:<br /><strong>Domain:</strong> example.com<br /><strong>Subdomain:</strong> example.subdomain.com" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
                   </tr>                  
                 </table>

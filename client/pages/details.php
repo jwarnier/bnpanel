@@ -9,18 +9,19 @@ class page {
 	public function content() { # Displays the page 
 		global $style, $db, $main;
 		$data = $db->client($main->getCurrentUserId());
-		$array['USER'] = $data['user'];
-		$array['EMAIL'] = $data['email'];
-		$array['DOMAIN'] = $data['domain'];
+		$array['USER']		= $data['user'];
+		$array['EMAIL'] 	= $data['email'];
+		$array['DOMAIN'] 	= $data['domain'];
 		$array['FIRSTNAME'] = $data['firstname'];
-		$array['LASTNAME'] = $data['lastname'];
-		$array['ADDRESS'] = $data['address'];
-		$array['CITY'] = $data['city'];
-		$array['STATE'] = $data['state'];
-		$array['ZIP'] = $data['zip'];
-		$array['COUNTRY'] = $data['country'];
-		$array['PHONE'] = $data['phone'];
-		$array['DISP'] = "<div>";
+		$array['LASTNAME']	= $data['lastname'];
+		$array['ADDRESS'] 	= $data['address'];
+		$array['CITY']		= $data['city'];
+		$array['STATE'] 	= $data['state'];
+		$array['ZIP'] 		= $data['zip'];
+		$array['COUNTRY'] 	= strtolower($data['country']);
+		$array['PHONE'] 	= $data['phone'];
+		$array['DISP'] 		= "<div>";
+		
 			if($_POST) {
 				if(!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i',$main->postvar['email'])) {
 					$main->errors("Your email is the wrong format!");
@@ -99,6 +100,7 @@ class page {
 				$db->query("UPDATE `<PRE>users` SET `phone` = '{$main->postvar['phone']}' WHERE `id` = '{$data['id']}'");
 				$db->query("UPDATE `<PRE>users` SET `zip` = '{$main->postvar['zip']}' WHERE `id` = '{$data['id']}'");
 				$db->query("UPDATE `<PRE>users` SET `city` = '{$main->postvar['city']}' WHERE `id` = '{$data['id']}'");
+				
 				if($main->postvar['change']) {
 					$data = $db->client($data['id']);
 					if(md5(md5($main->postvar['currentpass']) . md5($data['salt'])) == $data['password']) {
