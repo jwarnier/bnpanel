@@ -314,7 +314,7 @@ class invoice extends model {
 			
 			$array['CREATED'] 	= $invoice_info['created'];
 			$array['NOTES'] 	= $invoice_info['notes'];	
-			$array['DUE'] 		= date('Y-m-d h:i:s', $invoice_info['due']);
+			$array['DUE'] 		= date('Y-m-d', $invoice_info['due']);
 		
 			//$array['ADDON_FEE'] = $invoice_info['addon_fee'];
 			$addon_selected_list = array();
