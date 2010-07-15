@@ -11,6 +11,7 @@ class page {
 							
 	public function __construct() {
 		$this->navtitle = "Billing Sub Menu";
+		
 		$this->navlist[] = array("Add Billing cycle", "package_add.png", "add");
 		$this->navlist[] = array("Edit Billing cycle", "package_go.png", "edit");
 		$this->navlist[] = array("Delete Billing cycle", "package_delete.png", "delete");
@@ -54,7 +55,7 @@ class page {
 					}
 				}
 				
-				for($i = 1; $i<=48; $i++) {
+				for($i = 1; $i<=MAX_NUMBER_MONTHS; $i++) {
 					$values[] = array($i,$i);
 				}						
 				$array['NUMBER_MONTHS'] = $main->dropDown("number_months", $values, '');				
@@ -100,7 +101,7 @@ class page {
 						$array['ID'] = $data['id'];					
 						$array['NAME'] = $data['name'];
 												
-						for($i = 1; $i<=48; $i++) {
+						for($i = 1; $i<=MAX_NUMBER_MONTHS; $i++) {
 							$values[] = array($i,$i);
 						}						
 						$array['NUMBER_MONTHS'] = $main->dropDown("number_months", $values, $data['number_months']);						
@@ -112,8 +113,7 @@ class page {
 					$query = $db->query("SELECT * FROM `<PRE>billing_cycles`");
 					if($db->num_rows($query) == 0) {
 						echo "There are no billing cycles to edit!";	
-					}
-					else {
+					} else {
 						echo "<ERRORS>";
 						while($data = $db->fetch_array($query)) {
 							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=billing&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>');
