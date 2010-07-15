@@ -32,8 +32,7 @@ class currency {
 	/*
 	 * Integer
 	 */
-	function toInteger($number)
-	{
+	function toInteger($number) {
 		return intval(sprintf("%d", intval($number)));
 	}
 	/*
