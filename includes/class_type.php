@@ -146,7 +146,7 @@ class type {
 	public function determineType($id) { # Returns type of a package
 		global $db;
 		global $main;
-		$query = $db->query("SELECT * FROM `<PRE>packages` WHERE `id` = '{$db->strip($id)}'");
+		$query = $db->query("SELECT type FROM `<PRE>packages` WHERE `id` = '{$db->strip($id)}'");
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That package doesn't exist!";
 			$array['Package ID'] = $id;
@@ -157,33 +157,41 @@ class type {
 			return $data['type'];
 		}
 	}
-	public function determineServer($id) { # Returns server of a package
-		global $db;
-		global $main;
+	
+	/**
+	 *  Returns server id of a package
+	 * @param	int	package	id
+	 * @return 	int	server id
+	 */
+	public function determineServer($package_id) {
+		global $db, $main;
 		
-		$query = $db->query("SELECT * FROM `<PRE>packages` WHERE `id` = '{$db->strip($id)}'");
+		$query = $db->query("SELECT server FROM `<PRE>packages` WHERE `id` = '{$db->strip($package_id)}'");
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That package doesn't exist!";
-			$array['Package ID'] = $id;
+			$array['Package ID'] = $package_id;
 			$main->error($array);
 			return;	
-		}
-		else {
+		} else {
 			$data = $db->fetch_array($query);
 			return $data['server'];
 		}
 	}
-	public function determineServerType($id) { # Returns server of a package
-		global $db;
-		global $main;
-		$query = $db->query("SELECT * FROM `<PRE>servers` WHERE `id` = '{$db->strip($id)}'");
+	
+	/**
+	 * Returns the server type of a package
+	 * @param	int		server id
+	 * @return	string 	server type (ispconfig, whm)
+	 */
+	public function determineServerType($server_id) { 
+		global $db, $main;
+		$query = $db->query("SELECT type FROM `<PRE>servers` WHERE `id` = '{$db->strip($server_id)}'");
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That server doesn't exist!";
-			$array['Server ID'] = $id;
+			$array['Server ID'] = $server_id;
 			$main->error($array);
 			return;	
-		}
-		else {
+		} else {
 			$data = $db->fetch_array($query);
 			return $data['type'];
 		}
@@ -192,7 +200,7 @@ class type {
 	public function determineBackend($id) { # Returns server of a package
 		global $db;
 		global $main;
-		$query = $db->query("SELECT * FROM `<PRE>packages` WHERE `id` = '{$db->strip($id)}'");
+		$query = $db->query("SELECT backend FROM `<PRE>packages` WHERE `id` = '{$db->strip($id)}'");
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That package doesn't exist!";
 			$array['Package ID'] = $id;
