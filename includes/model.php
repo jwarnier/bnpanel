@@ -2,7 +2,9 @@
 /* For licensing terms, see /license.txt */
 
 /**
- * Object model  
+ * Object model 
+ * Inspired in the ActiveRecord in Akelos
+ * @author	Julio Montoya <gugli100@gmail.com>	Beeznest 
  */
 
 class model {
@@ -49,12 +51,16 @@ class model {
 		return "`<PRE>".$this->table_name."`";		
 	}
 	
+	/**
+	 * Gets the current primary key
+	 */
 	public function getPrimaryKey() {
 		if(!isset($this->primary_key)){
             $this->setPrimaryKey();
         }
         return $this->primary_key;
 	}
+	
 	/**
 	 * Sets a primary key
 	 */
@@ -104,6 +110,9 @@ class model {
     	return false; 
     }
     
+    /**
+     * Strips the variable
+     */
     public function castAttributeForDatabase($k, $v) {
     	global $db;
     	//this function should check the datatype not a priority right now    	
