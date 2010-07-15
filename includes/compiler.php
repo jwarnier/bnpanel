@@ -46,6 +46,8 @@ define('USER_STATUS_WAITING_USER_VALIDATION', 	4); //before ORDER_STATUS_INACTIV
 //define(USER_STATUS_WAITING_PAYMENT, 			4); //should not be use is useless!! 
 define('USER_STATUS_DELETED', 					9); //cancelled deleted users
 
+//Used in admin/billing.php
+define('MAX_NUMBER_MONTHS',						48);
 
 
 
