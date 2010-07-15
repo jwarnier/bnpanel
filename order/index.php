@@ -33,9 +33,6 @@ if($db->config("general") == 0) {
 	$_SESSION['orderform'] = true;	
 }
 
-
-global $billing; 
-
 echo '<div id="ajaxwrapper">'; #Ajax wrapper, for steps
 
 //Get all packages
