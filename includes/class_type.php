@@ -62,7 +62,9 @@ class type {
 				}
 			}			
 			//Submit button commented when adding a new package
-            //$html .= "<button id=\"submitIt\">Submit</button>";
+			if ($type_value != 'paid') {
+            	$html .= "<button id=\"submitIt\">Submit2</button>";
+			}
 			return $html;
 		} else {			
 			switch ($type_value) {
@@ -186,7 +188,7 @@ class type {
 			return $data['type'];
 		}
 	}
-		//@todo this should be move or removed to class_package
+	//@todo this should be move or removed to class_package
 	public function determineBackend($id) { # Returns server of a package
 		global $db;
 		global $main;
