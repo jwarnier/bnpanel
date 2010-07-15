@@ -1,8 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 /**
-	BNPanel
-		
+			
 	@author 	Julio Montoya <gugli100@gmail.com> Beeznest 2010
 	@package	tht.addons	
 */
@@ -78,10 +77,9 @@ class page {
 					}
 				}
 				
-				$billing_cycle_result = $billing->generateBillingInputs();
-				$array['BILLING_CYCLE'] = $billing_cycle_result;				
-				
-				$array['STATUS'] = $main->createCheckbox('', 'status');
+				$billing_cycle_result 	= $billing->generateBillingInputs();
+				$array['BILLING_CYCLE'] = $billing_cycle_result;
+				$array['STATUS'] 		= $main->createCheckbox('', 'status');
 	
 				//----- Finish billing cycle					
 				echo $style->replaceVar("tpl/addons/add.tpl", $array);
@@ -122,14 +120,12 @@ class page {
 								
 								//Editing addon											
 								$addon->edit($main->getvar['do'], $main->postvar);
-							
-								var_dump($main->postvar);
+								
 								//-----Adding billing cycles 
 								
 								//Deleting all billing_products relationship							
 								$query = $db->query("DELETE FROM `<PRE>billing_products` WHERE product_id = {$main->getvar['do']} AND type='".BILLING_TYPE_ADDON."' ");
-								   
-								
+								   								
 								$billing_list = $billing->getAllBillingCycles();
 								
 								$product_id = $main->getvar['do'];
@@ -140,7 +136,7 @@ class page {
 									$variable_name = 'billing_cycle_'.$data['id'];
 									//var_dump($variable_name);
 									if (isset($main->postvar[$variable_name]) && !empty($main->postvar[$variable_name]) ) {
-										echo $sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$data['id']}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_ADDON."')";
+										$sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$data['id']}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_ADDON."')";
 										$db->query($sql_insert);									
 									}
 								}						
@@ -175,12 +171,12 @@ class page {
 						
 						//----- Finish billing cycle						
 						
-						echo $style->replaceVar("tpl/addons/edit.tpl", $array);
+						echo $style->replaceVar('tpl/addons/edit.tpl', $array);
 					}
 				} else {
 					$query = $db->query("SELECT * FROM `<PRE>addons`");
 					if($db->num_rows($query) == 0) {
-						echo "There are no addons to edit!";	
+						echo 'There are no addons to edit!';	
 					} else {
 						echo "<ERRORS>";
 						while($data = $db->fetch_array($query)) {
@@ -210,4 +206,3 @@ class page {
 		}
 	}
 }
-?>

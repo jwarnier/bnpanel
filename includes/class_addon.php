@@ -23,8 +23,9 @@ class addon extends model {
 	
 	
 	public function delete($id) {
-		//Deleting addons
-		$db->query("DELETE FROM `<PRE>addons` WHERE `id` = '{$id}'");					
+		global $db;
+		$this->setPrimaryKey($id);
+		parent::delete();
 		
 		//Deleting relation between addons and packages 
 		$db->query("DELETE FROM `<PRE>package_addons` WHERE `addon_id` = '{$id}'");
@@ -98,19 +99,17 @@ class addon extends model {
 	 */
 	public function getAllAddonsByBillingId($billing_id) {
 		global $db;
-		$addong_list = array();		
+		$addon_list = array();		
 		if (!empty($billing_id)) {		
 			$sql = "SELECT a.id, a.name, amount, bc.name  as billing_name  FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 					ON (bc.id = b.billing_id) WHERE bc.id = {$billing_id} AND b.type = '".BILLING_TYPE_ADDON."' ";
-			$addons_billing = $db->query($sql);
-			$addong_list = array();
+			$addons_billing = $db->query($sql);			
 			while($data = $db->fetch_array($addons_billing)) {
-				$addong_list[$data['id']] = array('id'=>$data['id'],  'name' => $data['name'], 'amount'=>$data['amount']);									
+				$addon_list[$data['id']] = array('id'=>$data['id'],  'name' => $data['name'], 'amount'=>$data['amount']);									
 			}
 		}
-		return $addong_list;
-	}
-	
+		return $addon_list;
+	}	
 	
 	
 	/**
