@@ -120,7 +120,24 @@ function loadAddons(obj) {
     <td>  		
   		<input name="created_at" type="text" id="created_at" value="%CREATED_AT%"/>
     </td>
-  </tr>  
+</tr>
+
+
+        <tr>
+    <td valign="top">Control Panel Username</td>
+    <td>
+  		%USERNAME% 
+    </td>
+  </tr>
+  
+      <tr>
+    <td valign="top">Control Panel Password</td>
+    <td>
+  		%PASSWORD%
+    </td>
+  </tr>
+  
+    
   
   <tr>
     <td valign="top">Email center</td>
@@ -128,9 +145,9 @@ function loadAddons(obj) {
     <td>
     <div id="show_preview" ></div>  	
     	<ul>	
-  		<li><a href="#"  onclick="send('neworder', %ID%);" >Send Order Confirmation email</a> <a href="?page=email&sub=templates"><img src="<URL>themes/icons/pencil.png"</a></li>
-  		<li><a href="#"  onclick="send('orderactivation', %ID%);"  >Send Activation email<a href="?page=email&sub=templates"><img src="<URL>themes/icons/pencil.png"</a></li>
-  		<li><a href="#"  onclick="send('ordersuspension', %ID%);"  > Send Suspension email<a href="?page=email&sub=templates"><img src="<URL>themes/icons/pencil.png"</a></li>
+  		<li><a href="#" onclick="send('neworder', %ID%);" >Send Order Confirmation email</a> <a href="?page=email&sub=templates"><img src="<URL>themes/icons/pencil.png"</a></li>
+  		<li><a href="#" onclick="send('orderactivation', %ID%);"  >Send Activation email </a><a href="?page=email&sub=templates"><img src="<URL>themes/icons/pencil.png"</a></li>
+  		<li><a href="#" onclick="send('ordersuspension', %ID%);"  > Send Suspension email</a><a href="?page=email&sub=templates"><img src="<URL>themes/icons/pencil.png"</a></li>
   		</ul>
     </td>    
   </tr>  

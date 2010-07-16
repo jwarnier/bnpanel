@@ -1,8 +1,5 @@
 <script type="text/javascript" src="<URL>includes/javascript/jpaginate/jquery.paginate.js"></script>
 <link rel="stylesheet" href="<URL>includes/javascript/jpaginate/css/style.css" type="text/css" />
-<style>
-
-</style>
 <script type="text/javascript">
 
 $(document).ready(function() {
@@ -23,9 +20,9 @@ $(document).ready(function() {
 	$("#tbody").load("<AJAX>?function=getOrders&page=1", Hide_Load());
 
 	$("#pagination").paginate({
-		count 		: %COUNT%,
-		start 		: 1,
-		display     : 5,
+		count 					: %COUNT%,
+		start 					: 1,
+		display     			: 5,
 		border					: true,
 		border_color			: '#fff',
 		text_color  			: '#fff',
@@ -35,18 +32,15 @@ $(document).ready(function() {
 		background_hover_color	: '#fff', 
 		images					: false,
 		mouse					: 'press',
-		onChange     			: function(page){
+		onChange     			: function(page) {
 									var pageNum = page;
 									Display_Load();
 									$("#tbody").load("<AJAX>?function=getOrders&page=" + pageNum, Hide_Load());
-	  							}
+									}
 	});
 		
 });
-</script>
-
-
-	
+</script>	
 <p>From here you can see all orders in your BNPanel installation</p>
 <ERRORS>
 <div id="pagination_loading" ></div>
@@ -61,12 +55,12 @@ $(document).ready(function() {
 	        <td><strong>Status</strong></td>
 	        <td width="150px"><strong>Actions</strong></td>                
 		</tr>
-	</thead>	
-
+	</thead>
 	<tbody id="tbody"></tbody>
 	<tfoot>
 		<tr>
-			<td colspan="7" ><div id="pagination"></div></td>
+			<td colspan="7"></td>
 		</tr>
 	</tfoot>
 </table>
+<div id="pagination"></div> 

@@ -152,12 +152,29 @@ function reset() {
     </td>
   </tr>
   
+	
 <tr>
     <td valign="top">Creation date</td>
     <td>  		
   		<input name="created_at" type="text" id="created_at" value="%CREATED_AT%"/>
     </td>
-  </tr>  
+  </tr>
+  
+  
+      <tr>
+    <td valign="top">Control Panel Username</td>
+    <td>
+  		<input size="30" id="username" type="text" />
+    </td>
+  </tr>
+  
+      <tr>
+    <td valign="top">Control Panel Password</td>
+    <td>
+  		<input size="30" id="password" type="text" />
+    </td>
+  </tr>
+   
  
   
 </table>
