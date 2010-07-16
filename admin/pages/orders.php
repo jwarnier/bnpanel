@@ -92,12 +92,23 @@ class page {
 					
 				echo $style->replaceVar("tpl/orders/add.tpl", $array);
 			break;
+			case 'change_pass':			
+				if(isset($main->getvar['do'])) {
+					if($_POST) {
+						global $server;
+						if ($main->postvar['password'] == $main->postvar['confirm']) {
+							$server->changeOrderPassword($main->getvar['do'], $main->postvar['password']);
+						}
+					}
+					$return_array = $order->getOrder($main->getvar['do'], false, false);					
+					echo $style->replaceVar("tpl/orders/change-password.tpl", $return_array);
+				}
+				
+			break;
 			case 'edit':
 				if(isset($main->getvar['do'])) {
-					$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$main->getvar['do']}'");
-					if($db->num_rows($query) == 0) {
-						echo "That order doesn't exist!";	
-					} else {						
+					$order_info = $order->getOrderInfo($main->getvar['do']);
+					if (is_array($order_info) && !empty($order_info )) {
 						if($_POST) {
 							
 							foreach($main->postvar as $key => $value) {
@@ -132,8 +143,10 @@ class page {
 									$main->redirect('?page=orders&sub=all');	
 								}
 							}
-						}						
-					}					
+						}
+					} else {
+						echo "That order doesn't exist!";	
+					}			
 					$return_array = $order->getOrder($main->getvar['do'], false, false);					
 					echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);
 				}
