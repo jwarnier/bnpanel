@@ -15,21 +15,6 @@ class whm {
 	
 	private $server;
 	
-	private function serverDetails($server) {
-		global $db;
-		global $main;
-		$query = $db->query("SELECT * FROM `<PRE>servers` WHERE `id` = '{$db->strip($server)}'");
-		if($db->num_rows($query) == 0) {
-			$array['Error'] = "That server doesn't exist!";
-			$array['Server ID'] = $id;
-			$main->error($array);
-			return;	
-		}
-		else {
-			return $db->fetch_array($query);
-		}
-	}
-	
 	private function remote($url, $xml = 0, $term = false) {
                 global $db;
 		$data = $this->serverDetails($this->server);
@@ -65,46 +50,40 @@ class whm {
 		}
 		return $xml;
 	}
-
-	public function GenUsername() {
-		$t = rand(5,8);
-		for ($digit = 0; $digit < $t; $digit++) {
-			$r = rand(0,1);
-			$c = ($r==0)? rand(65,90) : rand(97,122);
-			$user .= chr($c);
-		}
-		return $user;
-	}
 	
-	public function GenPassword() {
-		for ($digit = 0; $digit < 5; $digit++) {
-			$r = rand(0,1);
-			$c = ($r==0)? rand(65,90) : rand(97,122);
-			$passwd .= chr($c);
-		}
-		return $passwd;
-	}
-	
-	public function signup($server, $reseller, $user = '', $email = '', $pass = '') {
-		global $main;
-		global $db;
+	public function signup($order_id, $user = '', $email = '', $pass = '') {
+		global $main, $db, $package, $order;
+		
+		$order_info		= $order->getOrderInfo($order_id);
+		$package_info 	= $package->getPackage($order_info['pid']);		
+		
 		if ($user == '') { $user = $main->getvar['username']; }
 		if ($email == '') { $email = $main->getvar['email']; }
 		if ($pass == '') { $pass = $main->getvar['password']; }
-		$this->server = $server;
+		
+		$user = $this->GenUsername();
+		$pass = $this->GenPassword();
+		
+		
+		$this->server = $package_info['server'];
 		$action = "/xml-api/createacct".
 					"?username=". $user . "".
 					"&password=". $pass ."".
 					"&domain=". $main->getvar['fdom'] ."".
 					"&plan=". $main->getvar['fplan'] ."".
 					"&contactemail=". $email ."";
-		if($reseller) {
+		if($package_info['reseller']) {
 			$action .= "&reseller=1";	
 		}
 		//echo $action."<br />". $reseller;
 		$command = $this->remote($action);
 		
+		
 		if($command->result->status == 1) {
+			
+			$params['username'] = $user;
+			$params['password'] = $pass;
+			$order->edit($order_id, $params);			
 			return true;	
 		}
 		else {
@@ -112,9 +91,12 @@ class whm {
 		}
 	}
 	
-	public function suspend($user, $server, $reason = false) {
+	public function suspend($order_id, $server, $reason = false) {
+		global $order, $user;
+		$order_info = $order->getOrderInfo($order_id);
+		$user_info	= $user->getUserById($order_info['userid']);
 		$this->server = $server;
-		$action = "/xml-api/suspendacct?user=" . strtolower($user);
+		$action = "/xml-api/suspendacct?user=" . strtolower($user_info['user']);
 		$command = $this->remote($action);
                 if($reason == false) {
                     $command = $this->remote($action);
@@ -130,9 +112,12 @@ class whm {
 		}
 	}
 	
-	public function unsuspend($user, $server) {
+	public function unsuspend($order_id, $server) {		
+		global $main, $db, $order, $user;
+		$order_info = $order->getOrderInfo($order_id);
+		$user_info	= $user->getUserById($order_info['userid']);
 		$this->server = $server;
-		$action = "/xml-api/unsuspendacct?user=" . strtolower($user);
+		$action = "/xml-api/unsuspendacct?user=" . strtolower($user_info['user']);
 		$command = $this->remote($action);
 		if($command->result->status == 1) {
 			return true;

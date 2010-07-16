@@ -15,17 +15,16 @@ class da {
 	
 	private $server;
 	
-	private function serverDetails($server) {
+	private function serverDetails($server_id) {
 		global $db;
 		global $main;
-		$query = $db->query("SELECT * FROM `<PRE>servers` WHERE `id` = '{$db->strip($server)}'");
+		$query = $db->query("SELECT * FROM `<PRE>servers` WHERE `id` = '{$db->strip($server_id)}'");
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That server doesn't exist!";
-			$array['Server ID'] = $id;
+			$array['Server ID'] = $server_id;
 			$main->error($array);
 			return;	
-		}
-		else {
+		} else {
 			return $db->fetch_array($query);
 		}
 	}
@@ -52,33 +51,21 @@ class da {
 		//die(print_r($final));
 		return $final;
 	}
-
-	public function GenUsername() {
-		$t = rand(5,8);
-		for ($digit = 0; $digit < $t; $digit++) {
-			$r = rand(0,1);
-			$c = ($r==0)? rand(65,90) : rand(97,122);
-			$user .= chr($c);
-		}
-		return $user;
-	}
-	
-	public function GenPassword() {
-		for ($digit = 0; $digit < 5; $digit++) {
-			$r = rand(0,1);
-			$c = ($r==0)? rand(65,90) : rand(97,122);
-			$passwd .= chr($c);
-		}
-		return $passwd;
-	}
-	
-	public function signup($server, $reseller, $user = '', $email = '', $pass = '') {
-		global $main;
-		global $db;
+		
+	public function signup($order_id, $user = '', $email = '', $pass = '') {
+		global $main, $db, $package, $order;
+		
+		$order_info		= $order->getOrderInfo($order_id);
+		$package_info 	= $package->getPackage($order_info['pid']);	
+		
 		if ($user == '') { $user = $main->getvar['username']; }
 		if ($email == '') { $email = $main->getvar['email']; }
 		if ($pass == '') { $pass = $main->getvar['password']; }
-		$this->server = $server;
+		
+		$user = $this->GenUsername();
+		$pass = $this->GenPassword();
+		
+		$this->server = $package_info['server'];
 		$data = $this->serverDetails($this->server);
 		$ip = gethostbyname($data['host']);
 		$string =   "action=create&add=Submit&username=". $user . "".
@@ -88,28 +75,37 @@ class da {
 					"&package=". $main->getvar['fplan'] ."".
 					"&notify=no".
 					"&email=".$email."";
-		if($reseller) {
+		if($package_info['reseller']) {
 			$define = "CMD_API_ACCOUNT_RESELLER";
 			$string .= "&ip=shared";
-		}
-		else {
+		} else {
 			$define = "CMD_API_ACCOUNT_USER";
 			$string .= "&ip=".$ip;
 		}
+		
+		
+		
 		//echo $action."<br />". $reseller;
 		$command = $this->remote($define,$string);
 		if($command['error']) {
 			echo "<strong>".$command['text']."</strong><br />". $command['details'];	
-		}
-		else {
+		} else {
+			//Update order
+			$params['username'] = $user;
+			$params['password'] = $pass;
+			$order->edit($order_id, $params);
+			
 			return true;	
 		}
 	}
 	
-	public function suspend($user, $server, $reason = false) {
+	public function suspend($order_id, $server, $reason = false) {
+		global $order, $user;
+		$order_info = $order->getOrderInfo($order_id);
+		$user_info	= $user->getUserById($order_info['userid']);
 		$this->server = $server;
 		$define = "CMD_API_SELECT_USERS";
-		$action = "dosuspend=Suspend&suspend=suspend&location=CMD_SELECT_USERS&select0=" . strtolower($user);
+		$action = "dosuspend=Suspend&suspend=suspend&location=CMD_SELECT_USERS&select0=" . strtolower($user_info['user']);
 		$command = $this->remote($define, $action);
 		if(!$command['error']) {
 			return true;
@@ -119,10 +115,14 @@ class da {
 		}
 	}
 	
-	public function unsuspend($user, $server) {
+	public function unsuspend($order_id, $server) {
+		global $order, $user;
+		$order_info = $order->getOrderInfo($order_id);
+		$user_info	= $user->getUserById($order_info['userid']);
+		
 		$this->server = $server;
 		$define = "CMD_API_SELECT_USERS";
-		$action = "dounsuspend=Unsuspend&suspend=unsuspend&select0=" . strtolower($user);
+		$action = "dounsuspend=Unsuspend&suspend=unsuspend&select0=" . strtolower($user_info['user']);
 		$command = $this->remote($define ,$action);
 		if(!$command['error']) {
 			return true;
