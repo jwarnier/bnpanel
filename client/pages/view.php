@@ -13,7 +13,7 @@ class page {
 		global $style, $db, $main, $server, $invoice;
 		$user_id = $main->getCurrentUserId();
 		$data = $db->client($user_id);
-		$query2 = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$db->strip($data['id'])}'");
+		$query2 = $db->query("SELECT * FROM `<PRE>orders` WHERE `userid` = '{$db->strip($data['id'])}'");
 		$data3 = $db->fetch_array($query2);
 		$query = $db->query("SELECT * FROM `<PRE>packages` WHERE `id` = '{$db->strip($data3['pid'])}'");
 		$data2 = $db->fetch_array($query);		
