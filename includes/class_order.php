@@ -8,8 +8,8 @@ if(THT != 1){
 
 class order extends model {
 	
-	public $columns 	= array('id', 'userid','username', 'domain','pid', 'signup', 'status', 'additional', 'billing_cycle_id');	
-	public $table_name 	= 'user_packs';	
+	public $columns 	= array('id', 'userid','username', 'password','domain','pid', 'signup', 'status', 'additional', 'billing_cycle_id');	
+	public $table_name 	= 'orders';	
 	
 	/** 
 	 * Creates an order
@@ -60,7 +60,7 @@ class order extends model {
 				if (!empty($addon_id) && is_numeric($addon_id)) {
 					$addon_id = intval($addon_id);
 					$order_id = intval($order_id);					
-					$sql_insert = "INSERT INTO user_pack_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
+					$sql_insert = "INSERT INTO order_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
 					$db->query(	$sql_insert);					
 				}
 			}
@@ -86,8 +86,36 @@ class order extends model {
 		return true;
 	}
 	
-	public function edit($id, $params) { # Edit an invoice. Fields created can only be edited?
-		$this->setPrimaryKey($id);
+	/**
+	 * Edits an order
+	 */
+	public function edit($order_id, $params) {
+		global $server;		
+		
+		$this->setPrimaryKey($order_id);
+		/*//No updates of a order username/password
+		unset($params['username']);
+		unset($params['password']);
+		*/
+		
+		//Here we will change the status of the package in the Server		
+		if(isset($params['status'])) {
+			switch($params['status']) {
+				case ORDER_STATUS_ACTIVE:
+					$server->unsuspend($order_id);
+				break;
+				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:
+				case ORDER_STATUS_CANCELLED:
+				case ORDER_STATUS_DELETED:
+				case ORDER_STATUS_WAITING_USER_VALIDATION:
+					$server->suspend($order_id);
+				break;
+				default:
+				break;
+			}
+		}
+		
+		
 		$this->update($params);
 	}
 	
@@ -136,7 +164,7 @@ class order extends model {
 		if ($db->num_rows($result) > 0 ) {
 			$array = $db->fetch_array($result);
 						
-			$sql = "SELECT addon_id FROM  `<PRE>user_pack_addons` WHERE order_id = '{$id}'";
+			$sql = "SELECT addon_id FROM  `<PRE>order_addons` WHERE order_id = '{$id}'";
 			$result_addons = $db->query($sql);
 			$addon_list = array();
 			while ($addon = $db->fetch_array($result_addons)) {
@@ -220,7 +248,7 @@ class order extends model {
 			
 			//Getting the addons info
 			
-			$sql = "SELECT addon_id, amount  FROM `<PRE>user_pack_addons` upa INNER JOIN `<PRE>billing_products` bp ON(addon_id=product_id)
+			$sql = "SELECT addon_id, amount  FROM `<PRE>order_addons` upa INNER JOIN `<PRE>billing_products` bp ON(addon_id=product_id)
 						 WHERE type='addon' AND billing_id = $billing_cycle_id AND `order_id` = ".$order_item['id'];
 			$query_addon 	= $db->query($sql);			
 			while($addon_info = $db->fetch_array($query_addon)){				
@@ -245,6 +273,9 @@ class order extends model {
 				$array['EDIT']  	= '<a href="index.php?page=orders&sub=edit&do='.$order_item['id'].'"><img src="../themes/icons/note_edit.png" title="Edit" alt="Edit" /></a>';			
 				$array['DELETE']  	= '<a href="index.php?page=orders&sub=delete&do='.$order_item['id'].'"><img src="../themes/icons/delete.png" title="Delete"  alt="Delete" /></a>';
 				$array['ADD_INVOICE']='<a href="index.php?page=orders&sub=add_invoice&do='.$order_item['id'].'"><img src="../themes/icons/note_add.png" title="Add invoice"  alt="Add invoice" /></a>';
+				
+				$array['CHANGE_PASS']='<a href="index.php?page=orders&sub=change_pass&do='.$order_item['id'].'"><img src="../themes/icons/key.png" title="Change password"  alt="Change password" /></a>';
+				
 				$result['list'] .= $style->replaceVar("tpl/orders/list-item.tpl", $array);
 			} else {
 				//This is for the client view
@@ -287,6 +318,10 @@ class order extends model {
 			$total = 0;			
 			$array['ID'] 		= $order_info['id'];
 			$array['domain'] 	= $order_info['domain'];
+			
+			$array['USERNAME'] 	= $order_info['username'];
+			$array['PASSWORD'] 	= $order_info['password'];	
+					
 			$user_id 			= $order_info['userid'];
 			$array['USER_ID'] 	= $user_id;			
 			$package_id 	  	= $order_info['pid'];

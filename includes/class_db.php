@@ -221,7 +221,7 @@ class db {
 		}
 		else {
 			$value = $this->fetch_array($query);
-			$query = $this->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$value['id']}'");
+			$query = $this->query("SELECT * FROM `<PRE>orders` WHERE `userid` = '{$value['id']}'");
 			$data = $this->fetch_array($query);
 			$value['domain'] = $data['domain'];
 			$value['status'] = $data['status'];

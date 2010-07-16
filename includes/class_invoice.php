@@ -405,17 +405,6 @@ class invoice extends model {
 		global $db, $main, $server, $billing, $invoice, $order, $email, $user;
 		$today = time();
 		
-		//For every package type paid
-		/*
-		$query = $db->query("SELECT * FROM `<PRE>packages` WHERE `type` = 'paid'");
-		while($package = $db->fetch_array($query)) {
-			$id = intval($package['id']);
-			if ($debug) { echo '<h1>Package:'.$id.'</h1><br />';}
-			//For every user order
-			 * 
-			 */
-			//$result_user_packs = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `pid` = '{$id}'");
-			
 			//Gets all orders 
 			$orders =  $order->getAllOrders();
 			$invoice_list_status = $main->getInvoiceStatusList();
@@ -663,12 +652,6 @@ class invoice extends model {
 		global  $server, $invoice;
 		$this->updateInvoiceStatus($invoice_id, INVOICE_STATUS_PAID);
 		$order_id = $this->getOrderByInvoiceId($invoice_id);
-		/*
-		$query2 = $db->query("SELECT * FROM `<PRE>invoices` WHERE `id` = '{$iid}' LIMIT 1");
-		$data2 = $db->fetch_array($query2);
-		$query3 = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$data2['uid']}'");
-		$data3 = $db->fetch_array($query3);
-		*/
 		$server->unsuspend($order_id);		
 	}
 	
