@@ -2,13 +2,13 @@
 /* For licensing terms, see /license.txt */
 
 /**
-	ISPConfig Plugin for TheHostingTool (THT)
+	ISPConfig Plugin for BNPanel (THT)
 	@author Julio Montoya <gugli100@gmail.com> Beeznest	2010
 */
 
 class ispconfig extends Panel {
 		
-	public	$name = "ISPConfig"; # THT Values
+	public	$name = "ISPConfig3";
 	public	$hash = false; # Password or Access Hash?
 	private $server;
 	private	$session_id;
@@ -19,7 +19,7 @@ class ispconfig extends Panel {
 	/**
 		Stablished a SOAP connection
 	*/
-	public function load() {	
+	public function load() {
 		$data = $this->serverDetails($this->server);
 		$port = 8080;
 
@@ -44,30 +44,6 @@ class ispconfig extends Panel {
 		}
 		return false;
 	}
-	
-	
-
-
-	/**
-		This functions gets the data of a package (hosting package)
-		@param 	int the package id 
-		@return array info with the package data
-		@author Julio Montoya <gugli100@gmail.com> Beeznest	2010	
-	*/
-	private function getPackage($package_id) {
-		global $db, $main;
-		$package_id = intval($package_id);
-		$sql = "SELECT * FROM `<PRE>packages` WHERE `id` = '$package_id'";
-		$query = $db->query($sql);
-		if($db->num_rows($query) == 0) {
-			$array['Error'] = "That server doesn't exist!";
-			$main->error($array);
-			return;	
-		} else {
-			return $db->fetch_array($query, MYSQL_ASSOC);
-		}
-	}
-
 	/**
 		Manage the ISPConfig SOAP functions
 		@param  string the action will be the same name as the specify in the ISPConfig API
@@ -75,6 +51,7 @@ class ispconfig extends Panel {
 		@return mixed  result of the SOAP call
 	*/
 	public function remote($action, $params) {
+		
 		$soap_client = $this->load();
 		
 		$result = array();
@@ -187,16 +164,19 @@ class ispconfig extends Panel {
 		
 		@author Julio Montoya <gugli100@gmail.com> Beeznest	2010
 	*/
-	public function signup($server, $reseller, $user = '', $email = '', $pass = '') {
-		global $main;
-		global $db;		
+	public function signup($order_id, $user = '', $email = '', $pass = '') {
+		global $main, $db, $package, $order;
+		$order_info		= $order->getOrderInfo($order_id);
+		$package_info 	= $package->getPackage($order_info['pid']);			
 
-		if ($user  == '')  { $user =	$main->getvar['username']; }
+		if ($user  == '')  { $user = $main->getvar['username']; }
 		if ($email == '')  { $email= $main->getvar['email']; }
 		if ($pass  == '')  { $pass = $main->getvar['password']; }
-
-		$this->server = $server;
-		$data = $this->serverDetails($this->server);	
+		
+		// Sets the current server
+		$this->server = $package_info['server'];
+		$data = $this->serverDetails($package_info['server']);	
+		
 		if ($this->debug) {echo '<pre>';}
 		$ip = gethostbyname($data['host']);
 
@@ -207,10 +187,19 @@ default_mailserver 	limit_maildomain 	limit_mailbox 	limit_mailalias 	limit_mail
 username 	password 	language 	usertheme 	template_master 	template_additional 	created_at
 					*/	
 		//User info
-		$params['username'] 		= $user ;
+		
+		$domain_username = substr($main->getvar['fdom'], 0, 8);
+		$domain_username = $this->GenUsername();
+		$domain_password = $this->GenPassword();
+		 
+		/*$params['username'] 		= $user;
+		$params['password'] 		= $pass;*/
+		//User and password from the Control Panel / ISPConfig, etc
+		$params['username'] 		= $domain_username;
+		$params['password'] 		= $domain_password;
+			
 		$params['email'] 			= $email;
 		$params['contact_name'] 	= $main->getvar['firstname'].' '.$main->getvar['lastname'];		
-		$params['password'] 		= $pass;	
 
 		$params['street'] 			= $main->getvar['address'];
 		$params['city'] 			= $main->getvar['city'];
@@ -219,15 +208,16 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		$params['country'] 			= $main->getvar['country'];
 		$params['telephone'] 		= $main->getvar['phone'];
 
-		$package_info = $this->getPackage($main->getvar['package']);
+		$package_info = $package->getPackage($main->getvar['package']);
 		$package_back_end_id = $package_info['backend'];
 
 		//Plan info
 		$params['template_master'] 	= $package_back_end_id;
+		
 		//$params['template_additional'] 	= '';
 
 		//Getting the server id it depends in the package that the user is selecting
-		$server_id = 1; //default server = 1
+		
 		if (!empty($package_info['server_id'])) {
 			$server_id = $package_info['server_id'];
 		}
@@ -239,13 +229,16 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 
 		 //The main domain
 		$is_domain = true;
+		$site_params['domain'] = $main->getvar['fdom'];
+		
+		/*
 		if ($main->getvar['domain'] == 'dom' ) {
 			$site_params['domain'] 	= $main->getvar['cdom'];
 		} elseif ($main->getvar['domain'] == 'sub') {
 			//Subdomain
 			$site_params['domain'] 	= $main->getvar['csub'].'.'.$main->getvar['csub2'];
 			$is_domain = false;
-		}
+		}*/
 
 		/*
 		hd_quota_error_empty ok
@@ -259,6 +252,13 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 
 		//Adding the client
 		$new_client_id = $this->remote('client_add',$params);
+		if(is_numeric($new_client_id) && !empty($new_client_id)){
+			//update the order
+			//Update order
+			$params['username'] = $domain_username;
+			$params['password'] = $domain_password;
+			$order->edit($order_id, $params);
+		}
 		$site_params['client_id'] = $new_client_id;
 
 		//If no error 
@@ -277,8 +277,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			$server_info = $this->remote('server_get',$server_params);
 
 			//Getting extra info of user
-			$client_info = $this->remote('client_get',array('client_id'=>$new_client_id));
-
+			$client_info = $this->remote('client_get',array('client_id'=>$new_client_id));			
+			
 			$website_id = 1;
 
 			//Setting parameters for the sites_web_domain_add function
@@ -294,12 +294,12 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 //			$site_params['subdomain'] 		= 'none';
 
 			if (empty($client_info['limit_web_quota'])) {
-			 //Not 0 values otherwise the script will not work
+			 	//Not 0 values otherwise the script will not work
 				$site_params['hd_quota'] = 1; //ISPCOnfig field
 			}
 
 			if (empty($client_info['$site_infolimit_traffic_quot'])) {
-			 //Not 0 values otherwise the script will not work
+				 //Not 0 values otherwise the script will not work
 				$site_params['traffic_quota'] = 1; // ISPCOnfig field
 			}
 
@@ -318,23 +318,26 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 
 				//Creating an ftp user
 			}		
+			
 			return true;	
 		}
 	}
 	
 	/**
-		Suspend a website of an user
-		@param string	username
+		Suspend a website/order
+		@param string	order id 
 		@param int		server id 
 		@param string	reason 
 		@author Julio Montoya <gugli100@gmail.com> Beeznest 2010
 	*/
 
-	public function suspend($username, $server_id, $reason = false) {
-		global $main;
-		global $db;		
+	public function suspend($order_id, $server_id, $reason = false) {
+		global $main, $db, $order, $user;
+		$order_info = $order->getOrderInfo($order_id);
+		$user_info	= $user->getUserById($order_info['userid']);
+		
 		$this->server = $server_id;
-		$params['username'] = $username;
+		$params['username'] = $user_info['user'];
 
 		//Getting user info
 		$user_info = $this->remote('client_get_by_username',$params);
@@ -343,13 +346,15 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		$site_params['sys_userid']	= $user_info['userid'];		
 		$site_params['groups'] 		= $user_info['groups'];	
 
-		//Getting domains by user THT problem 1 account = 1 domain
+		//Getting all domains from this user
 		$site_info = $this->remote('client_get_sites_by_user', $site_params);
+		$domain_id = 0;
 		if ($site_info !== false) {
-			foreach($site_info as $domain) {
-				//tacking the first domain of the user
-				$domain_id = $domain['domain_id'];
-				break;
+			foreach($site_info as $domain) {				
+				if ($order_info['domain'] == $domain['domain']) {
+					$domain_id = $domain['domain_id'];
+					break;
+				}
 			}
 			$params_get_site['primary_id'] = $domain_id;
 			$result = $this->remote('sites_web_domain_inactive',$params_get_site);
@@ -387,18 +392,19 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	}
 	
 	/**
-		Unsuspends a website of an user
-		Restrictions: Only one user can have one website
-		@param string	username
+		Unsuspends a website/order
+		@param string	order id
 		@param int		server id 
 		@author Julio Montoya <gugli100@gmail.com> Beeznest
 	*/
 
-	public function unsuspend($username, $server_id) {
-		global $main;
-		global $db;		
+	public function unsuspend($order_id, $server_id) {
+		global $main,$db, $order, $user;
+		$order_info = $order->getOrderInfo($order_id);
+		$user_info	= $user->getUserById($order_info['userid']);
+				
 		$this->server = $server_id;
-		$params['username'] = $username;
+		$params['username'] = $user_info['user'];
 
 		//Getting user info
 		$user_info = $this->remote('client_get_by_username',$params);
@@ -406,18 +412,16 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		$site_params['sys_userid']	= $user_info['userid'];		
 		$site_params['groups'] 		= $user_info['groups'];	
 
-		//Getting domains by user THT problem 1 account = 1 domain
 		$site_info = $this->remote('client_get_sites_by_user',$site_params);
-		
+		$domain_id = 0;
 		if ($site_info !==false) {
 			foreach($site_info as $domain) {
-				//tacking the first domain of the user
-				$domain_id = $domain['domain_id'];
-				break;
-			}
-				//		$params_get_site['client_id']  = $client_id;
-			$params_get_site['primary_id'] = $domain_id;
-			
+				if ($order_info['domain'] == $domain['domain']) {
+					$domain_id = $domain['domain_id'];
+					break;
+				}
+			}		
+			$params_get_site['primary_id'] = $domain_id;			
 			$result = $this->remote('sites_web_domain_active',$params_get_site);
 	/*
 			//Getting the site info

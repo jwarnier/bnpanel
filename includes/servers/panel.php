@@ -23,8 +23,7 @@ abstract class Panel {
 	}
 	
 	public function serverDetails($server) {
-		global $db;
-		global $main;
+		global $db, $main;
 		$sql = "SELECT * FROM `<PRE>servers` WHERE `id` = '{$db->strip($server)}'";
 		$query = $db->query($sql);
 		if($db->num_rows($query) == 0) {
