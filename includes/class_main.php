@@ -164,36 +164,10 @@ if(THT != 1){die();}class main {
 				}
 				return true;
 			}		}
-	}	
-	public function clientLogin($user, $pass) { # Checks the credentails of the client and logs in, returns true or false
-		global $db, $main;
-		if(isset($user) && isset($pass)) {			$sql = "SELECT * FROM `<PRE>users` WHERE `user` = '{$user}' AND status IN ('".USER_STATUS_ACTIVE."') ";			
-			$query = $db->query($sql);
-			if($db->num_rows($query) == 0) {
-				return false;
-			} else {				$date = time();
-				$data = $db->fetch_array($query,'ASSOC');
-				$ip   = $_SERVER['REMOTE_ADDR'];				
-				if(md5(md5($pass).md5($data['salt'])) == $data['password']) {					$_SESSION['clogged'] 	= 1;										$data['password'] 		= null;					$data['salt'] 			= null;					//Save all user in this session					$_SESSION['cuser'] 		= $data;
-					$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-														'{$data['id']}',
-														'{$main->postvar['user']}',
-														'{$date}',
-														'Login successful ($ip)')");
-					return true;
-				}	else {
-					
-					$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-														'{$data['id']}',
-														'{$main->postvar['user']}',
-														'{$date}',
-														'Login failed ($ip)')");					return false;
-				}
-			}
-		} else {
-			return false;
-		}
-	}
+	}		/**	 * Checks the credentails of the client and logs in, returns true or false	 * 	 */
+	public function clientLogin($username, $pass) {
+		global $db, $main, $user;		$ip   = $_SERVER['REMOTE_ADDR'];			
+		if(isset($user) && isset($pass)) {			$user_info	=	$user->getUserByUserName($username);			if (is_array($user_info) && !empty($user_info)) {				if ($user_info['status'] == USER_STATUS_ACTIVE) {					if(md5(md5($pass).md5($user_info['salt'])) == $user_info['password']) {												$_SESSION['clogged'] 	= 1;											$data['password'] 		= null;						$data['salt'] 			= null;						//Save all user in this session						$_SESSION['cuser'] 		= $data;						$this->insertLog($user_info['id'], $user_info['user'], "Login successful ($ip)");																							return true;					} else { 						$main->errors('Incorrect password!');					}				} else {					$main->errors('Your account is not active');				}			} else {				$main->errors('User does not exist');			}		}		$this->insertLog(0, $username, "Login failed ($ip)");					return false;	}
 	public function staffLogin($user, $pass) { # Checks the credentials of a staff member and returns true or false
 		global $db, $main;
 		if($user && $pass) {
@@ -329,7 +303,7 @@ if(THT != 1){die();}class main {
 	   return $isValid;
 	}
 	
-	/**
+	/**	 * Only changes the system password not the Control Panel password	 * 
 	 * A more or less centralized function for changing a client's
 	 * password. This updates both the cPanel/WHM and THT password.
 	 * Will return true ONLY on success. Any other returned value should
@@ -337,33 +311,25 @@ if(THT != 1){die();}class main {
 	 * string, it is an error message.	 * @todo this function should be moved to the class_user.php file	 * 
 	 */
 	function changeClientPassword($clientid, $newpass) {
-		global $db, $server;
-		//Making sure the $clientid is a reference to a valid id.		var_dump($clientid, $newpass);
-		$query = $db->query("SELECT * FROM `<PRE>users` WHERE `id` = {$db->strip($clientid)}");
-		if($db->num_rows($query) == 0) {
-			return "That client does not exist.";
-		}
-		
+		global $db, $user;
+		//Making sure the $clientid is a reference to a valid id.		$user_info	=	$user->getUserById($clientid);		
+		if (is_array($user_info) && !empty($user_info)) {			$user->edit($clientid, array('password'=>$newpass));			/*			mt_srand((int)microtime(true));			$salt = md5(mt_rand());			$password = md5(md5($newpass) . md5($salt));			$db->query("UPDATE `<PRE>users` SET `password` = '{$password}' WHERE `id` = '{$db->strip($clientid)}'");			$db->query("UPDATE `<PRE>users` SET `salt` = '{$salt}' WHERE `id` = '{$db->strip($clientid)}'");*/					} else {			return "That client does not exist.";		}		
 		/*
 		 * We're going to set the password in cPanel/WHM first. That way
 		 * if the password is rejected for some reason, THT will not 
 		 * desync.
-		 */
-		$command = $server->changePwd($clientid, $newpass);
+		 */		 
+		/*$command = $server->changePwd($clientid, $newpass);
 		if($command !== true) {
 			return $command;
-		}
+		}*/
 		
 		/*
 		 * Let's change THT's copy of the password. Might as well make a
 		 * new salt while we're at it.
 		 */
-		mt_srand((int)microtime(true));
-		$salt = md5(mt_rand());
-		$password = md5(md5($newpass) . md5($salt));
-		$db->query("UPDATE `<PRE>users` SET `password` = '{$password}' WHERE `id` = '{$db->strip($clientid)}'");
-		$db->query("UPDATE `<PRE>users` SET `salt` = '{$salt}' WHERE `id` = '{$db->strip($clientid)}'");
+	
 		
 		//Let's wrap it all up.
 		return true;
-	}		public function	countrySelect($selected_item = '') {		//@todo this will be move into other place something like includes/library/text.lib.php		require_once 'text.php';		$selected_item = strtoupper($selected_item);		return $this->createSelect('country', $country, $selected_item);	}		// Order status	public function getOrderStatusList() {		return array(			ORDER_STATUS_ACTIVE						=> 'Active', 			ORDER_STATUS_WAITING_USER_VALIDATION 	=> 'Waiting user validation',						ORDER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',			ORDER_STATUS_CANCELLED 					=> 'Canceled',  			//ORDER_STATUS_WAITING_PAYMENT	=> 'Waiting payment', 			ORDER_STATUS_DELETED			=> 'Deleted', 			);	}		public function getInvoiceStatusList() {		return array(			INVOICE_STATUS_PAID				=> 'Paid', 			INVOICE_STATUS_CANCELLED		=> 'Cancelled',						INVOICE_STATUS_WAITING_PAYMENT	=> 'Pending', 			INVOICE_STATUS_DELETED			=> 'Deleted'			);	}		public function getUserStatusList() {		return array(			USER_STATUS_ACTIVE						=> 'Active', 			USER_STATUS_SUSPENDED 					=> 'Suspend', 			USER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',  			//USER_STATUS_WAITING_PAYMENT				=> 'Waiting payment',  //should be remove only added for backward comptability			USER_STATUS_DELETED						=> 'Deleted', 			);	}		/**	 * Gets current user info 	 */	public function getCurrentUserInfo() {		if (isset($_SESSION['cuser']) && is_array($_SESSION['cuser'])) {			return $_SESSION['cuser'];		} else {			return false;		}	}		/**	 * Gets the curren user id 	 */	public function getCurrentUserId() {		if (isset($_SESSION['cuser']) && is_array($_SESSION['cuser'])) {			return intval($_SESSION['cuser']['id']);		} else {			return false;		}	}			/**	 * Gets current staff info 	 */	public function getCurrentStaffInfo() {		if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {			return $_SESSION['user'];		} else {			return false;		}	}		/**	 * Gets the curren staff id 	 */	public function getCurrentStaffId() {		if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {			return intval($_SESSION['user']['id']);		} else {			return false;		}	}		/**	 * Gets the admin menu 	 */	public function getAdminMenu() {				if (isset($_SESSION['admin_menu']) && count($_SESSION['admin_menu']) > 0 ) {			return $_SESSION['admin_menu'];					} else {			global $db;						$result = $db->query("SELECT * FROM `<PRE>acpnav`");			$menu_list = $db->store_result($result);			$new_menu_list = array();			foreach($menu_list as $menu) {				$new_menu_list[$menu['link']] = $menu;			}						$_SESSION['admin_menu'] = $new_menu_list;			return $menu_list;		}	}		/**	 * Check if the link exist in the admin menu	 * @param	string	link 	 * @return  bool	true if sucess		 */	public function linkAdminMenuExists($link) {		$list = $this->getAdminMenu();		if (isset($list[$link]) && $list[$link]['link'] == $link) {			return true;		} else {			//somebody is trying to hack			return false;		}	}	/**	 * Gets the list of subdomains by server id	 * @param	int		server id		 * @return	array	list of subdomains	 */	public function getSubDomainByServer($server_id) {		global $db;		$result = $db->query("SELECT id, subdomain FROM `<PRE>subdomains` WHERE `server` = '{$server_id}' ");		$array = array();		while($data = $db->fetch_array($result, 'ASSOC')) {			$array[$data['id']] = $data['subdomain'];		}			return $array;			}}
+	}		public function	countrySelect($selected_item = '') {		//@todo this will be move into other place something like includes/library/text.lib.php		require_once 'text.php';		$selected_item = strtoupper($selected_item);		return $this->createSelect('country', $country, $selected_item);	}		// Order status	public function getOrderStatusList() {		return array(			ORDER_STATUS_ACTIVE						=> 'Active', 			ORDER_STATUS_WAITING_USER_VALIDATION 	=> 'Waiting user validation',						ORDER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',			ORDER_STATUS_CANCELLED 					=> 'Cancelled',  			//ORDER_STATUS_WAITING_PAYMENT			=> 'Waiting payment', 			ORDER_STATUS_DELETED					=> 'Deleted', 			);	}		public function getInvoiceStatusList() {		return array(			INVOICE_STATUS_PAID				=> 'Paid', 			INVOICE_STATUS_CANCELLED		=> 'Cancelled',						INVOICE_STATUS_WAITING_PAYMENT	=> 'Pending', 			INVOICE_STATUS_DELETED			=> 'Deleted'			);	}		public function getUserStatusList() {		return array(			USER_STATUS_ACTIVE						=> 'Active', 			USER_STATUS_SUSPENDED 					=> 'Suspend', 			USER_STATUS_WAITING_ADMIN_VALIDATION	=> 'Waiting admin validation',  			//USER_STATUS_WAITING_PAYMENT				=> 'Waiting payment',  //should be remove only added for backward comptability			USER_STATUS_DELETED						=> 'Deleted', 			);	}		/**	 * Gets current user info 	 */	public function getCurrentUserInfo() {		if (isset($_SESSION['cuser']) && is_array($_SESSION['cuser'])) {			return $_SESSION['cuser'];		} else {			return false;		}	}		/**	 * Gets the curren user id 	 */	public function getCurrentUserId() {		if (isset($_SESSION['cuser']) && is_array($_SESSION['cuser'])) {			return intval($_SESSION['cuser']['id']);		} else {			return false;		}	}			/**	 * Gets current staff info 	 */	public function getCurrentStaffInfo() {		if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {			return $_SESSION['user'];		} else {			return false;		}	}		/**	 * Gets the curren staff id 	 */	public function getCurrentStaffId() {		if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {			return intval($_SESSION['user']['id']);		} else {			return false;		}	}		/**	 * Gets the admin menu 	 */	public function getAdminMenu() {				if (isset($_SESSION['admin_menu']) && count($_SESSION['admin_menu']) > 0 ) {			return $_SESSION['admin_menu'];					} else {			global $db;						$result = $db->query("SELECT * FROM `<PRE>acpnav`");			$menu_list = $db->store_result($result);			$new_menu_list = array();			foreach($menu_list as $menu) {				$new_menu_list[$menu['link']] = $menu;			}						$_SESSION['admin_menu'] = $new_menu_list;			return $menu_list;		}	}		/**	 * Check if the link exist in the admin menu	 * @param	string	link 	 * @return  bool	true if sucess		 */	public function linkAdminMenuExists($link) {		$list = $this->getAdminMenu();		if (isset($list[$link]) && $list[$link]['link'] == $link) {			return true;		} else {			//somebody is trying to hack			return false;		}	}		/**	 * Gets the list of subdomains by server id	 * @param	int		server id		 * @return	array	list of subdomains	 */	public function getSubDomainByServer($server_id) {		global $db;		$result = $db->query("SELECT id, subdomain FROM `<PRE>subdomains` WHERE `server` = '{$server_id}' ");		$array = array();		while($data = $db->fetch_array($result, 'ASSOC')) {			$array[$data['id']] = $data['subdomain'];		}			return $array;			}		public function insertLog($user_id, $user_name, $message) {		global $db;		if (empty($user_id)) {			$user_id = '0';		}		if (empty($user_name)) {			$user_name = 'Anonymous';		}		$date = time();				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(														'{$user_id}',														'{$user_name}',														'{$date}',														'{$message}')");			}}
