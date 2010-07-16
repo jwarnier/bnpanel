@@ -98,17 +98,20 @@ class page {
 				if($main->getvar['do']) {
 					if ($_POST) {
 						$user->edit($main->getvar['do'], $main->postvar);
+						if ($main->postvar['status'] == USER_STATUS_DELETED) {
+							$main->redirect('?page=users&sub=search');
+						}
 					}
+					
 					$array = $user->getUserById($main->getvar['do']);
 					
-					$array['status'] = $main->createSelect('status', $main->getUserStatusList(), $array['status'], 1);
-					
-					$array['country']  = $main->countrySelect($array['country']);
+					$array['status'] 		= $main->createSelect('status', $main->getUserStatusList(), $array['status'], 1);					
+					$array['country']		= $main->countrySelect($array['country']);
 						
-					$main_array['CONTENT'] =  $style->replaceVar("tpl/user/edit.tpl", $array);
+					$main_array['CONTENT'] 	= $style->replaceVar("tpl/user/edit.tpl", $array);
 					$main_array['BOX'] 		= "";
 					$main_array['ID'] 		= $main->getvar['do'];
-					
+										
 					echo $style->replaceVar("tpl/clientview.tpl", $main_array);							
 				}
 			break;
@@ -152,10 +155,11 @@ class page {
 			break;	
 			
 			default:
+			/*
 				if($main->getvar['do'] ) {
 					
 					$client = $db->client($main->getvar['do']);
-					$pack2 = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$main->getvar['do']}'");
+					$pack2 = $db->query("SELECT * FROM `<PRE>orders` WHERE `userid` = '{$main->getvar['do']}'");
 					$pack = $db->fetch_array($pack2);
 					switch ($main->getvar['func']) {
 						case "sus":
@@ -215,7 +219,7 @@ class page {
 							}
 							break;
 					}
-				}
+				}*/
 				break;
 			case 'search':
 				if($main->getvar['do'] ) {					
@@ -322,16 +326,19 @@ class page {
 			case 'stats':
 				$query = $db->query("SELECT * FROM `<PRE>users`");
 				$array['CLIENTS'] = $db->num_rows($query);
-				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '".USER_STATUS_ACTIVE."'");
+				$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `status` = '".USER_STATUS_ACTIVE."'");
 				$array['ACTIVE'] = $db->num_rows($query);
-				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '".USER_STATUS_SUSPENDED."'");
+				$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `status` = '".USER_STATUS_SUSPENDED."'");
 				$array['SUSPENDED'] = $db->num_rows($query);
-				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '".USER_STATUS_WAITING_ADMIN_VALIDATION."'");
+				$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `status` = '".USER_STATUS_WAITING_ADMIN_VALIDATION."'");
 				$array['ADMIN'] = $db->num_rows($query);
-				//$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '4'");
-				//$array['WAITING'] = $db->num_rows($query);				
-				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '".USER_STATUS_DELETED."'"); 
+				
+				$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `status` = '".USER_STATUS_WAITING_USER_VALIDATION."'");
+				$array['WAITING'] = $db->num_rows($query);	
+							
+				$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `status` = '".USER_STATUS_DELETED."'"); 
 				$array['CANCELLED'] = $db->num_rows($query);
+				
 				echo $style->replaceVar("tpl/clientstats.tpl", $array);
 				break;
 			
@@ -349,16 +356,14 @@ class page {
 				}			
 				$array['status'] = $main->createSelect('status', $main->getUserStatusList(), '', 1);				
 				echo $style->replaceVar("tpl/user/add.tpl", $array);				
-			break;			
-			
-			
+			break;
 			case 'validate':
 				if($main->getvar['do']) {
 					if($main->getvar['accept'] == 1) {
 						if($server->approve($main->getvar['do'])) {
 							$main->errors("Account activated!");
 							$emaildata = $db->emailTemplate("approvedacc");
-							$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$main->getvar['do']}'");
+							$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `id` = '{$main->getvar['do']}'");
 							$data = $db->fetch_array($query);
 							$client = $db->client($data['userid']);
 							$db->query("UPDATE `<PRE>users` SET `status` = '1' WHERE `id` = '{$client['id']}'");
@@ -366,7 +371,7 @@ class page {
 						}
 					}
 					else {
-						$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$main->getvar['do']}'");
+						$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `id` = '{$main->getvar['do']}'");
 						$data = $db->fetch_array($query);
 						$client = $db->client($data['userid']);
 						if($server->decline($main->getvar['do'])) {
@@ -374,7 +379,7 @@ class page {
 						}	
 					}
 				}
-				$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `status` = '3'");
+				$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `status` = '3'");
 				if($db->num_rows($query) == 0) {
 					echo "No clients are awaiting validation!";	
 				} else {
@@ -390,10 +395,7 @@ class page {
 					}
 					echo $tpl;
 				}
-				break;
-					
-		}
-		
+				break;					
+		}		
 	}
 }
-?>
