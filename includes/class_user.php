@@ -44,8 +44,36 @@ class user extends model {
 		return false;
 	}
 	
-	public function edit($id, $params) {		
-		$this->setPrimaryKey($id);
+	
+	public function edit($id, $params) {
+		global $order;	
+		$this->setPrimaryKey($id);	
+		
+		if (isset($params['password']) && !empty($params['password']) )  {			
+			$params['salt']			= md5(rand(0,9999999));
+			$params['password'] 	= md5(md5($params['password']).md5($params['salt']));
+		}	
+		
+		if(isset($params['status'])) {
+			switch($params['status']) {
+				case USER_STATUS_ACTIVE:
+					//$server->unsuspend($order_id);
+				break;
+				case USER_STATUS_SUSPENDED:
+				case USER_STATUS_WAITING_ADMIN_VALIDATION:
+				case USER_STATUS_WAITING_USER_VALIDATION:
+				case USER_STATUS_DELETED:
+				global $server;
+				//Set to suspend all website of this user
+				$order_list = $order->getAllOrdersByUser($id);				
+				foreach($order_list as $order_item) {
+					$server->suspend($order_item['id']);
+				}	
+				break;
+				default:
+				break;
+			}
+		}
 		$this->update($params);
 	}
 	
@@ -75,7 +103,7 @@ class user extends model {
 		$db->query("UPDATE `<PRE>user_packs` SET `status` = '$status' WHERE `id` = '{$db->strip($status)}'");*/
 	/*	global $db;
 		$query = $db->query("DELETE FROM `<PRE>user_packs` WHERE `id` = '{$id}'"); //Delete the invoice
-		$query = $db->query("DELETE FROM `<PRE>user_pack_addons` WHERE `order_id` = '{$id}'"); //Delete the invoice*/
+		$query = $db->query("DELETE FROM `<PRE>order_addons` WHERE `order_id` = '{$id}'"); //Delete the invoice*/
 		return true;
 	}
 		
@@ -91,9 +119,24 @@ class user extends model {
 		if($db->num_rows($query) > 0) {
 			$data = $db->fetch_array($query,'ASSOC');			
 		}
-		return $data;
-		
+		return $data;		
 	}
+	
+	/**
+	 * Gets user information by username
+	 * @param	int		user id
+	 * @param	array	user information
+	 */
+	public function getUserByUserName($username) {
+		global $db, $main;
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `user` = '{$db->strip($username)}'");
+		$data = array();
+		if($db->num_rows($query) > 0) {
+			$data = $db->fetch_array($query,'ASSOC');			
+		}
+		return $data;		
+	}
+	
 	
 	/**
 	 * Search a user from a keyword (username, email, firtname or lastname) 
