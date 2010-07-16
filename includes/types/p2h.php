@@ -162,7 +162,7 @@ class p2h {
 		$forum = $this->determineForum($main->getvar['package']);
 		$this->con = $this->forumCon($forum);
 		$details = $this->forumData($forum);
-		$select = $db->query("SELECT * FROM `<PRE>user_packs`");
+		$select = $db->query("SELECT * FROM `<PRE>orders`");
 		while($data = $db->fetch_array($select)) {
 			$pdetails = $type->userAdditional($data['id']);
 			if($pdetails['fuser'] == $fuser) {
@@ -196,7 +196,7 @@ class p2h {
 
 	public function cron() {
 		global $db, $main, $type, $server, $email;
-		$query = $db->query("SELECT * FROM `<PRE>user_packs`");
+		$query = $db->query("SELECT * FROM `<PRE>orders`");
 		$checkdate = explode(":", $db->config("p2hcheck"));
 		while($data = $db->fetch_array($query)) {
 			$ptype = $type->determineType($data['pid']);
@@ -211,7 +211,7 @@ class p2h {
 					if(date("d") == date("t")) {
 						if($posts < $mposts) {
 							$user = $db->client($data['userid']);
-							$query2 = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$data['id']}'");
+							$query2 = $db->query("SELECT * FROM `<PRE>orders` WHERE `userid` = '{$data['id']}'");
 							$data2 = $db->fetch_array($query2);
 							$sd1 = strftime("%m", $data2['signup']);
 							$sd2 = strftime("%Y", $data2['signup']);
@@ -229,7 +229,7 @@ class p2h {
 					if(date("d") == "20" && $checkdate[1] != "1") {
 						if($posts < $mposts) {
 							$user = $db->client($data['userid']);
-							$query2 = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$data['id']}'");
+							$query2 = $db->query("SELECT * FROM `<PRE>orders` WHERE `userid` = '{$data['id']}'");
 							$data2 = $db->fetch_array($query2);
 							$sd1 = strftime("%m", $data2['signup']);
 							$sd2 = strftime("%Y", $data2['signup']);
@@ -268,7 +268,7 @@ class p2h {
 		global $main, $db, $type;
 		$box[0] = "Forum Posting:<br />";
 		$user = $main->getvar['do'];
-		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$user}'");
+		$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `userid` = '{$user}'");
 		$data = $db->fetch_array($query);
 		$forum = $this->determineForum($data['pid']);
 		$user = $type->userAdditional($data['id']);
@@ -283,7 +283,7 @@ class p2h {
 		global $main, $db, $type;
 		$box[0] = "Forum Posting:<br />";
 		$user = $main->getCurrentUserId();		
-		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$user}'");
+		$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `userid` = '{$user}'");
 		$data = $db->fetch_array($query);
 		$forum = $this->determineForum($data['pid']);
 		$user = $type->userAdditional($data['id']);
@@ -297,7 +297,7 @@ class p2h {
 	public function clientPage() {
 		global $main, $db, $type, $style;
 		$user = $main->getCurrentUserId();;
-		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$user}'");
+		$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `userid` = '{$user}'");
 		$data = $db->fetch_array($query);
 		$forum = $this->determineForum($data['pid']);
 		$user = $type->userAdditional($data['id']);

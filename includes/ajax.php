@@ -278,7 +278,7 @@ class AJAX {
 		else {
 			$data = $db->fetch_array($query);
 			if(md5(md5($pass) . md5($data['salt'])) == $data['password']) {
-				$query2 = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$db->strip($user)}'");
+				$query2 = $db->query("SELECT * FROM `<PRE>orders` WHERE `userid` = '{$db->strip($user)}'");
 				$data2 = $db->fetch_array($query2);
 				if($server->cancel($data2['id'])) {
 					echo "Your account has been cancelled successfully!";

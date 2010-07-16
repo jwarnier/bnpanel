@@ -185,7 +185,8 @@ class type {
 	 */
 	public function determineServerType($server_id) { 
 		global $db, $main;
-		$query = $db->query("SELECT type FROM `<PRE>servers` WHERE `id` = '{$db->strip($server_id)}'");
+		$sql = "SELECT type FROM `<PRE>servers` WHERE `id` = '{$db->strip($server_id)}'";
+		$query = $db->query($sql);
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That server doesn't exist!";
 			$array['Server ID'] = $server_id;
@@ -246,7 +247,7 @@ class type {
 	
 	public function userAdditional($id) { # Returns the additional info of a PID
 		global $db, $main;
-		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}'");
+		$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `id` = '{$db->strip($id)}'");
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That user pack doesn't exist!";
 			$array['PID'] = $id;
@@ -254,7 +255,7 @@ class type {
 			return;	
 		}
 		else {
-			$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}'");
+			$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `id` = '{$db->strip($id)}'");
 			$data = $db->fetch_array($query);
 			$content = explode(",", $data['additional']);
 			foreach($content as $key => $value) {

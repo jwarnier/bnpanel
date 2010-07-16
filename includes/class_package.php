@@ -79,6 +79,5 @@ class package extends model {
 			}
 		}
 		return $data;
-	}
-	
+	}	
 }

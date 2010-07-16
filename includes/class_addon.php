@@ -177,18 +177,18 @@ class addon extends model {
 	
 	
 	/**
-	 * Updates the user_pack_addons table
+	 * Updates the order_addons table
 	 */
 	public function updateAddonOrders($list_of_addons_ids, $order_id) {
 		global $db;
 		$addon_fee = array();		
-		$result = $db->query("DELETE FROM `<PRE>user_pack_addons` WHERE order_id = ".intval($order_id));
+		$result = $db->query("DELETE FROM `<PRE>order_addons` WHERE order_id = ".intval($order_id));
 		
 		if (is_array($list_of_addons_ids) && count($list_of_addons_ids) > 0 ) {
 			foreach ($list_of_addons_ids as $addon_id) {
 				if (is_numeric($addon_id)) {
 					$addon_id = intval($addon_id);
-					$result = $db->query("INSERT INTO `<PRE>user_pack_addons` (addon_id, order_id) VALUES ('{$addon_id}', '{$order_id}')");				
+					$result = $db->query("INSERT INTO `<PRE>order_addons` (addon_id, order_id) VALUES ('{$addon_id}', '{$order_id}')");				
 				}
 			}
 		}

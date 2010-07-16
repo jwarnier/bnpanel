@@ -460,10 +460,10 @@ CREATE TABLE IF NOT EXISTS `%PRE%users` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `%PRE%user_packs`
+-- Table structure for table `%PRE%orders`
 --
 
-CREATE TABLE IF NOT EXISTS `%PRE%user_packs` (
+CREATE TABLE IF NOT EXISTS `%PRE%orders` (
   `id` mediumint(9) NOT NULL auto_increment,
   `userid` varchar(5) NOT NULL,
   `username` varchar(50) NOT NULL,
@@ -477,7 +477,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%user_packs` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
--- Dumping data for table `%PRE%user_packs`
+-- Dumping data for table `%PRE%orders`
 --
 
 -- --------------------------------------------------------
@@ -494,11 +494,6 @@ CREATE TABLE IF NOT EXISTS `%PRE%logs` (
   `message` text NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
---
--- Dumping data for table `%PRE%user_packs_bak`
---
-
 
 
 
@@ -541,7 +536,7 @@ CREATE TABLE  `%PRE%package_addons` (
   `addon_id` int NOT NULL DEFAULT '0'
 );
 
-CREATE TABLE `%PRE%user_pack_addons` (
+CREATE TABLE `%PRE%order_addons` (
   `order_id` int NOT NULL,
   `addon_id` int NOT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
