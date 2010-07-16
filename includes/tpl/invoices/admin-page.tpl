@@ -60,13 +60,6 @@ $(document).ready(function() {
         <td width="150px"><strong>Actions</strong></td>                
 	</tr>
 	</thead>
-	<tbody id="tbody"></tbody>
-	<tfoot>
-		<tr>
-		<td colspan="7">	
-			<div id="pagination"></div>
-			</td>
-		</tr>
-	</tfoot>
-	
+	<tbody id="tbody"></tbody>	
 </table>
+<div id="pagination"></div>

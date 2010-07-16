@@ -61,7 +61,7 @@ class page {
 				echo $style->replaceVar("tpl/addserver.tpl", $array);
 			break;
 			
-			case "view":
+			case 'view':
 				if(isset($main->getvar['do'])) {
 					$query = $db->query("SELECT * FROM `<PRE>servers` WHERE `id` = '{$main->getvar['do']}'");
 					if($db->num_rows($query) == 0) {
