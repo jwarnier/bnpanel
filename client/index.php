@@ -47,7 +47,7 @@ function client() {
 			}
 			# Types Navbar
 			$user_id = $main->getCurrentUserId();
-			$sql = "SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$user_id}'";
+			$sql = "SELECT * FROM `<PRE>orders` WHERE `userid` = '{$user_id}'";
 			$navquery = $db->query($sql);
 			$navdata = $db->fetch_array($navquery);
 			
@@ -209,10 +209,7 @@ if(!$_SESSION['clogged']) {
 		if($_POST) { # If user submitts form
 			if($main->clientLogin($main->postvar['user'], $main->postvar['pass'])) {
 				$main->redirect("?page=home");	
-			}
-			else {
-				$main->errors("Incorrect username or password!");
-			}
+			}		
 		}
 		
 		echo $style->get("header.tpl");

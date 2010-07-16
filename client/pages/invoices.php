@@ -29,7 +29,7 @@ class page {
 						$invoice->set_paid(intval($_GET['invoiceID']));
 						$main->errors("Your invoice has been paid!");
 						$user_id = $main->getCurrentUserId();
-						$client = $db->fetch_array($db->query("SELECT * FROM `<PRE>user_packs` WHERE `userid` = '{$user_id}'"));
+						$client = $db->fetch_array($db->query("SELECT * FROM `<PRE>orders` WHERE `userid` = '{$user_id}'"));
 						if($client['status'] == USER_STATUS_SUSPENDED) {
 							$server->unsuspend($client['id']);
 						}
