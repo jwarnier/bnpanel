@@ -56,6 +56,23 @@
     %CREATED_AT%
     </td>
   </tr>
+  
+  
+          <tr>
+    <td valign="top">Control Panel Username</td>
+    <td>  		
+		%USERNAME%
+    </td>
+  </tr>
+  
+          <tr>
+    <td valign="top">Control Panel Password</td>
+    <td>  		
+		%PASSWORD%
+    </td>
+  </tr>
+  
+  
 
    <tr>
     <td >Total:</td>

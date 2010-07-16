@@ -12,5 +12,5 @@
 	<!-- <td>%addon_fee%</td> -->	    
 	
   	<!--  <td>%paid%</td>  	  -->
-  	<td>%ADD_INVOICE% %EDIT% %DELETE% </td>  	           
+  	<td>%ADD_INVOICE% %EDIT% %CHANGE_PASS%  %DELETE% </td>  	           
 </tr>                
