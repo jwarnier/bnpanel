@@ -147,7 +147,7 @@ class cpc {
 																						'{$client['ip']}')");
 										$checkquery = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$data['packuser']}'");
 										$datanewuser = $db->fetch_array($checkquery);
-										$db->query("INSERT INTO `<PRE>user_packs` (userid,domain,pid,signup,status,additional) 
+										$db->query("INSERT INTO `<PRE>orders` (userid,domain,pid,signup,status,additional) 
 																				 VALUES(
 																						'{$datanewuser['id']}',
 																						'{$data['domain']}',
