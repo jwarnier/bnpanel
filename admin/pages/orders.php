@@ -190,7 +190,7 @@ class page {
 							$main->errors("Invoice created!");	
 							$main->redirect("?page=invoices&sub=all");
 						} else {
-							$main->errors("Please fill the Status order");
+							$main->errors("Please fill the Order's status");
 						}						
 					}
 					
