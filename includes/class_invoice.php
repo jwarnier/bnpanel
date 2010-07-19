@@ -103,11 +103,13 @@ class invoice extends model {
 		//Getting addon information
 		if (!empty($array['addon_fee'])) {
 			//the addon_fee is a serialize string			
-			$array['addon_fee'] = unserialize($array['addon_fee']);			
-			foreach($array['addon_fee'] as $addon) {					
-				//$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';
-				$total_amount +=$addon['amount'];					
-			}			
+			$array['addon_fee'] = unserialize($array['addon_fee']);
+			if (is_array($array['addon_fee']) && count($array['addon_fee']) > 0) {		
+				foreach($array['addon_fee'] as $addon) {					
+					//$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';
+					$total_amount +=$addon['amount'];
+				}			
+			}
 			$array['addon_fee'] = serialize($array['addon_fee']);					
 		}
 		$total_amount = $total_amount + $array['amount']; 
@@ -412,7 +414,7 @@ class invoice extends model {
 			echo 'Total others: '.count($orders);
 			foreach($orders as $order_item) {
 				
-				//If the order was deleted pass to the next order
+				//If the Order was deleted pass to the next order
 				if ($order_item['status'] == ORDER_STATUS_DELETED) {
 					continue;
 				}
@@ -429,7 +431,9 @@ class invoice extends model {
 					if ($debug) { echo '<h2>Invoice id:'.$last_invoice_id_by_order_id.'</h2><br />';}
 					
 					//Get invoice info
+					
 					$my_invoice 	= $invoice->getInvoiceInfo($last_invoice_id_by_order_id);
+					
 					
 					//Get billing info
 					$billing_info	= $billing->getBilling($order_item['billing_cycle_id']);					
