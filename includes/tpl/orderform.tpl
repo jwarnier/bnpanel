@@ -372,7 +372,7 @@ function showAddons(obj) {
 	<div class="table" id="5" style="display:none">
         <div class="cat">Step Three - Client Account</div>
         <div class="text">
-        	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
+        	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 700px;">
               <tr>
                 <td>Username:</td>
                 <td><input type="text" name="username" id="username" /></td>
