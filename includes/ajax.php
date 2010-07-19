@@ -1149,7 +1149,7 @@ class AJAX {
 	   		$package_id = $main->getvar['package_id'];
 	   		
 	   		
-	   		$html = '<fieldset style="width: 90%;"><legend><b>Package Order</b></legend><table width="100%" >';
+	   		$html = '<fieldset style="width: 98%;"><legend><b>Package Order</b></legend><table width="100%" >';
 	   		
 	   		$sql = "SELECT a.name, amount, bc.name  as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 					ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = {$main->getvar['billing_id']}  AND b.type = '".BILLING_TYPE_PACKAGE."' ";
@@ -1175,7 +1175,7 @@ class AJAX {
 	   		
 	   		if ($db->num_rows($result) > 0) {
 	   			$info_exist = false;
-		   		$html .= '<fieldset  style="width: 90%;"> <legend><b>Order Add-Ons</b></legend>';
+		   		$html .= '<fieldset  style="width: 98%;"> <legend><b>Order Add-Ons</b></legend>';
 		   		$html .= '<table width="100%" >';
 		   		
 		   		while($data = $db->fetch_array($result)) {		   			
@@ -1233,7 +1233,7 @@ class AJAX {
 			$html = '';
 			$total = 0;
 			
-			$html  = '<fieldset  style="width: 90%;"> <legend><b>Summary</b></legend>';
+			$html  = '<fieldset  style="width: 98%;"> <legend><b>Summary</b></legend>';
 			$html .= '<table width="100%" align="center" border="0" cellpadding="3" cellspacing="3">
 					        <tr>
 					            <td width="2%"></td>

@@ -19,29 +19,40 @@
 function templates(id) {
 	$.get("<AJAX>?function=template&id="+id, function(data) {
 			var result = data.split("{}[]{}");
+			
 			if(document.getElementById("templatebit").style.display == "none") {
 				document.getElementById("subject").value = result[0];
 				document.getElementById("description").innerHTML = result[1];
 				tinyMCE.get("content").execCommand('mceSetContent',false, result[2] );
 				$("#templatebit").slideDown(500);	
-			}
-			else {
+			} else {
 				$("#templatebit").slideUp(500, function(data) {
 					document.getElementById("subject").value = result[0];
 					document.getElementById("description").innerHTML = result[1];
 					tinyMCE.get("content").execCommand('mceSetContent',false, result[2] );
 					$("#templatebit").slideDown(500);
-														});		
+				});		
 			}
-															});
+	});
 }
+$(document).ready(function() {
+	var id = '%TEMPLATE_ID%'
+	if (id != '0') {
+		document.getElementById("templatebit").style.display="block";
+		templates(id);
+	}	
+});
 </script>
 <ERRORS>
 <form action="" method="post" name="edit" id="edit">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Select a Template:</td>
-    <td><select name="template" id="template" onchange="templates(this.value)"><option value="" disabled="disabled" selected="selected">Select a template</option>%TEMPLATES%</select>
+    <td>
+    	<select name="template" id="template" onchange="templates(this.value)">
+    		<option value="" disabled="disabled" selected="selected">Select a template</option>
+    		%TEMPLATES%
+    	</select>
     <a title="Which template are you going to edit?" class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
   </tr>
 </table>
@@ -61,5 +72,5 @@ function templates(id) {
         <td colspan="2" align="center"><input name="edit" id="edit" type="submit" value="Edit Template" /></td>
       </tr>
     </table>
-    </form>
 </div>
+</form>

@@ -44,14 +44,19 @@ class page {
 				while($data = $db->fetch_array($query)) {
 					$values[] = array($data['acpvisual'], $data['id']);	
 				}
-				$selected_id = $main->getvar['do'];		
-				$array['TEMPLATES'] = $main->dropDown("LOL", $values, $selected_id, 0, 1);
+				$selected_id = 0;
+				if (isset($main->getvar['do']) && !empty($main->getvar['do'])) {
+					$selected_id = $main->getvar['do'];
+				}		
 				
-				echo $style->replaceVar("tpl/emailtemplates.tpl", $array);
+				$array['TEMPLATES'] 	= $main->dropDown("LOL", $values, $selected_id, 0, 1);
+				$array['TEMPLATE_ID'] 	= $selected_id;
+				
+				echo $style->replaceVar("tpl/email/emailtemplates.tpl", $array);
 			break;
 			
 			case "mass": #mass emailer
-				echo $style->replaceVar("tpl/massemail.tpl");
+				echo $style->replaceVar("tpl/email/massemail.tpl");
 			break;
 		}
 	}
