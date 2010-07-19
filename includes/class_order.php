@@ -274,7 +274,7 @@ class order extends model {
 				$array['DELETE']  	= '<a href="index.php?page=orders&sub=delete&do='.$order_item['id'].'"><img src="../themes/icons/delete.png" title="Delete"  alt="Delete" /></a>';
 				$array['ADD_INVOICE']='<a href="index.php?page=orders&sub=add_invoice&do='.$order_item['id'].'"><img src="../themes/icons/note_add.png" title="Add invoice"  alt="Add invoice" /></a>';
 				
-				$array['CHANGE_PASS']='<a href="index.php?page=orders&sub=change_pass&do='.$order_item['id'].'"><img src="../themes/icons/key.png" title="Change password"  alt="Change password" /></a>';
+				$array['CHANGE_PASS']='<a href="index.php?page=orders&sub=change_pass&do='.$order_item['id'].'"><img src="../themes/icons/key.png" title="Change Panel password"  alt="Change Panel password" /></a>';
 				
 				$result['list'] .= $style->replaceVar("tpl/orders/list-item.tpl", $array);
 			} else {
