@@ -200,7 +200,7 @@ class db {
 		$query = $this->query("SELECT * FROM `<PRE>staff` WHERE `id` = '{$id}'");
 		if($this->num_rows($query) == 0) {
 			$error['Error'] = "Couldn't retrieve staff data!";
-			$error['Username'] = $name;
+			$error['Username'] = $id;
 			global $main;
 			$main->error($error);
 		}
@@ -215,7 +215,7 @@ class db {
 		$query = $this->query("SELECT * FROM `<PRE>users` WHERE `id` = '{$id}'");
 		if($this->num_rows($query) == 0) {
 			$error['Error'] = "Couldn't retrieve client data!";
-			$error['Username'] = $name;
+			$error['UserId'] = $id;
 			global $main;
 			$main->error($error);
 		}
