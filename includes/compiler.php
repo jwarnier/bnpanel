@@ -88,15 +88,24 @@ if($sql['install']) {
 }
 
 $folder = LINK;
-require_once LINK."/model.php"; # Get the file
+require_once LINK.'/model.php'; # Get the file
+require LINK.'/class_main.php'; # Get the file
+					
+$main = new main(); # Create the class
+if (isset($main) && !empty($main)) {
+	global $main;		
+} else {
+	$main->redirect('install');
+}
+
 if ($handle = opendir($folder)) { # Open the folder
 	while (false !== ($file = readdir($handle))) { # Read the files
 		if($file != "." && $file != "..") { # Check aren't these names
 			$base = explode(".", $file); # Explode the file name, for checking
 			if($base[1] == "php") { # Is it a php?
 				$base2 = explode("_", $base[0]);
-				if($base2[0] == "class" && $base2[1] != "db") {
-					require $folder."/".$file; # Get the file
+				if($base2[0] == "class" && $base2[1] != "db" && $base2[1] != "main") {
+					require $folder."/".$file; # Get the file					
 					${$base2[1]} = new $base2[1]; # Create the class
 					global ${$base2[1]}; # Globalise it
 				}
