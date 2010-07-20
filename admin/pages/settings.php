@@ -18,6 +18,7 @@ class page {
 		$this->navlist[] = array("Terms of Service", "application_edit.png", "tos");
 		$this->navlist[] = array("Client Area", "user_go.png", "client");
 		$this->navlist[] = array("Support Area", "help.png", "support");
+		//$this->navlist[] = array("Paid Configuration", "coins.png", "Paid Configuration");
 		
 	}
 	

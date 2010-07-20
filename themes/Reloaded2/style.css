@@ -245,3 +245,19 @@ input, option {
 	position: absolute;	
 }    
     
+    
+    
+    /*
+.error {
+	border:1px solid #F9DD34;
+}*/
+
+input.error, select.error {
+	border:1px dotted red;
+}
+
+label.error {
+	padding-left:20px;	
+	color:red;
+	position:absolute;
+}

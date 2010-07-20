@@ -73,10 +73,10 @@
   
   
 
-   <tr>
+   <!-- <tr>
     <td >Total:</td>
     <td valign="top" ><h2>%TOTAL%</h2></td>
-  </tr>    
+  </tr>  -->   
 </table>
 %INVOICE_LIST%
  

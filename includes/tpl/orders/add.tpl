@@ -1,4 +1,6 @@
 <script type="text/javascript" src="<URL>includes/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
+
 <script type="text/javascript">
 	tinyMCE.init({
 	mode : "textareas",
@@ -12,6 +14,10 @@
 			showOn: 'button',
 			buttonImage: '<URL>themes/icons/calendar_add.png'			 
 			});
+
+		 /* $("#addorder").validate(); */
+		$("#addorder").validate(%json_encode%);
+		
 	});
 	
 </script>
@@ -102,13 +108,13 @@ function reset() {
 </style>
     
 
-<form id="addpackage" name="addpackage" method="post" action="">
+<form id="addorder" name="addorder" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">    
     <tr>
     <td width="20%" valign="top">User</td>
     <td >            
 	    <input name="user_id" type="hidden" id="user_id" />    
-	    <input size="30" id="inputString" onkeyup="lookup(this.value);" type="text" /> <img onclick="reset();" src="<URL>themes/icons/arrow_refresh.png">
+	    <input size="30" autocomplete="off" id="inputString" onkeyup="lookup(this.value);" type="text" class="required" /><img onclick="reset();" src="<URL>themes/icons/arrow_refresh.png">
 		<div class="suggestionsBox" id="suggestions" style="display: none;">
 			<div class="suggestionList" id="autoSuggestionsList"></div>
 		</div> 		
@@ -118,7 +124,7 @@ function reset() {
 	<tr>
     	<td valign="top">Domain</td>
     	<td>
-    		<input name="domain" type="text" id="domain" />
+    		<input name="domain" type="text" id="domain" class="required" />
     	</td>
   	</tr>
   
@@ -157,7 +163,7 @@ function reset() {
 <tr>
     <td valign="top">Creation date</td>
     <td>  		
-  		<input name="created_at" type="text" id="created_at" value="%CREATED_AT%"/>
+  		<input name="created_at" type="text" id="created_at" value="%CREATED_AT%"  class="required"/>
     </td>
   </tr>
   
@@ -165,7 +171,7 @@ function reset() {
       <tr>
     <td valign="top">Control Panel Username</td>
     <td>
-  		<input size="30" id="username" name="username" type="text" value="%DOMAIN_USERNAME%"/>
+  		<input size="30" id="username" name="username" type="text" value="%DOMAIN_USERNAME%"  class="required"/>
   		<a class="tooltip" title="The username to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
     </td>
   </tr>
@@ -173,7 +179,7 @@ function reset() {
       <tr>
     <td valign="top">Control Panel Password</td>
     <td>
-  		<input size="30" id="password"  name="password" type="text" value="%DOMAIN_PASSWORD%"/>
+  		<input size="30" id="password"  name="password" type="text" value="%DOMAIN_PASSWORD%"  class="required"/>
   		<a class="tooltip" title="The password to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
     </td>
   </tr>

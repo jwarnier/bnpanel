@@ -24,7 +24,7 @@ class page {
 	}
 		
 	public function content() {		
-		global $style, $db, $main, $invoice,$addon, $order, $billing, $currency, $package, $user;
+		global $style, $server, $db, $main, $invoice,$addon, $order, $billing, $currency, $package, $user;
 		
 		if(isset($_GET['iid']) && isset($_GET['pay'])){			
 			$invoice->set_paid($_GET['iid']);
@@ -33,21 +33,40 @@ class page {
 			$invoice->set_unpaid($_GET['iid']);
 			echo "<span style='color:red'>Invoice {$_GET['iid']} marked as unpaid. <a href='index.php?page=invoices&iid={$_GET['iid']}&pay=true'>Undo this action</a></span>";
 		}
+		require_once LINK.'validator.class.php';
 		
-		switch($main->getvar['sub']) {						
-			case 'add':
-				if($_POST) {
-					foreach($main->postvar as $key => $value) {
-						if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle"  && substr($key,0,5) != "addon" ) {
-							$main->errors("Please fill in all the fields!");
-							$n++;
-						}
-					}							
-					if(!$n) {			
+		switch($main->getvar['sub']) {					
+			case 'add':					
+			
+				$asOption = array(
+				    'rules' => array(
+				        'domain' 			=> 'required',
+				        'billing_cycle_id' 	=> 'required',
+				        'package_id' 		=> 'required',
+				        'status' 			=> 'required',
+				        'created_at' 		=> 'required',
+				        'username' 			=> 'required',
+				        'password' 			=> 'required'			            
+				     ),			    
+				    'messages' => array(
+				        //'domain' => array( 'required' => 'Domain is required'),			       
+				    )
+				);				
+				$array['json_encode'] = json_encode($asOption);
+				
+				$oValidator = new Validator($asOption);
+				
+			
+				if($_POST) {	
+					$result = $oValidator->validate($_POST);
+					if (empty($result)) {				
 						
 						//Creating an order		
 						$params['userid'] 		= $main->postvar['user_id'];
-						$params['username'] 	= '';
+						
+						$params['username'] 	= $main->postvar['username'];
+						$params['password'] 	= $main->postvar['password'];
+						
 						$params['domain'] 		= $main->postvar['domain'];
 						$params['pid'] 			= $main->postvar['package_id'];
 						$params['signup'] 		= strtotime($main->postvar['created_at']);
@@ -76,6 +95,8 @@ class page {
 						} else {
 							$main->errors("There was a problem!");
 						}
+					} else {
+						//$main->errors("There was a problem!");
 					}
 																		
 				}
@@ -85,17 +106,20 @@ class page {
 				foreach($billing_list as $billing_item) {
 					$new_billing_list[$billing_item['id']] =$billing_item['name']; 
 				}
-				$array['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, '', 1,'', array('onchange'=>'loadPackages(this);'));				
+				$array['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, array('onchange'=>'loadPackages(this);','class'=>'required'));				
 				$array['PACKAGES'] 		= '-';
 				$array['ADDON'] 		= '-';
-				$array['STATUS'] 		= $main->createSelect('status', $main->getOrderStatusList());
+				$array['STATUS'] 		= $main->createSelect('status', $main->getOrderStatusList(),'', array('class'=>'required'));
+				
+				$array['DOMAIN_USERNAME'] = $main->generateUsername();
+				$array['DOMAIN_PASSWORD'] = $main->generatePassword();
+				
 					
 				echo $style->replaceVar("tpl/orders/add.tpl", $array);
 			break;
 			case 'change_pass':			
 				if(isset($main->getvar['do'])) {
-					if($_POST) {
-						global $server;
+					if($_POST) {						
 						if ($main->postvar['password'] == $main->postvar['confirm']) {
 							$server->changeOrderPassword($main->getvar['do'], $main->postvar['password']);
 						}
@@ -147,23 +171,42 @@ class page {
 					} else {
 						echo "That order doesn't exist!";	
 					}			
-					$return_array = $order->getOrder($main->getvar['do'], false, false);					
+					$return_array = $order->getOrder($main->getvar['do'], false, false);
+					$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);					
 					echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);
 				}
 			break;			
 			case 'view':				
 				if(isset($main->getvar['do'])) {					
-					$return_array = $order->getOrder($main->getvar['do'], true);									
+					$return_array = $order->getOrder($main->getvar['do'], true);	
+					$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);											
 					echo $style->replaceVar("tpl/orders/view.tpl", $return_array);					
 				}				
 			break;			
 			case 'add_invoice':			
-				if(isset($main->getvar['do'])) {						
+			
+				$asOption = array(
+				    'rules' => array(
+				        'due' 				=> 'required',
+				        'status' 			=> 'required',
+				        'package_id' 		=> 'required'
+				     ),			    
+				    'messages' => array(
+				        			       
+				    )
+				);				
+				$return_array['json_encode'] = json_encode($asOption);
+				
+				$oValidator = new Validator($asOption);
+				
+				
+				if(isset($main->getvar['do'])) {											
 					$order_info = $order->getOrderInfo($main->getvar['do']);
 					$billing_id = $order_info['billing_cycle_id'];
 															
 					if($_POST) {
-						if ($main->postvar['status'] != 0 ) {
+						$result = $oValidator->validate($_POST);
+						if (empty($result)) {					
 							$due 		= strtotime($main->postvar['due']);
 							$notes		= $main->postvar['notes'];
 							$package_id	= $main->postvar['package_id'];
@@ -187,10 +230,10 @@ class page {
 												
 							$invoice->create($order_info['userid'], $amount, $due, $notes, $addon_serialized, $status, $main->getvar['do']);
 							
-							$main->errors("Invoice created!");	
-							$main->redirect("?page=invoices&sub=all");
+							$main->errors("Invoice created!");
+							//$main->redirect("?page=invoices&sub=all");
 						} else {
-							$main->errors("Please fill the Order's status");
+							$main->errors("Please fill all the fields");
 						}						
 					}
 					
@@ -210,17 +253,16 @@ class page {
 					$packages = $package->getAllPackagesByBillingCycle($billing_id);
 										
 			   		$package_list = array();
+			   		
 					foreach($packages as $package) {
-						$package_list[$package['id']] = array($package['name'].' - '.$currency->toCurrency($package['amount']), $package['id']);				
+						$package_list[$package['id']] = $package['name'].' - '.$currency->toCurrency($package['amount']);				
 					}			
-					$return_array['PACKAGES']  =  $main->dropDown('package_id', $package_list, $order_info['pid'], 1, '', array('onchange'=>'loadAddons(this);'));
-									
-					$return_array['DUE'] = date('Y-m-d');					
-					$return_array['ID'] = $main->getvar['do'];		
-					
-					$invoice_status = $main->getInvoiceStatusList();
-					$return_array['STATUS'] = $main->createSelect('status', $invoice_status);
-					 
+					$return_array['PACKAGES']  		=  $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);','class'=>'required'));									
+					$return_array['DUE'] 			= date('Y-m-d');					
+					$return_array['ID'] 			= $main->getvar['do'];
+					$invoice_status 				= $main->getInvoiceStatusList();
+					$return_array['STATUS'] 		= $main->createSelect('status', $invoice_status,'', array('class'=>'required'));
+					$return_array['INVOICE_LIST'] 	= $order->showAllInvoicesByOrderId($main->getvar['do']);
 													
 					echo $style->replaceVar("tpl/invoices/addinvoice.tpl", $return_array);					
 				

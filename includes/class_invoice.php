@@ -315,7 +315,7 @@ class invoice extends model {
 			if ($read_only == true) {
 				$array['STATUS'] 	= $invoice_status[$invoice_info['status']];
 			} else {
-				$array['STATUS'] 	= $main->createSelect('status', $invoice_status, $invoice_info['status'],1);
+				$array['STATUS'] 	= $main->createSelect('status', $invoice_status, $invoice_info['status']);
 			}			
 			
 			$array['CREATED'] 	= $invoice_info['created'];
@@ -357,16 +357,21 @@ class invoice extends model {
 			$addong_result_string = '';			
 			$addon_list = $addon->getAddonsByPackage($package_id);		
 			$addon_list = $addon->getAllAddonsByBillingId($billing_cycle_id);
-			$array['ADDON']='<fieldset style="width:200px">';
-			foreach($addon_selected_list as $addon_id => $addon_amount) {
-				if ($read_only == false) {
-					$array['ADDON'] .= $addon_list[$addon_id]['name'].'<br /><input id="addon_'.$addon_id.'" name="addon_'.$addon_id.'" value="'.$addon_amount.'"><br />';				
-				} else {
-					$array['ADDON'] .= $addon_list[$addon_id]['name'].' - '.$currency->toCurrency($addon_amount).'<br />';
-				}
-				$total = $total + $addon_amount;
-			}	
-			$array['ADDON'].='</fieldset>';			
+			
+			$array['ADDON']='-';
+			
+			if (is_array($addon_selected_list) && count($addon_selected_list) > 0) {
+				$array['ADDON']='<fieldset style="width:200px">';
+				foreach($addon_selected_list as $addon_id => $addon_amount) {
+					if ($read_only == false) {
+						$array['ADDON'] .= $addon_list[$addon_id]['name'].'<br /><input id="addon_'.$addon_id.'" name="addon_'.$addon_id.'" value="'.$addon_amount.'"><br />';				
+					} else {
+						$array['ADDON'] .= $addon_list[$addon_id]['name'].' - '.$currency->toCurrency($addon_amount).'<br />';
+					}
+					$total = $total + $addon_amount;
+				}	
+				$array['ADDON'].='</fieldset>';			
+			}
 			//Packages feature added	
 			$package_list = $package->getAllPackages();			
 	
@@ -411,184 +416,194 @@ class invoice extends model {
 		global $db, $main, $server, $billing, $invoice, $order, $email, $user;
 		$today = time();
 		
+		$main->addLog('Cron executed');
+				
 		//Gets all orders 
-		$orders =  $order->getAllOrders();
+		$orders 			 =  $order->getAllOrders();
 		$invoice_list_status = $main->getInvoiceStatusList();
 		$order_list_status	 = $main->getOrderStatusList();
 			
-			if($debug) {
-				echo '<h1>Invoice Cron</h1><br />';
-				echo 'Total others: '.count($orders).'<br />';
+		if($debug) {
+			echo '<h1>Invoice Cron</h1><br />';
+			echo 'Total others: '.count($orders).'<br />';
+		}		
+			
+		foreach($orders as $order_item) {
+			
+			//If the Order was deleted pass to the next order
+			if ($order_item['status'] == ORDER_STATUS_DELETED) {
+				continue;
 			}
 			
-			foreach($orders as $order_item) {
+			if ($debug) { echo '<h2>Order id:'.$order_item['id'].'</h2>';}	
+			
+			//Get the last invoice of that order
+			$last_invoice_id_by_order_id = $order->getLastInvoiceByOrderId($order_item['id']);
+			$user_id = $order_item['userid'];
+			
+			// GEtting the info of that invoice
+			if (!empty($last_invoice_id_by_order_id)) {
 				
-				//If the Order was deleted pass to the next order
-				if ($order_item['status'] == ORDER_STATUS_DELETED) {
-					continue;
-				}
+				if ($debug) { echo '<h2>Invoice id:'.$last_invoice_id_by_order_id.'</h2>';}
 				
-				if ($debug) { echo '<h2>Order id:'.$order_item['id'].'</h2><br />';}	
+				//Get invoice info					
+				$my_invoice 	= $invoice->getInvoiceInfo($last_invoice_id_by_order_id);					
 				
-				//Get the last invoice of that order
-				$last_invoice_id_by_order_id = $order->getLastInvoiceByOrderId($order_item['id']);
-				$user_id = $order_item['userid'];
+				//Get billing info
+				$billing_info	= $billing->getBilling($order_item['billing_cycle_id']);					
 				
-				// GEtting the info of that invoice
-				if (!empty($last_invoice_id_by_order_id)) {
-					
-					if ($debug) { echo '<h2>Invoice id:'.$last_invoice_id_by_order_id.'</h2><br />';}
-					
-					//Get invoice info					
-					$my_invoice 	= $invoice->getInvoiceInfo($last_invoice_id_by_order_id);					
-					
-					//Get billing info
-					$billing_info	= $billing->getBilling($order_item['billing_cycle_id']);					
-					
-					//$uid = intval($order_item['userid']);
-					//Select the *last* invoice of that order
-					//$sql = "SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$uid}' AND status <> '".INVOICE_STATUS_DELETED."'ORDER BY id DESC LIMIT 1";
-					//$result_invoices = $db->query($sql);				
-					
- 					
-					//If today is bigger than 30 days since the creation then create a new invoice
-					$billing_number_months_in_seconds  = intval($billing_info['number_months'])*30*24*60*60; 
-										
+				//$uid = intval($order_item['userid']);
+				//Select the *last* invoice of that order
+				//$sql = "SELECT * FROM `<PRE>invoices` WHERE `uid` = '{$uid}' AND status <> '".INVOICE_STATUS_DELETED."'ORDER BY id DESC LIMIT 1";
+				//$result_invoices = $db->query($sql);				
+				
+				
+				//If today is bigger than 30 days since the creation then create a new invoice
+				$billing_number_months_in_seconds  = intval($billing_info['number_months'])*30*24*60*60; 
 									
-					//Generate a new invoice if time is exceed (first time)
-					//var_dump($today, strtotime($my_invoice['created']) + $billing_number_months_in_seconds);
-					/*
-					echo 'Now : '.$today = date('Y-m-d h:i:s', time());
+								
+				//Generate a new invoice if time is exceed (first time)
+				//var_dump($today, strtotime($my_invoice['created']) + $billing_number_months_in_seconds);
+				if ($debug) {
+					echo 'Today is  : '.date('Y-m-d', time());
 					echo '<br />Invoice info :<br />';					
-					echo 'Created date '.date('Y-m-d h:i:s', strtotime($my_invoice['created'])).'<br />';
-					echo 'Due date  '.date('Y-m-d h:i:s', $my_invoice['due']).'<br />';
-					*/
-					//"Terminating" a user if he does not pay
-					
-					//Check the suspension days parameter	
-					$suspendseconds 	= intval($db->config('suspensiondays')) *24*60*60;
-					
-					//I don't want to use this termination parameter. Not a priority
-					$terminateseconds 	= intval($db->config('terminationdays'))*24*60*60;				
-					
-					
-					//If normal time is over and he does not paid
-			//		var_dump(date('Y-m-d h:i:s',$today), date('Y-m-d h:i:s', strtotime($my_invoice['created']) + $billing_number_months_in_seconds));
-					//If the package is paid 
-					//if ($package['paid']) {
-						
-					//If the invoices isn't paid == is pending
-					//if ($my_invoice['status'] != INVOICE_STATUS_PAID ) {
-					
-					//If the invoice was deleted pass to the next order
-						
-					if ($debug) { echo 'Invoice status: ' .$invoice_list_status [$my_invoice['status']].' - Id  '.$my_invoice['status']; }
-					
-					$email_day_count = $this->calculateDaysToSendNotification($billing_info['number_months'], $my_invoice['due']);
-					var_dump($email_day_count);
-					
-					switch($my_invoice['status']) {
-						case INVOICE_STATUS_WAITING_PAYMENT: //Pending
-										
-							//1. Due date of the last invoice has exceed
-							if ($my_invoice['due'] < $today) {
-								
-								//My invoice has expired need to suspend if time has past the limits	
-													
-								//echo 'My invoice has expired need to suspend if time has past<br />';
-								
-								//Suspend conditions
-								//var_dump('Suspend : '.date('Y-m-d h:i:s',$today - $suspendseconds));
-								//Terminate conditions
-								//var_dump('Terminate: '.date('Y-m-d h:i:s',$today-$suspendseconds-$terminateseconds));
-								
-								$is_terminate = false;							
-								//Terminate is a bad thing we would do nothing
-								
-								/*						
-								if(($today-$suspendseconds-$terminateseconds) > intval($my_invoice['due']) ){
-									echo 'Terminate <br />';
-									$server->terminate($order_item['id']);
-									$is_terminate = true;
-								} */			
-												
-								//2. Proceed to suspend							 
-								if ($is_terminate == false ) {
-									if(($today - $suspendseconds) > intval($my_invoice['due'])) {
-										echo 'IsSuspended <br />';
-										$server->suspend($order_item['id']);
-									}
-								}			
-							}
-							//Send a notification
-							if (!empty($email_day_count)) {
-								//If the invoices is pending and the user do nothing
-							}							
-						break;
-						case INVOICE_STATUS_PAID:							
-							//If I'm already pay	
-							//Check the invoice creation date + 30 days (monthly)
-							//  29                    2010-06-28                  30   
-							//var_dump(date('Y-m-d', strtotime($my_invoice['created']) + $billing_number_months_in_seconds));
-							$mytemp = date('Y-m-d', strtotime($my_invoice['created']) + $billing_number_months_in_seconds);
-							
-							if($today > strtotime($my_invoice['created']) + $billing_number_months_in_seconds) {														
-								//	var_dump($my_new_invoice);							
-								echo '<br />Invoice created because the creation date of the last invoice '.$mytemp.' is smaller than today - '.date('Y-m-d',$today).' this means that the invoice is active<br />';
-								//$this->create($uid, $my_new_invoice['amount'], $today + intval($db->config('suspensiondays')*24*60*60), $my_new_invoice['notes'], $my_new_invoice['addon_fee']);						
-								//$this->create($user_id, $my_invoice['amount'], $today + $billing_number_months_in_seconds, $my_invoice['notes'], $my_invoice['addon_fee']); //will send an email to the user
-								
-							} else {
-								echo '<br />Invoice Not created because the creation date of the last invoice '.$mytemp.' is greater than today - '.date('Y-m-d',$today).' this means that the invoice is active<br />';								
-							}
-							echo 'Send email if no empty: $email_day_count';
-							
-							
-							//Generating email notification
-							if (!empty($email_day_count)) {
-								$user_info = $user->getUserById($user_id);
-								$emaildata = $db->emailTemplate('renewalnotice');
-								//var_dump($emaildata);
-								
-								$invoice_info = $this->getInvoice($my_invoice['id'], true); 
-													
-								$replace_array['USERNAME'] 				=  $user_info['firstname'].' '.$user_info['lastname'];
-								$replace_array['INVOICE_CREATE_DATE'] 	=  substr($invoice_info['CREATED'], 0,10);
-								
-								$replace_array['PAYMENT_METHOD'] 		=  'Paypal';
-								$replace_array['DOMAIN'] 				=  $order_item['domain'];
-								
-								$replace_array['BILLING_CYCLE'] 		=  $invoice_info['BILLING_CYCLE'];
-								$replace_array['INVOICE_NUMBER'] 		=  $invoice_info['ID'];
-								$replace_array['AMOUNT'] 				=  $invoice_info['TOTAL'];
-								$replace_array['INVOICE_DUE_DATE'] 		=  substr($invoice_info['DUE'], 0, 10);
-								$replace_array['PACKAGE_INFO'] 			=  $invoice_info['PACKAGE_NAME'].' - '.$invoice_info['PACKAGE_AMOUNT'];
-								$replace_array['ADDONS'] 				=  $invoice_info['ADDON'];
-								
-								$invoice_summary = '---------------------------------<br />';
-								$invoice_summary .= 'Total: '.$replace_array['AMOUNT'].'<br />';
-								$invoice_summary .= '---------------------------------<br />';
-								
-								$replace_array['INVOICE_SUMMARY'] 		=  $invoice_summary;
-								$replace_array['COMPANY_NAME'] 			=  $db->config('name');
-								$replace_array['URL'] 					=  $db->config('url');
-								$replace_array['USER_LOGIN'] 			=  $user_info['user'];					
-								
-								$emaildata['subject'] = $email_day_count.'-Day Renewal Notice';						
-								echo 'Email sent to user '.$user_info['email'].' Days'.$email_day_count;						
-								$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $replace_array);	
-							}							
-						break;						
-						case INVOICE_STATUS_CANCELLED:
-						case INVOICE_STATUS_DELETED:
-							//When the invoice is deleted or cancelled we do nothing pass to the next order
-							continue;
-						default:						
-					}	
-				} else {
-					if ($debug) { echo '<h3>No Invoice id</h3><br />';}
+					echo 'Created date	:'.date('Y-m-d', strtotime($my_invoice['created'])).'<br />';
+					echo 'Due date	:'.date('Y-m-d', $my_invoice['due']).'<br />';
 				}
+				//"Terminating" a user if he does not pay
+				
+				//Check the suspension days parameter	
+				$suspendseconds 	= intval($db->config('suspensiondays')) *24*60*60;
+				
+				//I don't want to use this termination parameter. Not a priority
+				$terminateseconds 	= intval($db->config('terminationdays'))*24*60*60;				
+				
+				
+				//If normal time is over and he does not paid
+		//		var_dump(date('Y-m-d h:i:s',$today), date('Y-m-d h:i:s', strtotime($my_invoice['created']) + $billing_number_months_in_seconds));
+				//If the package is paid 
+				//if ($package['paid']) {
+					
+				//If the invoices isn't paid == is pending
+				//if ($my_invoice['status'] != INVOICE_STATUS_PAID ) {
+				
+				//If the invoice was deleted pass to the next order
+					
+				if ($debug) { echo '<br/>Invoice status: ' .$invoice_list_status [$my_invoice['status']].' - Id  '.$my_invoice['status']; }
+				
+				$email_day_count = $this->calculateDaysToSendNotification($billing_info['number_months'], $my_invoice['due']);
+				var_dump($email_day_count);
+				
+				switch($my_invoice['status']) {
+					case INVOICE_STATUS_WAITING_PAYMENT: //Pending
+						
+						//1. Due date of the last invoice has exceed
+						if ($my_invoice['due'] < $today) {
+							
+							echo 'Invoice due is bigger than today so we suspend the hosting';
+							
+							//My invoice has expired need to suspend if time has past the limits	
+												
+							//echo 'My invoice has expired need to suspend if time has past<br />';
+							
+							//Suspend conditions
+							var_dump('Suspend : '.date('Y-m-d', $today - $suspendseconds));
+							//Terminate conditions
+							//var_dump('Terminate: '.date('Y-m-d h:i:s',$today-$suspendseconds-$terminateseconds));
+							
+							$is_terminate = false;							
+							//Terminate is a bad thing we would do nothing
+							
+							/*						
+							if(($today-$suspendseconds-$terminateseconds) > intval($my_invoice['due']) ){
+								echo 'Terminate <br />';
+								$server->terminate($order_item['id']);
+								$is_terminate = true;
+							} */			
+											
+							//2. Proceed to suspend							 
+							if ($is_terminate == false ) {
+								if(($today - $suspendseconds) > intval($my_invoice['due'])) {
+									echo 'Checking the tolerance (suspensiondays variable) <br />';
+									echo 'Order Suspended <br />';
+									$server->suspend($order_item['id']);
+								}
+							}			
+						}
+						//Send a notification
+						if (!empty($email_day_count)) {
+							//If the invoices is pending and the user do nothing
+						}							
+					break;
+					
+					case INVOICE_STATUS_PAID:							
+						//If I'm already pay	
+						//Check the invoice creation date + 30 days (monthly)
+						//  29                    2010-06-28                  30   
+						//var_dump(date('Y-m-d', strtotime($my_invoice['created']) + $billing_number_months_in_seconds));
+						$mytemp = date('Y-m-d', $my_invoice['due'] + $billing_number_months_in_seconds);
+						
+						if($today > $my_invoice['due'] + $billing_number_months_in_seconds) {														
+							//	var_dump($my_new_invoice);							
+							if ($debug) echo '<br />Invoice created because the due date of the last invoice '.date('Y-m-d',$my_invoice['due']).' +  '.$billing_info['number_months'].  '  months  = '.$mytemp.' is smaller than today '.date('Y-m-d',$today).' <br />';
+							//$this->create($uid, $my_new_invoice['amount'], $today + intval($db->config('suspensiondays')*24*60*60), $my_new_invoice['notes'], $my_new_invoice['addon_fee']);						
+							$invoice_id = $this->create($user_id, $my_invoice['amount'], $today + $billing_number_months_in_seconds, $my_invoice['notes'], $my_invoice['addon_fee'], INVOICE_STATUS_WAITING_PAYMENT,  $order_item['id']); //will send an email to the user
+
+							$main->addLog('Invoice created Id:'.$invoice_id);
+							
+						} else {
+							if ($debug) echo '<br />Invoice Not created because the due date of the last invoice '.date('Y-m-d',$my_invoice['due']).' +  '.$billing_info['number_months'].  '  months  = '.$mytemp.'  is greater than today - '.date('Y-m-d',$today).' this means that the invoice was already created and active<br />';								
+						}
+						echo 'Send email if no empty: $email_day_count';							
+						
+						//Generating email notification
+						if (!empty($email_day_count)) {
+							
+							$user_info = $user->getUserById($user_id);
+							$emaildata = $db->emailTemplate('renewalnotice');
+							//var_dump($emaildata);
+							
+							$invoice_info = $this->getInvoice($my_invoice['id'], true); 
+												
+							$replace_array['USERNAME'] 				=  $user_info['firstname'].' '.$user_info['lastname'];
+							$replace_array['INVOICE_CREATE_DATE'] 	=  substr($invoice_info['CREATED'], 0,10);
+							
+							$replace_array['PAYMENT_METHOD'] 		=  'Paypal';
+							$replace_array['DOMAIN'] 				=  $order_item['domain'];
+							
+							$replace_array['BILLING_CYCLE'] 		=  $invoice_info['BILLING_CYCLE'];
+							$replace_array['INVOICE_NUMBER'] 		=  $invoice_info['ID'];
+							$replace_array['AMOUNT'] 				=  $invoice_info['TOTAL'];
+							$replace_array['INVOICE_DUE_DATE'] 		=  substr($invoice_info['DUE'], 0, 10);
+							$replace_array['PACKAGE_INFO'] 			=  $invoice_info['PACKAGE_NAME'].' - '.$invoice_info['PACKAGE_AMOUNT'];
+							$replace_array['ADDONS'] 				=  $invoice_info['ADDON'];
+							
+							$invoice_summary = '---------------------------------<br />';
+							$invoice_summary .= 'Total: '.$replace_array['AMOUNT'].'<br />';
+							$invoice_summary .= '---------------------------------<br />';
+							
+							$replace_array['INVOICE_SUMMARY'] 		=  $invoice_summary;
+							$replace_array['COMPANY_NAME'] 			=  $db->config('name');
+							$replace_array['URL'] 					=  $db->config('url');
+							$replace_array['USER_LOGIN'] 			=  $user_info['user'];					
+							
+							$emaildata['subject'] = $email_day_count.'-Day Renewal Notice';						
+							echo 'Email sent to user '.$user_info['email'].' Days'.$email_day_count;						
+							$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $replace_array);
+							
+							$main->addLog('Reminder sent to '.$user_info['email'].' - Subject: '.$emaildata['subject']);	
+						}							
+					break;						
+					case INVOICE_STATUS_CANCELLED:
+					case INVOICE_STATUS_DELETED:
+						//When the invoice is deleted or cancelled we do *nothing* pass to the next order
+						continue;
+					default:						
+				}	
+			} else {
+				if ($debug) { echo '<h3>No Invoice id</h3><br />';}
 			}
+		}
 	}
 	
 	public function calculateDaysToSendNotification($number_months, $my_due_date) {
@@ -610,14 +625,14 @@ class invoice extends model {
 			case 1 :
 				$before_list_of_days = array(7);	
 			break;					
-			case  2 :
+			case 2 :
 				$before_list_of_days = array(7,30);	
 			break;
-			case  3 :
+			case $number_months >=  3 && $number_months <=  6 :
 				$before_list_of_days = array(7, 30, 60);	
 			break;
-			case  $number_months >=  4 :
-				$before_list_of_days = array(7, 30, 60, 120);
+			case $number_months > 6 :
+				$before_list_of_days = array(7, 30, 60, 180);
 			break;						
 		}				
 						
@@ -629,14 +644,16 @@ class invoice extends model {
 							
 		//$my_invoice['due'] = '1280451661';							
 		
-		//echo date('Y-m-d', $my_invoice['due']);
+		echo '<br /><br />Searching if today we are going to shoot an email:<br />';
+		echo '$number_months = '.$number_months.'<br />';
+		
 		foreach($before_list_of_days as $days) {
 			//var_dump($days);
 			$my_time_in_seconds = $my_due_date - $days*24*60*60;
 			$date_now = date('Y-m-d', time());
 			$due_date = date('Y-m-d', $my_time_in_seconds);
 			
-			echo $date_now.' - '.$due_date.'<br />';
+			echo $date_now.' - Shoots an email in : '.$due_date.' - Calculated for '.$days.' days<br />';
 			if ($date_now  == $due_date  ) {
 				$email_day_count = $days;
 				break;
@@ -659,14 +676,14 @@ class invoice extends model {
 	}
 	
 	public function set_paid($invoice_id) { # Pay the invoice by giving invoice id
-		global  $server, $invoice;
+		//global  $server, $invoice;
 		$this->updateInvoiceStatus($invoice_id, INVOICE_STATUS_PAID);
 		//$order_id = $this->getOrderByInvoiceId($invoice_id);
 		//$server->unsuspend($order_id);		
 	}
 	
 	public function set_unpaid($invoice_id) { # UnPay the invoice by giving invoice id - Don't think this will be useful
-		global $server;
+		///global $server;
 		$this->updateInvoiceStatus($invoice_id, INVOICE_STATUS_WAITING_PAYMENT);
 		//$order_id = $this->getOrderByInvoiceId($invoice_id);	
 		//$server->suspend($order_id);	

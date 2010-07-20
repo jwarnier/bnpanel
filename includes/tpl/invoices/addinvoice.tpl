@@ -1,4 +1,5 @@
 <script type="text/javascript" src="<URL>includes/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
 <script type="text/javascript">
 	tinyMCE.init({
 	mode : "textareas",
@@ -12,6 +13,7 @@
 			showOn: 'button',
 			buttonImage: '<URL>themes/icons/calendar_add.png'			 
 			});
+		$("#addinvoice").validate(%json_encode%);
 	});
 
 
@@ -32,15 +34,13 @@
 	}
 </script>
 <ERRORS>
-<form id="addpackage" name="addpackage" method="post" action="">
+<form id="addinvoice" name="addinvoice" method="post" action="">
+<input name="billing_id" type="hidden" id="billing_id" value="%BILLING_ID%"/>
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
-
   <tr>
     <td width="20%">Order id:</td>
     <td><input name="order_id" type="text" id="order_id" value="%ID%" readonly /></td>
   </tr>
-  
-  	<input name="billing_id" type="hidden" id="billing_id" value="%BILLING_ID%"/>
      <tr>
     <td valign="top">User</td>
     <td>
@@ -110,7 +110,7 @@
   	<tr>
     <td valign="top">Due date</td>
     <td>  		
-  		<input name="due" type="text" id="due" value="%DUE%"/>
+  		<input name="due" type="text" id="due" value="%DUE%" class="required"/>
     </td>
   </tr>
 </table>

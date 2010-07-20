@@ -105,7 +105,7 @@ class page {
 					
 					$array = $user->getUserById($main->getvar['do']);
 					
-					$array['status'] 		= $main->createSelect('status', $main->getUserStatusList(), $array['status'], 1);					
+					$array['status'] 		= $main->createSelect('status', $main->getUserStatusList(), $array['status']);					
 					$array['country']		= $main->countrySelect($array['country']);
 						
 					$main_array['CONTENT'] 	= $style->replaceVar("tpl/user/edit.tpl", $array);
@@ -354,7 +354,7 @@ class page {
 						$array = $main->postvar;						
 					}					
 				}			
-				$array['status'] = $main->createSelect('status', $main->getUserStatusList(), '', 1);				
+				$array['status'] = $main->createSelect('status', $main->getUserStatusList(), '');				
 				echo $style->replaceVar("tpl/user/add.tpl", $array);				
 			break;
 			case 'validate':
