@@ -726,14 +726,20 @@ class AJAX {
 	public function installfinal() {
 		global $db, $main;
 		$query = $db->query("SELECT * FROM `<PRE>staff`");
-		if(!$db->num_rows($query)) {
+		
+		if($db->num_rows($query) > 0) {
 			foreach($main->getvar as $key => $value) {
 				if(!$value) {
 					$n++;	
 				}
 			}
 			if(!$n) {
-				$db->query("UPDATE `<PRE>config` SET `value` = '{$main->getvar['url']}' WHERE `name` = 'url'");
+				
+				$db->updateConfig('url', 		$main->getvar['url']);
+				$db->updateConfig('name', 		$main->getvar['site_name']);
+				$db->updateConfig('emailfrom', 	$main->getvar['site_email']);
+				
+				
 				$salt = md5(rand(0,99999));
 				$password = md5(md5($main->getvar['pass']).md5($salt));
 				$db->query("INSERT INTO `<PRE>staff` (user, email, password, salt, name) VALUES(
