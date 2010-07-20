@@ -1348,12 +1348,11 @@ class AJAX {
 			$packages = $package->getAllPackagesByBillingCycle($billing_id);
 					
 	   		$package_list = array();
-	   		$package_list['0'] = array(' -- Select -- ','0');
+	   		
 			foreach($packages as $package) {
-				$package_list[$package['id']] = array($package['name'].' - '.$currency->toCurrency($package['amount']), $package['id']);				
-			}
-				
-			echo $main->dropDown('package_id', $package_list, $order_info['pid'], 1, '', array('onchange'=>'loadAddons(this);'));
+				$package_list[$package['id']] = $package['name'].' - '.$currency->toCurrency($package['amount']);				
+			}	
+			echo $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);', 'class'=>'required'));
 	   }
 	   
 	   function sendtemplate() {

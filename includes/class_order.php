@@ -87,6 +87,7 @@ class order extends model {
 			}		
 			$params['status'] = $status;		
 			$this->update($params);
+			$main->addLog("updateOrderStatus function called: $order_id changed to $status");
 		}		
 	}	
 	
@@ -103,8 +104,6 @@ class order extends model {
 	 * Edits an order
 	 */
 	public function edit($order_id, $params) {
-		global $server;		
-		
 		$this->setPrimaryKey($order_id);
 		/*//No updates of a order username/password
 		unset($params['username']);
@@ -114,9 +113,8 @@ class order extends model {
 		//Here we will change the status of the package in the Server
 		if(isset($params['status']) && !empty($params['status'])) {		
 			$this->updateOrderStatus($order_id, $params['status']);
+			unset($params['status']); //do not update twice 			
 		}
-		
-		
 		$this->update($params);
 	}
 	
@@ -367,7 +365,7 @@ class order extends model {
 				foreach($package_list as $package_item) {
 					$package_list[$package_item['id']] = $package_item['name'].' - '.$currency->toCurrency($package_with_amount[$package_item['id']]['amount']);									
 				}				
-				$array['PACKAGES'] = $main->createSelect('package_id', $package_list, $package_id, 1, '', array('onchange'=>'loadAddons(this);'));				
+				$array['PACKAGES'] = $main->createSelect('package_id', $package_list, $package_id, array('onchange'=>'loadAddons(this);'));				
 			}		
 			
 			//Billing cycle
@@ -379,7 +377,7 @@ class order extends model {
 			if ($read_only) {
 				$array['BILLING_CYCLES'] = $billing_list[$billing_cycle_id];
 			} else {
-				$array['BILLING_CYCLES'] = $main->createSelect('billing_cycle_id', $billing_list, $billing_cycle_id, 1,'', array('onchange'=>'loadPackages(this);'));
+				$array['BILLING_CYCLES'] = $main->createSelect('billing_cycle_id', $billing_list, $billing_cycle_id, array('onchange'=>'loadPackages(this);'));
 			}		
 			
 			$order_status = $main->getOrderStatusList();
@@ -416,13 +414,16 @@ class order extends model {
 		global $main, $invoice, $currency;
 		$invoice_status = $main->getInvoiceStatusList();
 		$invoice_list = $this->getAllInvoicesByOrderId($order_id);
-		
-		$html .= '<ul>';
-		foreach($invoice_list as $invoice_item) {
-			$my_invoice = $invoice->getInvoiceInfo($invoice_item['invoice_id']);						
-			$html .= '<li><a href="?page=invoices&sub=view&do='.$my_invoice['id'].'">'.$my_invoice['id'].'</a> '.date('Y-m-d', $my_invoice['due']).' '.$invoice_status[$my_invoice['status']].' '.$currency->toCurrency($my_invoice['total_amount']).'</li>';
+		$html = '';
+		if (is_array($invoice_list) && count($invoice_list) > 0) {
+			$html  = '<h2>Invoice List for this Order</h2>';
+			$html .= '<ul>';
+			foreach($invoice_list as $invoice_item) {
+				$my_invoice = $invoice->getInvoiceInfo($invoice_item['invoice_id']);						
+				$html .= '<li><a href="?page=invoices&sub=view&do='.$my_invoice['id'].'">'.$my_invoice['id'].'</a> '.date('Y-m-d', $my_invoice['due']).' '.$invoice_status[$my_invoice['status']].' '.$currency->toCurrency($my_invoice['total_amount']).'</li>';
+			}
+			$html .= '</ul>';
 		}
-		$html .= '</ul>';
 		return $html;
 	}
 	
