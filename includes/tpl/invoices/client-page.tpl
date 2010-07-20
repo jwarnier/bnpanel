@@ -1,5 +1,5 @@
 <ERRORS>
-<p>From here you can see the list of your invoices. You have a total of %num% invoices in your account.</p>
+<p>From here you can see the list of your invoices.</p>
 
 
 <table width="100%" border="0" cellspacing="3" cellpadding="0">
