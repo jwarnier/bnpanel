@@ -9,18 +9,17 @@ class db {
 	private $sql = array(), $con, $prefix, $db; #Variables, only accesible in class
 		
 	public function __construct() { # Connect SQL as class is called
-		include(LINK."conf.inc.php"); # Get the config
+	
+		include LINK.'conf.inc.php'; # Get the config
 		$this->sql = $sql; # Assign the settings to DB Class
-		$this->con = @mysql_connect($this->sql['host'], $this->sql['user'], $this->sql['pass']); #Connect to SQL
+		$this->con = @mysql_connect($this->sql['host'], $this->sql['user'], $this->sql['pass']); #Connect to SQL		
 		if(!$this->con) { # If SQL didn't connect
 			die("Fatal: Coudn't connect to mySQL, please check your details!");
-		}
-		else {
-			$this->db = @mysql_select_db($this->sql['db'], $this->con); # Select the mySQL DB
+		} else {
+			$this->db = @mysql_select_db($this->sql['db'], $this->con); # Select the mySQL DB			
 			if(!$this->db) {
 				die("Fatal: Couldn't select the database, check your db setting!");
-			}
-			else {
+			} else {
 				$this->prefix = $this->sql['pre'];
 			}
 		}
@@ -64,10 +63,11 @@ class db {
 	 * @author Julio Montoya <gugli100@gmail.com> Added some nice error reporting
 	 */
 	public function query($sql) { 
-		$sql = preg_replace("/<PRE>/si", $this->prefix, $sql); #Replace prefix variable with right value		
+		$sql = preg_replace("/<PRE>/si", $this->prefix, $sql); #Replace prefix variable with right value
+				
 		$result = mysql_query($sql, $this->con);
 			
-		if(!$result) {	
+		if(!$result) {
 			//$this->error("mySQL Query Failed", mysql_error(), __FUNCTION__); # Call Error
 								
 			$backtrace = debug_backtrace(); // Retrieving information about the caller statement.
@@ -111,7 +111,12 @@ class db {
 					}
 				}
 				global $main;
-				$main->error($error);
+				if (!empty($main)) {
+					$main->error($error);	
+				} else {
+					echo 'Main class is not loaded';
+				}		
+				
 			}	
 		}
 		return $result; # Return mySQL result
@@ -167,18 +172,13 @@ class db {
 
 	}
 	
-	public function config($name) { # Returns a value of a config variable
-		$query = $this->query("SELECT * FROM `<PRE>config` WHERE `name` = '{$name}'");
-		if($this->num_rows($query) == 0) {
-			$error['Error'] = "Couldn't Retrieve config value!";
-			$error['Config Name'] = $name;
-			global $main;
-			$main->error($error);
-		}
-		else {
+	public function config($name) { # Returns a value of a config variable	
+		$query = $this->query("SELECT * FROM `<PRE>config` WHERE `name` = '{$name}'");		
+		if($this->num_rows($query) > 0) {
 			$value = $this->fetch_array($query);
 			return $value['value'];
-		}
+		} 
+		return false;
 	}
 	
 	public function resources($name) { # Returns a value of a resource variable
@@ -230,7 +230,8 @@ class db {
 	}
 	
 	public function updateConfig($name, $value) { # Updates a config value
-		$query = $this->query("UPDATE `<PRE>config` SET `value` = '{$value}' WHERE `name` = '{$name}'");
+		$sql = "UPDATE `<PRE>config` SET `value` = '{$value}' WHERE `name` = '{$name}'";		
+		$query = $this->query($sql);
 	}
 	
 	public function updateResource($name, $value) { # Updates a config value
