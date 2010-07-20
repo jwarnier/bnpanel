@@ -253,7 +253,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%resources` (
 --
 
 INSERT INTO `%PRE%resources` (`resource_name`, `resource_value`) VALUES
-('admin_notes', '<p><strong>Welcome to your TheHostingTool v1.2 Installation!</strong></p>\r\n<p>We hope that you like TheHostingTool and you have a good time with our script. If you need any help, you can ask at the THT Community, or contact us directly. Thanks for using TheHostingTool, and good luck on your hosting service!</p>\r\n<p>- The THT Team</p>');
+('admin_notes', '<p><strong>Welcome to your BNPanel Installation!</strong></p>\r\n<p>We hope that you like BNPanel and you have a good time with our script. If you need any help, you can ask at the BNPanel Community, or contact us directly. Thanks for using BNPanel, and good luck on your hosting service!</p>\r\n<p>- The BNPanel Team</p>');
 
 -- --------------------------------------------------------
 
@@ -468,6 +468,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%orders` (
   `id` mediumint(9) NOT NULL auto_increment,
   `userid` varchar(5) NOT NULL,
   `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `domain` varchar(50) NOT NULL,
   `pid` varchar(5) NOT NULL,
   `signup` varchar(20) NOT NULL,
