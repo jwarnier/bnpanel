@@ -1,6 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
-//Compile THT
+//not implemented yet
+exit;
 define("LINK", "../includes/");
 include(LINK ."compiler.php");
 

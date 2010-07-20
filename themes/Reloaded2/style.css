@@ -257,7 +257,9 @@ input.error, select.error {
 }
 
 label.error {
-	padding-left:20px;	
+	padding-left:15px;	
 	color:red;
-	position:absolute;
+	/* position:absolute; 
+	display:inline-block;
+	line-height:1.8;*/
 }

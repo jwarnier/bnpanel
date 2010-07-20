@@ -358,8 +358,10 @@ class page {
 				echo $style->replaceVar("tpl/user/add.tpl", $array);				
 			break;
 			case 'validate':
+			/*
 				if($main->getvar['do']) {
-					if($main->getvar['accept'] == 1) {
+					
+					if($main->getvar['accept'] == 1) {						
 						if($server->approve($main->getvar['do'])) {
 							$main->errors("Account activated!");
 							$emaildata = $db->emailTemplate("approvedacc");
@@ -395,6 +397,7 @@ class page {
 					}
 					echo $tpl;
 				}
+				*/
 				break;					
 		}		
 	}
