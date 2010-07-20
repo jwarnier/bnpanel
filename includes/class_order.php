@@ -405,7 +405,8 @@ class order extends model {
 	
 	public function getAllInvoicesByOrderId($order_id) {
 		global $db;
-		$query = $db->query("SELECT invoice_id FROM `<PRE>order_invoices` WHERE `order_id` = '{$order_id}'");
+		$sql = "SELECT DISTINCT invoice_id FROM `<PRE>order_invoices` WHERE `order_id` = '{$order_id}'";
+		$query = $db->query($sql);
 		$array = $db->store_result($query);	
 		return $array;
 	}
@@ -418,7 +419,7 @@ class order extends model {
 		$html .= '<ul>';
 		foreach($invoice_list as $invoice_item) {
 			$my_invoice = $invoice->getInvoiceInfo($invoice_item['invoice_id']);						
-			$html .= '<li><a href="?page=invoices&sub=edit&do='.$my_invoice['id'].'">'.$my_invoice['id'].'</a> '.date('Y-m-d', $my_invoice['due']).'-'.$invoice_status[$my_invoice['status']].' '.$currency->toCurrency($my_invoice['total_amount']).'</li>';
+			$html .= '<li><a href="?page=invoices&sub=edit&do='.$my_invoice['id'].'">'.$my_invoice['id'].'</a> '.date('Y-m-d', $my_invoice['due']).' '.$invoice_status[$my_invoice['status']].' '.$currency->toCurrency($my_invoice['total_amount']).'</li>';
 		}
 		$html .= '</ul>';
 		return $html;
