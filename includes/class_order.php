@@ -68,11 +68,24 @@ class order extends model {
 	}
 	
 	public function updateOrderStatus($order_id, $status) {
-		global $main;		
+		global $main, $server;		
 		$this->setPrimaryKey($order_id);
-		$invoice_status = array_keys($main->getOrderStatusList());		
-		if (in_array($status, $invoice_status)) {		
-			$params['status'] = $status;
+		$order_status = array_keys($main->getOrderStatusList());		
+		if (in_array($status, $order_status)) {				
+			switch($status) {
+				case ORDER_STATUS_ACTIVE:
+					$server->unsuspend($order_id);
+				break;
+				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:
+				case ORDER_STATUS_CANCELLED:
+				case ORDER_STATUS_DELETED:
+				case ORDER_STATUS_WAITING_USER_VALIDATION:
+					$server->suspend($order_id);
+				break;
+				default:
+				break;
+			}		
+			$params['status'] = $status;		
 			$this->update($params);
 		}		
 	}	
@@ -98,21 +111,9 @@ class order extends model {
 		unset($params['password']);
 		*/
 		
-		//Here we will change the status of the package in the Server		
-		if(isset($params['status'])) {
-			switch($params['status']) {
-				case ORDER_STATUS_ACTIVE:
-					$server->unsuspend($order_id);
-				break;
-				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:
-				case ORDER_STATUS_CANCELLED:
-				case ORDER_STATUS_DELETED:
-				case ORDER_STATUS_WAITING_USER_VALIDATION:
-					$server->suspend($order_id);
-				break;
-				default:
-				break;
-			}
+		//Here we will change the status of the package in the Server
+		if(isset($params['status']) && !empty($params['status'])) {		
+			$this->updateOrderStatus($order_id, $params['status']);
 		}
 		
 		
@@ -419,7 +420,7 @@ class order extends model {
 		$html .= '<ul>';
 		foreach($invoice_list as $invoice_item) {
 			$my_invoice = $invoice->getInvoiceInfo($invoice_item['invoice_id']);						
-			$html .= '<li><a href="?page=invoices&sub=edit&do='.$my_invoice['id'].'">'.$my_invoice['id'].'</a> '.date('Y-m-d', $my_invoice['due']).' '.$invoice_status[$my_invoice['status']].' '.$currency->toCurrency($my_invoice['total_amount']).'</li>';
+			$html .= '<li><a href="?page=invoices&sub=view&do='.$my_invoice['id'].'">'.$my_invoice['id'].'</a> '.date('Y-m-d', $my_invoice['due']).' '.$invoice_status[$my_invoice['status']].' '.$currency->toCurrency($my_invoice['total_amount']).'</li>';
 		}
 		$html .= '</ul>';
 		return $html;
