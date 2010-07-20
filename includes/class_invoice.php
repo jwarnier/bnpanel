@@ -49,11 +49,14 @@ class invoice extends model {
 	 * 
 	 */
 	public function pay($invoice_id, $returnURL = "order/index.php") {
-		global $db, $main;
+		global $db, $main, $order;
 		require_once "paypal/paypal.class.php";
 		$paypal 		= new paypal_class();
 		$invoice_info 	= $this->getInvoiceInfo($invoice_id);
 		$user_id 		= $main->getCurrentUserId();
+		
+		$order_id 		= $this->getOrderByInvoiceId($invoice_id);
+		$order_info		= $order->getOrderInfo($order_id);
 		
 		if($user_id == $invoice_info['uid']) {
 			
@@ -69,12 +72,12 @@ class invoice extends model {
 			$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
 			$paypal->add_field('notify_url',  		urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
 			
-			$paypal->add_field('item_name', 		$db->config('name').' Invoice id: '.$invoice_id);
+			$paypal->add_field('item_name', 		$db->config('name').' - '.$order_info['domain'].' Invoice id: '.$invoice_id);
 			//$paypal->add_field('item_number', 		$invoice_id);
 			$paypal->add_field('invoice', 			$invoice_id);
-			//$paypal->add_field('no_note', 			0);
+			$paypal->add_field('no_note', 			0);
 			
-			//$paypal->add_field('no_shipping', 		1);			
+			$paypal->add_field('no_shipping', 		1);			
 			//Image is 150*50
 			//$paypal->add_field('image_url', 		'http://www.beeznest.com/sites/all/themes/beeznest/images/logo-beez.png');
 
@@ -408,11 +411,16 @@ class invoice extends model {
 		global $db, $main, $server, $billing, $invoice, $order, $email, $user;
 		$today = time();
 		
-			//Gets all orders 
-			$orders =  $order->getAllOrders();
-			$invoice_list_status = $main->getInvoiceStatusList();
-			$order_list_status	 = $main->getOrderStatusList();
-			echo 'Total others: '.count($orders);
+		//Gets all orders 
+		$orders =  $order->getAllOrders();
+		$invoice_list_status = $main->getInvoiceStatusList();
+		$order_list_status	 = $main->getOrderStatusList();
+			
+			if($debug) {
+				echo '<h1>Invoice Cron</h1><br />';
+				echo 'Total others: '.count($orders).'<br />';
+			}
+			
 			foreach($orders as $order_item) {
 				
 				//If the Order was deleted pass to the next order
@@ -431,10 +439,8 @@ class invoice extends model {
 					
 					if ($debug) { echo '<h2>Invoice id:'.$last_invoice_id_by_order_id.'</h2><br />';}
 					
-					//Get invoice info
-					
-					$my_invoice 	= $invoice->getInvoiceInfo($last_invoice_id_by_order_id);
-					
+					//Get invoice info					
+					$my_invoice 	= $invoice->getInvoiceInfo($last_invoice_id_by_order_id);					
 					
 					//Get billing info
 					$billing_info	= $billing->getBilling($order_item['billing_cycle_id']);					
@@ -463,8 +469,7 @@ class invoice extends model {
 					$suspendseconds 	= intval($db->config('suspensiondays')) *24*60*60;
 					
 					//I don't want to use this termination parameter. Not a priority
-					$terminateseconds 	= intval($db->config('terminationdays'))*24*60*60;
-					
+					$terminateseconds 	= intval($db->config('terminationdays'))*24*60*60;				
 					
 					
 					//If normal time is over and he does not paid
@@ -477,9 +482,10 @@ class invoice extends model {
 					
 					//If the invoice was deleted pass to the next order
 						
-					echo $invoice_list_status [$my_invoice['status']].' - '.$my_invoice['status'];
+					if ($debug) { echo 'Invoice status: ' .$invoice_list_status [$my_invoice['status']].' - Id  '.$my_invoice['status']; }
 					
 					$email_day_count = $this->calculateDaysToSendNotification($billing_info['number_months'], $my_invoice['due']);
+					var_dump($email_day_count);
 					
 					switch($my_invoice['status']) {
 						case INVOICE_STATUS_WAITING_PAYMENT: //Pending
@@ -517,8 +523,7 @@ class invoice extends model {
 							//Send a notification
 							if (!empty($email_day_count)) {
 								//If the invoices is pending and the user do nothing
-							}
-							var_dump($email_day_count);
+							}							
 						break;
 						case INVOICE_STATUS_PAID:							
 							//If I'm already pay	
@@ -529,14 +534,15 @@ class invoice extends model {
 							
 							if($today > strtotime($my_invoice['created']) + $billing_number_months_in_seconds) {														
 								//	var_dump($my_new_invoice);							
-								echo 'Create invoice<br />';
+								echo '<br />Invoice created because the creation date of the last invoice '.$mytemp.' is smaller than today - '.date('Y-m-d',$today).' this means that the invoice is active<br />';
 								//$this->create($uid, $my_new_invoice['amount'], $today + intval($db->config('suspensiondays')*24*60*60), $my_new_invoice['notes'], $my_new_invoice['addon_fee']);						
-								$this->create($user_id, $my_invoice['amount'], $today + $billing_number_months_in_seconds, $my_invoice['notes'], $my_invoice['addon_fee']);
+								//$this->create($user_id, $my_invoice['amount'], $today + $billing_number_months_in_seconds, $my_invoice['notes'], $my_invoice['addon_fee']); //will send an email to the user
+								
 							} else {
-								echo 'Invoice Not created because the creation date of the last invoice '.$mytemp.' is greater than today - '.date('Y-m-d',$today).' this means that the invoice is active<br />';								
+								echo '<br />Invoice Not created because the creation date of the last invoice '.$mytemp.' is greater than today - '.date('Y-m-d',$today).' this means that the invoice is active<br />';								
 							}
 							echo 'Send email if no empty: $email_day_count';
-							var_dump($email_day_count);
+							
 							
 							//Generating email notification
 							if (!empty($email_day_count)) {
@@ -617,7 +623,7 @@ class invoice extends model {
 						
 		sort($before_list_of_days);
 		
-		var_dump($before_list_of_days);
+		//var_dump($before_list_of_days);
 					
 		$email_day_count = '';
 							
@@ -655,15 +661,15 @@ class invoice extends model {
 	public function set_paid($invoice_id) { # Pay the invoice by giving invoice id
 		global  $server, $invoice;
 		$this->updateInvoiceStatus($invoice_id, INVOICE_STATUS_PAID);
-		$order_id = $this->getOrderByInvoiceId($invoice_id);
-		$server->unsuspend($order_id);		
+		//$order_id = $this->getOrderByInvoiceId($invoice_id);
+		//$server->unsuspend($order_id);		
 	}
 	
 	public function set_unpaid($invoice_id) { # UnPay the invoice by giving invoice id - Don't think this will be useful
 		global $server;
 		$this->updateInvoiceStatus($invoice_id, INVOICE_STATUS_WAITING_PAYMENT);
-		$order_id = $this->getOrderByInvoiceId($invoice_id);	
-		$server->suspend($order_id);	
+		//$order_id = $this->getOrderByInvoiceId($invoice_id);	
+		//$server->suspend($order_id);	
 	}
 	
 	
