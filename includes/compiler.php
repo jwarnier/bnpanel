@@ -35,6 +35,8 @@ define('INVOICE_STATUS_DELETED', 				9); // Cancelled in 9
 
 //Server status
 define('SERVER_STATUS', 'test');
+define('PAYPAL_STATUS_LIVE', 					1);
+define('PAYPAL_STATUS_SANDBOX', 				0);
 //define(SERVER_STATUS, 'test'); //show mysql errors + user paypal sandbox
 
 
