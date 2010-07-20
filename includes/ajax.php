@@ -267,7 +267,8 @@ class AJAX {
 		echo $type->orderForm($ptype);
 	}
 	
-	public function cancelacc() {
+	public function cancelacc() { 
+		/*
 		global $db, $main, $type, $server, $email;
 		$user = $main->getvar['user'];
 		$pass = $main->getvar['pass'];
@@ -292,6 +293,7 @@ class AJAX {
 				echo "That password is wrong!";	
 			}
 		}
+		*/
 	}
 	
 	public function template() {

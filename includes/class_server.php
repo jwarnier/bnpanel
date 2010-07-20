@@ -455,8 +455,9 @@ class server {
 			//Suspending the website of that user
 			if($this->servers[$server]->suspend($order_id, $server) == true) {
 				
-				$emaildata = $db->emailTemplate("cancelacc");
-				$array['REASON'] = "Account Cancelled.";
+				$emaildata = $db->emailTemplate('cancel_order');
+				
+				$array['REASON'] = 'Web Hosting Cancelled.';
 				$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $array);
 				$order->updateOrderStatus($order_id, ORDER_STATUS_CANCELLED);
 				
@@ -502,7 +503,7 @@ class server {
 			}
 			if($this->servers[$server]->terminate($data2['user'], $server) == true) {
 				$date = time();
-				$emaildata = $db->emailTemplate("cancelacc");
+				$emaildata = $db->emailTemplate('cancel_order');
 				$array['REASON'] = "Account Declined.";
 				$email->send($data2['email'], $emaildata['subject'], $emaildata['content'], $array);
 				$db->query("UPDATE `<PRE>user_packs` SET `status` = '9' WHERE `id` = '{$data['id']}'");
