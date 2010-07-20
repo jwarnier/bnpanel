@@ -243,7 +243,7 @@ class server {
 						
 			if($user_already_registered == false) {
 				//Creating a new user												
-				$user_name 					= $main->getvar['username'];	
+				$user_name					= $main->getvar['username'];	
 				$main->getvar['signup'] 	= $_SERVER['REMOTE_ADDR'];
 				$main->getvar['ip'] 		= time();				
 				$main->getvar['user'] 		= $main->getvar['username'];			
@@ -284,9 +284,15 @@ class server {
 				} else {
 					$params['status'] 		= ORDER_STATUS_ACTIVE;
 				}
+				//Always set the server to waiting admin validation
+				//$params['status'] 		= ORDER_STATUS_WAITING_ADMIN_VALIDATION;
 				
 				$params['additional']		= $additional;
 				$params['billing_cycle_id'] = $billing_cycle_id;
+				
+				//Order username + password
+				$params['password']			= $serverphp->GenUsername();
+				$params['username']			= $serverphp->GenPassword();
 				
 				if (!empty($params['userid']) && !empty($params['pid'])) {
 					//Creating a order		
@@ -296,7 +302,7 @@ class server {
 					$order->addAddons($order_id, $main->getvar['addon_ids']);
 					
 					//$done = $serverphp->signup($type->determineServer($package_id), $package_info['reseller']);
-					$done = $serverphp->signup($order_id);
+					$done = $serverphp->signup($order_id, $params['username'], $user_email, $params['password']);
 				}
 				
 				$array['USER']		= $user_name;				
@@ -314,7 +320,9 @@ class server {
 				
 				$array['PACKAGE'] 	= $package_info['name'];
 								
-				//Depends if the package needs an admin validation
+				//Send email to user
+				
+				//Package does not needs validation
 				if($package_info['admin'] == 0) {
 					//New hosting account just waiting for *user* validation
 					$emaildata = $db->emailTemplate('newacc');
@@ -352,12 +360,13 @@ class server {
 			
 			//If the package is paid			
 			if($donecorrectly && $type->determineType($package_id) == 'paid') {							
-				global $invoice,$package;
+				global $invoice, $package;
 				//The order was saved with an status of admin validation now we should create an invoice an set the status to wait payment 
 			
 				//$due 		= time()+intval($db->config('suspensiondays')*24*60*60);
 				$due 		= time();
-				$notes = '';
+				$notes 		= '';
+				$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);
 				
 				//1. Calculating the amount for the package depending on the billing cycle
 				$package_amount = 0;
@@ -376,9 +385,9 @@ class server {
 				$_SESSION['last_invoice_id'] = $invoice_id;
 				
 				//4. Suspend the hosting if is not already suspended
-				if ($package_info['admin'] == 0) { 				
-					$serverphp->suspend($order_id, $type->determineServer($package_id));
-				}												
+				//if ($package_info['admin'] == 0) { 				
+				$serverphp->suspend($order_id, $type->determineServer($package_id));
+				//}												
 				echo '<div class="errors"><b>You are being redirected to payment! It will load in a couple of seconds..</b></div>';
 			}
 		}
@@ -534,6 +543,7 @@ class server {
 			}
 			
 			if($donestuff == true) {
+				
 				$order->updateOrderStatus($order_id, ORDER_STATUS_CANCELLED);
 
 				//$db->query("UPDATE `<PRE>users` SET `status` = '2' WHERE `id` = '{$db->strip($data['userid'])}'");
@@ -548,13 +558,12 @@ class server {
 				return true;
 			} else {
 				return false;	
-			}
-			
+			}			
 		} else {
 			$array['Error'] = "That order doesn't exist or cannot be suspended!";
 			$array['User PID'] = $order_id;
 			$main->error($array);
-			return;			
+			return false;			
 		}
 	}
 	
