@@ -69,7 +69,7 @@ function change() {
 			case 4:
 				document.getElementById("button5").disabled = true;
 				document.getElementById("button5").value = "Working...";
-				$.get("<AJAX>?function=installfinal&user="+document.getElementById("staffusername").value+"&pass="+document.getElementById("staffpassword").value+"&email="+document.getElementById("email").value+"&name="+document.getElementById("name").value+"&url="+document.getElementById("url").value,
+				$.get("<AJAX>?function=installfinal&user="+document.getElementById("staffusername").value+"&pass="+document.getElementById("staffpassword").value+"&email="+document.getElementById("email").value+"&name="+document.getElementById("name").value+"&url="+document.getElementById("url").value+"&site_name="+document.getElementById("site_name").value+"&site_email="+document.getElementById("site_email").value,
 					  function(finisheddata) {
 							document.getElementById("button5").disabled = false;
 							document.getElementById("button5").value = "Next Step";
@@ -128,6 +128,8 @@ $(window).load(function () {
 	next();
 });
 </script>
+<form id="install" name="install" method="post" action="">
+
 <table width="100%" border="0" cellspacing="3" cellpadding="0">
   <tr>
     <td width="30%" valign="top"><table width="100%" border="0" cellspacing="3" cellpadding="0">
@@ -151,7 +153,7 @@ $(window).load(function () {
         <div class="text" id="main">
         	<div id="step1" style="display:none;">
             <span class="errors">%ANYTHING%</span>
-                <form id="install" name="install" method="post" action="">
+                
                 <table width="100%" border="0" cellspacing="2">
                   <tr>
                     <td width="20%">Choose Method:</td>
@@ -174,6 +176,7 @@ $(window).load(function () {
                 </table>
                 <input name="step" id="step" type="hidden" value="2" />
              </div>
+             
              <div id="step2" style="display:none;">
                 <table width="100%" border="0" cellspacing="2">
                 <tr>
@@ -201,14 +204,13 @@ $(window).load(function () {
                      <tr>
                     <td width="20%">mySQL Database:</td>
                     <td><label>
-                      <input name="database" type="text" id="database" />
+                      <input name="database" type="text" id="database" value="bnpanel"/>
                     </label><a class="tooltip" title="The database where the BNPanel SQL will be inside. Includes your control panel username."><img src="<ICONDIR>information.png"></a></td>
                   </tr>
-                    </tr>
                      <tr>
                     <td width="20%">Prefix:</td>
                     <td><label>
-                      <input name="prefix" type="text" id="prefix" value="bnp_" />
+                      <input name="prefix" type="text" id="prefix" value="" />
                     </label><a class="tooltip" title="This is the table prefixes for the BNPanel database. Unless you want this to be different. Leave it default."><img src="<ICONDIR>information.png"></a></td>
                   </tr>
                   <tr>
@@ -222,17 +224,38 @@ $(window).load(function () {
              </div>
              <div id="step4" style="display:none;">
              <table width="100%" border="0" cellspacing="2">
-             <tr>
-                	<td colspan="2" id="finalerror" class="errors">
-                    </td>
+            	<tr>
+					<td colspan="2" id="finalerror" class="errors"></td>
+                </tr>     
+                
+                <tr>
+                <td colspan="2"><strong>Site Information</strong></td>
                 </tr>
+                           
+                
+                <tr>
+                <td width="30%">Site's name:</td>
+                <td><label>
+                  <input name="site_name" type="text" id="site_name" value="%SITE_NAME%" />
+                </label><a class="tooltip" title="Site's name"><img src="<ICONDIR>information.png"></a></td>
+              </tr>
+              
+                <tr>
+                <td width="30%">Site's email:<br />
+					</td>
+                <td><label>
+                  <input name="site_email" type="text" id="site_email" value="%SITE_EMAIL%" />
+                </label><a class="tooltip" title="Site's email"><img src="<ICONDIR>information.png"></a></td>
+              </tr>  
+                          
               <tr>
-                <td width="30%">Your URL:<br />
+                <td width="30%">Site's URL:<br />
                   (Including the trailing slash)</td>
                 <td><label>
                   <input name="url" type="text" id="url" value="%GENERATED_URL%" />
                 </label><a class="tooltip" title="This is a very important field. Make sure this is correct before clicking next. The BNPanel URL is where your BNPanel is located. Make sure it's in this format: http://example.com/BNPanel/"><img src="<ICONDIR>information.png"></a></td>
               </tr>
+              
                <tr>
                 <td colspan="2"><strong>Admin Account</strong></td>
                 </tr>
@@ -248,13 +271,11 @@ $(window).load(function () {
                   <input name="staffpassword" type="password" id="staffpassword" />
                 </label><a class="tooltip" title="This is your password. Make sure it's entered correctly."><img src="<ICONDIR>information.png"></a></td>
               </tr>
-              </tr>
                  <tr>
                 <td width="30%">Email:</td>
                 <td><label>
                   <input name="email" type="text" id="email" />
                 </label><a class="tooltip" title="This is your email where all BNPanel emails will be sent to."><img src="<ICONDIR>information.png"></a></td>
-              </tr>
               </tr>
                  <tr>
                 <td width="30%">Full Name:</td>
@@ -274,6 +295,7 @@ $(window).load(function () {
              </div>
         </div>
     </div>
-    </form></td>
+    </td>
   </tr>
 </table>
+</form>
