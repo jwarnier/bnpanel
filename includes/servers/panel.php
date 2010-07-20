@@ -4,22 +4,13 @@
 abstract class Panel {
 	
 	public function GenUsername() {
-		$t = rand(5,8);
-		for ($digit = 0; $digit < $t; $digit++) {
-			$r = rand(0,1);
-			$c = ($r==0)? rand(65,90) : rand(97,122);
-			$user .= chr($c);
-		}
-		return $user;
+		global $main;
+		return $main->generateUsername();
 	}
 	
 	public function GenPassword() {
-		for ($digit = 0; $digit < 5; $digit++) {
-			$r = rand(0,1);
-			$c = ($r==0)? rand(65,90) : rand(97,122);
-			$passwd .= chr($c);
-		}
-		return $passwd;
+		global $main;
+		return $main->generatePassword();	
 	}
 	
 	public function serverDetails($server) {
