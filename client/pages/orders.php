@@ -22,7 +22,8 @@ class page {
 		switch($main->getvar['sub']) {							
 			case 'view':				
 				if(isset($main->getvar['do'])) {					
-					$return_array = $order->getOrder($main->getvar['do'], true);					
+					$return_array = $order->getOrder($main->getvar['do'], true);	
+					$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);						
 					echo $style->replaceVar("tpl/orders/view.tpl", $return_array);				
 				}
 			break;					

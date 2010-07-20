@@ -17,7 +17,7 @@ class page {
 	}	
 	
 	public function content() {
-		global $style, $db, $main, $invoice, $server, $addon, $billing;
+		global $style, $db, $main, $invoice,  $addon, $billing, $order;
 
 		switch($main->getvar['sub']) {
 			case 'paid':				
@@ -34,11 +34,15 @@ class page {
 						$main->errors("Your invoice has been paid!");
 						$user_id = $main->getCurrentUserId();
 						$order_id = $invoice->getOrderByInvoiceId($invoice_id);
-						//Unsuspend an order						
-						$server->unsuspend($order_id);						
+						
+						//Unsuspend order status + unsuspend the webhosting 
+						$order->updateOrderStatus($order_id, ORDER_STATUS_ACTIVE);
+						
+						//Adding the transaction id (comes from a post of paypal)
 						$transaction_id = $main->postvar['txn_id'];
-						$params['transaction_id'] = $transaction_id;
-						$invoice->edit($invoice_id, $params);						
+						$params['transaction_id'] = $transaction_id;						
+						$invoice->edit($invoice_id, $params);		
+										
 						$main->errors("Your invoice is paid!");										
 					} else {						
 						$main->errors("Your invoice hasn't been paid!");						
@@ -47,8 +51,8 @@ class page {
 				}
 			break;				
 			case 'view':				
-				if(isset($main->getvar['do'])) {					
-					$return_array = $invoice->getInvoice($main->getvar['do'], true);									
+				if(isset($main->getvar['do'])) {
+					$return_array = $invoice->getInvoice($main->getvar['do'], true);
 					echo $style->replaceVar('tpl/invoices/viewinvoice.tpl', $return_array);					
 				}
 			break;					
@@ -69,7 +73,7 @@ class page {
 							
 					$total_amount = 0;				
 					$array['id'] = $invoice_item['id'];
-					$array['due'] = strftime("%D", $invoice_item['due']);
+					$array['due'] = date('Y-m-d', $invoice_item['due']);
 					
 					switch ($invoice_item['status']) {
 						case INVOICE_STATUS_PAID:
