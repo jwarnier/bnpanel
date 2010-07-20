@@ -12,12 +12,13 @@ class page {
 	public function __construct() {
 		$this->navtitle = "General Settings Sub Menu";
 		$this->navlist[] = array("General Configuration", "world.png", "paths");
+		$this->navlist[] = array("Email Configuration", "email.png", "email");
 		$this->navlist[] = array("Security Settings", "lock.png", "security");
 		$this->navlist[] = array("Signup Form", "user_red.png", "signup");
 		$this->navlist[] = array("Terms of Service", "application_edit.png", "tos");
 		$this->navlist[] = array("Client Area", "user_go.png", "client");
 		$this->navlist[] = array("Support Area", "help.png", "support");
-		$this->navlist[] = array("Email Configuration", "email.png", "email");
+		
 	}
 	
 	public function description() {
@@ -48,16 +49,19 @@ class page {
 		}
 		switch($main->getvar['sub']) {
 			default:
-				$array['NAME'] = $db->config("name");
-				$array['URL'] = $db->config("url");
+				$array['NAME'] 			= $db->config("name");
+				$array['URL'] 			= $db->config("url");
 				$array['ROWS_PER_PAGE'] = $db->config('rows_per_page');
-				$array['RECURL'] = $_SERVER['HTTP_HOST'];
+				$array['RECURL'] 		= $_SERVER['HTTP_HOST'];
+				
+				//$array['SITE_EMAIL'] 	= $db->config('site_email');
+				
 				
 				$values[] = array("Admin Area", "admin");
 				$values[] = array("Order Form", "order");
 				$values[] = array("Client Area", "client");
 				$array['DROPDOWN'] = $main->dropDown("default", $values, $db->config("default"));
-				echo $style->replaceVar("tpl/pathsettings.tpl", $array);
+				echo $style->replaceVar("tpl/settings/pathsettings.tpl", $array);
 				break;
 				
 			case "security": #security settings
