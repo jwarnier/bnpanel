@@ -145,15 +145,16 @@ function loadAddons(obj) {
     <td>
     <div id="show_preview" ></div>  	
     	<ul>	
-  		<li><a href="#" onclick="send('neworder', %ID%);" >Send Order Confirmation email</a> <a href="?page=email&sub=templates"><img src="<URL>themes/icons/pencil.png"</a></li>
-  		<li><a href="#" onclick="send('orderactivation', %ID%);"  >Send Activation email </a><a href="?page=email&sub=templates"><img src="<URL>themes/icons/pencil.png"</a></li>
-  		<li><a href="#" onclick="send('ordersuspension', %ID%);"  > Send Suspension email</a><a href="?page=email&sub=templates"><img src="<URL>themes/icons/pencil.png"</a></li>
+  		<li><a href="#" onclick="send('neworder', %ID%);" >Send Order Confirmation email</a> <a href="?page=email&sub=templates&do=19"><img src="<URL>themes/icons/pencil.png"></a></li>
+  		<li><a href="#" onclick="send('orderactivation', %ID%);"  >Send Activation email </a><a href="?page=email&sub=templates&do=19"><img src="<URL>themes/icons/pencil.png"></a></li>
+  		<li><a href="#" onclick="send('ordersuspension', %ID%);"  > Send Suspension email</a><a href="?page=email&sub=templates&do=19"><img src="<URL>themes/icons/pencil.png"></a></li>
   		</ul>
     </td>    
   </tr>  
-  
-  
 </table>
+<h2>Invoice List</h2>
+ %INVOICE_LIST%
+ 
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Edit order" /></td>
