@@ -57,10 +57,10 @@ class invoice extends model {
 		
 		if($user_id == $invoice_info['uid']) {
 			
-			if (SERVER_STATUS == 'test') {
-				$paypal->paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+			if ($db->config('paypal_mode') == PAYPAL_STATUS_LIVE) {
+				$paypal->paypal_url = 'https://www.paypal.com/cgi-bin/webscr';				
 			} else {
-				$paypal->paypal_url = 'https://www.paypal.com/cgi-bin/webscr';
+				$paypal->paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 			}
 			//More infor for paypal variables : https://www.paypal.com/cgi-bin/webscr?cmd=p/pdn/howto_checkout-outside
 			
@@ -458,8 +458,6 @@ class invoice extends model {
 					*/
 					//"Terminating" a user if he does not pay
 					
-					
-					
 					//Check the suspension days parameter	
 					$suspendseconds 	= intval($db->config('suspensiondays')) *24*60*60;
 					
@@ -519,8 +517,6 @@ class invoice extends model {
 							if (!empty($email_day_count)) {
 								//If the invoices is pending and the user do nothing
 							}
-							
-							
 							var_dump($email_day_count);
 						break;
 						case INVOICE_STATUS_PAID:							
@@ -528,6 +524,7 @@ class invoice extends model {
 							//Check the invoice creation date + 30 days (monthly)
 							//  29                    2010-06-28                  30   
 							//var_dump(date('Y-m-d', strtotime($my_invoice['created']) + $billing_number_months_in_seconds));
+							$mytemp = date('Y-m-d', strtotime($my_invoice['created']) + $billing_number_months_in_seconds);
 							
 							if($today > strtotime($my_invoice['created']) + $billing_number_months_in_seconds) {														
 								//	var_dump($my_new_invoice);							
@@ -535,8 +532,10 @@ class invoice extends model {
 								//$this->create($uid, $my_new_invoice['amount'], $today + intval($db->config('suspensiondays')*24*60*60), $my_new_invoice['notes'], $my_new_invoice['addon_fee']);						
 								$this->create($user_id, $my_invoice['amount'], $today + $billing_number_months_in_seconds, $my_invoice['notes'], $my_invoice['addon_fee']);
 							} else {
-								//echo 'Not created';
+								echo 'Invoice Not created because the creation date of the last invoice '.$mytemp.' is greater than today - '.date('Y-m-d',$today).' this means that the invoice is active<br />';								
 							}
+							echo 'Send email if no empty: $email_day_count';
+							var_dump($email_day_count);
 							
 							//Generating email notification
 							if (!empty($email_day_count)) {

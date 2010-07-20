@@ -55,10 +55,11 @@ class paid {
 				}
 				if(!$n) {
 					if(is_numeric($main->postvar['susdays']) && is_numeric($main->postvar['termdays'])) {
-						$db->updateConfig("suspensiondays", $main->postvar['susdays']);
-						$db->updateConfig("terminationdays", $main->postvar['termdays']);
-						$db->updateConfig("currency", $main->postvar['currency']);
-						$db->updateConfig("paypalemail", $main->postvar['paypalemail']);
+						$db->updateConfig("suspensiondays",		$main->postvar['susdays']);
+						$db->updateConfig("terminationdays", 	$main->postvar['termdays']);
+						$db->updateConfig("currency", 			$main->postvar['currency']);
+						$db->updateConfig("paypalemail", 		$main->postvar['paypalemail']);
+						$db->updateConfig('paypal_mode', 		$main->postvar['paypal_mode']);
 						$main->errors("Values have been updated!");
 					}
 					else {
@@ -84,9 +85,15 @@ class paid {
 			$values[] = array("Czech Koruna","CZK");
 			$values[] = array("Israeli Shekel","ILS");
 			$values[] = array("Mexican Peso","MXN");
+			
 			$array['CURRENCY'] = $main->dropDown("currency", $values, $db->config("currency"));
 			$array['SUSDAYS'] = $db->config("suspensiondays");
 			$array['TERDAYS'] = $db->config("terminationdays");
+			
+			$selected_id = $db->config('paypal_mode');
+			$values=array(0=>'Sandbox',1=>'Live');			
+			$array['PAYPAL_MODE'] = $main->createSelect('paypal_mode', $values, $selected_id);
+			
 			$array['PAYPALEMAIL'] = $db->config("paypalemail");
 			echo $style->replaceVar("tpl/paid/acp.tpl", $array);
 		}
