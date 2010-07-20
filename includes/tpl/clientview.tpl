@@ -110,7 +110,7 @@ function kthx() {
       </tr>
       <tr>
         <td width="1%" align="center"><img src="<URL>themes/icons/user_edit.png" /></td>
-        <td align="left"><a href="?page=users&amp;sub=passwd&amp;do=%ID%&amp;">Change Password</a></td>
+        <td align="left"><a href="?page=users&amp;sub=passwd&amp;do=%ID%&amp;">Change BNPanel Password</a></td>
       </tr>
     </table>
     </div>
