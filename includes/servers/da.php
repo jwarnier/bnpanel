@@ -58,12 +58,11 @@ class da {
 		$order_info		= $order->getOrderInfo($order_id);
 		$package_info 	= $package->getPackage($order_info['pid']);	
 		
-		if ($user == '') { $user = $main->getvar['username']; }
+		//The server::signup function generates the username + password for the Control Panel
+		/*if ($user == '') { $user = $main->getvar['username']; }
 		if ($email == '') { $email = $main->getvar['email']; }
 		if ($pass == '') { $pass = $main->getvar['password']; }
-		
-		$user = $this->GenUsername();
-		$pass = $this->GenPassword();
+		*/
 		
 		$this->server = $package_info['server'];
 		$data = $this->serverDetails($this->server);

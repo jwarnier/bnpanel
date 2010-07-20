@@ -164,14 +164,10 @@ class ispconfig extends Panel {
 		
 		@author Julio Montoya <gugli100@gmail.com> Beeznest	2010
 	*/
-	public function signup($order_id, $user = '', $email = '', $pass = '') {
+	public function signup($order_id, $domain_username, $email, $domain_password = '') {
 		global $main, $db, $package, $order;
 		$order_info		= $order->getOrderInfo($order_id);
-		$package_info 	= $package->getPackage($order_info['pid']);			
-
-		if ($user  == '')  { $user = $main->getvar['username']; }
-		if ($email == '')  { $email= $main->getvar['email']; }
-		if ($pass  == '')  { $pass = $main->getvar['password']; }
+		$package_info 	= $package->getPackage($order_info['pid']);
 		
 		// Sets the current server
 		$this->server = $package_info['server'];
@@ -180,7 +176,7 @@ class ispconfig extends Panel {
 		if ($this->debug) {echo '<pre>';}
 		$ip = gethostbyname($data['host']);
 
-			/*ISPConfig client variables
+		/*ISPConfig client variables
 					client_id 	sys_userid 	sys_groupid 	sys_perm_user 	sys_perm_group 	sys_perm_other 	
 company_name 	contact_name 	street 	zip 	city 	state 	country 	telephone 	mobile 	fax 	email 	internet 	icq 	notes 	
 default_mailserver 	limit_maildomain 	limit_mailbox 	limit_mailalias 	limit_mailaliasdomain 	limit_mailforward 	limit_mailcatchall 	limit_mailrouting 	limit_mailfilter 	limit_fetchmail 	limit_mailquota 	limit_spamfilter_wblist 	limit_spamfilter_user 	limit_spamfilter_policy 	default_webserver 	limit_web_ip 	limit_web_domain 	limit_web_quota 	web_php_options 	limit_web_subdomain 	limit_web_aliasdomain 	limit_ftp_user 	limit_shell_user 	ssh_chroot 	default_dnsserver 	limit_dns_zone 	limit_dns_record 	default_dbserver 	limit_database 	limit_cron 	limit_cron_type 	limit_cron_frequency 	limit_traffic_quota 	limit_client 	parent_client_id 	
@@ -188,12 +184,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					*/	
 		//User info
 		
-		$domain_username = substr($main->getvar['fdom'], 0, 8);
-		$domain_username = $this->GenUsername();
-		$domain_password = $this->GenPassword();
-		 
-		/*$params['username'] 		= $user;
-		$params['password'] 		= $pass;*/
+		//$domain_username = substr($main->getvar['fdom'], 0, 8);		 
+		
 		//User and password from the Control Panel / ISPConfig, etc
 		$params['username'] 		= $domain_username;
 		$params['password'] 		= $domain_password;

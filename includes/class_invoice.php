@@ -8,7 +8,7 @@ if(THT != 1){
 
 class invoice extends model {
 	
-	public $columns 	= array('id', 'uid','amount', 'is_paid','created', 'due', 'is_suspended', 'notes', 'uniqueid', 'addon_fee', 'status');	
+	public $columns 	= array('id', 'uid','amount', 'is_paid','created', 'due', 'is_suspended', 'notes', 'uniqueid', 'addon_fee', 'status', 'transaction_id');	
 	public $table_name 	= 'invoices';	
 	
 	/**
@@ -51,7 +51,7 @@ class invoice extends model {
 	public function pay($invoice_id, $returnURL = "order/index.php") {
 		global $db, $main;
 		require_once "paypal/paypal.class.php";
-		$paypal 		= new paypal_class;
+		$paypal 		= new paypal_class();
 		$invoice_info 	= $this->getInvoiceInfo($invoice_id);
 		$user_id 		= $main->getCurrentUserId();
 		
@@ -72,14 +72,15 @@ class invoice extends model {
 			$paypal->add_field('item_name', 		$db->config('name').' Invoice id: '.$invoice_id);
 			//$paypal->add_field('item_number', 		$invoice_id);
 			$paypal->add_field('invoice', 			$invoice_id);
-			$paypal->add_field('no_note', 			0);
+			//$paypal->add_field('no_note', 			0);
 			
-			$paypal->add_field('no_shipping', 		1);			
+			//$paypal->add_field('no_shipping', 		1);			
 			//Image is 150*50
-			$paypal->add_field('image_url', 		'http://www.beeznest.com/sites/all/themes/beeznest/images/logo-beez.png');
+			//$paypal->add_field('image_url', 		'http://www.beeznest.com/sites/all/themes/beeznest/images/logo-beez.png');
 
 			$paypal->add_field('amount', 			$invoice_info['total_amount']);
 			$paypal->add_field('currency_code', 	$db->config('currency'));
+			
 			$paypal->submit_paypal_post(); // submit the fields to paypal
 		} else {
 			echo "You don't seem to be the person who owns that invoice!";	
