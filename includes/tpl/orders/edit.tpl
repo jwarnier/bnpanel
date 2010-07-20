@@ -110,6 +110,7 @@ function loadAddons(obj) {
     <td valign="top">Order status</td>
     <td>
     %STATUS%
+    <a class="tooltip" title="Will operate on the Control Panel server"><img src="<ICONDIR>information.png"></a>
     </td>
   </tr>
   
@@ -124,9 +125,12 @@ function loadAddons(obj) {
 
 
         <tr>
-    <td valign="top">Control Panel Username</td>
+    <td valign="top">
+    Control Panel Username    
+    </td>
     <td>
   		%USERNAME% 
+  		<a class="tooltip" title="The username to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
     </td>
   </tr>
   
@@ -134,6 +138,7 @@ function loadAddons(obj) {
     <td valign="top">Control Panel Password</td>
     <td>
   		%PASSWORD%
+  		<a class="tooltip" title="The password to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
     </td>
   </tr>
   

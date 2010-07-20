@@ -149,6 +149,7 @@ function reset() {
     <td valign="top">Order status</td>
     <td>
     %STATUS%
+    <a class="tooltip" title="Will operate on the Control Panel server"><img src="<ICONDIR>information.png"></a>
     </td>
   </tr>
   
@@ -165,6 +166,7 @@ function reset() {
     <td valign="top">Control Panel Username</td>
     <td>
   		<input size="30" id="username" type="text" />
+  			<a class="tooltip" title="The username to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
     </td>
   </tr>
   
@@ -172,6 +174,7 @@ function reset() {
     <td valign="top">Control Panel Password</td>
     <td>
   		<input size="30" id="password" type="text" />
+  		<a class="tooltip" title="The password to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
     </td>
   </tr>
    
