@@ -165,15 +165,15 @@ function reset() {
       <tr>
     <td valign="top">Control Panel Username</td>
     <td>
-  		<input size="30" id="username" type="text" />
-  			<a class="tooltip" title="The username to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
+  		<input size="30" id="username" name="username" type="text" value="%DOMAIN_USERNAME%"/>
+  		<a class="tooltip" title="The username to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
     </td>
   </tr>
   
       <tr>
     <td valign="top">Control Panel Password</td>
     <td>
-  		<input size="30" id="password" type="text" />
+  		<input size="30" id="password"  name="password" type="text" value="%DOMAIN_PASSWORD%"/>
   		<a class="tooltip" title="The password to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
     </td>
   </tr>
