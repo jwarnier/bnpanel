@@ -29,7 +29,7 @@
   <tr>
     <td valign="top">Type:</td>
     <td>
-    %TYPE% <a title="The Server where the package is located at." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+    %TYPE% <a title="The type of package" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>
   
@@ -43,7 +43,7 @@
   <tr>
     <td valign="top">Admin Validation:</td>
     <td>
-      <input name="admin" type="checkbox" id="admin" value="1" %CHECKED% /> <a title="Does this package require admin validation?" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+      <input name="admin" type="checkbox" id="admin" value="1" %CHECKED% /> <a title="Does this package require admin validation? User's order will need also an admin validation" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
   </tr>
     <tr>
     <td valign="top">Reseller:</td>
