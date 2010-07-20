@@ -21,22 +21,29 @@ class page {
 
 		switch($main->getvar['sub']) {
 			case 'paid':				
+				//var_dump($main->postvar);
+			
 				if(isset($_GET['invoiceID'])) {				
 					require_once "../includes/paypal/paypal.class.php";
-					$paypal = new paypal_class;
+					$paypal = new paypal_class();
 					//This is a very important step, this thing checks if the payment was sucessfull or not
 					if($paypal->validate_ipn()) {
-						$invoice->set_paid(intval($_GET['invoiceID']));
+						
+						$invoice_id = intval($_GET['invoiceID']);
+						$invoice->set_paid($invoice_id);
 						$main->errors("Your invoice has been paid!");
 						$user_id = $main->getCurrentUserId();
-						$client = $db->fetch_array($db->query("SELECT * FROM `<PRE>orders` WHERE `userid` = '{$user_id}'"));
-						if($client['status'] == USER_STATUS_SUSPENDED) {
-							$server->unsuspend($client['id']);
-						}
+						$order_id = $invoice->getOrderByInvoiceId($invoice_id);
+						//Unsuspend an order						
+						$server->unsuspend($order_id);						
+						$transaction_id = $main->postvar['txn_id'];
+						$params['transaction_id'] = $transaction_id;
+						$invoice->edit($invoice_id, $params);						
+						$main->errors("Your invoice is paid!");										
 					} else {						
-						$main->errors("Your invoice hasn't been paid!");
-						echo '<ERRORS>';
+						$main->errors("Your invoice hasn't been paid!");						
 					}
+					echo '<ERRORS>';
 				}
 			break;				
 			case 'view':				

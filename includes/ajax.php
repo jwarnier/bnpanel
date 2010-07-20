@@ -727,14 +727,13 @@ class AJAX {
 		global $db, $main;
 		$query = $db->query("SELECT * FROM `<PRE>staff`");
 		
-		if($db->num_rows($query) > 0) {
+		if($db->num_rows($query) == 0) {
 			foreach($main->getvar as $key => $value) {
 				if(!$value) {
 					$n++;	
 				}
 			}
-			if(!$n) {
-				
+			if(!$n) {				
 				$db->updateConfig('url', 		$main->getvar['url']);
 				$db->updateConfig('name', 		$main->getvar['site_name']);
 				$db->updateConfig('emailfrom', 	$main->getvar['site_email']);
@@ -743,18 +742,18 @@ class AJAX {
 				$salt = md5(rand(0,99999));
 				$password = md5(md5($main->getvar['pass']).md5($salt));
 				$db->query("INSERT INTO `<PRE>staff` (user, email, password, salt, name) VALUES(
-																				  '{$main->getvar['user']}',
-																				  '{$main->getvar['email']}',
-																				  '{$password}',
-																				  '{$salt}',
-																				  '{$main->getvar['name']}')");
+						  '{$main->getvar['user']}',
+						  '{$main->getvar['email']}',
+						  '{$password}',
+						  '{$salt}',
+						  '{$main->getvar['name']}')");
 				echo 1;
-			}
-			else {
+			} else {
 				echo 0;	
 			}
 		}
 	}
+	
 	function massemail() {
 		if($_SESSION['logged']) {
 			global $main, $email, $db;
