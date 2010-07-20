@@ -115,9 +115,9 @@
   </tr>
 </table>
 
-<h2>Invoice List</h2>
 
- %INVOICE_LIST%
+%INVOICE_LIST%
+ 
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Add invoice" /></td>

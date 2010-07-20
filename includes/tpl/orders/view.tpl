@@ -1,4 +1,3 @@
-<form id="addpackage" name="addpackage" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Id:</td>
@@ -77,6 +76,8 @@
    <tr>
     <td >Total:</td>
     <td valign="top" ><h2>%TOTAL%</h2></td>
-  </tr>  
+  </tr>    
 </table>
-</form>
+%INVOICE_LIST%
+ 
+
