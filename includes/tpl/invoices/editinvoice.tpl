@@ -125,9 +125,9 @@
   		<li><a href="">Send Invoice Notice</a></li>  		
   		</ul>
     </td>    
-  </tr>  
-  
+  </tr>    
 </table>
+
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Edit invoice" /></td>

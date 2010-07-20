@@ -30,11 +30,6 @@
 			document.getElementById("showaddons").innerHTML = data;
 		});
 	}
-	
-
-
-	
-
 </script>
 <ERRORS>
 <form id="addpackage" name="addpackage" method="post" action="">
@@ -117,11 +112,12 @@
     <td>  		
   		<input name="due" type="text" id="due" value="%DUE%"/>
     </td>
-  </tr>  
-  
-  
-  
+  </tr>
 </table>
+
+<h2>Invoice List</h2>
+
+ %INVOICE_LIST%
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Add invoice" /></td>
