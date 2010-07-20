@@ -84,14 +84,14 @@ class paypal_class {
    var $fields = array();           // array holds the fields to submit to paypal
 
    
-   function paypal_class() { 
+	function paypal_class() { 
        
-      // initialization constructor.  Called when class is created.
-      
-		if (SERVER_STATUS == 'test') {
-			$this->paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+		//initialization constructor.  Called when class is created.
+		global $db;
+		if ($db->config('paypal_mode') == PAYPAL_STATUS_LIVE) {
+			$this->paypal_url = 'https://www.paypal.com/cgi-bin/webscr';			
 		} else {
-			$this->paypal_url = 'https://www.paypal.com/cgi-bin/webscr';
+			$this->paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 		}  
       
       $this->last_error = '';
