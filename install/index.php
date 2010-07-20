@@ -103,7 +103,10 @@ echo $style->get("header.tpl");
 if($disable) {
 	echo '<script type="text/javascript">$(function(){$(".twobutton").attr("disabled", "true");$("#method").attr("disabled", "true");});</script>';
 }
-$array["GENERATED_URL"] = generateSiteUrl();
+$array['GENERATED_URL'] = generateSiteUrl();
+$array['SITE_NAME'] 	= 'BNPanel';
+$array['SITE_EMAIL'] 	= 'example@example.com';
+
 echo $style->replaceVar("tpl/install/install.tpl", $array);
 echo $style->get("footer.tpl");
 
