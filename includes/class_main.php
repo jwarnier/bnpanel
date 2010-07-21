@@ -61,7 +61,7 @@ if(THT != 1){die();}class main {
 		}
 		return $tbl;
 	}
-	public function sub($left, $right) { # Returns the HTML for a THT table
+	public function sub($left, $right) { # Returns the HTML for a THT table
 		global $style;
 		$array['LEFT'] = $left;
 		$array['RIGHT'] = $right;
@@ -74,12 +74,12 @@ if(THT != 1){die();}class main {
 		return $tbl;
 	}
 	
-	public function evalreturn($code) { # Evals code and then returns it without showing
-		ob_start();
-		eval("?> " . $code . "<?php ");
-		$data = ob_get_contents();
-		ob_clean();
-		return $data;
+	public function evalreturn($code) { # Evals code and then returns it without showing
+		ob_start();
+		eval("?> " . $code . "<?php ");
+		$data = ob_get_contents();
+		ob_clean();
+		return $data;
 	}
 	
 	public function done() { # Redirects the user to the right part
@@ -103,8 +103,8 @@ if(THT != 1){die();}class main {
 		else {
 			return false;
 		}
-	}		/*	public function createInput($type, $label, $name, $value) {		switch($type) {			case THT_INPUT:			$html = $label.': <input name="'.$name.'" value="'.$value.'"> <br/>';			break;			case THT_CHECKBOX:								}				return $html;	}		*/
-	/**	 * Creates an input	 * @param string	label	 * @param string	name	 * @param bool		true if the checkbox will be checked	 * @return string html	 * 	 */	public function createInput($label, $name, $value) {		$html = $label.' <input name="'.$name.'" value="'.$value.'"> <br/>';		return $html;	}		/**	 * Creates a checkbox	 * @param string	label	 * @param string	name	 * @param bool		true if the checkbox will be checked	 * @return string html	 * 	 */	public function createCheckbox($label, $name, $checked = false) {		if ($checked == true) {			$checked = 'checked="'.$checked.'"';		} else {			$checked = '';		}		if(empty($label)) {			$label = '';		} else {			$label = $label.':';		}		$html = $label.'<input type="checkbox" name="'.$name.'"  '.$checked.' > <br/>';		return $html;	}		
+	}
+	/**	 * Creates an input	 * @param string	label	 * @param string	name	 * @param bool		true if the checkbox will be checked	 * @return string html	 * 	 */	public function createInput($label, $name, $value) {		$html = $label.' <input name="'.$name.'" value="'.$value.'"> <br/>';		return $html;	}		/**	 * Creates a checkbox	 * @param string	label	 * @param string	name	 * @param bool		true if the checkbox will be checked	 * @return string html	 * 	 */	public function createCheckbox($label, $name, $checked = false) {		if ($checked == true) {			$checked = 'checked="'.$checked.'"';		} else {			$checked = '';		}		if(empty($label)) {			$label = '';		} else {			$label = $label.':';		}		$html = $label.'<input type="checkbox" name="'.$name.'"  '.$checked.' > <br/>';		return $html;	}		/**	 * @todo Function deprecated use createSelect instead	 */
 	public function dropDown($name, $values, $default = 0, $top = 1, $class = "", $parameter_list = array()) { # Returns HTML for a drop down menu with all values and selected		if($top) {			$extra = '';			foreach($parameter_list as $key=>$parameter) {				$extra .= $key.'="'.$parameter.'"';			}
 			$html .= '<select name="'.$name.'" id="'.$name.'" class="'.$class.'" '.$extra.'>';
 		}
@@ -120,8 +120,8 @@ if(THT != 1){die();}class main {
 			$html .= '</select>';
 		}
 		return $html;
-	}		/**	 * New simpler version of the dropDown function	 * @param 	string	name of the select tag	 * @param	array	values with this structure array(1=>'Item 1', 2=>'Item 2')	 * @param	bool	show top or not	 * @param	string	class of the select	 * @param 	array	extra information to add in the select i.e onclick, onBlur, etc	 * @param	bool	show or not a blank item	 * @return	html	returns the select html  	 */	public function createSelect($name, $values, $default = 0, $parameter_list = array(), $show_blank_item = true) { # Returns HTML for a drop down menu with all values and selected				$extra = '';		foreach($parameter_list as $key=>$parameter) {			$extra .= $key.'="'.$parameter.'"';		}		$html .= '<select name="'.$name.'" id="'.$name.'" '.$extra.'>';			if ($show_blank_item) {			$html .= '<option value="">-- Select --</option>';		}		if($values) {			foreach($values as $key => $value) {				$html .= '<option value="'.$key.'"';				if($default == $key) {					$html .= 'selected="selected"';				}				$html .= '>'.$value.'</option>';			}		}		if($top) {			$html .= '</select>';		}		return $html;	}			
-	public function folderFiles($link) { # Returns the filenames of a content in a folder
+	}		/**	 * New simpler version of the dropDown function	 * @param 	string	name of the select tag	 * @param	array	values with this structure array(1=>'Item 1', 2=>'Item 2')	 * @param 	array	extra information to add in the select i.e onclick, onBlur, etc	 * @param	bool	show or not a blank item	 * @return	html	returns the select html  	 */	public function createSelect($name, $values, $default = 0, $parameter_list = array(), $show_blank_item = true) {				$extra = '';		foreach($parameter_list as $key=>$parameter) {			$extra .= $key.'="'.$parameter.'"';		}		$html .= '<select name="'.$name.'" id="'.$name.'" '.$extra.'>';			if ($show_blank_item) {			$html .= '<option value="">-- Select --</option>';		}		if($values) {			foreach($values as $key => $value) {				$html .= '<option value="'.$key.'"';				if($default == $key) {					$html .= 'selected="selected"';				}				$html .= '>'.$value.'</option>';			}		}				$html .= '</select>';				return $html;	}			
+	public function folderFiles($link) { # Returns the filenames of a content in a folder
 		$folder = $link;
 		if ($handle = opendir($folder)) { # Open the folder
 			while (false !== ($file = readdir($handle))) { # Read the files
@@ -167,40 +167,25 @@ if(THT != 1){die();}class main {
 	}		/**	 * Checks the credentails of the client and logs in, returns true or false	 * 	 */
 	public function clientLogin($username, $pass) {
 		global $db, $main, $user;		$ip   = $_SERVER['REMOTE_ADDR'];			
-		if(isset($user) && isset($pass)) {			$user_info	= $user->getUserByUserName($username);						if (is_array($user_info) && !empty($user_info)) {				if ($user_info['status'] == USER_STATUS_ACTIVE) {										if(md5(md5($pass).md5($user_info['salt'])) == $user_info['password']) {												$_SESSION['clogged'] 	= 1;											$data['password'] 		= null;						$data['salt'] 			= null;						//Save all user in this session						$_SESSION['cuser'] 		= $user_info;						$this->insertLog($user_info['id'], $user_info['user'], "Login successful ($ip)");																							return true;					} else { 						$main->errors('Incorrect password!');					}				} else {					$main->errors('Your account is not active');				}			} else {				$main->errors('User does not exist');			}		}		$this->insertLog(0, $username, "Login failed ($ip)");					return false;	}
+		if(isset($user) && isset($pass)) {			$user_info	= $user->getUserByUserName($username);						if (is_array($user_info) && !empty($user_info)) {				if ($user_info['status'] == USER_STATUS_ACTIVE) {										if(md5(md5($pass).md5($user_info['salt'])) == $user_info['password']) {												$_SESSION['clogged'] 	= 1;											$data['password'] 		= null;						$data['salt'] 			= null;						//Save all user in this session						$_SESSION['cuser'] 		= $user_info;						$this->addLog("Login successful $ip - $username");																							return true;					} else { 						$main->errors('Incorrect password!');					}				} else {					$main->errors('Your account is not active');				}			} else {				$main->errors('User does not exist');			}		}				$this->addLog("Login failed ($ip) - $username");			return false;	}
 	public function staffLogin($user, $pass) { # Checks the credentials of a staff member and returns true or false
-		global $db, $main;
+		global $db, $main;		$ip = $_SERVER['REMOTE_ADDR'];		$date = time();		
 		if($user && $pass) {
 			$query = $db->query("SELECT * FROM `<PRE>staff` WHERE `user` = '{$main->postvar['user']}'");
 			if($db->num_rows($query) == 0) {
 				return false;
-			} else {
-				$data = $db->fetch_array($query);
+			} else {
+				$data = $db->fetch_array($query);
 				if(md5(md5($main->postvar['pass']) . md5($data['salt'])) == $data['password']) {
-					$_SESSION['logged'] = 1;					$data['password'] = null;					$data['salt'] = null;					$_SESSION['user'] = $data;
-					$date = time();
-					$ip = $_SERVER['REMOTE_ADDR'];
-					$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-														'{$data['id']}',
-														'{$main->postvar['user']}',
-														'{$date}',
-														'STAFF LOGIN SUCCESSFUL ($ip)')");
+					$_SESSION['logged'] = 1;					$data['password'] 	= null;					$data['salt'] 		= null;					$_SESSION['user'] 	= $data;										$main->addLog("STAFF LOGIN SUCCESSFUL ($ip)");					
 					return true;
-				} else {
-					$date = time();
-					$ip = $_SERVER['REMOTE_ADDR'];
-					$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-														'{$data['id']}',
-														'{$main->postvar['user']}',
-														'{$date}',
-														'STAFF LOGIN FAILED ($ip)')");
-					return false;
-				}
-			}
-		}
-		else {
-			return false;
-		}
+				} else {										$main->addLog("STAFF LOGIN FAILED ($ip)");
+					return false;
+				}
+			}
+		} else {
+			return false;
+		}
 	}
 	
 	public function laterMonth($num) { # Makes the date with num of months after current
@@ -239,68 +224,62 @@ if(THT != 1){die();}class main {
 	* Thank you, Linux Journal!
 	* http://www.linuxjournal.com/article/9585
 	*/
-	public function validEmail($email)
-	{
-	   $isValid = true;
-	   $atIndex = strrpos($email, "@");
-	   if (is_bool($atIndex) && !$atIndex)
+	public function validEmail($email) {
+	   $isValid = true;
+	   $atIndex = strrpos($email, "@");
+	   if (is_bool($atIndex) && !$atIndex)   {
+		  $isValid = false;
+	   }
+	   else
 	   {
-		  $isValid = false;
-	   }
-	   else
-	   {
-		  $domain = substr($email, $atIndex+1);
-		  $local = substr($email, 0, $atIndex);
-		  $localLen = strlen($local);
-		  $domainLen = strlen($domain);
-		  if ($localLen < 1 || $localLen > 64)
-		  {
-			 // local part length exceeded
-			 $isValid = false;
-		  }
-		  else if ($domainLen < 1 || $domainLen > 255)
-		  {
-			 // domain part length exceeded
-			 $isValid = false;
-		  }
-		  else if ($local[0] == '.' || $local[$localLen-1] == '.')
-		  {
-			 // local part starts or ends with '.'
-			 $isValid = false;
-		  }
-		  else if (preg_match('/\\.\\./', $local))
-		  {
-			 // local part has two consecutive dots
-			 $isValid = false;
-		  }
-		  else if (!preg_match('/^[A-Za-z0-9\\-\\.]+$/', $domain))
-		  {
-			 // character not valid in domain part
-			 $isValid = false;
-		  }
-		  else if (preg_match('/\\.\\./', $domain))
-		  {
-			 // domain part has two consecutive dots
-			 $isValid = false;
-		  }
-		  else if
-	(!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/',
-					 str_replace("\\\\","",$local)))
-		  {
-			 // character not valid in local part unless 
-			 // local part is quoted
-			 if (!preg_match('/^"(\\\\"|[^"])+"$/',
-				 str_replace("\\\\","",$local)))
-			 {
-				$isValid = false;
-			 }
-		  }
-		  if ($isValid && !(checkdnsrr($domain,"MX") || checkdnsrr($domain,"A"))) {
-			 // domain not found in DNS
-			 $isValid = false;
-		  }
-	   }
-	   return $isValid;
+		  $domain = substr($email, $atIndex+1);
+		  $local = substr($email, 0, $atIndex);
+		  $localLen = strlen($local);
+		  $domainLen = strlen($domain);
+		  if ($localLen < 1 || $localLen > 64)
+		  {
+			 // local part length exceeded
+			 $isValid = false;		  }
+		  else if ($domainLen < 1 || $domainLen > 255)
+		  {
+			 // domain part length exceeded
+			 $isValid = false;
+		  }
+		  else if ($local[0] == '.' || $local[$localLen-1] == '.')
+		  {
+			 // local part starts or ends with '.'
+			 $isValid = false;
+		  }
+		  else if (preg_match('/\\.\\./', $local))
+		  {
+			 // local part has two consecutive dots
+			 $isValid = false;
+		  }
+		  else if (!preg_match('/^[A-Za-z0-9\\-\\.]+$/', $domain))
+		  {
+			 // character not valid in domain part
+			 $isValid = false;
+		  }
+		  else if (preg_match('/\\.\\./', $domain))
+		  {
+			 // domain part has two consecutive dots
+			 $isValid = false;
+		  }
+		  else if(!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/',
+					 str_replace("\\\\","",$local)))  {
+			 // character not valid in local part unless			 // local part is quoted
+			 if (!preg_match('/^"(\\\\"|[^"])+"$/',
+				 str_replace("\\\\","",$local)))
+			 {
+				$isValid = false;
+			 }
+		  }
+		  if ($isValid && !(checkdnsrr($domain,"MX") || checkdnsrr($domain,"A"))) {
+			 // domain not found in DNS
+			 $isValid = false;
+		  }
+	   }
+	   return $isValid;
 	}
 	
 	/**	 * Only changes the system password not the Control Panel password	 * 
@@ -310,7 +289,7 @@ if(THT != 1){die();}class main {
 	 * be treated as a failure. If the return value happens to be a
 	 * string, it is an error message.	 * @todo this function should be moved to the class_user.php file	 * 
 	 */
-	function changeClientPassword($clientid, $newpass) {
+	public function changeClientPassword($clientid, $newpass) {
 		global $db, $user;
 		//Making sure the $clientid is a reference to a valid id.		$user_info	=	$user->getUserById($clientid);		
 		if (is_array($user_info) && !empty($user_info)) {			$user->edit($clientid, array('password'=>$newpass));			/*			mt_srand((int)microtime(true));			$salt = md5(mt_rand());			$password = md5(md5($newpass) . md5($salt));			$db->query("UPDATE `<PRE>users` SET `password` = '{$password}' WHERE `id` = '{$db->strip($clientid)}'");			$db->query("UPDATE `<PRE>users` SET `salt` = '{$salt}' WHERE `id` = '{$db->strip($clientid)}'");*/					} else {			return "That client does not exist.";		}		
