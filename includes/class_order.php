@@ -22,6 +22,7 @@ class order extends model {
 		global $main, $db, $email, $user;
 		$order_id = $this->save($params);
 		if (!empty($order_id) && is_numeric($order_id )) {
+			$main->addLog("Order created: $order_id");
 			/*
 			$emailtemp 				= $db->emailTemplate('neworder');
 			$user_info 				= $user->getUserById($params['userid']);			
@@ -97,6 +98,7 @@ class order extends model {
 	 */
 	public function delete($id) { # Deletes invoice upon invoice id
 		$this->updateOrderStatus($id, ORDER_STATUS_DELETED);		
+		$main->addLog("Order id $id deleted ");
 		return true;
 	}
 	
@@ -115,6 +117,7 @@ class order extends model {
 			$this->updateOrderStatus($order_id, $params['status']);
 			unset($params['status']); //do not update twice 			
 		}
+		$main->addLog("Order id $order_id updated");
 		$this->update($params);
 	}
 	
@@ -154,8 +157,7 @@ class order extends model {
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
 	 */
 	public function getOrderInfo($id) {
-		global $db;
-		
+		global $db;		
 		$id = intval($id);
 		$sql = "SELECT * FROM ".$this->getTableName()." up WHERE up.id = '{$id}'";
 		$result = $db->query($sql);
@@ -425,7 +427,5 @@ class order extends model {
 			$html .= '</ul>';
 		}
 		return $html;
-	}
-	
-	
+	}	
 }

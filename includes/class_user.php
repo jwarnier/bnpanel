@@ -29,7 +29,8 @@ class user extends model {
 					$params['signup']		= time();
 					$params['password'] 	= md5(md5($params['password']).md5($params['salt']));
 					$params['ip'] 			= $_SERVER['REMOTE_ADDR'];
-					$user_id = $this->save($params);	        	
+					$user_id = $this->save($params);	    
+					$main->addLog("User created: $user_id");    	
 		      		return $user_id;
 				} else {
 					//$array['Error'] = "That username already exist!";				
@@ -46,7 +47,7 @@ class user extends model {
 	
 	
 	public function edit($id, $params) {
-		global $order;	
+		global $order, $main;	
 		$this->setPrimaryKey($id);	
 		
 		if (isset($params['password']) && !empty($params['password']) )  {			
@@ -80,13 +81,13 @@ class user extends model {
 					foreach($order_list as $order_item) {
 						$server->cancel($order_item['id']);
 					}
-				}				
-				
+				}
 				break;
 				default:
 				break;
 			}
 		}
+		$main->addLog("User updated: $id");
 		$this->update($params);
 	}
 	
@@ -106,17 +107,24 @@ class user extends model {
 	}
 	
 	/**
-	 * Deletes a user
+	 * Deletes a user + order deleted + invoice deleted
 	 */
-	public function delete($id) { # Deletes a user
+	public function delete($id) {
+		global $order, $invoice, $main; 
+		//User deleted
 		$this->updateUserStatus($id,USER_STATUS_DELETED);
+		$main->addLog("User deleted: $id");
 		
-		/*global $db;
-		
-		$db->query("UPDATE `<PRE>user_packs` SET `status` = '$status' WHERE `id` = '{$db->strip($status)}'");*/
-	/*	global $db;
-		$query = $db->query("DELETE FROM `<PRE>user_packs` WHERE `id` = '{$id}'"); //Delete the invoice
-		$query = $db->query("DELETE FROM `<PRE>order_addons` WHERE `order_id` = '{$id}'"); //Delete the invoice*/
+		//@todo check this funcionality
+		$order_list = $order->getAllOrdersByUser($id);
+		foreach($order_list as $order_item) {
+			//Deleting orders
+			$order->updateOrderStatus($order_item['id'], ORDER_STATUS_DELETED);
+			$invoice_list = $invoice->getAllInvoicesByOrderId($order_item['id']);
+			foreach($invoice_list as $invoice_item) {
+				$invoice->updateInvoiceStatus($invoice_item['item'], INVOICE_STATUS_DELETED);				
+			}			
+		}		
 		return true;
 	}
 		
@@ -181,6 +189,7 @@ class user extends model {
 		$user_status_list = array_keys($main->getUserStatusList());		
 		if (in_array($status, $user_status_list)) {		
 			$params['status'] = $status;
+			$main->addLog("updateUserStatus function called: $user_id");
 			$this->update($params);
 		}		
 	}
