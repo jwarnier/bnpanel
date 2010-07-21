@@ -26,7 +26,8 @@ class invoice extends model {
 		$insert_sql = "INSERT INTO `<PRE>invoices` (uid, amount, due, notes, addon_fee, status ) VALUES('{$uid}', '{$amount}', '{$due}', '{$notes}', '{$addon_fee}', '{$status}' )";
 		$db->query($insert_sql);
 		$invoice_id = $db->insert_id();			
-		if (!empty($invoice_id ) && is_numeric($invoice_id )) {			
+		if (!empty($invoice_id ) && is_numeric($invoice_id)) {
+			$main->addLog("Invoice id $invoice_id created ");			
 			if (!empty($order_id)) {
 				$insert_sql = "INSERT INTO `<PRE>order_invoices` (order_id, invoice_id) VALUES('{$order_id}', '{$invoice_id}')";				
 				$db->query($insert_sql);		
@@ -37,11 +38,13 @@ class invoice extends model {
 	
 	public function delete($id) { # Deletes invoice upon invoice id	
 		$this->updateInvoiceStatus($id, INVOICE_STATUS_DELETED);
+		$main->addLog("Invoice id $id deleted ");		
 	}
 	
 	public function edit($id, $params) { # Edit an invoice. Fields created can only be edited?
 		$this->setPrimaryKey($id);
 		$this->update($params);
+		$main->addLog("Invoice updated $id deleted ");	
 	}
 	
 	/**
@@ -83,7 +86,7 @@ class invoice extends model {
 
 			$paypal->add_field('amount', 			$invoice_info['total_amount']);
 			$paypal->add_field('currency_code', 	$db->config('currency'));
-			
+			$main->addLog("Invoice pay function called Invoice id: $invoice_id Order id: $order_id Total amount: {$invoice_info['total_amount']}");
 			$paypal->submit_paypal_post(); // submit the fields to paypal
 		} else {
 			echo "You don't seem to be the person who owns that invoice!";	
