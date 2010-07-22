@@ -6,7 +6,7 @@
 // Released under the GNU-GPL
 //////////////////////////////
 
-class da {
+class da extends Panel {
 	
 	# START THE MO TRUCKIN FUNCTIONS #
 	
