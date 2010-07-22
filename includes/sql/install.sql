@@ -501,6 +501,8 @@ CREATE TABLE IF NOT EXISTS `%PRE%logs` (
 
 -- New tables for BNPanel
 
+-- Billing cycle structure
+
 CREATE TABLE `%PRE%billing_cycles` (
   `id` int NOT NULL AUTO_INCREMENT,
   `number_months` int NOT NULL,
@@ -517,12 +519,16 @@ INSERT INTO `%PRE%billing_cycles` (`number_months`, `name`, `status`) VALUES
 ('1', 'Monthly', '1');
 
 
+-- Relation of Addons || Packages with billing cycles
+
 CREATE TABLE  `%PRE%billing_products` (
   `billing_id` int NOT NULL,
   `product_id` int NOT NULL,
   `amount` decimal(16,6) NOT NULL DEFAULT '0.000000',
   `type` varchar(255) NOT NULL
 );
+
+-- Table structure for addons
 
 CREATE TABLE  `%PRE%addons` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -533,10 +539,14 @@ CREATE TABLE  `%PRE%addons` (
   PRIMARY KEY (`id`)
 );
 
+-- Relationship between package and addons
+
 CREATE TABLE  `%PRE%package_addons` (
   `package_id` int NOT NULL DEFAULT '0',
   `addon_id` int NOT NULL DEFAULT '0'
 );
+
+-- Relationship between orders and addons
 
 CREATE TABLE `%PRE%order_addons` (
   `order_id` int NOT NULL,
