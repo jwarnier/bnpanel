@@ -50,7 +50,7 @@ class ispconfig extends Panel {
 		@param	array  parameters that the SOAP will used 
 		@return mixed  result of the SOAP call
 	*/
-	public function remote($action, $params) {
+	private function remote($action, $params) {
 		
 		$soap_client = $this->load();
 		
@@ -307,10 +307,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 
 				//Creating a site
 				$result = $this->remote('sites_web_domain_add',$site_params);
-
-				//Creating an ftp user
-			}		
-			
+			}					
 			return true;	
 		}
 	}
