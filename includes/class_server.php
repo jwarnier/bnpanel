@@ -3,23 +3,23 @@
 
 /**
  * This class is the interface between the Billing System and the Control Panel (ISPConfig, Cpanel, Direct Admin)
- * It cancel, suspend the orders.
- * 
+ * It cancel, suspend the orders. * 
  */
-class server {
-	
+ 
+class server {	
 	private $servers = array(); # All the servers in a array
 	
 	/**
-	 * Loads the server class (isoconfig, direct admin,  cpanel)
+	 * Loads the Server class (isoconfig, direct admin,  cpanel)
+	 * @param	int		package id
+	 * @return 	mixed	false or the instance of the server class 
 	 */
 	private function createServer($package_id) { # Returns the server class for the desired package
 		global $type, $main;		
 		$server_type = $type->determineServerType($type->determineServer($package_id)); # Determine server		
 		if($this->servers[$server_type]) {
 			return true;	
-		}
-		
+		}		
 		//Abstract class Panel added
 		require_once LINK."servers/panel.php";
 		$link = LINK."servers/".$server_type.".php";
@@ -40,7 +40,7 @@ class server {
 	 * Creates a user account, order and invoice
 	 */
 	public function signup() { # Echos the result of signup for ajax
-		global $main, $db, $type, $addon, $order, $package, $email,$user;
+		global $main, $db, $type, $addon, $order, $package, $email, $user;
 			
 		//Check package details
 		$package_id 	= intval($main->getvar['package']);
@@ -51,7 +51,7 @@ class server {
 			return;
 		} 
 		$user_id = '';
-	
+			
 		if($main->getvar['domain'] == 'dom') { # If Domain
 			if(!$main->getvar['cdom']) {
 				echo "Please fill in the domain field!";
@@ -197,12 +197,14 @@ class server {
 				return;
 			}
 		} else {
-			//The user is already log in we load user information from the DB
+			//The user is already in. We load the user information from the DB
 			$user_already_registered = true;
-			$user_id 	= $main->getCurrentUserId();
-			$user_info 	= $main->getCurrentUserInfo();			
-			$user_name 	= $user_info['user'];			
-			$user_email = $user_info['email'];			
+			$user_id 			= $main->getCurrentUserId();
+			$user_info 			= $main->getUserById($user_id);	
+					
+			$system_username 	= $user_info['user'];
+			$system_password 	= $user_info['password'];			
+			$system_email		= $user_info['email'];			
 		}		
 		
 		// Creates the "paid" or "free" class 
@@ -216,181 +218,141 @@ class server {
 				return ;
 			}
 		}
-		
-		foreach($main->getvar as $key => $value) {
-			$data = explode("_", $key);
-			if($data[0] == "type") {
-				if($n) {
-					$additional .= ",";	
-				}
-				$additional .= $data[1]."=".$value;
-				$n++;
-			}
-		}
-		
-		//useless right now
-		//$main->getvar['fplan'] = $package_info['backend'];
+
+		//$main->getvar['fplan'] = $package_info['backend']; 		//useless right now
 		$serverphp = $this->createServer($package_id); # Create server class
 		
-		//Registering to the server
-		
-		
-		$done = true;
-		if($done == true) {
-			// Did the signup pass?
-			$date 				= time();
-			$billing_cycle_id 	= $main->getvar['billing_id'];
-						
-			if($user_already_registered == false) {
-				//Creating a new user												
-				$user_name					= $main->getvar['username'];	
-				$main->getvar['signup'] 	= $_SERVER['REMOTE_ADDR'];
-				$main->getvar['ip'] 		= time();				
-				$main->getvar['user'] 		= $main->getvar['username'];			
-				$main->getvar['status'] 	= USER_STATUS_ACTIVE; 
-				//Create a new user
-				$user_id 					= $user->create($main->getvar);
-				
-				//If user is created
-				if (!empty($user_id) && is_numeric($user_id)){
-					$user_already_registered = true;										
-					$login = $main->clientLogin($user_name, $main->getvar['password']);
-				}
-								
-				$password					= $main->getvar['password']; 
-				$user_email					= $main->getvar['email'];
-								
-				//@todo create a new class or function or whatever to avoid calling this insert log 
-				/* Replace this thing with some cool class_log.php or something like that
-				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-												  '{$data['userid']}',
-												  '{$data['user']}',
-												  '{$date}',
-												  'User registered.')");*/												  
-			} 
-				
-			if ($user_already_registered == true) {
-				
-				//Creating a new order because the user is already registered
-				$params['userid'] 		= $user_id;				
-								
-				$params['domain'] 		= $main->getvar['fdom'];
-				$params['pid'] 			= $package_id;
-				$params['signup'] 		= $date;
-				
-				//Change the order status it depends on the package
-				if ($package_info['admin'] == 1) {
-					$params['status'] 		= ORDER_STATUS_WAITING_ADMIN_VALIDATION;
-				} else {
-					$params['status'] 		= ORDER_STATUS_ACTIVE;
-				}
-				//Always set the server to waiting admin validation
-				//$params['status'] 		= ORDER_STATUS_WAITING_ADMIN_VALIDATION;
-				
-				$params['additional']		= $additional;
-				$params['billing_cycle_id'] = $billing_cycle_id;
-				
-				//Order username + password
-				$params['password']			= $serverphp->GenUsername();
-				$params['username']			= $serverphp->GenPassword();
-				
-				if (!empty($params['userid']) && !empty($params['pid'])) {
-					//Creating a order		
-						
-					$order_id = $order->create($params);
-					//Add addons to a new order		
-					$order->addAddons($order_id, $main->getvar['addon_ids']);
+		$date 				= time();
+		$billing_cycle_id 	= $main->getvar['billing_id'];
 					
-					//$done = $serverphp->signup($type->determineServer($package_id), $package_info['reseller']);
-					$done = $serverphp->signup($order_id, $params['username'], $user_email, $params['password']);
-				}
-				
-				$array['USER']		= $user_name;				
-				$array['PASS'] 		= $password; 
-				$array['EMAIL'] 	= $user_email;
-				$array['DOMAIN'] 	= $main->getvar['fdom'];	
-				
-				//We avoid the user confirmation for the moment
-				if ($user_already_registered == true && $user_info['status'] == USER_STATUS_ACTIVE) {			
-					$array['CONFIRM'] 	= '';
-				} else {
-				//	$array['CONFIRM'] 	= '<span style="font-weight: bold;">Confirmation Link: </span>'.$db->config('url') . "client/confirm.php?u=" . $user_name . "&c=" . $date;	
-					$array['CONFIRM'] 	= '';
-				}
-				
-				$array['PACKAGE'] 	= $package_info['name'];
-								
-				//Send email to user
-				
-				//Package does not needs validation
-				if($package_info['admin'] == 0) {
-					//New hosting account just waiting for *user* validation
-					$emaildata = $db->emailTemplate('newacc');
-					echo "<strong>Your account has been completed!</strong><br />You may now use the client login bar to see your client area or proceed to your control panel. An email has been dispatched to confirm you email address";
-					if($type->determineType($package_id) == 'paid') {
-						echo " This will apply only when you've made payment.";	
-								
-						//$_SESSION['clogged'] = 1;
-						//$_SESSION['cuser'] = $user_id;
-					}
-					$donecorrectly = true;
-				} elseif($package_info['admin'] == 1) {
-					//Needs admin validation so we suspend the webhosting -
-					if($serverphp->suspend($order_id, $type->determineServer($package_id)) == true) {
-						
-						//User is waiting for admin validation						
-						$emaildata 	= $db->emailTemplate('newaccadmin');
-						
-						//Email sent to all admins 
-						$email_to_admin = $db->emailTemplate('adminval');
-						$email->staff($email_to_admin['subject'], $email_to_admin['content']);
-						
-						echo "<strong>Your account is awaiting admin validation!</strong><br />An email has been dispatched to the address on file. You will recieve another email when the admin has overlooked your account.";
-						$donecorrectly = true;
-					} else {
-						echo "Something with admin validation went wrong (suspend). Your account should be running but contact your host administrator!";	
-					}
-				} else {				
-					echo "Something with admin validation went wrong. Your account should be running but contact your host administrator.";	
-				}
-				$email->send($array['EMAIL'], $emaildata['subject'], $emaildata['content'], $array);
+		if ($user_already_registered == false) {
+			
+			/* Creating a new user */												
+			$system_username			= $main->getvar['username'];	
+			$system_password			= $main->getvar['password'];
+			$system_email				= $main->getvar['email'];
+			
+			$main->getvar['signup'] 	= $date;
+			$main->getvar['ip'] 		= $_SERVER['REMOTE_ADDR'];
+			$main->getvar['status'] 	= USER_STATUS_ACTIVE; 
+			
+			//Creates a new user
+			$user_id 					= $user->create($main->getvar);
+			
+			//If user is created
+			if (!empty($user_id) && is_numeric($user_id)){
+				$user_already_registered = true;
+				$main->addLog('User registered user id :'.$user_id);										
+				$login = $main->clientLogin($system_username, $system_password);
+			}																		  
+		} 
+			
+		if ($user_already_registered == true) {
+			
+			/* Creating a new order */ 
+			
+			$params['userid'] 			= $user_id;
+			$params['domain'] 			= $main->getvar['fdom'];
+			$params['pid'] 				= $package_id;
+			$params['signup'] 			= $date;
+			
+			//Change the order status it depends on the package
+			if ($package_info['admin'] == 1) {
+				$params['status'] 		= ORDER_STATUS_WAITING_ADMIN_VALIDATION;
 			} else {
-				echo "There was a problem when creating a user. Please contact the system administrator.";	
+				$params['status'] 		= ORDER_STATUS_ACTIVE;
 			}
 			
-			//If the package is paid			
-			if($donecorrectly && $type->determineType($package_id) == 'paid') {							
-				global $invoice, $package;
-				//The order was saved with an status of admin validation now we should create an invoice an set the status to wait payment 
+			//Always set the server to waiting admin validation
+			//$params['status'] 			= ORDER_STATUS_WAITING_ADMIN_VALIDATION;
+						
+			$params['additional']		= '';//@todo this field is not used
+			$params['billing_cycle_id'] = $billing_cycle_id;
 			
-				//$due 		= time()+intval($db->config('suspensiondays')*24*60*60);
-				$due 		= time();
-				$notes 		= '';
-				$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);
-				
-				//1. Calculating the amount for the package depending on the billing cycle
-				$package_amount = 0;
-				$package_billing_info = $package->getPackageByBillingCycle($package_id, $billing_cycle_id);	
-				
-				if (is_array($package_billing_info) && isset($package_billing_info['amount'])) {					
-					$package_amount = $package_billing_info['amount'];
-				}				
-				//2. Generating the addon serialized array
-				$addon_fee = $addon->generateAddonFee($main->getvar['addon_ids'], $billing_cycle_id, true);
-								
-				//3. Creating the invoice
-				$invoice_id = $invoice->create($user_id, $package_amount, $due, $notes, $addon_fee, INVOICE_STATUS_WAITING_PAYMENT, $order_id);
-				
-				//This variable will be read by the Ajax::ispaid function
-				$_SESSION['last_invoice_id'] = $invoice_id;
-				
-				//4. Suspend the hosting if is not already suspended
-				//if ($package_info['admin'] == 0) { 				
-				$serverphp->suspend($order_id, $type->determineServer($package_id));
-				//}												
-				echo '<div class="errors"><b>You are being redirected to payment! It will load in a couple of seconds..</b></div>';
+			//Username + password for the ISPConfig
+			$params['password']			= $serverphp->GenUsername();
+			$params['username']			= $serverphp->GenPassword();
+			
+			if (!empty($params['userid']) && !empty($params['pid'])) {
+				$order_id = $order->create($params);
+				//Add addons to the new order		
+				$order->addAddons($order_id, $main->getvar['addon_ids']);
 			}
+			
+			$array['USER']		= $system_username;				
+			$array['PASS'] 		= $system_password; 
+			$array['EMAIL'] 	= $system_email;
+			$array['DOMAIN'] 	= $main->getvar['fdom'];	
+			
+			//We avoid the user confirmation for the moment
+			if ($user_already_registered == true && $user_info['status'] == USER_STATUS_ACTIVE) {			
+				$array['CONFIRM'] 	= '';
+			} else {
+			//	$array['CONFIRM'] 	= '<span style="font-weight: bold;">Confirmation Link: </span>'.$db->config('url') . "client/confirm.php?u=" . $user_name . "&c=" . $date;	
+				$array['CONFIRM'] 	= '';
+			}			
+			$array['PACKAGE'] 	= $package_info['name'];
+							
+			//Register the new order to the ISPConfig/Cpanel
+			$done = $serverphp->signup($order_id, $params['username'], $system_email, $params['password']);
+			
+			//Package does not needs validation
+			if ($package_info['admin'] == 0) {
+				//New hosting account created
+				$emaildata = $db->emailTemplate('newacc');
+				echo "<strong>Your account has been completed!</strong><br />You may now use the client login bar to see your client area or proceed to your control panel.";				
+				$donecorrectly = true;
+			} elseif($package_info['admin'] == 1) {
+				//Needs admin validation so we suspend the order
+				$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);				
+					
+				//User is waiting for admin validation						
+				$emaildata 	= $db->emailTemplate('newaccadmin');
+				
+				//Email sent to all admins 
+				//$email_to_admin = $db->emailTemplate('adminval');
+				$email_to_admin = $db->emailTemplate('admin_order_validation');				
+				$email->staff($email_to_admin['subject'], $email_to_admin['content']);
+				
+				echo "<strong>Your order is awaiting admin validation!</strong><br />An email has been dispatched to the address on file. You will recieve another email when the admin has overlooked your account.";
+				$donecorrectly = true;
+				
+			} else {				
+				echo "Something with admin validation went wrong. Your account should be running but contact your host administrator.";	
+			}
+			
+			$email->send($array['EMAIL'], $emaildata['subject'], $emaildata['content'], $array);
+		} else {
+			echo "There was a problem when creating a user. Please contact the system administrator.";	
 		}
+		
+		//If the package is paid			
+		if($donecorrectly && $type->determineType($package_id) == 'paid') {							
+			global $invoice, $package;
+			//The order was saved with an status of admin validation now we should create an invoice an set the status to wait payment
+			$due 		= time();
+			$notes 		= '';			
+			
+			//1. Calculating the amount for the package depending on the billing cycle
+			$package_amount = 0;
+			$package_billing_info = $package->getPackageByBillingCycle($package_id, $billing_cycle_id);	
+			
+			if (is_array($package_billing_info) && isset($package_billing_info['amount'])) {					
+				$package_amount = $package_billing_info['amount'];
+			}				
+			//2. Generating the addon serialized array
+			$addon_fee = $addon->generateAddonFee($main->getvar['addon_ids'], $billing_cycle_id, true);
+							
+			//3. Creating the invoice
+			$invoice_id = $invoice->create($user_id, $package_amount, $due, $notes, $addon_fee, INVOICE_STATUS_WAITING_PAYMENT, $order_id);
+			
+			//This variable will be read in the Ajax::ispaid function
+			$_SESSION['last_invoice_id'] = $invoice_id;
+			
+			//4. Suspend the hosting if is not already suspended
+			$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);												
+			echo '<div class="errors"><b>You are being redirected to payment! It will load in a couple of seconds..</b></div>';
+		}	
 	}
 	
 	
@@ -455,9 +417,9 @@ class server {
 			//Suspending the website of that user
 			if($this->servers[$server]->suspend($order_id, $server) == true) {
 				
-				$emaildata = $db->emailTemplate('cancel_order');
-				
-				$array['REASON'] = 'Web Hosting Cancelled.';
+				$emaildata 			= $db->emailTemplate('cancel_order');
+				$array['DOMAIN'] 	= $order_info['domain'];
+				$array['REASON'] 	= 'Web Hosting Cancelled.';
 				$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $array);
 				$order->updateOrderStatus($order_id, ORDER_STATUS_CANCELLED);
 				
