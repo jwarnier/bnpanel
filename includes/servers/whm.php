@@ -6,7 +6,7 @@
 // Released under the GNU-GPL
 //////////////////////////////
 
-class whm {
+class whm extends Panel{
 	
 	# START THE MO TRUCKIN FUNCTIONS #
 	
