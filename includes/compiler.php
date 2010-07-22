@@ -116,7 +116,7 @@ if ($handle = opendir($folder)) { # Open the folder
 	}
 }
 closedir($handle); #Close the folder
-
+$token =  $main->getToken();
 if(INSTALL == 1) {
 	define("THEME", $db->config("theme")); # Set the default theme
 	define("URL", 	$db->config("url")); # Sets the URL THT is located at
@@ -126,16 +126,17 @@ if(INSTALL == 1) {
 		foreach($_POST as $key => $value) {
 			$main->postvar[$key] = $db->strip($value);
 		}
+		$main->postvar['_post_token'] =	$token;
 	}
 }
 //Converts all GET into variable - DB Friendly.
 foreach($_GET as $key => $value) {
 	if(INSTALL == 1) {
 		$main->getvar[$key] = $db->strip($value);
-	}
-	else {
+	} else {
 		$main->getvar[$key] = $value;	
 	}
+	$main->getvar['_get_token'] = $token;
 }
 $path = dirname($_SERVER['PHP_SELF']);
 $position = strrpos($path,'/') + 1;

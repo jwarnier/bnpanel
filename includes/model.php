@@ -18,12 +18,14 @@ class model {
 	 * Prepares a INSERT query to the database
 	 */
 	public function save($attributes) {
-		global $db; 
-		$new_attributes = $this->filterParams($attributes, $this->getColumns());
-		$sql = 'INSERT INTO '.$this->getTableName().' '.
-				'('.join(', ',array_keys($new_attributes)).') '.
-				'VALUES ('.join(',',array_values($new_attributes)).')';
-		$db->query($sql);
+		global $main, $db;		
+		if ($main->checkToken()) {		
+			$new_attributes = $this->filterParams($attributes, $this->getColumns());
+			$sql = 'INSERT INTO '.$this->getTableName().' '.
+					'('.join(', ',array_keys($new_attributes)).') '.
+					'VALUES ('.join(',',array_values($new_attributes)).')';
+			$db->query($sql);
+		}		
 	    return $db->insert_id();
 	}
 	
@@ -31,20 +33,24 @@ class model {
 	 * Builds an update query to hit the DB
 	 */
 	public function update($attributes) {
-		global $db;
-		//Remove the primary key id
-		unset($attributes['id']);		
-		$sql = 'UPDATE '.$this->getTableName().' '.
-        		'SET '.join(', ', $this->getAvailableAttributesQuoted($attributes)) .' '.
-        		"WHERE id ='".$this->getPrimaryKey()."'";
-       	$db->query($sql); 
+		global $main, $db;
+		if ($main->checkToken()) {		
+			//Remove the primary key id
+			unset($attributes['id']);		
+			$sql = 'UPDATE '.$this->getTableName().' '.
+	        		'SET '.join(', ', $this->getAvailableAttributesQuoted($attributes)) .' '.
+	        		"WHERE id ='".$this->getPrimaryKey()."'";
+	       	$db->query($sql); 
+		}
 	}
 		
 	public function delete() {
-		global $db;
-		$sql = 'DELETE FROM '.$this->getTableName().' '.        		
-        		"WHERE id ='".$this->getPrimaryKey()."'";
-       	$db->query($sql);
+		global $main, $db;
+		if ($main->checkToken()) {	
+			$sql = 'DELETE FROM '.$this->getTableName().' '.        		
+	        		"WHERE id ='".$this->getPrimaryKey()."'";
+	       	$db->query($sql);
+		}
 	}
 	
 	public function getTableName() {			
@@ -145,7 +151,5 @@ class model {
 		//Only accept values with something there		
 		$filtered_params = array_diff($filtered_params, array(''));
 		return $filtered_params;
-	}
-	
-	
+	}	
 }
