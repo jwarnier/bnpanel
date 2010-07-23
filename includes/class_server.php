@@ -306,7 +306,7 @@ class server extends Model {
 			}
 		} else {
 			//The user is already in. We load the user information from the DB
-			$user_already_registered = true;
+			
 			
 			$user_id 			= $main->getCurrentUserId();
 			if (!empty($user_id) && is_numeric($user_id) ) {
@@ -315,9 +315,12 @@ class server extends Model {
 				$system_username 	= $user_info['user'];
 				$system_password 	= $user_info['password'];			
 				$system_email		= $user_info['email'];
+				
+				$user_already_registered = true;
 			} else {
 				echo 'Please try again';
-				$main->logout();				
+				$main->logout();		
+				return;		
 			}
 		}		
 		
