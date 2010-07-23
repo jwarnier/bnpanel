@@ -38,11 +38,10 @@ class ispconfig extends Panel {
 	*/
 	public function load() {		
 		$data = $this->serverDetails($this->getServerId());			
-		$port = 8080;
-		$port = ':'.$port; 
-		//$port = '';
+	//	$host_parts = parse_url($data['host']);
+//		var_dump($host_parts);
+		//$data['host']	= $host_parts['scheme'].$host_parts['host'].$host_parts['path'];
 		
-		$data['host']	= $data['host'].$port;
 		//* The URI to the remoting interface. Please replace with the URI to your real server
 		$soap_location	= $data['host'].'/remote/index.php';
 		$soap_uri 		= $data['host'].'/remote/';
@@ -58,7 +57,7 @@ class ispconfig extends Panel {
 			}
 		} catch (SoapFault $e) {
 			if ($this->debug)			
-				die('SOAP Error: '.$e->getMessage());
+				//die('SOAP Error: '.$e->getMessage());
 			return false;
 		}
 		return false;
@@ -296,7 +295,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			//If client is added we have the new client id	
 
 			//Preparing variables to send to server_get
-			$server_params['server_id'] 	= $server_id;
+			$server_params['server_id'] 	= $this->server_id;
 			$server_params['section'] 		= 'web';
 			
 			//Getting server info
@@ -346,7 +345,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				
 				//Setting up the domain
 				$mail_domain_params['client_id'] = $new_client_id;
-				$mail_domain_params['server_id'] = $server_id;
+				$mail_domain_params['server_id'] = $this->server_id;
 				$mail_domain_params['domain']	 = $main->getvar['fdom'];
 				$mail_domain_params['active'] 	 = 'y';
 				$domain_id = $this->remote('mail_domain_add', $mail_domain_params);
