@@ -11,7 +11,7 @@ class page {
 	
 							
 	public function __construct() {
-		global $main;
+		global $main, $server;
 		$this->navtitle = "Servers Sub Menu";
 		$this->navlist[] = array("View Servers", "server_go.png", "view");
 		$this->navlist[] = array("Add Server", "server_add.png", "add");
@@ -29,7 +29,11 @@ class page {
 				}
 			}
 		}
+		
 		$this->array_type = $main->dropDown("type", $values, 0, 0);
+		
+		/*$server_list = $server->getAvailablePanels();
+		$this->array_type = $main->createSelect('type', $server_list);*/
 		
 	}
 	
@@ -40,9 +44,7 @@ class page {
 	}
 	
 	public function content() { # Displays the page 
-		global $main;
-		global $style;
-		global $db;
+		global $main, $style, $db, $server;
 		switch($main->getvar['sub']) {
 			default:
 				if($_POST) {
@@ -53,7 +55,8 @@ class page {
 						}
 					}
 					if(!$n) {
-						$db->query("INSERT INTO `<PRE>servers` (name, host, user, accesshash, type) VALUES('{$main->postvar['name']}', '{$main->postvar['host']}', '{$main->postvar['user']}', '{$main->postvar['hash']}', '{$main->postvar['type']}')");
+						$main->postvar['accesshash'] = $main->postvar['hash']; 
+						$server->create($main->postvar);
 						$main->errors("Server has been added!");
 					}
 				}
@@ -76,26 +79,32 @@ class page {
 								}
 							}
 							if(!$n) {
-								$db->query("UPDATE `<PRE>servers` SET `name` = '{$main->postvar['name']}' WHERE `id` = '{$main->getvar['do']}'");
-								$db->query("UPDATE `<PRE>servers` SET `user` = '{$main->postvar['user']}' WHERE `id` = '{$main->getvar['do']}'");
-								$db->query("UPDATE `<PRE>servers` SET `host` = '{$main->postvar['host']}' WHERE `id` = '{$main->getvar['do']}'");
-								$db->query("UPDATE `<PRE>servers` SET `accesshash` = '{$main->postvar['hash']}' WHERE `id` = '{$main->getvar['do']}'");
-								$db->query("UPDATE `<PRE>servers` SET `type` = '{$main->postvar['type']}' WHERE `id` = '{$main->getvar['do']}'");
+								$main->postvar['accesshash'] = $main->postvar['hash']; 
+								$server->edit($main->getvar['do'], $main->postvar);
 								$main->errors("Server edited!");
 								$main->done();
 							}
 						}
 						$data = $db->fetch_array($query);
+						
 						$array['USER'] = $data['user'];
 						$array['HOST'] = $data['host'];
 						$array['NAME'] = $data['name'];
 						$array['HASH'] = $data['accesshash'];
 						$array['ID'] = $data['id'];
 						$array['TYPE'] = $this->array_type;
+						
+						global $server;
+						
+						$server_php = $server->loadServer($data['id']);						
+						$server_php->testConnection();
 						echo $style->replaceVar("tpl/viewserver.tpl", $array);
 					}
-				}
-				else {
+					
+			
+					
+					
+				} else {
 					$query = $db->query("SELECT * FROM `<PRE>servers`");
 					if($db->num_rows($query) == 0) {
 						echo "There are no servers to view!";	
@@ -111,18 +120,16 @@ class page {
 						}
 					}
 				}
-				break;
-			
-			case "delete":
+				break;			
+			case 'delete':
 				if($main->getvar['do']) {
-					$db->query("DELETE FROM `<PRE>servers` WHERE `id` = '{$main->getvar['do']}'");
+					$server->delete($main->getvar['do']);
 					$main->errors("Server Account Deleted!");		
 				}
 				$query = $db->query("SELECT * FROM `<PRE>servers`");
 				if($db->num_rows($query) == 0) {
 					echo "There are no servers to delete!";	
-				}
-				else {
+				} else {
 					echo "<ERRORS>";
 					while($data = $db->fetch_array($query)) {
 						echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=servers&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
@@ -136,4 +143,3 @@ class page {
 		}
 	}
 }
-?>

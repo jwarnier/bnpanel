@@ -6,8 +6,110 @@
  * It cancel, suspend the orders. * 
  */
  
-class server {	
+class server extends Model {
+		
+	public $columns 	= array('id', 'name','host', 'user','accesshash','type');	
+	public $table_name 	= 'servers';	
+	
+	
 	private $servers = array(); # All the servers in a array
+	public 	$availableServerList = array();
+	
+	public function __construct() {
+		$this->availableServerList = $this->getAvailablePanelsFromDir();			
+		/*if (isset($_SESSION['available_server_list']) && is_array($_SESSION['available_server_list'])) {
+			$this->availableServerList  = $_SESSION['available_server_list'];
+		} else {
+			$this->availableServerList = $this->getAvailablePanelsFromDir();	
+			$_SESSION['available_server_list'] = $this->availableServerList;
+		}	*/	
+	}
+	
+	/**
+	 * Reads the includes/servers folder
+	 */
+	private function getAvailablePanelsFromDir() {
+		$server_path = LINK.'servers';
+		$my_list = array();
+		if (is_dir($server_path) && $handle_type = opendir($server_path)) {
+			while (FALSE !== ($file = readdir($handle_type))) {  		
+	    		if (!in_array($file, array('.','..')) && $file != 'panel.php') {
+	    			$my_list[] = basename($file,'.php');	    			
+	    		}
+			}
+		}		
+		return 	$my_list;
+	}
+	
+	/**
+	 * Adds a server in the Database
+	 * @param	array	parameters 
+	 */
+	public function create($params) {
+		global $main;
+		
+		$server_id = $this->save($params);
+		if (!empty($server_id) && is_numeric($server_id )) {
+			$main->addLog("Server created: $server_id");	
+		}
+		return $server_id;
+	}
+	
+	/** 
+	 * Edits a server
+	 * 
+	 */
+	public function edit($server_id, $params) {
+		global $main;
+		$this->setPrimaryKey($server_id);		
+		$this->update($params);
+		$main->addLog("Server id $server_id updated");
+	}
+	
+	/**
+	 * Deletes a server
+	 */
+	public function delete($server_id) { # Deletes invoice upon invoice id
+		global $main;
+		$this->setPrimaryKey($server_id);	
+		parent::delete();
+		$main->addLog("Server id $id deleted ");
+		return true;
+	}
+	
+	
+	public function getAvailablePanels() {
+		return $this->availableServerList;
+	}
+	
+	/**
+	 * Return the server class
+	 * @param	int		server id	
+	 */
+	public function loadServer($server_id) {
+		$server_info = $this->getServerById($server_id); # Determine server
+		
+		$server_type = $server_info['type'];
+		if($this->servers[$server_type]) {
+			return $this->servers[$server_type];	
+		}
+		//Abstract class Panel added
+		require_once LINK."servers/panel.php";
+		if (in_array($server_type, $this->getAvailablePanels())) {
+			$link = LINK."servers/".$server_type.".php";
+			if(!file_exists($link)) {
+				$array['Error'] = "The server  $server_type doesn't exist!";
+				$array['Server ID'] = $server_type;
+				$array['Path'] = $link;
+				$main->error($array);
+				return false;	
+			} else {
+				require_once $link; # Get the server							
+				$serverphp = new $server_type($server_id);
+				return $serverphp;
+			}
+		}
+	}
 	
 	/**
 	 * Loads the Server class (isoconfig, direct admin,  cpanel)
@@ -448,7 +550,7 @@ class server {
 	 */
 	public function decline($id) { # Deletes a user account from the package ID
 		global $db, $main, $type, $email;
-		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}' AND `status` != '9'");
+		$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `id` = '{$db->strip($id)}' AND `status` != '9'");
 		if($db->num_rows($query) == 0) {
 			$array['Error'] = "That package doesn't exist or cannot be cancelled! Are you trying to cancel an already cancelled account?";
 			$array['User PID'] = $id;
@@ -706,4 +808,22 @@ class server {
 		}
 	}
 	
+	public function	getAllServers() {
+		global $db, $main;	
+	}
+	
+	public function getServerById($server_id) {
+		global $db, $main;	
+		$sql = "SELECT *  FROM `<PRE>servers` WHERE `id` = '{$db->strip($server_id)}'";
+		$query = $db->query($sql);
+		if($db->num_rows($query) == 0) {
+			$array['Error'] = "That server doesn't exist!";
+			$array['Server ID'] = $server_id;
+			$main->error($array);
+			return;	
+		} else {
+			$data = $db->fetch_array($query,'ASSOC');
+			return $data;
+		}	
+	}
 }
