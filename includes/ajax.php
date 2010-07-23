@@ -6,8 +6,8 @@
  */
 
 
-define("LINK", "./");
-include("compiler.php");
+define('LINK', './');
+include 'compiler.php';
 
 class AJAX {
 	public function orderIsUser() {

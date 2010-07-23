@@ -142,6 +142,7 @@ class ispconfig extends Panel {
 						$params['client_id'] = null;
 						$soap_result 	= $soap_client->mail_domain_add($this->session_id, $client_id, $params);
 					break;
+					
 					default:
 					break;
 				}

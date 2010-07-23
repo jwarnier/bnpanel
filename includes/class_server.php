@@ -154,7 +154,7 @@ class server extends Model {
 			return;
 		} 
 		
-		if (!$main->checkToken()) {
+		if (!$main->checkToken(false)) {
 			echo 'Token Error';
 		}
 		$user_id = '';
@@ -335,7 +335,7 @@ class server extends Model {
 		if ($user_already_registered == false) {
 			
 			/* Creating a new user */												
-			$system_username			= $main->getvar['username'];	
+			$system_username			= $main->getvar['user'] = $main->getvar['username'];	
 			$system_password			= $main->getvar['password'];
 			$system_email				= $main->getvar['email'];
 			
@@ -344,7 +344,7 @@ class server extends Model {
 			$main->getvar['status'] 	= USER_STATUS_ACTIVE; 
 			
 			//Creates a new user
-			$user_id 					= $user->create($main->getvar);
+			$user_id 					= $user->create($main->getvar, false);
 			
 			//If user is created
 			if (!empty($user_id) && is_numeric($user_id)){
@@ -381,7 +381,7 @@ class server extends Model {
 			$params['username']			= $serverphp->GenPassword();
 			
 			if (!empty($params['userid']) && !empty($params['pid'])) {
-				$order_id = $order->create($params);
+				$order_id = $order->create($params, false);
 				//Add addons to the new order		
 				$order->addAddons($order_id, $main->getvar['addon_ids']);
 			}
@@ -451,7 +451,16 @@ class server extends Model {
 			$addon_fee = $addon->generateAddonFee($main->getvar['addon_ids'], $billing_cycle_id, true);
 							
 			//3. Creating the invoice
-			$invoice_id = $invoice->create($user_id, $package_amount, $due, $notes, $addon_fee, INVOICE_STATUS_WAITING_PAYMENT, $order_id);
+			
+			$invoice_params['uid'] 		= $user_id;
+			$invoice_params['amount'] 	= $package_amount;
+			$invoice_params['due'] 		= $due;
+			$invoice_params['notes'] 	= $notes;
+			$invoice_params['addon_fee']= $addon_fee;
+			$invoice_params['status'] 	= INVOICE_STATUS_WAITING_PAYMENT;
+			$invoice_params['order_id'] = $order_id;
+						
+			$invoice_id = $invoice->create($invoice_params, false);
 			
 			//This variable will be read in the Ajax::ispaid function
 			$_SESSION['last_invoice_id'] = $invoice_id;

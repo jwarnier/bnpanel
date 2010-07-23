@@ -18,9 +18,9 @@ class order extends model {
 	 * @param	float	amount
 	 * @param	date	expiration date
 	 */
-	public function create($params) {		
+	public function create($params, $clean_token = true) {		
 		global $main, $db, $email, $user;
-		$order_id = $this->save($params);
+		$order_id = $this->save($params, $clean_token);
 		if (!empty($order_id) && is_numeric($order_id )) {
 			$main->addLog("Order created: $order_id");
 			/*
