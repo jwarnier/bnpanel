@@ -119,7 +119,8 @@ class server extends Model {
 	 */
 	private function createServer($package_id) { # Returns the server class for the desired package
 		global $type, $main;		
-		$server_type = $type->determineServerType($type->determineServer($package_id)); # Determine server		
+		$server_id 	 = $type->determineServer($package_id);
+		$server_type = $type->determineServerType($server_id); # Determine server		
 		if($this->servers[$server_type]) {
 			return true;	
 		}		
@@ -134,7 +135,7 @@ class server extends Model {
 			return false;	
 		} else {
 			require_once $link; # Get the server
-			$serverphp = new $server_type();
+			$serverphp = new $server_type($server_id);
 			return $serverphp;
 		}
 	}
@@ -307,7 +308,7 @@ class server extends Model {
 			//The user is already in. We load the user information from the DB
 			$user_already_registered = true;
 			$user_id 			= $main->getCurrentUserId();
-			$user_info 			= $main->getUserById($user_id);	
+			$user_info 			= $user->getUserById($user_id);	
 					
 			$system_username 	= $user_info['user'];
 			$system_password 	= $user_info['password'];			
@@ -327,7 +328,7 @@ class server extends Model {
 		}
 
 		//$main->getvar['fplan'] = $package_info['backend']; 		//useless right now
-		$serverphp = $this->createServer($package_id); # Create server class
+		$serverphp = $this->loadServer($package_info['server']); # Create server class
 		
 		$date 				= time();
 		$billing_cycle_id 	= $main->getvar['billing_id'];
