@@ -25,8 +25,7 @@ function client() {
 	$link = "pages/". $main->getvar['page'] .".php";
 	if(!file_exists($link)) {
 		$html = "Seems like the .php is non existant. Is it deleted?";	
-	}
-	else {
+	} else {
 		//If deleting something
 		if(preg_match("/[\.*]/", $main->getvar['page']) == 0) {
 			include($link);
@@ -202,13 +201,14 @@ if(!$_SESSION['clogged']) {
 		echo '<div align="center">'.$main->table("Client Area - Reset Password", $style->replaceVar("tpl/creset.tpl", $array), "300px").'</div>';
 		
 		echo $style->get("footer.tpl");
-	}
-	else {
+	} else {
 		define("SUB", "Login");
 		define("INFO", " ");
 		if($_POST) { # If user submitts form
-			if($main->clientLogin($main->postvar['user'], $main->postvar['pass'])) {
-				$main->redirect("?page=home");	
+			if ($main->checkToken()) {
+				if($main->clientLogin($main->postvar['user'], $main->postvar['pass'])) {
+					$main->redirect("?page=home");	
+				}
 			}		
 		}
 		
