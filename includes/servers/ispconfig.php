@@ -39,8 +39,7 @@ class ispconfig extends Panel {
 	public function load() {		
 		$data = $this->serverDetails($this->getServerId());		
 		$port = 8080;
-		$port = ':'.$port;
-		$port = '';
+		//$port = ':'.$port; $port = '';
 		
 		$data['host']	= $data['host'].$port;
 		//* The URI to the remoting interface. Please replace with the URI to your real server
@@ -121,14 +120,28 @@ class ispconfig extends Panel {
 						$params['client_id'] = null;
 						$soap_result 	= $soap_client->sites_web_domain_add($this->session_id, $client_id  , $params);
 					break;	
+					//Get domain info
 					case 'sites_web_domain_get':
 						$soap_result 	= $soap_client->sites_web_domain_get($this->session_id, $params['primary_id']);
 					break;
-					
+					//Get server info
+					//Section Could be 'web', 'dns', 'mail', 'dns', 'cron', etc
 					case 'server_get':
 						$soap_result 	= $soap_client->server_get($this->session_id, $params['server_id'], $params['section']);
 					break;
-	
+					
+					//Adds a DNS zone
+					case 'dns_zone_add':
+						$client_id 		= $params['client_id']; // client id
+						$params['client_id'] = null;
+						$soap_result 	= $soap_client->dns_zone_add($this->session_id, $client_id, $params);
+					break;
+					
+					case 'mail_domain_add':
+						$client_id 		= $params['client_id']; // client id
+						$params['client_id'] = null;
+						$soap_result 	= $soap_client->mail_domain_add($this->session_id, $client_id, $params);
+					break;
 					default:
 					break;
 				}
@@ -182,6 +195,7 @@ class ispconfig extends Panel {
 		@author Julio Montoya <gugli100@gmail.com> Beeznest	2010
 	*/
 	public function signup($order_id, $domain_username, $email, $domain_password = '') {
+		
 		global $main, $db, $package, $order;
 		$order_info		= $order->getOrderInfo($order_id);
 		$package_info 	= $package->getPackage($order_info['pid']);
@@ -307,7 +321,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$site_params['hd_quota'] = 1; //ISPCOnfig field
 			}
 
-			if (empty($client_info['$site_infolimit_traffic_quot'])) {
+			if (empty($client_info['site_infolimit_traffic_quota'])) {
 				 //Not 0 values otherwise the script will not work
 				$site_params['traffic_quota'] = 1; // ISPCOnfig field
 			}
@@ -324,6 +338,38 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 
 				//Creating a site
 				$result = $this->remote('sites_web_domain_add',$site_params);
+				//Creating a zone 
+				$result = $this->remote('sites_web_domain_add',$site_params);
+				
+				//Setting up the domain
+				$mail_domain_params['client_id'] = $new_client_id;
+				$mail_domain_params['server_id'] = $server_id;
+				$mail_domain_params['domain']	 = $main->getvar['fdom'];
+				$mail_domain_params['active'] 	 = 'y';
+				$domain_id = $this->remote('mail_domain_add', $mail_domain_params);
+				
+				//Setting up the DNS zone				
+				$dns_domain_params['client_id'] = $new_client_id;
+				$dns_domain_params['origin']	= $main->getvar['fdom'];
+				$dns_domain_params['ns']		= '8.8.8.8';
+				$dns_domain_params['mbox'] 		='julio.montoya@beeznest.com';//email
+				$dns_domain_params['refresh'] 	= 28800;
+				$dns_domain_params['retry'] 	= 7200;
+				$dns_domain_params['expire']	= 604800;
+				$dns_domain_params['minimum']	= 604800;
+				$dns_domain_params['ttl']		= 604800;
+				
+				$dns_domain_params['active']	= 'y';			
+				
+				/* Extra params
+				serial				
+				xfer
+				also_notify
+				update_acl
+				*/			
+				
+				$domain_id = $this->remote('dns_zone_add', 	  $dns_domain_params);
+	
 			}					
 			return true;	
 		}
