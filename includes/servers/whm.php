@@ -13,11 +13,11 @@ class whm extends Panel {
 	public $name = "cPanel/WHM"; # THT Values
 	public $hash = true; # Password or Access Hash?
 	
-	private $server;
+	private $server_id;
 	
 	private function remote($url, $xml = 0, $term = false) {
                 global $db;
-		$data = $this->serverDetails($this->server);
+		$data = $this->serverDetails($this->server_id);
 		//Curl Script done by Krakjoe and Kevin, Thanks.
 		$cleanaccesshash = preg_replace("'(\r|\n)'","",$data['accesshash']);
 		$authstr = $data['user'] . ":" . $cleanaccesshash;
@@ -66,7 +66,7 @@ class whm extends Panel {
 		$pass = $this->GenPassword();
 		*/
 		
-		$this->server = $package_info['server'];
+		$this->server_id = $package_info['server'];
 		$action = "/xml-api/createacct".
 					"?username=". $user . "".
 					"&password=". $pass ."".
@@ -96,7 +96,7 @@ class whm extends Panel {
 		global $order, $user;
 		$order_info = $order->getOrderInfo($order_id);
 		$user_info	= $user->getUserById($order_info['userid']);
-		$this->server = $server;
+		$this->server_id = $server;
 		$action = "/xml-api/suspendacct?user=" . strtolower($user_info['user']);
 		$command = $this->remote($action);
                 if($reason == false) {
@@ -117,7 +117,7 @@ class whm extends Panel {
 		global $main, $db, $order, $user;
 		$order_info = $order->getOrderInfo($order_id);
 		$user_info	= $user->getUserById($order_info['userid']);
-		$this->server = $server;
+		$this->server_id = $server;
 		$action = "/xml-api/unsuspendacct?user=" . strtolower($user_info['user']);
 		$command = $this->remote($action);
 		if($command->result->status == 1) {
@@ -128,7 +128,7 @@ class whm extends Panel {
 		}
 	}
 	public function terminate($user, $server) {
-		$this->server = $server;
+		$this->server_id = $server;
 		$action = "/xml-api/removeacct?user=" . strtolower($user);
 		$command = $this->remote($action, 0, true);
 		if($command == true) {
@@ -139,7 +139,7 @@ class whm extends Panel {
 		}
 	}
 	public function listaccs($server) {
-		$this->server = $server;
+		$this->server_id = $server;
 		$action = "/xml-api/listaccts";
 		$command = $this->remote($action, 1);
 		$xml = new DOMDocument();
@@ -204,7 +204,7 @@ class whm extends Panel {
 	}
 	public function changePwd($acct, $newpwd, $server)
 	{
-		$this->server = $server;
+		$this->server_id = $server;
 		$action = '/xml-api/passwd?user=' . $acct . '&pass=' . $newpwd;
 		$command = $this->remote($action);
 		if($command->passwd->status == 1) {
@@ -220,5 +220,3 @@ class whm extends Panel {
 		}
 	}
 }
-
-?>
