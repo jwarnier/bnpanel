@@ -352,9 +352,10 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				
 				//Setting up the DNS zone				
 				$dns_domain_params['client_id'] = $new_client_id;
+				$dns_domain_params['server_id'] = $this->server_id;
 				$dns_domain_params['origin']	= $main->getvar['fdom'];
 				$dns_domain_params['ns']		= '8.8.8.8';
-				$dns_domain_params['mbox'] 		='julio.montoya@beeznest.com';//email
+				$dns_domain_params['mbox'] 		='mbox.beeznest.com';//@todo 
 				$dns_domain_params['refresh'] 	= 28800;
 				$dns_domain_params['retry'] 	= 7200;
 				$dns_domain_params['expire']	= 604800;
