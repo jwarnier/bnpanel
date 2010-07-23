@@ -16,24 +16,25 @@ class invoice extends model {
 	 * @param	float	amount
 	 * @param	date	expiration date
 	 */
-	public function create($uid, $amount, $due, $notes, $addon_fee, $status, $order_id) {
+	public function create($params, $clean_token = true) {
 		global $db, $email;
-		$client 		= $db->client($uid);		
-		$emailtemp 		= $db->emailTemplate('newinvoice');
-		$array['USER'] 	= $client['user'];
-		$array['DUE'] 	= strftime("%D", $due);
-		$email->send($client['email'], $emailtemp['subject'], $emailtemp['content'], $array);
-		$insert_sql = "INSERT INTO `<PRE>invoices` (uid, amount, due, notes, addon_fee, status ) VALUES('{$uid}', '{$amount}', '{$due}', '{$notes}', '{$addon_fee}', '{$status}' )";
-		$db->query($insert_sql);
-		$invoice_id = $db->insert_id();			
-		if (!empty($invoice_id ) && is_numeric($invoice_id)) {
-			$main->addLog("Invoice id $invoice_id created ");			
+		$invoice_id = $this->save($params, $clean_token);
+		if (!empty($invoice_id) && is_numeric($invoice_id )) {
+			
+			$client 		= $db->client($params['uid']);		
+			$emailtemp 		= $db->emailTemplate('newinvoice');
+			$array['USER'] 	= $client['user'];
+			$array['DUE'] 	= strftime("%D", $params['due']);
+			$email->send($client['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+			$order_id = $params['order_id'];
 			if (!empty($order_id)) {
 				$insert_sql = "INSERT INTO `<PRE>order_invoices` (order_id, invoice_id) VALUES('{$order_id}', '{$invoice_id}')";				
 				$db->query($insert_sql);		
-			}
-			return 	$invoice_id;
-		}		
+			}			
+			$main->addLog("Invoice created: $invoice_id");
+			return	$invoice_id;
+		}
+		return false;		
 	}
 	
 	public function delete($id) { # Deletes invoice upon invoice id	

@@ -97,7 +97,8 @@ $main = new main(); # Create the class
 if (isset($main) && !empty($main)) {
 	global $main;		
 } else {
-	$main->redirect('install');
+	//$main->redirect('install');
+	echo 'Something goes wrong';
 }
 
 if ($handle = opendir($folder)) { # Open the folder
@@ -116,6 +117,7 @@ if ($handle = opendir($folder)) { # Open the folder
 	}
 }
 closedir($handle); #Close the folder
+
 $token =  $main->getToken();
 if(INSTALL == 1) {
 	define("THEME", $db->config("theme")); # Set the default theme
@@ -138,6 +140,7 @@ foreach($_GET as $key => $value) {
 	}
 	$main->getvar['_get_token'] = $token;
 }
+
 $path = dirname($_SERVER['PHP_SELF']);
 $position = strrpos($path,'/') + 1;
 define("FOLDER", substr($path,$position)); # Add current folder name to global
@@ -154,8 +157,9 @@ $_SESSION['errors'] = 0;
 
 //If payment..
 if(FOLDER == "client" && $main->getvar['page'] == "invoices" && $main->getvar['iid'] && $_SESSION['clogged'] == 1) {
-
-	$invoice->pay($main->getvar['iid'], "client/index.php?page=invoices");
+	if ($main->checkToken()) {
+		$invoice->pay($main->getvar['iid'], "client/index.php?page=invoices");
+	}
 	echo "You made it this far.. something went wrong.";
 }
 

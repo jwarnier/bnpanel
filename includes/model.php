@@ -17,9 +17,9 @@ class model {
 	/**
 	 * Prepares a INSERT query to the database
 	 */
-	public function save($attributes) {
+	public function save($attributes, $clean_token = true) {
 		global $main, $db;		
-		if ($main->checkToken()) {		
+		if ($main->checkToken($clean_token)) {		
 			$new_attributes = $this->filterParams($attributes, $this->getColumns());
 			$sql = 'INSERT INTO '.$this->getTableName().' '.
 					'('.join(', ',array_keys($new_attributes)).') '.
@@ -32,9 +32,9 @@ class model {
 	/**
 	 * Builds an update query to hit the DB
 	 */
-	public function update($attributes) {
+	public function update($attributes, $clean_token = true) {
 		global $main, $db;
-		if ($main->checkToken()) {		
+		if ($main->checkToken($clean_token)) {		
 			//Remove the primary key id
 			unset($attributes['id']);		
 			$sql = 'UPDATE '.$this->getTableName().' '.
@@ -44,9 +44,9 @@ class model {
 		}
 	}
 		
-	public function delete() {
+	public function delete($clean_token = true) {
 		global $main, $db;
-		if ($main->checkToken()) {	
+		if ($main->checkToken($clean_token)) {	
 			$sql = 'DELETE FROM '.$this->getTableName().' '.        		
 	        		"WHERE id ='".$this->getPrimaryKey()."'";
 	       	$db->query($sql);

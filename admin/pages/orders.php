@@ -226,9 +226,19 @@ class page {
 							$addon_serialized = $addon->generateAddonFee($new_addon_list, $billing_id, true);
 							
 							$package_info = $package->getPackageByBillingCycle($package_id, $billing_id);
-							$amount = $package_info['amount'];	
+																			
 												
-							$invoice->create($order_info['userid'], $amount, $due, $notes, $addon_serialized, $status, $main->getvar['do']);
+							$invoice_params['uid'] 		= $order_info['userid'];
+							$invoice_params['amount'] 	= $package_info['amount'];
+							$invoice_params['due'] 		= $due;
+							$invoice_params['notes'] 	= $notes;
+							$invoice_params['addon_fee']= $addon_serialized;
+							$invoice_params['status'] 	= $status;
+							$invoice_params['order_id'] = $main->getvar['do'];
+										
+							$invoice_id = $invoice->create($invoice_params, false);
+			
+							$invoice->create($invoice_params);
 							
 							$main->errors("Invoice created!");
 							//$main->redirect("?page=invoices&sub=all");
