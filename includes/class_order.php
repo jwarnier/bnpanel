@@ -18,7 +18,7 @@ class order extends model {
 	 * @param	float	amount
 	 * @param	date	expiration date
 	 */
-	public function create($params) {
+	public function create($params) {		
 		global $main, $db, $email, $user;
 		$order_id = $this->save($params);
 		if (!empty($order_id) && is_numeric($order_id )) {
@@ -41,8 +41,9 @@ class order extends model {
 			$array['ADMIN_EMAIL'] 	= $db->config('EMAIL');
 			
 			$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);*/
-		}
-		return	$order_id;
+			return	$order_id;
+		}			
+		return false;
 	}
 	
 	/** 
@@ -54,15 +55,17 @@ class order extends model {
 	 */
 	 
 	public function addAddons($order_id, $addon_list) {
-		global $db;
-		//Insert into user_pack_addons
-		if (is_array($addon_list) && count($addon_list) > 0) {
-			foreach ($addon_list as $addon_id) {
-				if (!empty($addon_id) && is_numeric($addon_id)) {
-					$addon_id = intval($addon_id);
-					$order_id = intval($order_id);					
-					$sql_insert = "INSERT INTO order_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
-					$db->query(	$sql_insert);					
+		global $db, $main;
+		if ($main->checkToken()) {
+			//Insert into user_pack_addons
+			if (is_array($addon_list) && count($addon_list) > 0) {
+				foreach ($addon_list as $addon_id) {
+					if (!empty($addon_id) && is_numeric($addon_id)) {
+						$addon_id = intval($addon_id);
+						$order_id = intval($order_id);					
+						$sql_insert = "INSERT INTO order_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
+						$db->query(	$sql_insert);					
+					}
 				}
 			}
 		}
