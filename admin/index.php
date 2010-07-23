@@ -103,15 +103,21 @@ function acp() {
 					}
 				}
 			}
+		
 			
-			if($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {
+			if($main->getvar['sub'] == 'delete' && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {
+				
 				foreach($main->postvar as $key => $value) {
 					$array['HIDDEN'] .= '<input name="'.$key.'" type="hidden" value="'.$value.'" />';
-				}
+				}								
 				$array['HIDDEN'] .= " ";
-				$html = $style->replaceVar("tpl/warning.tpl", $array);	
+				$html = $style->replaceVar("tpl/warning.tpl", $array);
+				
 			} elseif($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
 				if($main->postvar['yes']) {
+					
+			
+				
 					foreach($main->getvar as $key => $value) {
 					  if($i) {
 						  $i = "&";	
@@ -216,11 +222,13 @@ if(!$_SESSION['logged']) {
 	} else { 
 		define("SUB", "Login");
 		define("INFO", " ");
-		if($_POST) { # If user submitts form		
-			if($main->staffLogin($main->postvar['user'], $main->postvar['pass'])) {
-				$main->redirect("?page=home");	
-			} else {
-			$main->errors("Incorrect username or password!");
+		if($_POST) { # If user submitts form
+			if ($main->checkToken()) {
+				if($main->staffLogin($main->postvar['user'], $main->postvar['pass'])) {
+					$main->redirect("?page=home");	
+				} else {
+					$main->errors("Incorrect username or password!");
+				}
 			}
 		}	
 		echo $style->get("header.tpl");
