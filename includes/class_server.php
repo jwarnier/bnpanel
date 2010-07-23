@@ -41,6 +41,11 @@ class server extends Model {
 		return 	$my_list;
 	}
 	
+	public function getAvailablePanels() {
+		return $this->availableServerList;
+	}
+	
+	
 	/**
 	 * Adds a server in the Database
 	 * @param	array	parameters 
@@ -77,10 +82,6 @@ class server extends Model {
 		return true;
 	}
 	
-	
-	public function getAvailablePanels() {
-		return $this->availableServerList;
-	}
 	
 	/**
 	 * Return the server class
@@ -152,6 +153,10 @@ class server extends Model {
 			echo 'Package doesn\'t exist please contact the administrator';
 			return;
 		} 
+		
+		if (!$main->checkToken()) {
+			echo 'Token Error';
+		}
 		$user_id = '';
 			
 		if($main->getvar['domain'] == 'dom') { # If Domain
