@@ -37,9 +37,10 @@ class ispconfig extends Panel {
 		Stablished a SOAP connection
 	*/
 	public function load() {		
-		$data = $this->serverDetails($this->getServerId());		
+		$data = $this->serverDetails($this->getServerId());			
 		$port = 8080;
-		//$port = ':'.$port; $port = '';
+		$port = ':'.$port; 
+		//$port = '';
 		
 		$data['host']	= $data['host'].$port;
 		//* The URI to the remoting interface. Please replace with the URI to your real server
@@ -56,8 +57,9 @@ class ispconfig extends Panel {
 				return $client;
 			}
 		} catch (SoapFault $e) {
+			if ($this->debug)			
+				die('SOAP Error: '.$e->getMessage());
 			return false;
-			//die('SOAP Error: '.$e->getMessage());
 		}
 		return false;
 	}
