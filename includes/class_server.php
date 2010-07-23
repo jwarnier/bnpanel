@@ -418,6 +418,8 @@ class server extends Model {
 			$array['PACKAGE'] 	= $package_info['name'];
 							
 			//Register the new order to the ISPConfig/Cpanel
+			echo ' I send this';
+			var_dump($order_id, $params['username'], $system_email, $params['password']);
 			$done = $serverphp->signup($order_id, $params['username'], $system_email, $params['password']);
 			
 			//Package does not needs validation
