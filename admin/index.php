@@ -233,7 +233,7 @@ if(!$_SESSION['logged']) {
 	if(!$main->getvar['page']) {
 		$main->getvar['page'] = "home";
 	} elseif($main->getvar['page'] == "logout") {
-		session_destroy();
+		$main->logout();		
 		$main->redirect("?page=home");
 	}
 	$content = acp();

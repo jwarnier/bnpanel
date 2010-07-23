@@ -307,12 +307,18 @@ class server extends Model {
 		} else {
 			//The user is already in. We load the user information from the DB
 			$user_already_registered = true;
+			
 			$user_id 			= $main->getCurrentUserId();
-			$user_info 			= $user->getUserById($user_id);	
-					
-			$system_username 	= $user_info['user'];
-			$system_password 	= $user_info['password'];			
-			$system_email		= $user_info['email'];			
+			if (!empty($user_id) && is_numeric($user_id) ) {
+				$user_info 			= $user->getUserById($user_id);	
+						
+				$system_username 	= $user_info['user'];
+				$system_password 	= $user_info['password'];			
+				$system_email		= $user_info['email'];
+			} else {
+				echo 'Please try again';
+				$main->logout();				
+			}
 		}		
 		
 		// Creates the "paid" or "free" class 
@@ -352,6 +358,8 @@ class server extends Model {
 				$user_already_registered = true;
 				$main->addLog('User registered user id :'.$user_id);										
 				$login = $main->clientLogin($system_username, $system_password);
+			} else {
+				return "Can't create an user";
 			}																		  
 		} 
 			
