@@ -17,6 +17,7 @@ class page {
 		$this->navlist[] = array("Add Server", "server_add.png", "add");
 		$this->navlist[] = array("Delete Server", "server_delete.png", "delete");
 		
+		//@todo this foreach for something lighter
 		$files = $main->folderFiles(LINK."servers/");
 		require_once LINK.'servers/panel.php';
 		if(is_array($files) && count($files) > 0) {
@@ -66,6 +67,7 @@ class page {
 			
 			case 'view':
 				if(isset($main->getvar['do'])) {
+					//@todo replace this queries
 					$query = $db->query("SELECT * FROM `<PRE>servers` WHERE `id` = '{$main->getvar['do']}'");
 					if($db->num_rows($query) == 0) {
 						echo "That server doesn't exist!";	
@@ -94,17 +96,13 @@ class page {
 						$array['ID'] = $data['id'];
 						$array['TYPE'] = $this->array_type;
 						
-						global $server;
-						
+						global $server;						
 						$server_php = $server->loadServer($data['id']);						
 						$server_php->testConnection();
 						echo $style->replaceVar("tpl/viewserver.tpl", $array);
 					}
-					
-			
-					
-					
 				} else {
+					//@todo replace this queries
 					$query = $db->query("SELECT * FROM `<PRE>servers`");
 					if($db->num_rows($query) == 0) {
 						echo "There are no servers to view!";	
@@ -126,6 +124,7 @@ class page {
 					$server->delete($main->getvar['do']);
 					$main->errors("Server Account Deleted!");		
 				}
+				//@todo replace this queries
 				$query = $db->query("SELECT * FROM `<PRE>servers`");
 				if($db->num_rows($query) == 0) {
 					echo "There are no servers to delete!";	
