@@ -9,33 +9,51 @@
 class ispconfig extends Panel {
 		
 	public	$name = "ISPConfig3";
-	public	$hash = false; # Password or Access Hash?
-	private $server;
+	public	$hash = false; # Password or Access Hash?	
 	private	$session_id;
-	public	$debug = true;
-
-//	private	$soap_client;
+	
+	public function getSessionId() {
+		return	$this->session_id;
+	}
+			
+	public function testConnection() {		
+		$soap_client = $this->load();
+		if ($soap_client && $this->getSessionId()) {
+			//get the current list of methods
+						
+			//var_dump($soap_client->get_function_list($this->getSessionId()));
+			/*try {
+				//$soap_client->get_function_list();		
+				var_dump($this->session_id);			
+			} catch (SoapFault $e) {				
+				die('SOAP Error: '.$e->getMessage());
+			}*/
+		} else {
+			echo 'Something goes wrong please check the host name';
+		}				
+	}
 
 	/**
 		Stablished a SOAP connection
 	*/
-	public function load() {
-		$data = $this->serverDetails($this->server);
+	public function load() {		
+		$data = $this->serverDetails($this->getServerId());		
 		$port = 8080;
-
-		$data['host']	= $data['host'].':'.$port;
+		$port = ':'.$port;
+		$port = '';
+		
+		$data['host']	= $data['host'].$port;
 		//* The URI to the remoting interface. Please replace with the URI to your real server
 		$soap_location	= $data['host'].'/remote/index.php';
 		$soap_uri 		= $data['host'].'/remote/';
-
+		
 		// Create the SOAP Client
-		$client = new SoapClient(null, array('location' => $soap_location,'uri'=> $soap_uri));
+		$client = new SoapClient(null, array('location' => $soap_location,'uri'=> $soap_uri));				
 		try {
 			//* Login to the remote server
-			if($session_id = $client->login($data['user'],$data['accesshash'])) {
-				//var_dump($client->__getFunctions()); does not work
-				if ($this->debug) {echo 'Logged into remote server sucessfully. The SessionID is '.$session_id.'<br />';}
-				$this->session_id = $session_id;
+			if($session_id = $client->login($data['user'],$data['accesshash'])) {				
+				if ($this->debug) {echo 'Logged into remote server sucessfully. The SessionID is '.$session_id.'<br />';}				
+				$this->session_id = $session_id;	
 				return $client;
 			}
 		} catch (SoapFault $e) {
@@ -44,16 +62,15 @@ class ispconfig extends Panel {
 		}
 		return false;
 	}
+		
 	/**
 		Manage the ISPConfig SOAP functions
 		@param  string the action will be the same name as the specify in the ISPConfig API
 		@param	array  parameters that the SOAP will used 
 		@return mixed  result of the SOAP call
 	*/
-	private function remote($action, $params) {
-		
-		$soap_client = $this->load();
-		
+	private function remote($action, $params) {		
+		$soap_client = $this->load();		
 		$result = array();
 		if ($soap_client) {
 			try {
@@ -137,7 +154,7 @@ class ispconfig extends Panel {
 		@author Julio Montoya <gugli100@gmail.com> Beeznest	2010
 	*/
 	public function changePwd($username, $newpwd, $server_id) {
-		$this->server = $server_id;
+		$this->server_id = $server_id;
 		$params['username'] = $username;
 		$user_info = $this->remote('client_get_by_username',$params);	
 		if (!empty($user_info['client_id'])) {	
@@ -170,7 +187,7 @@ class ispconfig extends Panel {
 		$package_info 	= $package->getPackage($order_info['pid']);
 		
 		// Sets the current server
-		$this->server = $package_info['server'];
+		$this->server_id = $package_info['server'];
 		$data = $this->serverDetails($package_info['server']);	
 		
 		if ($this->debug) {echo '<pre>';}
@@ -325,7 +342,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		$order_info = $order->getOrderInfo($order_id);
 		$user_info	= $user->getUserById($order_info['userid']);
 		
-		$this->server = $server_id;
+		$this->server_id = $server_id;
 		$params['username'] = $user_info['user'];
 
 		//Getting user info
@@ -392,7 +409,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		$order_info = $order->getOrderInfo($order_id);
 		$user_info	= $user->getUserById($order_info['userid']);
 				
-		$this->server = $server_id;
+		$this->server_id = $server_id;
 		$params['username'] = $user_info['user'];
 
 		//Getting user info
@@ -451,7 +468,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		@return bool true if sucess
 	*/
 	public function terminate($username, $server_id) {
-		$this->server = $server_id;
+		$this->server_id = $server_id;
 
 		//Getting user info
 		$params['username'] = $username;
@@ -463,5 +480,12 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		} else {
 			return false;
 		}
+	}
+	
+	public function getMethods() {
+		$soap_client = $this->load();
+		var_dump($soap_client);
+		var_dump($soap_client ->get_class_methods());
+		
 	}
 }

@@ -3,6 +3,23 @@
 
 abstract class Panel {
 	
+	/** Panel Name*/
+	public	$name; 
+	/** Hash or password*/ 
+	public	$hash;
+	/**Show debug or net*/
+	public	$debug = true;
+	/**The server id*/
+	private $server_id;
+	
+	
+	public function __construct($server_id = null) {
+		if (empty($server_id)) {
+			$server_id = 0;
+		}		
+		$this->server_id = $server_id;		
+	}
+	
 	public function GenUsername() {
 		global $main;
 		return $main->generateUsername();
@@ -26,8 +43,15 @@ abstract class Panel {
 			return $db->fetch_array($query);
 		}
 	}
-	
+	public  function setServerId($server_id) {
+		$this->server_id = $server_id;		
+	}	
+	public  function getServerId() {
+		return $this->server_id;		
+	}
+		
 	private	function remote($action, $params){}
+	public  function testConnection() {}
 	public	function changePwd($username, $newpwd, $server_id) {}
 	public	function signup($server, $reseller, $user, $email, $pass ) {}
 	public	function suspend($username, $server_id, $reason) {}

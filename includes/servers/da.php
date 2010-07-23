@@ -13,10 +13,10 @@ class da extends Panel {
 	public $name = "Direct Admin"; # THT Values
 	public $hash = false; # Password or Access Hash?
 	
-	private $server;
+	private $server_id;
 	
 	private function remote($action, $url) {
-		$data = $this->serverDetails($this->server);
+		$data = $this->serverDetails($this->server_id);
 		$ch = curl_init();
 		$ip = gethostbyname($data['host']);
 		$serverstuff = "http://".$data['user'].":".$data['accesshash']."@" . $data['host'] . ":2222/". $action;
@@ -50,8 +50,8 @@ class da extends Panel {
 		if ($pass == '') { $pass = $main->getvar['password']; }
 		*/
 		
-		$this->server = $package_info['server'];
-		$data = $this->serverDetails($this->server);
+		$this->server_id = $package_info['server'];
+		$data = $this->serverDetails($this->server_id);
 		$ip = gethostbyname($data['host']);
 		$string =   "action=create&add=Submit&username=". $user . "".
 					"&passwd=". $pass ."".
@@ -88,7 +88,7 @@ class da extends Panel {
 		global $order, $user;
 		$order_info = $order->getOrderInfo($order_id);
 		$user_info	= $user->getUserById($order_info['userid']);
-		$this->server = $server;
+		$this->server_id = $server;
 		$define = "CMD_API_SELECT_USERS";
 		$action = "dosuspend=Suspend&suspend=suspend&location=CMD_SELECT_USERS&select0=" . strtolower($user_info['user']);
 		$command = $this->remote($define, $action);
@@ -105,7 +105,7 @@ class da extends Panel {
 		$order_info = $order->getOrderInfo($order_id);
 		$user_info	= $user->getUserById($order_info['userid']);
 		
-		$this->server = $server;
+		$this->server_id = $server;
 		$define = "CMD_API_SELECT_USERS";
 		$action = "dounsuspend=Unsuspend&suspend=unsuspend&select0=" . strtolower($user_info['user']);
 		$command = $this->remote($define ,$action);
@@ -117,7 +117,7 @@ class da extends Panel {
 		}
 	}
 	public function terminate($user, $server) {
-		$this->server = $server;
+		$this->server_id = $server;
 		$define = "CMD_API_SELECT_USERS";
 		$action = "confirmed=Confirm&delete=yes&select0=" . strtolower($user);
 		$command = $this->remote($define ,$action);
@@ -129,5 +129,3 @@ class da extends Panel {
 		}
 	}
 }
-
-?>
