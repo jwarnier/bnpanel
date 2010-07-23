@@ -291,7 +291,6 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 //			echo "<strong>".$command['text']."</strong><br />". $command['details'];
 			return false;
 		} else {
-
 			//If client is added we have the new client id	
 
 			//Preparing variables to send to server_get
@@ -302,7 +301,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			$server_info = $this->remote('server_get',$server_params);
 
 			//Getting extra info of user
-			$client_info = $this->remote('client_get',array('client_id'=>$new_client_id));			
+			$client_info = $this->remote('client_get', array('client_id'=>$new_client_id));			
 			
 			$website_id = 1;
 
@@ -315,7 +314,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			$site_params['system_user'] 	= 'web'.$website_id;
 			$site_params['system_group'] 	= 'client'.$client_info['client_id'];
  	
-			$site_params['server_id'] 		= $server_id;
+			$site_params['server_id'] 		= $this->server_id;
 //			$site_params['subdomain'] 		= 'none';
 
 			if (empty($client_info['limit_web_quota'])) {
@@ -343,6 +342,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				//Creating a zone 
 				$result = $this->remote('sites_web_domain_add',$site_params);
 				
+				
 				//Setting up the domain
 				$mail_domain_params['client_id'] = $new_client_id;
 				$mail_domain_params['server_id'] = $this->server_id;
@@ -355,14 +355,13 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$dns_domain_params['server_id'] = $this->server_id;
 				$dns_domain_params['origin']	= $main->getvar['fdom'];
 				$dns_domain_params['ns']		= '8.8.8.8';
-				$dns_domain_params['mbox'] 		='mbox.beeznest.com';//@todo 
+				$dns_domain_params['mbox'] 		= 'mbox.beeznest.com.';//@todo 
 				$dns_domain_params['refresh'] 	= 28800;
 				$dns_domain_params['retry'] 	= 7200;
 				$dns_domain_params['expire']	= 604800;
 				$dns_domain_params['minimum']	= 604800;
-				$dns_domain_params['ttl']		= 604800;
-				
-				$dns_domain_params['active']	= 'y';			
+				$dns_domain_params['ttl']		= 604800;				
+				$dns_domain_params['active']	= 'y';		
 				
 				/* Extra params
 				serial				
@@ -388,11 +387,10 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 
 	public function suspend($order_id, $server_id, $reason = false) {
 		global $main, $db, $order, $user;
-		$order_info = $order->getOrderInfo($order_id);
-		$user_info	= $user->getUserById($order_info['userid']);
+		$order_info = $order->getOrderInfo($order_id);	
 		
 		$this->server_id = $server_id;
-		$params['username'] = $user_info['user'];
+		$params['username'] = $order_info['username'];
 
 		//Getting user info
 		$user_info = $this->remote('client_get_by_username',$params);
@@ -456,10 +454,9 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	public function unsuspend($order_id, $server_id) {
 		global $main,$db, $order, $user;
 		$order_info = $order->getOrderInfo($order_id);
-		$user_info	= $user->getUserById($order_info['userid']);
-				
+						
 		$this->server_id = $server_id;
-		$params['username'] = $user_info['user'];
+		$params['username'] = $order_info['username'];
 
 		//Getting user info
 		$user_info = $this->remote('client_get_by_username',$params);
