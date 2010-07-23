@@ -100,6 +100,7 @@ class order extends model {
 	 * Deletes an order
 	 */
 	public function delete($id) { # Deletes invoice upon invoice id
+		global $main;
 		$this->updateOrderStatus($id, ORDER_STATUS_DELETED);		
 		$main->addLog("Order id $id deleted ");
 		return true;
@@ -109,6 +110,7 @@ class order extends model {
 	 * Edits an order
 	 */
 	public function edit($order_id, $params) {
+		global $main;
 		$this->setPrimaryKey($order_id);
 		/*//No updates of a order username/password
 		unset($params['username']);

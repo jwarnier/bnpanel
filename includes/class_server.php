@@ -311,12 +311,17 @@ class server extends Model {
 			$user_id 			= $main->getCurrentUserId();
 			if (!empty($user_id) && is_numeric($user_id) ) {
 				$user_info 			= $user->getUserById($user_id);	
-						
-				$system_username 	= $user_info['user'];
-				$system_password 	= $user_info['password'];			
-				$system_email		= $user_info['email'];
-				
-				$user_already_registered = true;
+				if (!empty($user_info)) {						
+					$system_username 	= $user_info['user'];
+					$system_password 	= $user_info['password'];			
+					$system_email		= $user_info['email'];
+					
+					$user_already_registered = true;
+				} else {
+					echo 'Please try again';
+					$main->logout();		
+					return;	
+				} 
 			} else {
 				echo 'Please try again';
 				$main->logout();		
