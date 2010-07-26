@@ -8,7 +8,7 @@
 
 class ispconfig extends Panel {
 		
-	public	$name = "ISPConfig3";
+	public	$name = 'ISPConfig3';
 	public	$hash = false; # Password or Access Hash?	
 	private	$session_id;
 	
@@ -19,6 +19,7 @@ class ispconfig extends Panel {
 	public function testConnection() {		
 		$soap_client = $this->load();
 		if ($soap_client && $this->getSessionId()) {
+			return 'Logged into ISPConfig3 remote server sucessfully. The SessionID is '.$this->getSessionId().'<br />';
 			//get the current list of methods
 						
 			//var_dump($soap_client->get_function_list($this->getSessionId()));
@@ -129,21 +130,25 @@ class ispconfig extends Panel {
 					//Section Could be 'web', 'dns', 'mail', 'dns', 'cron', etc
 					case 'server_get':
 						$soap_result 	= $soap_client->server_get($this->session_id, $params['server_id'], $params['section']);
-					break;
-					
+					break;					
 					//Adds a DNS zone
 					case 'dns_zone_add':
 						$client_id 		= $params['client_id']; // client id
 						$params['client_id'] = null;
 						$soap_result 	= $soap_client->dns_zone_add($this->session_id, $client_id, $params);
 					break;
-					
+					//Add an email domain
 					case 'mail_domain_add':
 						$client_id 		= $params['client_id']; // client id
 						$params['client_id'] = null;
 						$soap_result 	= $soap_client->mail_domain_add($this->session_id, $client_id, $params);
 					break;
-					
+					//Creates a mySQL database
+					case 'sites_database_add':
+						$client_id 		= $params['client_id']; // client id
+						$params['client_id'] = null;
+						$soap_result 	= $soap_client->sites_database_add($this->session_id, $client_id, $params);
+					break;					
 					default:
 					break;
 				}
@@ -350,7 +355,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$mail_domain_params['active'] 	 = 'y';
 				$domain_id = $this->remote('mail_domain_add', $mail_domain_params);
 				
-				//Setting up the DNS zone				
+				//Adding the the DNS zone				
 				$dns_domain_params['client_id'] = $new_client_id;
 				$dns_domain_params['server_id'] = $this->server_id;
 				$dns_domain_params['origin']	= $main->getvar['fdom'];
@@ -361,8 +366,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$dns_domain_params['expire']	= 604800;
 				$dns_domain_params['minimum']	= 604800;
 				$dns_domain_params['ttl']		= 604800;				
-				$dns_domain_params['active']	= 'y';		
-				
+				$dns_domain_params['active']	= 'y';				
 				/* Extra params
 				serial				
 				xfer
@@ -370,7 +374,23 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				update_acl
 				*/			
 				
-				$domain_id = $this->remote('dns_zone_add', 	  $dns_domain_params);
+				/*
+				Adding a mysql database
+				
+				//Create a new database
+				$mysql_params['client_id'] 			= $new_client_id;
+				$mysql_params['server_id']			= $this->server_id;				
+				$mysql_params['type'] 				= 'mysql';
+				$mysql_params['database_name'] 		= $this->server_id;
+				$mysql_params['database_user'] 		= $this->server_id;
+				$mysql_params['database_password'] 	= $this->server_id;
+				$mysql_params['database_charset']	= 'utf8';
+				$mysql_params['remote_access'] 		= 'n';
+				$mysql_params['active'] 			= 'y';
+				//$mysql_params['remote_ips'] = '';
+				//see database.tform.php
+				$result = $this->remote('sites_database_add', $mysql_params);
+				*/
 	
 			}					
 			return true;	
@@ -515,7 +535,6 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	*/
 	public function terminate($username, $server_id) {
 		$this->server_id = $server_id;
-
 		//Getting user info
 		$params['username'] = $username;
 		$user_info = $this->remote('client_get_by_username',$params);
