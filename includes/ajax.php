@@ -1397,6 +1397,37 @@ class AJAX {
 			$array = $invoice->getAllInvoicesToArray('', $page);
 			echo $array['list'];
 	   }
+	   
+	   	public function checkSubDomainExists() {
+			global $main, $db, $package, $order;			
+			$domain  		= $main->getvar['domain'];
+			$package_id  	= $main->getvar['package_id'];			
+			$package_info 	= $package->getPackage($package_id);		
+			$final_domain 	= $main->getvar['final_domain'];			
+			if($main->getvar['domain'] == 'sub') { # If Subdomain				
+				$subdomain_list = $main->getSubDomainByServer($package_info['server']);			
+				$subdomain 		= $subdomain_list[$main->getvar['subdomain_id']];			
+				$final_domain 	= $final_domain.".".$subdomain;
+			}			
+			if ($order->domainExistInOrder($final_domain) ) {
+				echo 1;				
+			} else {
+				echo 0;	
+			}			
+			return;
+		}	
+		
+		public function checkSubDomainExistsSimple() {
+			global $main, $db, $package, $order;			
+			$final_domain  = $main->getvar['domain'];			
+			if ($order->domainExistInOrder($final_domain) ) {
+				echo 1;				
+			} else {
+				echo 0;	
+			}			
+			return;
+		}
+		
 }
 
 if(isset($_GET['function']) and $_GET['function'] != "") {

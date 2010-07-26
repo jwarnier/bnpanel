@@ -36,7 +36,7 @@ class page {
 		require_once LINK.'validator.class.php';
 		
 		switch($main->getvar['sub']) {					
-			case 'add':					
+			case 'add':			
 			
 				$asOption = array(
 				    'rules' => array(
@@ -106,10 +106,13 @@ class page {
 				foreach($billing_list as $billing_item) {
 					$new_billing_list[$billing_item['id']] =$billing_item['name']; 
 				}
-				$array['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, array('onchange'=>'loadPackages(this);','class'=>'required'));				
+				$array['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, '', array('onchange'=>'loadPackages(this);', 'class'=>'required'));				
 				$array['PACKAGES'] 		= '-';
 				$array['ADDON'] 		= '-';
-				$array['STATUS'] 		= $main->createSelect('status', $main->getOrderStatusList(),'', array('class'=>'required'));
+				$order_list = $main->getOrderStatusList();
+				//removing the deleted option useless when creating an order
+				unset($order_list[ORDER_STATUS_DELETED]);
+				$array['STATUS'] 		= $main->createSelect('status', $order_list, '', array('class'=>'required'));
 				
 				$array['DOMAIN_USERNAME'] = $main->generateUsername();
 				$array['DOMAIN_PASSWORD'] = $main->generatePassword();
@@ -283,7 +286,6 @@ class page {
 			case 'delete':			
 				if (isset($main->getvar['do'])) { 
 					$order->delete($main->getvar['do']);
-								
 				} else {
 					$main->redirect("?page=orders&sub=all");										
 				}		
