@@ -411,6 +411,7 @@ class order extends model {
 	
 	public function getAllInvoicesByOrderId($order_id) {
 		global $db;
+		$order_id = intval($order_id);
 		$sql = "SELECT DISTINCT invoice_id FROM `<PRE>order_invoices` WHERE `order_id` = '{$order_id}'";
 		$query = $db->query($sql);
 		$array = $db->store_result($query);	
@@ -433,4 +434,25 @@ class order extends model {
 		}
 		return $html;
 	}	
+	
+	/**
+	 * Gets an order by user 
+	 * IMPORTANT only 1 order per user
+	 */
+	public function	domainExistInOrder($domain) {
+		global $db;
+		if (!empty($domain)) {
+			$domain = trim($domain);
+			$domain = $db->strip($domain);
+			//Getting the domain info
+			$sql 	= "SELECT domain FROM ".$this->getTableName()." WHERE domain = '".$domain."'";
+			$result = $db->query($sql);
+			if($db->num_rows($result) > 0 ) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 }

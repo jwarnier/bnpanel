@@ -2,6 +2,9 @@
 <script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
 
 <script type="text/javascript">
+var wrong = '<img src="<URL>themes/icons/cross.png">';
+var right = '<img src="<URL>themes/icons/accept.png">';
+
 	tinyMCE.init({
 	mode : "textareas",
 	skin : "o2k7",
@@ -76,6 +79,20 @@ function reset() {
 	$('#inputString').removeAttr('disabled');
 	$('#inputString').val('');	
 }
+
+function checkdomain() {
+	var domain = document.getElementById("domain").value;
+	$.get("<AJAX>?function=checkSubDomainExistsSimple&domain="+domain, function(data) {
+		if (data == 1 ) {
+			document.getElementById("domain_result").innerHTML = wrong;	
+		} else {
+			document.getElementById("domain_result").innerHTML = right;
+		}
+		
+	});
+	
+}
+
 </script>
 
 <ERRORS>
@@ -114,7 +131,9 @@ function reset() {
     <td width="20%" valign="top">User</td>
     <td >            
 	    <input name="user_id" type="hidden" id="user_id" />    
-	    <input size="30" autocomplete="off" id="inputString" onkeyup="lookup(this.value);" type="text" class="required" /><img onclick="reset();" src="<URL>themes/icons/arrow_refresh.png">
+	    
+	    <input value="Search an user" onfocus="this.value=(this.value=='Search an user') ? '' : this.value;" onblur="this.value=(this.value=='') ? 'Search an user' : this.value;" size="30" autocomplete="off" id="inputString" onkeyup="lookup(this.value);" type="text" class="required" />
+	    <img title="Reset" onclick="reset();" src="<URL>themes/icons/arrow_refresh.png">
 		<div class="suggestionsBox" id="suggestions" style="display: none;">
 			<div class="suggestionList" id="autoSuggestionsList"></div>
 		</div> 		
@@ -124,7 +143,8 @@ function reset() {
 	<tr>
     	<td valign="top">Domain</td>
     	<td>
-    		<input name="domain" type="text" id="domain" class="required" />
+    		<input name="domain" type="text" id="domain" class="required" /><span id="domain_result"></span><br/><a href="#" onclick="checkdomain();">Check availavility</a>
+    		
     	</td>
   	</tr>
   

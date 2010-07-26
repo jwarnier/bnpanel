@@ -32,20 +32,20 @@ $(window).load(function () {
   <tr>
     <td width="20%">Name:</td>
     <td>
-      <input name="name" type="text" id="name" value="%NAME%" />
+      <input name="name" size="30" type="text" id="name" value="%NAME%" />
       <a title="The server's user-friendly name." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>
   <tr>
     <td width="20%">Host:</td>
     <td>
-      <input name="host" type="text" id="host" value="%HOST%" />
+      <input name="host" size="30" type="text" id="host" value="%HOST%" />
       <a title="The Server's Hostname. Must be a FQDN!" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>
   <tr>
     <td>Username:</td>
-    <td><input type="text" name="user" id="user" value="%USER%" />
+    <td><input type="text"  name="user" id="user" value="%USER%" />
     <a title="The username to access the server." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
   </tr>
   <tr>
