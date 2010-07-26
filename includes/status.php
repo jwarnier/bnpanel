@@ -12,21 +12,16 @@ $live = "../themes/icons/lightbulb.png";
 $dead = "../themes/icons/lightbulb_off.png";
 
 //The status checking script
-//meddle at your own risk!
-//check for port number, default is 80
 $link = $_GET['link'];
-$s_link = basename($link);
-list($addr,$port)= explode (':',"$s_link");
-if (empty($port)){
-    $port = 80;
-}
-
+$link_array = parse_url($link);
+$domain = $link_array['host'];
 //Test the server connection
-$churl = @fsockopen($addr, $port, $errno, $errstr, 5);
-if (!$churl){
-    //echo $errstr;
+$churl = @fsockopen($domain, $link_array['port'], $errno, $errstr, 5);
+/*var_dump($churl);
+var_dump($errstr);
+exit;*/
+if (!$churl) {    
     header("Location: $dead");
 } else {
    header("Location: $live");             
 }
-?>

@@ -63,17 +63,17 @@ $(window).load(function () {
 </form>
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
 <tr>
-<td align="center"><strong>HTTP</strong></td>
-<td align="center"><strong>FTP</strong></td>
-<td align="center"><strong>MySQL</strong></td>
-<td align="center"><strong>POP3</strong></td>
-<td align="center"><strong>SSH</strong></td>
+<td align="center"><strong>HTTP (80)</strong></td>
+<td align="center"><strong>FTP (21)</strong></td>
+<td align="center"><strong>MySQL (3306)</strong></td>
+<td align="center"><strong>POP3 (110)</strong></td>
+<td align="center"><strong>SSH (22)</strong></td>
 </tr>
 <tr>
-<td align="center"> <img src="../includes/status.php?link=%HOST%:80"></td>
-<td align="center"> <img src="../includes/status.php?link=%HOST%:21"></td>
-<td align="center"> <img src="../includes/status.php?link=%HOST%:3306"></td>
-<td align="center"> <img src="../includes/status.php?link=%HOST%:110"></td>
-<td align="center"> <img src="../includes/status.php?link=%HOST%:22"></td>
+<td align="center"> <img src="<URL>includes/status.php?link=%HOST_SERVER%:80"></td>
+<td align="center"> <img src="<URL>includes/status.php?link=%HOST_SERVER%:21"></td>
+<td align="center"> <img src="<URL>includes/status.php?link=%HOST_SERVER%:3306"></td>
+<td align="center"> <img src="<URL>includes/status.php?link=%HOST_SERVER%:110"></td>
+<td align="center"> <img src="<URL>includes/status.php?link=%HOST_SERVER%:22"></td>
 </tr>
 </table>
