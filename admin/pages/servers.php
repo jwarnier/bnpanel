@@ -96,10 +96,13 @@ class page {
 						$array['ID'] = $data['id'];
 						$array['TYPE'] = $this->array_type;
 						
+						//$host_array = parse_url($data['host']);						
+						//$array['HOST_SERVER'] = $host_array['scheme'].'://'.$host_array['host'];
+						
 						global $server;						
 						$server_php = $server->loadServer($data['id']);						
-						$server_php->testConnection();
-						echo $style->replaceVar("tpl/viewserver.tpl", $array);
+						$array['SERVER_STATUS'] = $server_php->testConnection();
+						echo $style->replaceVar("tpl/servers/viewserver.tpl", $array);
 					}
 				} else {
 					//@todo replace this queries
