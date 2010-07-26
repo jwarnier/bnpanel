@@ -143,8 +143,7 @@ function checkdomain() {
 	<tr>
     	<td valign="top">Domain</td>
     	<td>
-    		<input name="domain" type="text" id="domain" class="required" /><span id="domain_result"></span><br/><a href="#" onclick="checkdomain();">Check availavility</a>
-    		
+    		<input name="domain" autocomplete="off" type="text" id="domain" class="required" /><span id="domain_result"></span><br/><a href="#" onclick="checkdomain();">Check availavility</a>    		
     	</td>
   	</tr>
   
