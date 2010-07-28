@@ -8,14 +8,24 @@
  */
 
 class model {
-	
+	//Table columns id, field, value
 	public $columns;
+	
+	//Attributes of the object
 	public $attributes;
+	//Table name
 	public $table_name;
+	
+	//Current primary key
 	public $primary_key;
 	
+	
+
 	/**
-	 * Prepares a INSERT query to the database
+	 * Prepares an  INSERT query to the database
+	 * @param	array	list of attributes	to add
+	 * @param	bool	clean a token
+	 * @return	mixed	inserted id or false if error 
 	 */
 	public function save($attributes, $clean_token = true) {
 		global $main, $db;		
@@ -25,12 +35,15 @@ class model {
 					'('.join(', ',array_keys($new_attributes)).') '.
 					'VALUES ('.join(',',array_values($new_attributes)).')';
 			$db->query($sql);
+			return $db->insert_id();
 		}		
-	    return $db->insert_id();
+	    return false;
 	}
 	
 	/**
 	 * Builds an update query to hit the DB
+	 * @param	array	list of attributes to update
+	 * @param	bool	clean a token
 	 */
 	public function update($attributes, $clean_token = true) {
 		global $main, $db;
@@ -43,7 +56,11 @@ class model {
 	       	$db->query($sql); 
 		}
 	}
-		
+	
+	/**
+	 * Builds a delete query to shoot the DB
+	 * @param	bool	clean a token
+	 */
 	public function delete($clean_token = true) {
 		global $main, $db;
 		if ($main->checkToken($clean_token)) {	
@@ -52,7 +69,11 @@ class model {
 	       	$db->query($sql);
 		}
 	}
+
 	
+	/**
+	 * Gets the current table name
+	 */
 	public function getTableName() {			
 		return "`<PRE>".$this->table_name."`";		
 	}
