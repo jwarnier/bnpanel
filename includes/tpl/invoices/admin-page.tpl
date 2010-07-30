@@ -20,9 +20,9 @@ $(document).ready(function() {
 	$("#tbody").load("<AJAX>?function=getInvoices&page=1", Hide_Load());
 
 	$("#pagination").paginate({
-		count 		: %COUNT%,
-		start 		: 1,
-		display     : 5,
+		count 					: %COUNT%,
+		start 					: 1,
+		display     			: 5,
 		border					: true,
 		border_color			: '#fff',
 		text_color  			: '#fff',
@@ -32,11 +32,11 @@ $(document).ready(function() {
 		background_hover_color	: '#fff', 
 		images					: false,
 		mouse					: 'press',
-		onChange     			: function(page){
-									var pageNum = page;
-									Display_Load();
-									$("#tbody").load("<AJAX>?function=getInvoices&page=" + pageNum, Hide_Load());
-	  							}
+		onChange     			: 	function(page) {
+										var pageNum = page;
+										Display_Load();
+										$("#tbody").load("<AJAX>?function=getInvoices&page=" + pageNum, Hide_Load());
+									}
 	 });	
 });
 </script>
