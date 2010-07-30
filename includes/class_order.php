@@ -211,14 +211,11 @@ class order extends model {
 		$result['list'] = '';
 		
 		//Package info
-		$package_list		= $package->getAllPackages();
-				
+		$package_list		= $package->getAllPackages();				
 		//Billing cycles
-		$billing_cycle_list = $billing->getAllBillingCycles();
-				
+		$billing_cycle_list = $billing->getAllBillingCycles();				
 		//Selecting addons
-		$addons_list 		= $addon->getAllAddons();
-		
+		$addons_list 		= $addon->getAllAddons();		
 		$total_amount = 0;                
     	$user_pack_status = $main->getOrderStatusList();
     	
@@ -246,8 +243,7 @@ class order extends model {
 			}
 			//$array['due'] 		= strftime("%D", $array['due']);
 			
-			//Getting the domain info
-			
+			//Getting the domain info			
 			$array['DOMAIN'] 	= $order_item['domain'];
 			$package_id 	  	= $order_item['pid'];
 			$billing_cycle_id 	= $order_item['billing_cycle_id'];			
