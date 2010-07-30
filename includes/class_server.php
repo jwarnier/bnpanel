@@ -159,7 +159,9 @@ class server extends Model {
 			echo 'Token Error';
 		}
 		$user_id = '';
-			
+		
+		$final_domain = '';
+		$subdomain_id = 0;
 		if($main->getvar['domain'] == 'dom') { # If Domain
 			if(!$main->getvar['cdom']) {
 				echo "Please fill in the domain field!";
@@ -181,18 +183,22 @@ class server extends Model {
 					} # If we get past this, its a top level domain :D yay
 				}
 			}
-			$main->getvar['fdom'] = $main->getvar['cdom'];
+			$final_domain = $main->getvar['fdom'] = $main->getvar['cdom'];
 		}
 		
 		if($main->getvar['domain'] == 'sub') { # If Subdomain
 			if(!$main->getvar['csub']) {
 				echo "Please fill in the subdomain field!";
 				return;
-			}			
-			$subdomain_list = $main->getSubDomainByServer($package_info['server']);			
-			$subdomain = $subdomain_list[$main->getvar['csub2']];			
-			$main->getvar['fdom'] = $main->getvar['csub'].".".$subdomain;
+			}						
+			$final_domain = $main->getvar['csub'];
+			$subdomain_id = $main->getvar['csub2'];
 		}
+		
+		if ($order->domainExistInOrder($final_domain)) {
+			echo "Domain already exists";
+			return;
+		}	
 				
 		$user_already_registered = false;
 		
@@ -305,17 +311,19 @@ class server extends Model {
 				return;
 			}
 		} else {
-			//The user is already in. We load the user information from the DB
+			//The user is already in. We load the user information from the DB			
 			
-			
-			$user_id 			= $main->getCurrentUserId();
+			$user_id = $main->getCurrentUserId();
 			if (!empty($user_id) && is_numeric($user_id) ) {
-				$user_info 			= $user->getUserById($user_id);	
+				$user_info = $user->getUserById($user_id);	
 				if (!empty($user_info)) {						
 					$system_username 	= $user_info['user'];
 					$system_password 	= $user_info['password'];			
-					$system_email		= $user_info['email'];
-					
+					$system_email		= $user_info['email'];			
+							
+					$main->getvar['firstname'] = $user_info['firstname']; 
+					$main->getvar['lastname']  = $user_info['lastname']; 
+										
 					$user_already_registered = true;
 				} else {
 					echo 'Please try again';
@@ -376,7 +384,7 @@ class server extends Model {
 			/* Creating a new order */ 
 			
 			$params['userid'] 			= $user_id;
-			$params['domain'] 			= $main->getvar['fdom'];
+			$params['domain'] 			= $final_domain;
 			$params['pid'] 				= $package_id;
 			$params['signup'] 			= $date;
 			
@@ -394,8 +402,8 @@ class server extends Model {
 			$params['billing_cycle_id'] = $billing_cycle_id;
 			
 			//Username + password for the ISPConfig
-			$params['password']			= $serverphp->GenUsername();
-			$params['username']			= $serverphp->GenPassword();
+			$params['password']			= $main->GenUsername();
+			$params['username']			= $main->GenPassword();
 			
 			if (!empty($params['userid']) && !empty($params['pid'])) {
 				$order_id = $order->create($params, false);
@@ -406,7 +414,7 @@ class server extends Model {
 			$array['USER']		= $system_username;				
 			$array['PASS'] 		= $system_password; 
 			$array['EMAIL'] 	= $system_email;
-			$array['DOMAIN'] 	= $main->getvar['fdom'];	
+			$array['DOMAIN'] 	= $final_domain;	
 			
 			//We avoid the user confirmation for the moment
 			if ($user_already_registered == true && $user_info['status'] == USER_STATUS_ACTIVE) {			
@@ -420,7 +428,8 @@ class server extends Model {
 			//Register the new order to the ISPConfig/Cpanel
 			echo ' I send this';
 			var_dump($order_id, $params['username'], $system_email, $params['password']);
-			$done = $serverphp->signup($order_id, $params['username'], $system_email, $params['password']);
+			
+			$done = $serverphp->signup($order_id, $package_id, $params['username'], $params['password'], $user_id, $final_domain, $subdomain_id);
 			
 			//Package does not needs validation
 			if ($package_info['admin'] == 0) {
@@ -630,20 +639,16 @@ class server extends Model {
 		
 		if (is_array($order_info) && !empty($order_info)) {
 			$user_info = $user->getUserById($order_info['userid']);
-			$server_id = $type->determineServer($order_info['pid']);
-			
+			$server_id = $type->determineServer($order_info['pid']);			
 			
 			if(!is_object($this->servers[$server_id]) && !$serverphp) {
 				$this->servers[$server_id] = $this->createServer($order_info['pid']); # Create server class
 				$donestuff = $this->servers[$server_id]->suspend($order_id, $server_id, $reason);
 			} else {
 				$donestuff = $serverphp->suspend($order_id, $server_id, $reason);
-			}
-			
-			if($donestuff == true) {
-				
-				$order->updateOrderStatus($order_id, ORDER_STATUS_CANCELLED);
-
+			}			
+			if($donestuff == true) {				
+				//$order->updateOrderStatus($order_id, ORDER_STATUS_CANCELLED);
 				//$db->query("UPDATE `<PRE>users` SET `status` = '2' WHERE `id` = '{$db->strip($data['userid'])}'");
 				/*
 				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
