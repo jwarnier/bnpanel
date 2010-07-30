@@ -37,7 +37,8 @@ class invoice extends model {
 		return false;		
 	}
 	
-	public function delete($id) { # Deletes invoice upon invoice id	
+	public function delete($id) { # Deletes invoice upon invoice id
+		global $main;	
 		$this->updateInvoiceStatus($id, INVOICE_STATUS_DELETED);
 		$main->addLog("Invoice id $id deleted ");		
 	}
