@@ -6,8 +6,6 @@
 	@package	tht.addons	
 */
 
-
-
 //Check if called by script
 if(THT != 1){die();}
 
@@ -59,19 +57,15 @@ class page {
 							$main->postvar['status'] = ADDON_STATUS_INACTIVE;
 						}
 						//Addon creation
-						$product_id = $addon->create($main->postvar);												
-						$query = $db->query("SELECT * FROM `<PRE>billing_cycles` WHERE status = ".BILLING_CYCLE_STATUS_ACTIVE);
-						 
-						if($db->num_rows($query) > 0) {											
-							$billing_cycle_result = '';
-							while($data = $db->fetch_array($query)) {										
-								$variable_name = 'billing_cycle_'.$data['id'];
-								//var_dump($variable_name);
-								if (isset($main->postvar[$variable_name])) {
-									$sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$data['id']}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_ADDON."')";
-									$db->query($sql_insert);									
-								}
-							}						
+						$product_id = $addon->create($main->postvar);					
+						$billing_list = $billing->getAllBillings();
+						$billing_cycle_result = '';							
+						foreach($billing_list as $billing_item) {
+							$variable_name = 'billing_cycle_'.$billing_item['id'];
+							//var_dump($variable_name);
+							if (isset($main->postvar[$variable_name])) {									
+								$this->createPackageAddons($billing_item['id'], $product_id, $main->postvar[$variable_name],BILLING_TYPE_ADDON);					
+							}													
 						}
 						$main->errors("Addon has been added!");
 					}
