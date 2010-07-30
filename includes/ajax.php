@@ -4,8 +4,6 @@
 /**
  * This class respond the AJAX calls
  */
-
-
 define('LINK', './');
 include 'compiler.php';
 
@@ -468,7 +466,9 @@ class AJAX {
 		$pack = $main->getvar['pack'];
 		$server = $type->determineServer($pack);	
 		$values = $main->getSubDomainByServer($server);
-		echo $main->createSelect('csub2', $values);		
+		if (!empty($values)) {
+			echo $main->createSelect('csub2', $values);
+		}		
 	}
 	
 	public function phpinfo() {
