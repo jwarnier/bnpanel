@@ -36,8 +36,7 @@ class page {
 		require_once LINK.'validator.class.php';
 		
 		switch($main->getvar['sub']) {					
-			case 'add':			
-			
+			case 'add':
 				$asOption = array(
 				    'rules' => array(
 				        'domain' 			=> 'required',
@@ -52,33 +51,49 @@ class page {
 				        //'domain' => array( 'required' => 'Domain is required'),			       
 				    )
 				);				
-				$array['json_encode'] = json_encode($asOption);
-				
-				$oValidator = new Validator($asOption);
-				
+				$array['json_encode'] = json_encode($asOption);				
+				$oValidator = new Validator($asOption);				
 			
 				if($_POST) {	
 					$result = $oValidator->validate($_POST);
 					if (empty($result)) {				
 						
 						//Creating an order		
-						$params['userid'] 		= $main->postvar['user_id'];
-						
+						$params['userid'] 		= $main->postvar['user_id'];						
 						$params['username'] 	= $main->postvar['username'];
-						$params['password'] 	= $main->postvar['password'];
-						
-						$params['domain'] 		= $main->postvar['domain'];
+						$params['password'] 	= $main->postvar['password'];						
 						$params['pid'] 			= $main->postvar['package_id'];
+						$params['domain'] 		= $main->postvar['domain'];
+						
+						$subdomain_id = 0;
+						if (isset($main->postvar['csub2'])) {
+							$subdomain_id 	= $main->postvar['csub2'];		
+							$package_data	= $package->getPackage($params['pid'] );
+							$subdomain_list = $main->getSubDomainByServer($package_data['server']);
+							$subdomain = $subdomain_list[$subdomain_id];
+							$domain = $domain.'.'.$subdomain;			
+						}
+						
 						$params['signup'] 		= strtotime($main->postvar['created_at']);
 						$params['status'] 		= $main->postvar['status'];
 						$params['additional']	= '';
 						$params['billing_cycle_id'] = $main->postvar['billing_cycle_id'];
-						
+												
 						if (!empty($params['userid']) && !empty($params['pid'])) {
-							$order_id = $order->create($params);	
+							$order_id = $order->create($params);
 						}
+						
 						//Add addons to a new order	
 						if (!empty($order_id) && is_numeric($order_id)) {
+							global $server;
+							
+							$package_data = $package->getPackage($params['pid']);
+							$serverphp	  = $server->loadServer($package_data['server']); # Create server class
+							
+							//Creating the account in ISPconfig
+							$done = $serverphp->signup($order_id, $params['pid'], $params['username'], $params['password'], $params['userid'], $params['domain'], $subdomain_id);							
+							//$order->updateOrderStatus($order_id, $params['status']);
+							
 							//Add addons
 							$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
 							$new_addon_list = array();
@@ -91,7 +106,10 @@ class page {
 								}															
 							}												
 							$order->addAddons($order_id, $new_addon_list);
-							$main->errors("Order has been added!");
+							if ($done)
+								$main->errors("Order has been added!");
+							else 
+								$main->errors("Order has been added to BNPanel. Order is not updated in the Control Panel. Please trying updating this order.");
 						} else {
 							$main->errors("There was a problem!");
 						}
@@ -187,15 +205,13 @@ class page {
 				}				
 			break;			
 			case 'add_invoice':			
-			
 				$asOption = array(
 				    'rules' => array(
 				        'due' 				=> 'required',
 				        'status' 			=> 'required',
 				        'package_id' 		=> 'required'
 				     ),			    
-				    'messages' => array(
-				        			       
+				    'messages' => array(				        			       
 				    )
 				);				
 				$return_array['json_encode'] = json_encode($asOption);
