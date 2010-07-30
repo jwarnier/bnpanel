@@ -68,6 +68,25 @@ function lookup(inputString) {
     }
 } // lookup
 
+function changeDomain(){
+	var domain_obj = document.getElementById("domain_type");
+	var id=domain_obj.options[domain_obj.selectedIndex].value;
+	
+	var text = '<input name="domain" autocomplete="off" type="text" id="domain" class="required" /><span id="domain_result"></span>';
+	if (id == 1) {
+		 $('#domain_input').html(text);
+	} else if(id == 2) {
+		var pid = document.getElementById("package_id").value;
+		$.get("<AJAX>?function=sub&pack="+pid, function(data) {		
+			 if (data == '') {
+				 domain_obj.selectedIndex = 1;
+				 data = 'No subdomains available for the moment';
+			 }			 
+			 $('#domain_input').html(text + data);			 
+		});		
+	}
+}
+
 function fill(thisValue,id) {
     $('#inputString').val(thisValue);
     $('#user_id').val(id);
@@ -87,10 +106,8 @@ function checkdomain() {
 			document.getElementById("domain_result").innerHTML = wrong;	
 		} else {
 			document.getElementById("domain_result").innerHTML = right;
-		}
-		
-	});
-	
+		}		
+	});	
 }
 
 </script>
@@ -98,7 +115,6 @@ function checkdomain() {
 <ERRORS>
 
 <style type="text/css">
-
 .suggestionsBox {
     position: relative;
    /* left: 30px; */
@@ -138,22 +154,16 @@ function checkdomain() {
 			<div class="suggestionList" id="autoSuggestionsList"></div>
 		</div> 		
     </td>
-  </tr>
-  
-	<tr>
-    	<td valign="top">Domain</td>
-    	<td>
-    		<input name="domain" autocomplete="off" type="text" id="domain" class="required" /><span id="domain_result"></span><br/><a href="#" onclick="checkdomain();">Check availavility</a>    		
-    	</td>
-  	</tr>
-  
-  <tr>
+  </tr>  
+ 
+   <tr>
     <td valign="top">Billing cycles</td>
     <td>
     %BILLING_CYCLES%
     <div id = "showdata"></div>
     </td>
   </tr> 
+    
     
      <tr>
     <td valign="top">Packages</td>
@@ -169,6 +179,30 @@ function checkdomain() {
    <div id = "showaddons">-</div>
     </td>
   </tr>
+  
+    
+  
+    <tr>
+    <td valign="top">Domain type</td>
+    <td>
+    	<select id="domain_type" onchange="changeDomain();">
+    	<option value="0">Select</option>
+    	<option value="1">Domain</option>
+    	<option value="2">Subdomain</option>
+    	</select>	    
+    </td>
+  </tr> 
+  
+	<tr>
+    	<td valign="top">Domain</td>
+    	<td>
+    		<div id="domain_input">---</div>
+    		
+    		<!--  <br/><a href="#" onclick="checkdomain();">Check availavility</a> -->    		
+    	</td>
+  	</tr>
+  
+
    
    <tr>
     <td valign="top">Order status</td>

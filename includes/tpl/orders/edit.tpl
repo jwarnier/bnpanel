@@ -75,7 +75,7 @@ function loadAddons(obj) {
      <tr>
     <td valign="top">Domain</td>
     <td>
-    <input name="domain" type="text" id="domain" value="%DOMAIN%" />
+    <input name="domain" type="text" id="domain" value="%DOMAIN%" readonly/>
     </td>
   </tr>
   
@@ -119,7 +119,7 @@ function loadAddons(obj) {
 <tr>
     <td valign="top">Creation date</td>
     <td>  		
-  		<input name="created_at" type="text" id="created_at" value="%CREATED_AT%"/>
+  		<input name="created_at" type="text" id="created_at" value="%CREATED_AT%" />
     </td>
 </tr>
 

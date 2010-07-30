@@ -239,7 +239,7 @@ function nextstep() {
 							//Check if an invoice is generated
 							$.get("<AJAX>?function=ispaid&pid="+ document.getElementById("package").value +"&uname="+ document.getElementById("username").value, function(invoice_id) {
 								if(invoice_id != "") {
-									window.location = "../client/?page=invoices&iid="+invoice_id;				
+									//window.location = "../client/?page=invoices&iid="+invoice_id;				
 								}
 							});
 						});
