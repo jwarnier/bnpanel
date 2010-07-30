@@ -24,12 +24,22 @@ class addon extends model {
 	
 	public function delete($id) {
 		global $db;
+		
 		$this->setPrimaryKey($id);
-		parent::delete();
-		
-		//Deleting relation between addons and packages 
-		$db->query("DELETE FROM `<PRE>package_addons` WHERE `addon_id` = '{$id}'");
-		
+		parent::delete();		
+		//Deleting relation between addons and packages
+		$id = intval($id); 
+		$db->query("DELETE FROM `<PRE>package_addons` WHERE `addon_id` = '{$id}'");		
+	}
+	
+	public function createPackageAddons($billing_id, $product_id, $amount, $type) {
+		global $db;
+		$billing_id = intval($billing_id);
+		$product_id = intval($product_id);
+		$amount = $db->strip($amount);
+		$type = intval($type);		
+		$sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$billing_id}', '{$product_id}', '{$amount}', '".$type."')";
+		$db->query($sql_insert);		
 	}
 	
 	/**
@@ -274,14 +284,16 @@ class addon extends model {
 	 */
 	public function getAddonsByPackage($package_id) {
 		global $db, $main;
-		
-		$result = $db->query("SELECT * FROM `<PRE>addons` a INNER JOIN  `<PRE>package_addons` pa ON (pa.addon_id = a.id) WHERE package_id = ".$package_id);
-		$addon_list = array();				
-		if($db->num_rows($result) > 0) {
-			while($data = $db->fetch_array($result)) {		
-				$addon_list[$data['id']] = $data;
-			}								
-		}		
+		$package_id = intval($package_id);
+		$addon_list = array();	
+		if (!empty($package_id)) {
+			$result = $db->query("SELECT * FROM `<PRE>addons` a INNER JOIN  `<PRE>package_addons` pa ON (pa.addon_id = a.id) WHERE package_id = ".$package_id);						
+			if($db->num_rows($result) > 0) {
+				while($data = $db->fetch_array($result)) {		
+					$addon_list[$data['id']] = $data;
+				}								
+			}
+		}
 		return $addon_list;
 	}	
 	

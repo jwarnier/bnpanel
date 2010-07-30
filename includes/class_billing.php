@@ -61,6 +61,20 @@ class billing extends model {
 		return $billing_list; 		
 	}
 	
+	public function getAllBillings($status = BILLING_CYCLE_STATUS_ACTIVE) {
+		global $db;
+		if (empty($status)) {
+			$status = BILLING_CYCLE_STATUS_ACTIVE;
+		} else {
+			$status = intval($status);
+		}
+		$sql 	= "SELECT * FROM ".$this->getTableName()." WHERE status = ".$status;
+		$query 	= $db->query($sql);	
+		$result = $db->store_result($query, 'ASSOC');
+		return $result;
+		
+	}
+	
 	public function getBilling($id) {
 		global $db;
 		$id = intval($id);
