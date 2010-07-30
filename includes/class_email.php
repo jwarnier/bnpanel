@@ -75,13 +75,11 @@ class email {
 		} else {
 			$this->email['content'] = $content;	
 		}
-		if (SERVER_STATUS == 'test') {
-			echo 'Email log: <br />';
+		if (SERVER_STATUS == 'test') {			
 			echo 'Email sent to :'.$to;
-			echo '<br />Email content :<br />';			
-			echo '<pre>';print_r($this->email['content']);			
+			echo '<br />Email content <br />';			
+			echo '<pre>';print_r($this->email['content']).'</pre>';			
 		}
-
 		$this->email['subject'] = $subject;
 		$method = $this->method;
 		if($method == "php") {

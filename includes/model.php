@@ -19,7 +19,13 @@ class model {
 	//Current primary key
 	public $primary_key;
 	
-	
+	/**
+	 * Prepares a SELECT query 
+	 * 
+	 */
+	public function find() {
+		
+	}
 
 	/**
 	 * Prepares an  INSERT query to the database
