@@ -417,14 +417,19 @@ class order extends model {
 	public function showAllInvoicesByOrderId($order_id) {
 		global $main, $invoice, $currency;
 		$invoice_status = $main->getInvoiceStatusList();
-		$invoice_list = $this->getAllInvoicesByOrderId($order_id);
+		
+		$invoice_list = $this->getAllInvoicesByOrderId($order_id);		
 		$html = '';
 		if (is_array($invoice_list) && count($invoice_list) > 0) {
-			$html  = '<h2>Invoice List for this Order</h2>';
+			$html  = '<h2>Invoices for this Order</h2>';
 			$html .= '<ul>';
-			foreach($invoice_list as $invoice_item) {
-				$my_invoice = $invoice->getInvoiceInfo($invoice_item['invoice_id']);						
-				$html .= '<li><a href="?page=invoices&sub=view&do='.$my_invoice['id'].'">'.$my_invoice['id'].'</a> '.date('Y-m-d', $my_invoice['due']).' '.$invoice_status[$my_invoice['status']].' '.$currency->toCurrency($my_invoice['total_amount']).'</li>';
+			foreach($invoice_list as $invoice_item) {				
+				$my_invoice = $invoice->getInvoiceInfo($invoice_item['invoice_id']);
+				if (!empty($my_invoice)) {										
+					$html .= '<li><a href="?page=invoices&sub=view&do='.$my_invoice['id'].'">'.$my_invoice['id'].'</a> '.date('Y-m-d', $my_invoice['due']).' '.$invoice_status[$my_invoice['status']].' '.$currency->toCurrency($my_invoice['total_amount']).'</li>';
+				} else {
+					$html .= '<li>Problem found with Invoice id #'.$invoice_item['invoice_id'].'</li>';
+				}
 			}
 			$html .= '</ul>';
 		}
@@ -448,7 +453,5 @@ class order extends model {
 			}
 		}
 		return false;
-	}
-	
-	
+	}	
 }
