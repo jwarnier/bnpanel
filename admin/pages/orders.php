@@ -38,7 +38,7 @@ class page {
 		switch($main->getvar['sub']) {					
 			case 'add':
 				$asOption = array(
-				    'rules' => array(
+				    'rules' => array(				    	
 				        'domain' 			=> 'required',
 				        'billing_cycle_id' 	=> 'required',
 				        'package_id' 		=> 'required',
@@ -141,8 +141,12 @@ class page {
 			case 'change_pass':			
 				if(isset($main->getvar['do'])) {
 					if($_POST) {						
-						if ($main->postvar['password'] == $main->postvar['confirm']) {
-							$server->changeOrderPassword($main->getvar['do'], $main->postvar['password']);
+						if ($main->postvar['password'] == $main->postvar['confirm']) {							
+							if ($server->changeOrderPassword($main->getvar['do'], $main->postvar['password'])) {
+								$main->errors("Password has been changed");
+							} else {
+								$main->errors("There was an error. Please try again.");
+							}
 						}
 					}
 					$return_array = $order->getOrder($main->getvar['do'], false, false);					
