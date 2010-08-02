@@ -57,7 +57,7 @@ $(document).ready(function() {
         <!--  -->
         <td><strong>Status</strong></td>
         <td><strong><a title="When it's due." class="tooltip"><img src="<ICONDIR>time.png" border="0" /></a> Due date</strong></td>
-        <td width="150px"><strong>Actions</strong></td>                
+        <td width="100px"><strong>Actions</strong></td>                
 	</tr>
 	</thead>
 	<tbody id="tbody"></tbody>	

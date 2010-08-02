@@ -62,7 +62,7 @@ $(document).ready(function() {
     <table width="100%" border="0" cellspacing="2" cellpadding="0">
       <tr>
         <td valign="top">Subject:</td>
-        <td><input type="text" name="subject" id="subject" />
+        <td><input type="text" name="subject" id="subject" size="50" />
         <a title="The subject of the email." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
       </tr>
       <tr>

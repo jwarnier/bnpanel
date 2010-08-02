@@ -7,11 +7,11 @@
 	});
 
 	$(function() {
-		$( "#created_at" ).datepicker({
+	/*	$( "#created_at" ).datepicker({
 			dateFormat: 'yy-mm-dd',
 			showOn: 'button',
 			buttonImage: '<URL>themes/icons/calendar_add.png'			 
-		});
+		});*/
 
 		$("#show_preview").dialog({ autoOpen: false, width: '400px' });
 
@@ -63,25 +63,19 @@ function loadAddons(obj) {
   <tr>
     <td width="20%">Id:</td>
     <td><input name="order_id" type="text" id="order_id" value="%ID%" readonly /></a></td>
-  </tr>
-  
+  </tr>  
      <tr>
     <td valign="top">User</td>
     <td>
     %USER%
     </td>
-  </tr>
-  
+  </tr> 
      <tr>
     <td valign="top">Domain</td>
     <td>
     <input name="domain" type="text" id="domain" value="%DOMAIN%" readonly/>
     </td>
-  </tr>
-  
-    
-
-  
+  </tr>  
   <tr>
     <td valign="top">Billing cycles</td>
     <td>
@@ -115,14 +109,6 @@ function loadAddons(obj) {
   </tr>
   
 
-  
-<tr>
-    <td valign="top">Creation date</td>
-    <td>  		
-  		<input name="created_at" type="text" id="created_at" value="%CREATED_AT%" />
-    </td>
-</tr>
-
 
         <tr>
     <td valign="top">
@@ -130,33 +116,44 @@ function loadAddons(obj) {
     </td>
     <td>
   		%USERNAME% 
-  		<a class="tooltip" title="The username to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
+  		<a class="tooltip" title="The username to login in the Control Panel System"><img src="<ICONDIR>information.png"></a>
     </td>
   </tr>
+  
   
       <tr>
     <td valign="top">Control Panel Password</td>
     <td>
   		%PASSWORD%
-  		<a class="tooltip" title="The password to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
+  		<a class="tooltip" title="The password to login in the Control Panel System"><img src="<ICONDIR>information.png"></a>
     </td>
   </tr>
+  
+  <tr>
+    <td valign="top">Creation date</td>
+    <td>  		
+  		<!--  <input name="created_at" type="text" id="created_at" value="%CREATED_AT%" />  -->
+  		%CREATED_AT%
+    </td>
+</tr>
   
     
   
   <tr>
-    <td valign="top">Email center</td>
+    <td valign="top">Emails sent when editing this order</td>
     
     <td>
     <div id="show_preview" ></div>  	
     	<ul>	
-  		<li><a href="#" onclick="send('neworder', %ID%);" >Send Order Confirmation email</a> <a href="?page=email&sub=templates&do=19"><img src="<URL>themes/icons/pencil.png"></a></li>
-  		<li><a href="#" onclick="send('orderactivation', %ID%);"  >Send Activation email </a><a href="?page=email&sub=templates&do=19"><img src="<URL>themes/icons/pencil.png"></a></li>
-  		<li><a href="#" onclick="send('ordersuspension', %ID%);"  > Send Suspension email</a><a href="?page=email&sub=templates&do=19"><img src="<URL>themes/icons/pencil.png"></a></li>
+    	<!-- onclick="send('neworder', %ID%);" -->
+  		<li><a href="?page=email&sub=templates&do=22">Edit Order Activation email</a> 		<a href="?page=email&sub=templates&do=22"><img src="<URL>themes/icons/pencil.png"></a></li>
+  		<li><a href="?page=email&sub=templates&do=23">Edit Order Waiting for Admin email</a><a href="?page=email&sub=templates&do=23"><img src="<URL>themes/icons/pencil.png"></a></li>
+  		<li><a href="?page=email&sub=templates&do=24">Edit Order Cancelled email </a>		<a href="?page=email&sub=templates&do=24"><img src="<URL>themes/icons/pencil.png"></a></li>  		
   		</ul>
     </td>    
   </tr>  
 </table>
+<br />
 %INVOICE_LIST% 
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
