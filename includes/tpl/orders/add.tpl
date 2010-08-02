@@ -201,9 +201,7 @@ function checkdomain() {
     		<!--  <br/><a href="#" onclick="checkdomain();">Check availavility</a> -->    		
     	</td>
   	</tr>
-  
-
-   
+    
    <tr>
     <td valign="top">Order status</td>
     <td>
@@ -211,16 +209,7 @@ function checkdomain() {
     <a class="tooltip" title="Will operate on the Control Panel server"><img src="<ICONDIR>information.png"></a>
     </td>
   </tr>
-  
-	
-<tr>
-    <td valign="top">Creation date</td>
-    <td>  		
-  		<input name="created_at" type="text" id="created_at" value="%CREATED_AT%"  class="required"/>
-    </td>
-  </tr>
-  
-  
+     
       <tr>
     <td valign="top">Control Panel Username</td>
     <td>
@@ -235,10 +224,13 @@ function checkdomain() {
   		<input size="30" id="password"  name="password" type="text" value="%DOMAIN_PASSWORD%"  class="required"/>
   		<a class="tooltip" title="The password to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
     </td>
-  </tr>
-   
- 
-  
+  </tr>	
+<tr>
+    <td valign="top">Creation date</td>
+    <td>  		
+  		<input name="created_at" type="text" id="created_at" value="%CREATED_AT%"  class="required"/>
+    </td>
+  </tr>  
 </table>
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>

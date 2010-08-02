@@ -1,4 +1,4 @@
-<div id='tht_navigation'>
+<div id='navigation'>
     <ul>
     	%NAV%
     </ul>
