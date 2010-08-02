@@ -58,6 +58,7 @@ class package extends model {
 	 */	 
 	public function getPackage($package_id) {
 		global $db;
+		$package_id = intval($package_id);
 		$sql = "SELECT * FROM ".$this->getTableName()." WHERE `id` = '{$package_id}'";
 		$result = $db->query($sql);
 		$data = array();
