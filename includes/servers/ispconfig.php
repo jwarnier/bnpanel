@@ -37,7 +37,8 @@ class ispconfig extends Panel {
 	/**
 		Stablished a SOAP connection
 	*/
-	public function load() {		
+	public function load() {	
+		global $main;	
 		$data = $this->serverDetails($this->getServerId());			
 	//	$host_parts = parse_url($data['host']);
 //		var_dump($host_parts);
@@ -225,6 +226,9 @@ class ispconfig extends Panel {
 	*/
 	public function signup($order_id, $package_id, $domain_username, $domain_password, $user_id, $domain, $sub_domain_id) {		
 		global $main, $db, $package, $order, $user;
+		
+		$main->addLog('Server::signup loaded Order id:'.$order_id.' Domain: '.$domain);
+		
 		$order_info		= $order->getOrderInfo($order_id);
 		$package_info 	= $package->getPackage($order_info['pid']);
 		
@@ -330,8 +334,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			$website_id = 1;
 
 			//Setting parameters for the sites_web_domain_add function
-			$site_params['type'] 			= 'vhost';// harcoded in ISPConfig vhost
-			$site_params['vhost_type'] 		= 'name';// harcoded in ISPConfig vhost 
+			$site_params['type'] 			= 'vhost';	// harcoded in ISPConfig vhost
+			$site_params['vhost_type'] 		= 'name';	// harcoded in ISPConfig vhost 
 	
 			$site_params['sys_userid'] 		= 1;//1; force to the admin
 			$site_params['sys_groupid'] 	= 1; //ass added by the admin
@@ -361,8 +365,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$site_params['php_open_basedir'] = str_replace(array('[website_path]','[website_domain]'),array($site_params['document_root'], $site_params['domain']), $server_info['php_open_basedir']);
 
 				//Creating a site
-				$result = $this->remote('sites_web_domain_add',$site_params);
-					
+				$result = $this->remote('sites_web_domain_add',$site_params);					
 				
 				//Setting up the mail domain
 				$mail_domain_params['client_id'] = $new_client_id;
