@@ -516,7 +516,7 @@ class server extends Model {
 			$user_info = $user->getUserById($order_info['userid']);
 			if($this->servers[$server_id]->terminate($user_info['user'], $server_id) == true) {
 				$date = time();
-				$emaildata = $db->emailTemplate("termacc");
+				$emaildata = $db->emailTemplate('termacc');
 				$array['REASON'] = "Admin termination.";
 				$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $array);
 				/*
@@ -757,16 +757,18 @@ class server extends Model {
 	 * @param	string	new password
 	 */
 	public function changeOrderPassword($order_id, $new_password) {
-		global $order;
-		$order_info = $order->getOrderInfo($order_id);		
-		$server_id  = $type->determineServer($order_info['pid']);
-		
+		global $order, $package;
+		$order_info = $order->getOrderInfo($order_id);
+		$package_info = $package->getPackage($order_info['pid']);
+		$server_id = $package_info['server'];
 		if(!is_object($this->servers[$server_id])) {
 			$this->servers[$server_id] = $this->createServer($order_info['pid']); # Create server class
 		}
 		if($this->servers[$server_id]->changePwd($order_info['username'], $new_password, $server_id) == true) {
-			$order->edit($order_id,array('password'=>$new_password));
+			$order->edit($order_id, array('password'=>$new_password));
+			return true;
 		}
+		return false;
 	}
 	
 	/**
@@ -854,14 +856,10 @@ class server extends Model {
 		global $db, $main;	
 		$sql = "SELECT *  FROM `<PRE>servers` WHERE `id` = '{$db->strip($server_id)}'";
 		$query = $db->query($sql);
-		if($db->num_rows($query) == 0) {
-			$array['Error'] = "That server doesn't exist!";
-			$array['Server ID'] = $server_id;
-			$main->error($array);
-			return;	
-		} else {
-			$data = $db->fetch_array($query,'ASSOC');
-			return $data;
-		}	
+		$data = array();
+		if($db->num_rows($query) > 0) {			
+			$data = $db->fetch_array($query,'ASSOC');			
+		}
+		return $data;
 	}
 }
