@@ -87,7 +87,14 @@
     %ADDON%
     </td>
   </tr>
+
   
+   <tr>
+    <td valign="top">Backend Package info</td>
+    <td>
+    %BACKEND_INFO%
+    </td>
+  </tr>
   
   
 </table>
