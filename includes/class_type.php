@@ -63,7 +63,7 @@ class type {
 			}			
 			//Submit button commented when adding a new package
 			if ($type_value != 'paid') {
-            	$html .= "<button id=\"submitIt\">Submit2</button>";
+            	$html .= "<button id=\"submitIt\">Submit</button>";
 			}
 			return $html;
 		} else {			

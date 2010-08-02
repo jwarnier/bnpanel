@@ -31,7 +31,7 @@ class page {
 	}
 	
 	public function content() { # Displays the page 
-		global $main, $style, $db, $billing, $addon;
+		global $main, $style, $db, $billing, $package,$addon, $server;
 		
 		switch($main->getvar['sub']) {
 			default:
@@ -58,6 +58,8 @@ class page {
 					}	
 						
 					if(!$n) {
+						
+						/*
 						foreach($main->postvar as $key => $value) {
 							if($key != "name") {
 								if($n) {
@@ -66,7 +68,7 @@ class page {
 								$additional .= $key."=".$value;
 								$n++;
 							}
-						}
+						}*/
 						//var_dump($main->postvar);
 						$db->query("INSERT INTO `<PRE>packages` (name, backend, description, type, server, admin, is_hidden, is_disabled, additional, reseller) VALUES('{$main->postvar['name']}', '{$main->postvar['backend']}', '{$main->postvar['description']}', '{$main->postvar['type']}', '{$main->postvar['server']}', '{$main->postvar['admin']}', '{$main->postvar['hidden']}', '{$main->postvar['disabled']}', '{$additional}', '{$main->postvar['reseller']}')");
 						$product_id = mysql_insert_id();
@@ -111,13 +113,14 @@ class page {
 				$array['ADDON'] = $addon->generateAddonCheckboxes();
 				//finish 				
 								
-				echo $style->replaceVar("tpl/addpackage.tpl", $array);
+				echo $style->replaceVar("tpl/packages/addpackage.tpl", $array);
 				break;
 				
 			case 'edit':
 				if(isset($main->getvar['do'])) {
-					$query = $db->query("SELECT * FROM `<PRE>packages` WHERE `id` = '{$main->getvar['do']}'");
-					if($db->num_rows($query) == 0) {
+					$package_info = $package->getPackage($main->getvar['do']);
+					
+					if(empty($package_info)) {
 						echo "That package doesn't exist!";	
 					} else {
 						if($_POST) {
@@ -157,11 +160,8 @@ class page {
 								//-----Adding billing cycles 
 								
 								//Deleting all billing_products relationship							
-								$query = $db->query("DELETE FROM `<PRE>billing_products` WHERE product_id = {$main->getvar['do']} AND type='".BILLING_TYPE_PACKAGE."' ");
-								
+								$query = $db->query("DELETE FROM `<PRE>billing_products` WHERE product_id = {$main->getvar['do']} AND type='".BILLING_TYPE_PACKAGE."' ");								
 								$product_id = $main->getvar['do'];
-											
-								
 								$billing_list = $billing->getAllBillingCycles();
 								foreach($billing_list as $billing_id=>$value) {
 									$variable_name = 'billing_cycle_'.$billing_id;
@@ -199,42 +199,48 @@ class page {
 								$main->done();
 							}
 						}
-						$data = $db->fetch_array($query);
+												
+						$array['TYPE'] 			= $package_info['type'];
+						$array['BACKEND'] 		= $package_info['backend'];
+						$array['DESCRIPTION'] 	= $package_info['description'];
+						$array['NAME'] 			= $package_info['name'];
+						$array['URL'] 			= $db->config('url');
+						$array['ID'] 			= $package_info['id'];
 						
-						$array['TYPE'] 			= $data['type'];
-						$array['BACKEND'] 		= $data['backend'];
-						$array['DESCRIPTION'] 	= $data['description'];
-						$array['NAME'] 			= $data['name'];
-						$array['URL'] 			= $db->config("url");
-						$array['ID'] 			= $data['id'];
-						
-						if($data['admin'] == 1) {
+						if($package_info['admin'] == 1) {
 							$array['CHECKED'] = 'checked="checked"';	
 						} else {
 							$array['CHECKED'] = "";
 						}
-						if($data['reseller'] == 1) {
+						if($package_info['reseller'] == 1) {
 							$array['CHECKED2'] = 'checked="checked"';	
 						} else {
 							$array['CHECKED2'] = "";
 						}
-						if($data['is_hidden'] == 1) {
+						if($package_info['is_hidden'] == 1) {
 							$array['CHECKED3'] = 'checked="checked"';	
 						} else {
 							$array['CHECKED3'] = "";
 						}
-						if($data['is_disabled'] == 1) {
+						if($package_info['is_disabled'] == 1) {
 							$array['CHECKED4'] = 'checked="checked"';	
 						} else {
 							$array['CHECKED4'] = "";
 						}
-						$additional = explode(",", $data['additional']);
+						
+						$server_info = $server->getServerById($package_info['server']);
+						
+						if ($server_info['type'] == 'ispconfig') {
+							$array['ADDITIONAL'] .='';
+						} 
+						$additional = explode(",", $package_info['additional']);
 						foreach($additional as $key => $value) {
 							$me = explode("=", $value);
 							$cform[$me[0]] = $me[1];
 						}
 						global $type;
-						$array['FORM'] = $type->acpPedit($data['type'], $cform);
+						$array['FORM'] = $type->acpPedit($package_info['type'], $cform);
+						
 						$query = $db->query("SELECT * FROM `<PRE>servers`");
 						while($data_server = $db->fetch_array($query)) {
 							$values[] = array($data_server['name'], $data_server['id']);	
@@ -243,15 +249,31 @@ class page {
 						
 						
 						// Addon feature added						
-						$sql = "SELECT addon_id FROM `<PRE>package_addons` WHERE package_id =".$data['id'];
+						$sql = "SELECT addon_id FROM `<PRE>package_addons` WHERE package_id =".$package_info['id'];
 						$query = $db->query($sql);		
 						$myresults = array();
 						while($data = $db->fetch_array($query)) {
 							$myresults[$data['addon_id']]= 1;				
-						}						
-						$array['ADDON'] = $addon->generateAddonCheckboxes($myresults);						
+						}									
+						$array['ADDON'] = $addon->generateAddonCheckboxes($myresults);	
+						global $server;
+												
+						$serverphp= $server->loadServer($package_info['server']);
 						
-						echo $style->replaceVar("tpl/editpackage.tpl", $array);
+						$package_list = $serverphp->getAllPackageBackEnd();
+						foreach($package_list as $package_item_panel) {
+							if ($package_item_panel['template_id'] == $package_info['backend']) {
+								$my_package_back_end = $package_item_panel;
+								break;
+							}							
+						}
+						$html_result = $serverphp->parseBackendInfo($my_package_back_end);
+						$array['BACKEND_INFO'] = $html_result;
+						
+						//data['backend']
+											
+						
+						echo $style->replaceVar("tpl/packages/editpackage.tpl", $array);
 					}
 				} else {
 					$query = $db->query("SELECT * FROM `<PRE>packages`");

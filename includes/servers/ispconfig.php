@@ -20,8 +20,7 @@ class ispconfig extends Panel {
 		$soap_client = $this->load();
 		if ($soap_client && $this->getSessionId()) {
 			return 'Logged into ISPConfig3 remote server sucessfully. The SessionID is '.$this->getSessionId().'<br />';
-			//get the current list of methods
-						
+			//get the current list of methods						
 			//var_dump($soap_client->get_function_list($this->getSessionId()));
 			/*try {
 				//$soap_client->get_function_list();		
@@ -125,14 +124,17 @@ class ispconfig extends Panel {
 						$client_id = $params['client_id'];
 						$params['client_id'] = null;
 						$soap_result 	= $soap_client->sites_web_domain_add($this->session_id, $client_id  , $params);
-					break;
-					
+					break;					
+					case 'sites_web_domain_update':
+						$client_id = $params['client_id'];
+						$params['client_id'] = null;
+						$soap_result 	= $soap_client->sites_web_domain_update($this->session_id, $client_id  , $params);
+					break;					
 					case 'sites_web_subdomain_add':
 						$client_id = $params['client_id'];
 						$params['client_id'] = null;
 						$soap_result 	= $soap_client->sites_web_subdomain_add($this->session_id, $client_id  , $params);
-					break;
-					
+					break;					
 					//Get domain info
 					case 'sites_web_domain_get':
 						$soap_result 	= $soap_client->sites_web_domain_get($this->session_id, $params['primary_id']);
@@ -164,8 +166,7 @@ class ispconfig extends Panel {
 						$client_id 		= $params['client_id']; // client id
 						$params['client_id'] = null;
 						$soap_result 	= $soap_client->sites_database_add($this->session_id, $client_id, $params);
-					break;
-					
+					break;					
 					case 'sites_database_get_all_by_user':
 						$client_id 		= $params['client_id']; // client id
 						$params['client_id'] = null;
@@ -175,7 +176,10 @@ class ispconfig extends Panel {
 						$client_id 		= $params['client_id']; // client id
 						$params['client_id'] = null;
 						$soap_result 	= $soap_client->install_chamilo($this->session_id, $client_id, $params);
-					break;			
+					break;	
+					case 'client_templates_get_all': 
+					$soap_result 	= $soap_client->client_templates_get_all($this->session_id);
+					break;	
 					default:
 					break;
 				}
@@ -285,6 +289,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		$is_domain = true;
 		
 		$subdomain_list = $main->getSubDomainByServer($package_info['server']);
+		
 		if ($sub_domain_id != 0 ) {		
 			$subdomain = $subdomain_list[$sub_domain_id];
 			$domain = $domain.'.'.$subdomain;
@@ -374,7 +379,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$mail_domain_params['active'] 	 = 'y';
 				$domain_id = $this->remote('mail_domain_add', $mail_domain_params);
 				
-				//Adding the the DNS zone				
+				//Adding the DNS zone				
 				$dns_domain_params['client_id'] = $new_client_id;
 				$dns_domain_params['server_id'] = $this->getServerId();
 				$dns_domain_params['origin']	= $domain;
@@ -596,6 +601,24 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		} else {
 			return false;
 		}
+	}
+	
+	public function getAllPackageBackEnd() {
+		$result = $this->remote('client_templates_get_all', null);		
+		return $result;
+	}
+	
+	public function parseBackendInfo($data) {
+//		$html = 'No data';
+		$html .='<ul>';
+		foreach ($data as $key=>$value) {
+			$html .='<li>';
+			$html.="<strong>$key</strong> :  $value";
+			$html .='</li>';			
+		}
+		$html .='</ul>';
+		return $html;
+		
 	}
 	
 	public function getMethods() {

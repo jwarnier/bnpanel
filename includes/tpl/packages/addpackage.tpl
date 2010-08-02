@@ -58,6 +58,7 @@
     <td>
       <input name="hidden" type="checkbox" id="hidden" value="1" /><a title="Is this package hidden on the order form? (Direct orders allowed.)" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
   </tr>
+  
   <tr>
     <td valign="top">Disabled:</td>
     <td>
@@ -70,6 +71,7 @@
     %ADDON%
     </td>
   </tr>
+  
   
   
 </table>

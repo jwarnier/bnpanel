@@ -99,7 +99,7 @@ class page {
 						global $server;						
 						$server_php = $server->loadServer($data['id']);						
 						$array['SERVER_STATUS'] = $server_php->testConnection();
-						$server_php->installChamilo(29);
+						//$server_php->installChamilo(29);
 						
 						echo $style->replaceVar("tpl/servers/viewserver.tpl", $array);
 					}
