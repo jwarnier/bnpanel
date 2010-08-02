@@ -3,15 +3,10 @@
 
 //Check if called by script
 if(THT != 1){die();}
-
 define("PAGE", "Logs");
-
-class page {
-	
+class page {	
 	public function content() { # Displays the page 
-		global $style;
-		global $db;
-		global $main;
+		global $style, $db, $main;
 		
 		echo "<div class=\"subborder\"><form id=\"filter\" name=\"filter\" method=\"post\" action=\"\"><select size=\"1\" name=\"show\"><option value=\"all\">ALL</option><option value=\"Registered\">Registered</option><option value=\"Package created\">Package created</option><option value=\"Approved\">Approved</option><option value=\"Declined\">Declined</option><option value=\"Suspended\">Suspended</option><option value=\"Unsuspended\">Unsuspended</option><option value=\"Cancelled\">Cancelled</option><option value=\"Terminated\">Terminated</option><option value=\"cPanel password\">Control Panel password change</option><option value=\"Login\">Client Logins (Success/Fail)</option><option value=\"Login successful\">Client Logins (Success)</option><option value=\"Login failed\">Client Logins (Fail)</option><option value=\"STAFF\">Staff Logins (Success/Fail)</option><option value=\"STAFF LOGIN SUCCESSFUL\">Staff Logins (Success)</option><option value=\"STAFF LOGIN FAILED\">Staff Logins (Fail)</option></select><input type=\"submit\" name=\"filter\" id=\"filter\" value=\"Filter Log\" /></form><table width=\"100%\" cellspacing=\"2\" cellpadding=\"2\" border=\"1\" style=\"border-collapse: collapse\" bordercolor=\"#000000\"><tr bgcolor=\"#EEEEEE\">";
 		echo "<td width=\"75\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">DATE</td><td width=\"60\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">TIME</td><td width=\"75\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">USERNAME</td><td align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">MESSAGE</td></tr>";
@@ -28,7 +23,7 @@ class page {
 			$p = 0;
 		}
 		if (!($l)) {
-			$l = 10;
+			$l = 50;
 		}
 		if (!($p)) {
 			$p = 0;
