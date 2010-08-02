@@ -51,29 +51,40 @@ class page {
 								$n++;
 							}
 						}
+						
 						if ($main->postvar['status'] == 'on') {
 							$main->postvar['status'] = ADDON_STATUS_ACTIVE;
 						} else {
 							$main->postvar['status'] = ADDON_STATUS_INACTIVE;
 						}
+						
+						
+						if ($main->postvar['install_package'] == 'on') {
+							$main->postvar['install_package'] = 1;
+						} else {
+							$main->postvar['install_package'] = 0;
+						}
+						
 						//Addon creation
 						$product_id = $addon->create($main->postvar);					
 						$billing_list = $billing->getAllBillings();
-						$billing_cycle_result = '';							
+						$billing_cycle_result = '';			
+						var_dump($billing_list);				
 						foreach($billing_list as $billing_item) {
 							$variable_name = 'billing_cycle_'.$billing_item['id'];
 							//var_dump($variable_name);
 							if (isset($main->postvar[$variable_name])) {									
-								$this->createPackageAddons($billing_item['id'], $product_id, $main->postvar[$variable_name],BILLING_TYPE_ADDON);					
+								$addon->createPackageAddons($billing_item['id'], $product_id, $main->postvar[$variable_name],BILLING_TYPE_ADDON);					
 							}													
 						}
-						$main->errors("Addon has been added!");
+						$main->errors("Addon has been added!");						
 					}
 				}
 				
 				$billing_cycle_result 	= $billing->generateBillingInputs();
 				$array['BILLING_CYCLE'] = $billing_cycle_result;
 				$array['STATUS'] 		= $main->createCheckbox('', 'status');
+				$array['INSTALL_PACKAGE'] 		= $main->createCheckbox('', 'install_package');
 	
 				//----- Finish billing cycle					
 				echo $style->replaceVar("tpl/addons/add.tpl", $array);
@@ -112,6 +123,13 @@ class page {
 									$main->postvar['status'] = ADDON_STATUS_INACTIVE;
 								}
 								
+								if ($main->postvar['install_package'] == 'on') {
+									$main->postvar['install_package'] = 1;
+								} else {
+									$main->postvar['install_package'] = 0;
+								}
+								
+								
 								//Editing addon											
 								$addon->edit($main->getvar['do'], $main->postvar);
 								
@@ -145,7 +163,12 @@ class page {
 						
 						$array['BACKEND'] 		= $data['backend'];
 						$array['DESCRIPTION']	= $data['description'];						
-						$array['STATUS'] 		= $main->createCheckbox('', 'status', $data['status']);						
+						$array['STATUS'] 		= $main->createCheckbox('', 'status', $data['status']);
+							
+						$array['INSTALL_PACKAGE']= $main->createCheckbox('', 'install_package', $data['install_package']);
+						
+						
+											
 						$array['NAME'] 			= $data['name'];
 						
 						$array['ID'] = $data['id'];

@@ -3,7 +3,7 @@
 	tinyMCE.init({
 	mode : "textareas",
 	skin : "o2k7",
-	theme : "advanced"
+	theme : "simple"
 	});
 </script>
 <ERRORS>
@@ -19,8 +19,7 @@
   <tr>
     <td valign="top">Description:</td>
     <td><textarea name="description" id="description" cols="45" rows="5"></textarea></td>
-  </tr>
-  
+  </tr> 
 
   
     
@@ -43,6 +42,13 @@
     <td valign="top">Active</td>
     <td>
 	 %STATUS%	
+    </td>
+  </tr>
+  
+           <tr>
+    <td valign="top">Install Chamilo</td>
+    <td>
+	 %INSTALL_PACKAGE%	
     </td>
   </tr>
   
