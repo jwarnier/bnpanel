@@ -37,6 +37,15 @@
   </tr>
   
   
+    
+           <tr>
+    <td valign="top">Install Chamilo</td>
+    <td>
+	 %INSTALL_PACKAGE%	
+    </td>
+  </tr>
+  
+  
  
     
 </table>

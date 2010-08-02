@@ -548,6 +548,7 @@ CREATE TABLE  `%PRE%addons` (
   `setup_fee` decimal(16,6) NOT NULL DEFAULT '0.000000',
   `description` varchar(255) NOT NULL,
   `status` int NOT NULL,
+  `install_package` int NOT NULL,
   PRIMARY KEY (`id`)
 );
 

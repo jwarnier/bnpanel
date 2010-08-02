@@ -8,7 +8,7 @@ if(THT != 1){
 
 class addon extends model {
 	
-	public $columns 	= array('id', 'name','setup_fee', 'description','status');
+	public $columns 	= array('id', 'name','setup_fee', 'description','status', 'install_package');
 	public $table_name = 'addons';
 	
 	public function create($params) {
@@ -37,7 +37,10 @@ class addon extends model {
 		$billing_id = intval($billing_id);
 		$product_id = intval($product_id);
 		$amount = $db->strip($amount);
-		$type = intval($type);		
+		
+		if (!in_array($type, array(BILLING_TYPE_ADDON,BILLING_TYPE_PACKAGE))) {
+			$type = 0;
+		}				
 		$sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$billing_id}', '{$product_id}', '{$amount}', '".$type."')";
 		$db->query($sql_insert);		
 	}
