@@ -210,13 +210,13 @@ function checkdomain() {
     </td>
   </tr>
      
-      <tr>
-    <td valign="top">Control Panel Username</td>
-    <td>
-  		<input size="30" id="username" name="username" type="text" value="%DOMAIN_USERNAME%"  class="required"/>
-  		<a class="tooltip" title="The username to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
-    </td>
-  </tr>
+	<tr>
+	    <td valign="top">Control Panel Username</td>
+	    <td>
+	  		<input size="30" id="username" name="username" type="text" value="%DOMAIN_USERNAME%"  class="required"/>
+	  		<a class="tooltip" title="The username to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
+	    </td>
+	</tr>
   
       <tr>
     <td valign="top">Control Panel Password</td>
@@ -231,6 +231,23 @@ function checkdomain() {
   		<input name="created_at" type="text" id="created_at" value="%CREATED_AT%"  class="required"/>
     </td>
   </tr>  
+  
+    
+  <tr>
+    <td valign="top">Emails sent when editing this order</td>
+    
+    <td>
+    <div id="show_preview" ></div>  	
+    	<ul>	
+    	<!-- onclick="send('neworder', %ID%);" -->
+  		<li><a href="?page=email&sub=templates&do=19">Edit New Order email</a> 		<a href="?page=email&sub=templates&do=19"><img src="<URL>themes/icons/pencil.png"></a></li>
+  		  		
+  		</ul>
+    </td>    
+  </tr>  
+   
+   
+   
 </table>
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>

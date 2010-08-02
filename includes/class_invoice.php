@@ -22,11 +22,12 @@ class invoice extends model {
 		if (!empty($invoice_id) && is_numeric($invoice_id )) {
 			
 			$client 		= $db->client($params['uid']);		
-			$emailtemp 		= $db->emailTemplate('newinvoice');
+			$emailtemp 		= $db->emailTemplate('invoices_new');
 			$array['USER'] 	= $client['user'];
 			$array['DUE'] 	= strftime("%D", $params['due']);
 			$email->send($client['email'], $emailtemp['subject'], $emailtemp['content'], $array);
 			$order_id = $params['order_id'];
+			
 			if (!empty($order_id)) {
 				$insert_sql = "INSERT INTO `<PRE>order_invoices` (order_id, invoice_id) VALUES('{$order_id}', '{$invoice_id}')";				
 				$db->query($insert_sql);		
@@ -315,8 +316,7 @@ class invoice extends model {
 			//Invoice status list
 			$invoice_status = $main->getInvoiceStatusList();
 						
-			$array['USER'] 		=  $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';				
-			
+			$array['USER'] 		=  $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';			
 			
 			if ($read_only == true) {
 				$array['STATUS'] 	= $invoice_status[$invoice_info['status']];
@@ -355,8 +355,7 @@ class invoice extends model {
 				
 			$array['domain'] 	= $order_info['domain'];
 			$package_id 	  	= $order_info['pid'];
-			$billing_cycle_id 	= $order_info['billing_cycle_id'];
-							
+			$billing_cycle_id 	= $order_info['billing_cycle_id'];							
 						
 			//Addon feature added			
 			$array['ADDON'] = ' - ';
@@ -392,7 +391,6 @@ class invoice extends model {
 			
 			//Billing cycle
 			$billing_list = $billing->getAllBillingCycles();
-
 			
 			if ($read_only) {
 				$array['BILLING_CYCLES'] = $billing_list[$billing_cycle_id]['name'];
@@ -695,9 +693,12 @@ class invoice extends model {
 		//$server->suspend($order_id);	
 	}
 	
-	
+	/**
+	 * Gets the order of the invoice
+	 */
 	public function getOrderByInvoiceId($invoice_id) {
 		global $db;
+		$invoice_id = intval($invoice_id);
 		$query = $db->query("SELECT order_id FROM `<PRE>order_invoices` WHERE `invoice_id` = '{$invoice_id}' LIMIT 1");
 		$data = $db->fetch_array($query);
 		return $data['order_id'];
@@ -713,11 +714,38 @@ class invoice extends model {
 		}
 	}
 	
+	/**
+	 * Updates an invoice status. Also sends an email to the user order owner
+	 */
 	public function updateInvoiceStatus($invoice_id, $status) {
-		global $main;		
+		global $main, $email;		
 		$this->setPrimaryKey($invoice_id);
+		$order_info = $this->getOrderByInvoiceId($invoice_id);
+		$user_info 	= $user->getUserById($order_info['userid']);
+		
 		$invoice_status = array_keys($main->getInvoiceStatusList());		
-		if (in_array($status, $invoice_status)) {		
+		if (in_array($status, $invoice_status)) {	
+			switch($status) {
+				case INVOICE_STATUS_PAID:
+					$emailtemp 	= $db->emailTemplate('invoices_paid');
+					$array['INVOICE_ID'] = $invoice_id;					
+					$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+				break;
+				case INVOICE_STATUS_CANCELLED:
+					$emailtemp 	= $db->emailTemplate('invoices_cancelled');
+					$array['INVOICE_ID'] = $invoice_id;					
+					$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+				break;
+				case INVOICE_STATUS_WAITING_PAYMENT:
+					$emailtemp 	= $db->emailTemplate('invoices_pending');
+					$array['INVOICE_ID'] = $invoice_id;					
+					$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+				break;
+				case INVOICE_STATUS_DELETED:
+				default:
+				break;
+			}
+				
 			$params['status'] = $status;
 			$this->update($params);
 		}		

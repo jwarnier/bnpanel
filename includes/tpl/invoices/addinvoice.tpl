@@ -113,6 +113,16 @@
   		<input name="due" type="text" id="due" value="%DUE%" class="required"/>
     </td>
   </tr>
+  
+    <tr>
+    <td valign="top">Email center</td>
+    <td>  	
+    	<ul>    		
+  		<li><a href="?page=email&sub=templates&do=24">Edit New Invoice email</a>		<a href="?page=email&sub=templates&do=24"><img src="<URL>themes/icons/pencil.png"></a></li>
+  		</ul>
+    </td>    
+  </tr>  
+  
 </table>
 
 
