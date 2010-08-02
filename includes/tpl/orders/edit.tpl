@@ -120,7 +120,6 @@ function loadAddons(obj) {
     </td>
   </tr>
   
-  
       <tr>
     <td valign="top">Control Panel Password</td>
     <td>
@@ -146,12 +145,13 @@ function loadAddons(obj) {
     <div id="show_preview" ></div>  	
     	<ul>	
     	<!-- onclick="send('neworder', %ID%);" -->
-  		<li><a href="?page=email&sub=templates&do=22">Edit Order Activation email</a> 		<a href="?page=email&sub=templates&do=22"><img src="<URL>themes/icons/pencil.png"></a></li>
-  		<li><a href="?page=email&sub=templates&do=23">Edit Order Waiting for Admin email</a><a href="?page=email&sub=templates&do=23"><img src="<URL>themes/icons/pencil.png"></a></li>
-  		<li><a href="?page=email&sub=templates&do=24">Edit Order Cancelled email </a>		<a href="?page=email&sub=templates&do=24"><img src="<URL>themes/icons/pencil.png"></a></li>  		
+  		<li><a href="?page=email&sub=templates&do=20">Edit Order Activation email</a> 		<a href="?page=email&sub=templates&do=20"><img src="<URL>themes/icons/pencil.png"></a></li>
+  		<li><a href="?page=email&sub=templates&do=21">Edit Order Waiting for Admin email</a><a href="?page=email&sub=templates&do=21"><img src="<URL>themes/icons/pencil.png"></a></li>
+  		<li><a href="?page=email&sub=templates&do=22">Edit Order Cancelled email </a>		<a href="?page=email&sub=templates&do=22"><img src="<URL>themes/icons/pencil.png"></a></li>  		
   		</ul>
     </td>    
   </tr>  
+   
 </table>
 <br />
 %INVOICE_LIST% 

@@ -405,6 +405,7 @@ class server extends Model {
 			$params['password']			= $main->GenUsername();
 			$params['username']			= $main->GenPassword();
 			
+			//Create an order
 			if (!empty($params['userid']) && !empty($params['pid'])) {
 				$order_id = $order->create($params, false);
 				//Add addons to the new order		
@@ -433,30 +434,24 @@ class server extends Model {
 			
 			//Package does not needs validation
 			if ($package_info['admin'] == 0) {
-				//New hosting account created
-				$emaildata = $db->emailTemplate('newacc');
+				//New hosting account created	
 				echo "<strong>Your account has been completed!</strong><br />You may now use the client login bar to see your client area or proceed to your control panel.";				
 				$donecorrectly = true;
 			} elseif($package_info['admin'] == 1) {
-				//Needs admin validation so we suspend the order
-				$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);				
-					
-				//User is waiting for admin validation						
-				$emaildata 	= $db->emailTemplate('newaccadmin');
 				
+				//Needs admin validation so we suspend the order
+				$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);					
 				//Email sent to all admins 
+				
 				//$email_to_admin = $db->emailTemplate('adminval');
-				$email_to_admin = $db->emailTemplate('admin_order_validation');				
+				$email_to_admin = $db->emailTemplate('orders_needs_validation');				
 				$email->staff($email_to_admin['subject'], $email_to_admin['content']);
 				
 				echo "<strong>Your order is awaiting admin validation!</strong><br />An email has been dispatched to the address on file. You will recieve another email when the admin has overlooked your account.";
-				$donecorrectly = true;
-				
+				$donecorrectly = true;				
 			} else {				
 				echo "Something with admin validation went wrong. Your account should be running but contact your host administrator.";	
-			}
-			
-			$email->send($array['EMAIL'], $emaildata['subject'], $emaildata['content'], $array);
+			}			
 		} else {
 			echo "There was a problem when creating a user. Please contact the system administrator.";	
 		}
@@ -561,7 +556,7 @@ class server extends Model {
 			//Suspending the website of that user
 			if($this->servers[$server]->suspend($order_id, $server) == true) {
 				
-				$emaildata 			= $db->emailTemplate('cancel_order');
+				$emaildata 			= $db->emailTemplate('orders_cancelled');
 				$array['DOMAIN'] 	= $order_info['domain'];
 				$array['REASON'] 	= 'Web Hosting Cancelled.';
 				$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $array);
@@ -609,7 +604,7 @@ class server extends Model {
 			}
 			if($this->servers[$server]->terminate($data2['user'], $server) == true) {
 				$date = time();
-				$emaildata = $db->emailTemplate('cancel_order');
+				$emaildata = $db->emailTemplate('orders_cancelled');
 				$array['REASON'] = "Account Declined.";
 				$email->send($data2['email'], $emaildata['subject'], $emaildata['content'], $array);
 				$db->query("UPDATE `<PRE>user_packs` SET `status` = '9' WHERE `id` = '{$data['id']}'");

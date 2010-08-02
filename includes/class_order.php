@@ -23,10 +23,10 @@ class order extends model {
 		$order_id = $this->save($params, $clean_token);
 		if (!empty($order_id) && is_numeric($order_id )) {
 			$main->addLog("Order created: $order_id");
-			/*
-			$emailtemp 				= $db->emailTemplate('neworder');
-			$user_info 				= $user->getUserById($params['userid']);			
+		
+			$emailtemp 				= $db->emailTemplate('orders_new');
 			$order_info 			= $this->getOrder($order_id, true);
+			$user_info 				= $user->getUserById($params['userid']);			
 						
 			$array['FIRSTNAME']		= $user_info['firstname'];
 			$array['LASTNAME'] 		= $user_info['lastname'];			
@@ -40,7 +40,7 @@ class order extends model {
 			$array['TOS'] 		    = $db->config('TOS');
 			$array['ADMIN_EMAIL'] 	= $db->config('EMAIL');
 			
-			$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);*/
+			$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
 			return	$order_id;
 		}			
 		return false;
@@ -71,24 +71,45 @@ class order extends model {
 		}
 	}
 	
+	/**
+	 * Updates an order status. Also sends an email to the user order owner
+	 */
 	public function updateOrderStatus($order_id, $status) {
-		global $main, $server;		
-		$this->setPrimaryKey($order_id);
+		global $main, $server, $email;		
+		$this->setPrimaryKey($order_id);		
+		
+		$order_info = $this->getOrder($order_id, true);
+		$user_info 	= $user->getUserById($order_info['userid']);	
+		
 		$order_status = array_keys($main->getOrderStatusList());		
 		if (in_array($status, $order_status)) {				
 			switch($status) {
 				case ORDER_STATUS_ACTIVE:
+					$emailtemp 	= $db->emailTemplate('orders_active');
+					$array['ORDER_ID'] = $order_id;
 					$server->unsuspend($order_id);
+					$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
 				break;
 				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:
+					$emailtemp 	= $db->emailTemplate('orders_waiting_admin');
+					$array['ORDER_ID'] = $order_id;
+					$server->suspend($order_id);
+					$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+				break;
 				case ORDER_STATUS_CANCELLED:
-				case ORDER_STATUS_DELETED:
-				case ORDER_STATUS_WAITING_USER_VALIDATION:
+					$emailtemp 	= $db->emailTemplate('orders_cancelled');
+					$array['ORDER_ID'] = $order_id;
+					$server->suspend($order_id);
+					$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+				break;
+				case ORDER_STATUS_DELETED:				
+				case ORDER_STATUS_WAITING_USER_VALIDATION:					
 					$server->suspend($order_id);
 				break;
 				default:
 				break;
 			}		
+			
 			$params['status'] = $status;		
 			$this->update($params);
 			$main->addLog("updateOrderStatus function called: $order_id changed to $status");
