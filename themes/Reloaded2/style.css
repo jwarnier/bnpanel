@@ -1,7 +1,7 @@
-
+* {padding:0px; margin:0px;}
 body {
 	margin:0;
-	background:url(<IMG>img_02.png) repeat-x #eeeff1;
+	background:url(<IMG>background.png) repeat-x #eeeff1;
 }
 p {
 	padding:0;
@@ -11,7 +11,7 @@ p {
 a {	
 	color:#000;
 }
-img{
+img {
     border:0;
 }
 h1 {
@@ -25,13 +25,13 @@ h1 {
 	border-bottom:dashed 1px #245ba9;
 }
 #wrapper {
-	width:80%;
+	width:980px;
 	margin:auto auto;
 }
 .logo {
 	width:100%;
 	background:url(<IMG>logo.png) center no-repeat;
-	height:133px;
+	height:75px;
 }
 #nav {
 	height:39px;
@@ -80,12 +80,12 @@ h1 {
 }
 
 #left {
-	width:30%;
+	width:24%;
 	float:left;
 }
 
 #right {
-	width:68%;
+	width:75%;
 	float:right;
 }
 .box {
@@ -262,4 +262,8 @@ label.error {
 	/* position:absolute; 
 	display:inline-block;
 	line-height:1.8;*/
+}
+
+#navigation {
+ /*	background-color: #162A67; */
 }

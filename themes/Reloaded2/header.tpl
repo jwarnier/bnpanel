@@ -11,6 +11,5 @@
     	<div class="logo"></div>
         <div id="nav">
         	<MENU>
-        </div>
-        <div class="gap"></div><div class="gap"></div>
+        </div>  
 
