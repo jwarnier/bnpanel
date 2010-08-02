@@ -168,8 +168,7 @@ class order extends model {
 		$result = $db->query($sql);
 		$array = array(); 
 		if ($db->num_rows($result) > 0 ) {
-			$array = $db->fetch_array($result);
-						
+			$array = $db->fetch_array($result, 'ASSOC');						
 			$sql = "SELECT addon_id FROM  `<PRE>order_addons` WHERE order_id = '{$id}'";
 			$result_addons = $db->query($sql);
 			$addon_list = array();
