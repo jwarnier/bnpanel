@@ -124,7 +124,7 @@ class page {
 						$main->errors("Email sent!");
 					}
 					$array['BOX'] = "";
-					$array['CONTENT'] = $style->replaceVar("tpl/emailclient.tpl");
+					$array['CONTENT'] = $style->replaceVar("tpl/email/emailclient.tpl");
 					$array['ID'] 	  = $main->getvar['do'];
 					echo $style->replaceVar("tpl/clientview.tpl", $array);
 				}

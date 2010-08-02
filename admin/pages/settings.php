@@ -120,7 +120,7 @@ class page {
 				$array['SMTP_HOST'] = $db->config("smtp_host");
 				$array['SMTP_USER'] = $db->config("smtp_user");
 				$array['SMTP_PASS'] = $db->config("smtp_password");
-				echo $style->replaceVar("tpl/emailsettings.tpl", $array);
+				echo $style->replaceVar("tpl/email/emailsettings.tpl", $array);
 				break;
 		}
 	}
