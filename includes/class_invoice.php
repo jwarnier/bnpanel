@@ -102,28 +102,29 @@ class invoice extends model {
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
 	 */
 	public function getInvoiceInfo($id) {
-		global $db;
-		
+		global $db;		
 		$id = intval($id);
 		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `id` = '{$id}'");
-		$array = $db->fetch_array($query, 'ASSOC');
-		$total_amount = 0;
-		
-		//Getting addon information
-		if (!empty($array['addon_fee'])) {
-			//the addon_fee is a serialize string			
-			$array['addon_fee'] = unserialize($array['addon_fee']);
-			if (is_array($array['addon_fee']) && count($array['addon_fee']) > 0) {		
-				foreach($array['addon_fee'] as $addon) {					
-					//$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';
-					$total_amount +=$addon['amount'];
-				}			
+		$array = array();
+		if ($db->num_rows($query) > 0) {
+			$array = $db->fetch_array($query, 'ASSOC');
+			$total_amount = 0;
+			
+			//Getting addon information
+			if (!empty($array['addon_fee'])) {
+				//the addon_fee is a serialize string			
+				$array['addon_fee'] = unserialize($array['addon_fee']);
+				if (is_array($array['addon_fee']) && count($array['addon_fee']) > 0) {		
+					foreach($array['addon_fee'] as $addon) {					
+						//$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';
+						$total_amount +=$addon['amount'];
+					}			
+				}
+				$array['addon_fee'] = serialize($array['addon_fee']);					
 			}
-			$array['addon_fee'] = serialize($array['addon_fee']);					
-		}
-		$total_amount = $total_amount + $array['amount']; 
-		$array['total_amount'] = $total_amount;		
-		
+			$total_amount = $total_amount + $array['amount']; 
+			$array['total_amount'] = $total_amount;		
+		}		
 		return $array;
 	}
 	
