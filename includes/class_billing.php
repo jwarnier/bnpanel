@@ -82,7 +82,7 @@ class billing extends model {
 		$result = $db->query($sql);
 		$data = array();		
 		if ($db->num_rows($result) > 0) {
-			$data = $db->fetch_array($result);	
+			$data = $db->fetch_array($result, 'ASSOC');	
 		}		
 		return $data;
 	}

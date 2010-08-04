@@ -3,7 +3,7 @@
 
 //Compile THT
 define("LINK", "../includes/");
-include(LINK ."compiler.php");
+include LINK ."compiler.php";
 
 //THT Variables
 define("PAGE", "Order Form");
@@ -21,6 +21,8 @@ $ip = $_SERVER['REMOTE_ADDR'];
 
 //Deleting check  
 unset($_SESSION['check']);
+//Deleting last invoices just in case
+unset($_SESSION['last_invoice_id']);	
 
 #Check stuff
 if($db->config("general") == 0) {
@@ -33,9 +35,7 @@ if($db->config("general") == 0) {
 	$_SESSION['orderform'] = true;	
 }
 
-
-global $billing; 
-
+global $billing;
 echo '<div id="ajaxwrapper">'; #Ajax wrapper, for steps
 
 //Get all packages
@@ -78,15 +78,21 @@ if($db->num_rows($packages2) == 0) {
 	$array['USER'] = "";
 	$array['DOMAIN'] = '<input name="cdom" id="cdom" type="text" />';
 	$sub = $db->query("SELECT * FROM `<PRE>subdomains`");
-	if($db->num_rows($sub) == 0) {
-		$array["CANHASSUBDOMAIN"] = "";
-	} else {
+	$array["CANHASSUBDOMAIN"] = "";
+	if($db->num_rows($sub) > 0) {
 		$array["CANHASSUBDOMAIN"] = '<option value="sub">Subdomain</option>';
 	}
 	while($sub2 = $db->fetch_array($sub)) {
 		$values2[] = array($sub2['subdomain'], $sub2['subdomain']);	
 	}
 	
+	/*$username = '';
+	$user_info = $main->getCurrentUserInfo();
+	$array['USERNAME'] = '';
+	if (!empty($user_info)) {	
+		$array['USERNAME'] = '<input type="hidden" name="username" value="'.$user_info['user'].'">';	
+	}*/	
+	 
 	//Determine what to show in Client box
 	if(!$_SESSION['clogged']) {
 		$content = $style->replaceVar("tpl/clogin.tpl");

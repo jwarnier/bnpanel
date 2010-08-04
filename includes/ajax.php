@@ -35,8 +35,7 @@ class AJAX {
 	}
 	
 	public function usercheck() {
-		global $main;
-		global $db;
+		global $main, $db;
 		
 		//If it's over 8 characters then complain.
 		if(strlen($main->getvar['user']) > 8) {
@@ -1135,6 +1134,7 @@ class AJAX {
 			} else {
 				echo 0;
 			}
+			unset($_SESSION['last_invoice_id']);	
 	   }
 	   
 	   function deleteTicket() {

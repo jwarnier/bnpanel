@@ -54,9 +54,9 @@ class order extends model {
 	 * @param	date	expiration date
 	 */
 	 
-	public function addAddons($order_id, $addon_list) {
+	public function addAddons($order_id, $addon_list, $clean_token = false) {
 		global $db, $main;
-		if ($main->checkToken()) {
+		if ($main->checkToken($clean_token)) {
 			//Insert into user_pack_addons
 			if (is_array($addon_list) && count($addon_list) > 0) {
 				foreach ($addon_list as $addon_id) {
@@ -75,45 +75,53 @@ class order extends model {
 	 * Updates an order status. Also sends an email to the user order owner
 	 */
 	public function updateOrderStatus($order_id, $status) {
-		global $main, $server, $email;		
-		$this->setPrimaryKey($order_id);		
+		global $main, $server, $email, $user, $db;		
+		$this->setPrimaryKey($order_id);
 		
 		$order_info = $this->getOrder($order_id, true);
 		$user_info 	= $user->getUserById($order_info['userid']);	
 		
-		$order_status = array_keys($main->getOrderStatusList());		
+		$order_status = array_keys($main->getOrderStatusList());	
+			
 		if (in_array($status, $order_status)) {				
 			switch($status) {
 				case ORDER_STATUS_ACTIVE:
 					$emailtemp 	= $db->emailTemplate('orders_active');
 					$array['ORDER_ID'] = $order_id;
-					$server->unsuspend($order_id);
-					$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+					$result = $server->unsuspend($order_id);
+					if ($result)
+						$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
 				break;
 				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:
 					$emailtemp 	= $db->emailTemplate('orders_waiting_admin');
-					$array['ORDER_ID'] = $order_id;
-					$server->suspend($order_id);
-					$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+					$array['ORDER_ID'] = $order_id;					
+					$result = $server->suspend($order_id);
+					if ($result)
+						$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
 				break;
 				case ORDER_STATUS_CANCELLED:
 					$emailtemp 	= $db->emailTemplate('orders_cancelled');
 					$array['ORDER_ID'] = $order_id;
-					$server->suspend($order_id);
-					$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+					$result = $server->suspend($order_id);
+					if ($result)
+						$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
 				break;
 				case ORDER_STATUS_DELETED:				
-				case ORDER_STATUS_WAITING_USER_VALIDATION:					
-					$server->suspend($order_id);
+				case ORDER_STATUS_WAITING_USER_VALIDATION:
+					if ($result)					
+						$result = $server->suspend($order_id);
 				break;
 				default:
 				break;
-			}		
-			
-			$params['status'] = $status;		
-			$this->update($params);
-			$main->addLog("updateOrderStatus function called: $order_id changed to $status");
-		}		
+			}			
+			$params['status'] = $status;
+			if ($result) {		
+				$this->update($params);
+				$main->addLog("updateOrderStatus function called: $order_id changed to $status");
+				return true;
+			}			
+		}
+		return false;	
 	}	
 	
 	
@@ -131,20 +139,21 @@ class order extends model {
 	 * Edits an order
 	 */
 	public function edit($order_id, $params) {
-		global $main;
+		global $main;		
 		$this->setPrimaryKey($order_id);
-		/*//No updates of a order username/password
-		unset($params['username']);
-		unset($params['password']);
-		*/
-		
 		//Here we will change the status of the package in the Server
-		if(isset($params['status']) && !empty($params['status'])) {		
-			$this->updateOrderStatus($order_id, $params['status']);
+		$result = true;
+		if(isset($params['status']) && !empty($params['status'])) {
+			$result = $this->updateOrderStatus($order_id, $params['status']);
 			unset($params['status']); //do not update twice 			
 		}
-		$main->addLog("Order id $order_id updated");
-		$this->update($params);
+		if ($result) {		
+			$this->update($params);
+			$main->addLog("Order id $order_id updated");
+			return true;
+		}
+		$main->addLog("Trying to update the Order id $order_id ");
+		return false;
 	}
 	
 	/**

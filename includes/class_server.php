@@ -402,14 +402,14 @@ class server extends Model {
 			$params['billing_cycle_id'] = $billing_cycle_id;
 			
 			//Username + password for the ISPConfig
-			$params['password']			= $main->GenUsername();
-			$params['username']			= $main->GenPassword();
+			$params['password']			= $main->generateUsername();
+			$params['username']			= $main->generatePassword();
 			
 			//Create an order
 			if (!empty($params['userid']) && !empty($params['pid'])) {
 				$order_id = $order->create($params, false);
 				//Add addons to the new order		
-				$order->addAddons($order_id, $main->getvar['addon_ids']);
+				$order->addAddons($order_id, $main->getvar['addon_ids'], false);
 			}
 			
 			$array['USER']		= $system_username;				
@@ -430,25 +430,21 @@ class server extends Model {
 			echo ' I send this';
 			var_dump($order_id, $params['username'], $system_email, $params['password']);
 			
-			$done = $serverphp->signup($order_id, $package_id, $params['username'], $params['password'], $user_id, $final_domain, $subdomain_id);
+			//$done = $serverphp->signup($order_id, $package_id, $params['username'], $params['password'], $user_id, $final_domain, $subdomain_id);
 			
 			//Package does not needs validation
 			if ($package_info['admin'] == 0) {
 				//New hosting account created	
-				echo "<strong>Your account has been completed!</strong><br />You may now use the client login bar to see your client area or proceed to your control panel.";				
-				$donecorrectly = true;
-			} elseif($package_info['admin'] == 1) {
-				
+				echo "<strong>Your account has been completed!</strong><br />You may now use the client login bar to see your client area or proceed to your control panel.";							
+			} elseif($package_info['admin'] == 1) {				
 				//Needs admin validation so we suspend the order
 				$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);					
-				//Email sent to all admins 
 				
 				//$email_to_admin = $db->emailTemplate('adminval');
 				$email_to_admin = $db->emailTemplate('orders_needs_validation');				
 				$email->staff($email_to_admin['subject'], $email_to_admin['content']);
 				
-				echo "<strong>Your order is awaiting admin validation!</strong><br />An email has been dispatched to the address on file. You will recieve another email when the admin has overlooked your account.";
-				$donecorrectly = true;				
+				echo "<strong>Your order is awaiting admin validation!</strong><br />An email has been dispatched to the address on file. You will recieve another email when the admin has overlooked your account.";				
 			} else {				
 				echo "Something with admin validation went wrong. Your account should be running but contact your host administrator.";	
 			}			
@@ -457,8 +453,8 @@ class server extends Model {
 		}
 		
 		//If the package is paid			
-		if($donecorrectly && $type->determineType($package_id) == 'paid') {							
-			global $invoice, $package;
+		if($package_info['type'] == 'paid') {		
+			global $invoice, $package, $billing;
 			//The order was saved with an status of admin validation now we should create an invoice an set the status to wait payment
 			$due 		= time();
 			$notes 		= '';			
@@ -466,6 +462,7 @@ class server extends Model {
 			//1. Calculating the amount for the package depending on the billing cycle
 			$package_amount = 0;
 			$package_billing_info = $package->getPackageByBillingCycle($package_id, $billing_cycle_id);	
+			$billing_info = $billing->getBilling($billing_cycle_id);
 			
 			if (is_array($package_billing_info) && isset($package_billing_info['amount'])) {					
 				$package_amount = $package_billing_info['amount'];
@@ -476,20 +473,21 @@ class server extends Model {
 			//3. Creating the invoice
 			
 			$invoice_params['uid'] 		= $user_id;
-			$invoice_params['amount'] 	= $package_amount;
-			$invoice_params['due'] 		= $due;
+			$invoice_params['amount'] 	= $package_amount;			
+			$invoice_params['due'] 		= $due + $billing_info['number_months']*30*24*60*60;
 			$invoice_params['notes'] 	= $notes;
 			$invoice_params['addon_fee']= $addon_fee;
 			$invoice_params['status'] 	= INVOICE_STATUS_WAITING_PAYMENT;
 			$invoice_params['order_id'] = $order_id;
 						
 			$invoice_id = $invoice->create($invoice_params, false);
-			
-			//This variable will be read in the Ajax::ispaid function
-			$_SESSION['last_invoice_id'] = $invoice_id;
-			
+			if ($invoice_id) {							
+				//This variable will be read in the Ajax::ispaid function
+				$_SESSION['last_invoice_id'] = $invoice_id;
+			}
 			//4. Suspend the hosting if is not already suspended
-			$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);												
+			$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);			
+			$main->clearToken();										
 			echo '<div class="errors"><b>You are being redirected to payment! It will load in a couple of seconds..</b></div>';
 		}	
 	}
@@ -634,14 +632,15 @@ class server extends Model {
 		
 		if (is_array($order_info) && !empty($order_info)) {
 			$user_info = $user->getUserById($order_info['userid']);
-			$server_id = $type->determineServer($order_info['pid']);			
+			$server_id = $type->determineServer($order_info['pid']);						
 			
-			if(!is_object($this->servers[$server_id]) && !$serverphp) {
+			if(!is_object($this->servers[$server_id]) && !$serverphp) {				
 				$this->servers[$server_id] = $this->createServer($order_info['pid']); # Create server class
 				$donestuff = $this->servers[$server_id]->suspend($order_id, $server_id, $reason);
-			} else {
+			} else {				
 				$donestuff = $serverphp->suspend($order_id, $server_id, $reason);
-			}			
+			}	
+					
 			if($donestuff == true) {				
 				//$order->updateOrderStatus($order_id, ORDER_STATUS_CANCELLED);
 				//$db->query("UPDATE `<PRE>users` SET `status` = '2' WHERE `id` = '{$db->strip($data['userid'])}'");
@@ -651,10 +650,10 @@ class server extends Model {
 													  '{$data2['user']}',
 													  '{$date}',
 													  'Suspended ($reason)')");*/
-				$emaildata = $db->emailTemplate('suspendacc');
-				$email->send($user_info['email'], $emaildata['subject'], $emaildata['content']);
+			//	$emaildata = $db->emailTemplate('suspendacc');
+				//$email->send($user_info['email'], $emaildata['subject'], $emaildata['content']);
 				return true;
-			} else {
+			} else {				
 				return false;	
 			}			
 		} else {
@@ -679,10 +678,10 @@ class server extends Model {
 			
 			if(!is_object($this->servers[$server_id])) {
 				$this->servers[$server_id] = $this->createServer($order_info['pid']); # Create server class
-			}
-			if($this->servers[$server_id]->unsuspend($order_id, $server_id) == true) {
-			//	$date = time();
-				$order->updateOrderStatus($order_id, ORDER_STATUS_ACTIVE);
+			}			
+			if($this->servers[$server_id]->unsuspend($order_id, $server_id) == true) {			
+				//	$date = time();
+				
 				
 				//$db->query("UPDATE `<PRE>users` SET `status` = '1' WHERE `id` = '{$db->strip($data['userid'])}'");
 				/*$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
@@ -690,8 +689,8 @@ class server extends Model {
 													  '{$data2['user']}',
 													  '{$date}',
 													  'Unsuspended.')");*/
-				$emaildata = $db->emailTemplate('unsusacc');
-				$email->send($user_info['email'], $emaildata['subject'], $emaildata['content']); 
+				//$emaildata = $db->emailTemplate('unsusacc');
+				//$email->send($user_info['email'], $emaildata['subject'], $emaildata['content']); 
 				return true;
 			} else {
 				return false;	
