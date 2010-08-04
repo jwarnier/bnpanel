@@ -144,7 +144,7 @@ class page {
 			case 'delete':				
 				$user_id = $main->getCurrentStaffId();
 				if(!empty($main->getvar['do']) && $user_id != $main->getvar['do']) {
-					$staff->delete($main->getvar['do']);						
+					$staff->delete($main->getvar['do'], true);						
 					$main->errors("Staff Account Deleted!");
 				}
 				$staff_list = $staff->gettAllStaff();
