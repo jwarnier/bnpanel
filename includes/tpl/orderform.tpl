@@ -199,57 +199,55 @@ function nextstep() {
 					$("#verify").html("<strong>Domain already exist</strong> "+wrong);					
 				} else {
 
-						final(step, step + 1);
-						step = step + 1
-						var url = "?function=create";
-						var i;
-						
-						for(i="0"; i < document.order.length; i++) {
-							if(document.order.elements[i].type == "checkbox") {
-								if (document.order.elements[i].id != null && document.order.elements[i].value != null) {
-									//fix to work with addons					
-									if (document.order.elements[i].name == 'addon_ids') {
-										url = url+"&"+document.order.elements[i].id+"[]="+document.order.elements[i].value;
-									} else {
-										url = url+"&"+document.order.elements[i].id+"="+document.order.elements[i].checked;
-									}
-								}					
-							} else {
-								url = url+"&"+document.order.elements[i].id+"="+document.order.elements[i].value;
-							}
-							//alert(document.order.elements[i].id + ' - '. document.order.elements[i].value + ' - '. document.order.elements[i].checked);
-						}
-						
-						//adding subdomain
-						if (document.getElementById("domain").value == 'sub') {
-							var subdomain = document.getElementById("csub2");			
-							var subdomain_id = subdomain.options[subdomain.selectedIndex].value;
-							url = url + "&csub2="+subdomain_id;
-						}
-						 
-						document.getElementById("finished").innerHTML = working;
-						document.getElementById("next").disabled = true;
-						document.getElementById("back").disabled = true;
-						//showing the signup code
-						alert(url);
-						$.get("<AJAX>"+url, function(data) {
-							document.getElementById("finished").innerHTML = data;
-							document.getElementById("back").disabled = false;
-							document.getElementById("verify").innerHTML = "";				
-							//Check if an invoice is generated
-							$.get("<AJAX>?function=ispaid&pid="+ document.getElementById("package").value +"&uname="+ document.getElementById("username").value, function(invoice_id) {
-								if(invoice_id != "") {
-									//window.location = "../client/?page=invoices&iid="+invoice_id;				
+					final(step, step + 1);
+					step = step + 1
+					var url = "?function=create";
+					var i;
+					
+					for(i="0"; i < document.order.length; i++) {
+						if(document.order.elements[i].type == "checkbox") {
+							if (document.order.elements[i].id != null && document.order.elements[i].value != null) {
+								//fix to work with addons					
+								if (document.order.elements[i].name == 'addon_ids') {
+									url = url+"&"+document.order.elements[i].id+"[]="+document.order.elements[i].value;
+								} else {
+									url = url+"&"+document.order.elements[i].id+"="+document.order.elements[i].checked;
 								}
-							});
+							}					
+						} else {
+							url = url+"&"+document.order.elements[i].id+"="+document.order.elements[i].value;
+						}
+						//alert(document.order.elements[i].id + ' - '. document.order.elements[i].value + ' - '. document.order.elements[i].checked);
+					}
+					
+					//adding subdomain
+					if (document.getElementById("domain").value == 'sub') {
+						var subdomain = document.getElementById("csub2");			
+						var subdomain_id = subdomain.options[subdomain.selectedIndex].value;
+						url = url + "&csub2="+subdomain_id;
+					}
+					 
+					document.getElementById("finished").innerHTML = working;
+					document.getElementById("next").disabled = true;
+					document.getElementById("back").disabled = true;
+					//showing the signup code
+					alert(url);
+					$.get("<AJAX>"+url, function(data) {
+						document.getElementById("finished").innerHTML = data;
+						document.getElementById("back").disabled = false;
+						document.getElementById("verify").innerHTML = "";				
+						//Check if an invoice is generated
+						$.get("<AJAX>?function=ispaid", function(invoice_id) {
+							if(invoice_id != "") {
+								window.location = "../client/?page=invoices&iid="+invoice_id;				
+							} else {
+								window.location = "../client/?page=invoices";
+							}
+							
 						});
-						
-
-				}
-				
-			});
-
-			
+					});
+				}				
+			});			
 			break;
 	}
 }
@@ -288,7 +286,7 @@ function previousstep() {
 				document.getElementById("next").disabled = true;
 				document.getElementById("order"+pid).disabled = false;
 			}
-										  });
+		});
 		
      });
 	}
@@ -304,11 +302,9 @@ function showAddons(obj) {
 }
 </script>
 <form action="" method="post" name="order" id="order">
-<div>
-	
+<div>	
 	<div id="1">
-    	<input name="package" id="package" type="hidden" value="" />
-    	
+    	<input name="package" id="package" type="hidden" value="" />    	
         <div class="table">
             <div class="cat">Step One - Choose Type/Package</div>
             <div class="text">
@@ -325,13 +321,11 @@ function showAddons(obj) {
                   </tr>                  
                 </table>
             </div>
-        </div>
-        
+        </div>        
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           %PACKAGES%          
         </table>
-    </div>
-    
+    </div>    
 	<!-- cambios por julio billing thing --> 
     <div class="table" id="2" style="display:none">
         <div class="cat">Select</div>
@@ -353,8 +347,7 @@ function showAddons(obj) {
               </tr>
             </table>
         </div>
-    </div>
-    
+    </div>    
     <!-- cambios por julio  resumen --> 
     <div class="table" id="3" style="display:none">
         <div class="cat">Select</div>
@@ -371,9 +364,7 @@ function showAddons(obj) {
               </tr>
             </table>
         </div>
-    </div>
-    
-    
+    </div>   
     <div class="table" id="4" style="display:none">
         <div class="cat">Step Two - Terms of Service</div>
         <div class="text">
@@ -393,8 +384,7 @@ function showAddons(obj) {
               </tr>
             </table>
         </div>
-    </div>
-    
+    </div>    
 	<div class="table" id="5" style="display:none">
         <div class="cat">Step Three - Client Account</div>
         <div class="text">

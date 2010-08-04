@@ -1,5 +1,5 @@
 <div id='navigation'>
     <ul>
-    	%NAV%
+    	%NAV%    	
     </ul>
 </div>
