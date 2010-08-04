@@ -40,7 +40,6 @@ class ispconfig extends Panel {
 		global $main;	
 		$data = $this->serverDetails($this->getServerId());			
 	//	$host_parts = parse_url($data['host']);
-//		var_dump($host_parts);
 		//$data['host']	= $host_parts['scheme'].$host_parts['host'].$host_parts['path'];
 		
 		//* The URI to the remoting interface. Please replace with the URI to your real server
@@ -51,7 +50,7 @@ class ispconfig extends Panel {
 		$client = new SoapClient(null, array('location' => $soap_location,'uri'=> $soap_uri));				
 		try {
 			//* Login to the remote server
-			if($session_id = $client->login($data['user'],$data['accesshash'])) {				
+			if($session_id = $client->login($data['user'],$data['accesshash'])) {
 				if ($this->debug) {echo 'Logged into remote server sucessfully. The SessionID is '.$session_id.'<br />';}				
 				$this->session_id = $session_id;	
 				return $client;
@@ -71,15 +70,15 @@ class ispconfig extends Panel {
 		@param	array  parameters that the SOAP will used 
 		@return mixed  result of the SOAP call
 	*/
-	private function remote($action, $params) {
+	private function remote($action, $params = array()) {
 		global $main;		
 		$main->addLog('Remote action called:' . $action);
-		$soap_client = $this->load();		
+		$soap_client = $this->load();	
+			
 		$result = array();
-		if ($soap_client) {
-			try {
-				if ($this->debug) { echo '<br /><<-'.$action.'<br />'; echo 'Params : '; var_dump($params).'<br /><br />'; }
-	
+		if ($soap_client) {		
+			try {			
+				if ($this->debug) { echo '<br /><<-'.$action.'<br />'; echo 'Params : '; var_dump($params).'<br /><br />'; }	
 				switch($action) {
 					case 'client_add':
 					 	$reseller_id = 0;		
@@ -150,11 +149,34 @@ class ispconfig extends Panel {
 						$params['client_id'] = null;
 						$soap_result 	= $soap_client->dns_zone_add($this->session_id, $client_id, $params);
 					break;
+					case 'dns_zone_get':
+						$soap_result 	= $soap_client->dns_zone_get($this->session_id, $client_id, $params);
+					break;
+					case 'dns_zone_get_by_user':
+						$client_id 		= $params['client_id']; // client id	
+						$soap_result 	= $soap_client->dns_zone_get_by_user($this->session_id, $client_id, $params);
+					break;
+					case 'dns_zone_update':
+						/*$client_id 		= $params['client_id']; // client id
+						$primary_id		= $params['primary_id']; // client id
+						$params['client_id'] = null;
+						$params['primary_id'] = null;						
+						$soap_result 	= $soap_client->dns_zone_update($this->session_id, $client_id, $primary_id, $params);*/						
+					break;
+					case 'dns_zone_inactive':						
+						$primary_id		= $params['primary_id']; // client id
+						$soap_result 	= $soap_client->dns_zone_inactive($this->session_id, $primary_id);				
+					break;					
+					case 'dns_zone_active':						
+						$primary_id		= $params['primary_id']; // client id
+						$soap_result 	= $soap_client->dns_zone_active($this->session_id, $primary_id);				
+					break;
+					
 					//Add an email domain
-					case 'mail_domain_add':
+					case 'mail_domain_update':
 						$client_id 		= $params['client_id']; // client id
 						$params['client_id'] = null;
-						$soap_result 	= $soap_client->mail_domain_add($this->session_id, $client_id, $params);
+						$soap_result 	= $soap_client->mail_domain_update($this->session_id, $client_id, $params);
 					break;
 					//Creates a mySQL database
 					case 'sites_database_add':
@@ -178,8 +200,11 @@ class ispconfig extends Panel {
 						$soap_result 	= $soap_client->install_chamilo($this->session_id, $client_id, $params);
 					break;	
 					case 'client_templates_get_all': 
-					$soap_result 	= $soap_client->client_templates_get_all($this->session_id);
+						$soap_result 	= $soap_client->client_templates_get_all($this->session_id);
 					break;	
+					case 'logout' :
+						$soap_result 	= $soap_client->logout($this->session_id);
+					break;
 					default:
 					break;
 				}
@@ -238,10 +263,9 @@ class ispconfig extends Panel {
 		
 		// Sets the current server
 		$this->server_id = $package_info['server'];
-		$data 			= $this->serverDetails($package_info['server']);	
+		$data 			 = $this->serverDetails($package_info['server']);	
 		
-		if ($this->debug) {echo '<pre>';}
-		
+		if ($this->debug) {echo '<pre>';}		
 		//$ip = gethostbyname($data['host']);
 
 		/*ISPConfig client variables
@@ -272,7 +296,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		$package_info 				= $package->getPackage($package_id);
 		$package_back_end_id 		= $package_info['backend'];
 
-		//Plan info
+		//This is very important we match the package backend with the client_template id in ISPConfig
 		$params['template_master'] 	= $package_back_end_id;
 
 		//Getting the server id it depends in the package that the user is selecting		
@@ -295,6 +319,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			$domain = $domain.'.'.$subdomain;
 			$is_domain = false;
 		}
+		
 		//defining domain
 		$site_params['domain'] = $domain;
 
@@ -334,76 +359,105 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			$server_info = $this->remote('server_get',$server_params);
 
 			//Getting extra info of user
-			$client_info = $this->remote('client_get', array('client_id'=>$new_client_id));			
-			
-			$website_id = 1;
-
-			//Setting parameters for the sites_web_domain_add function
-			$site_params['type'] 			= 'vhost';	// harcoded in ISPConfig vhost
-			$site_params['vhost_type'] 		= 'name';	// harcoded in ISPConfig vhost 
-	
-			$site_params['sys_userid'] 		= 1;//1; force to the admin
-			$site_params['sys_groupid'] 	= 1; //ass added by the admin
-			$site_params['system_user'] 	= 'web'.$website_id;
-			$site_params['system_group'] 	= 'client'.$client_info['client_id']; 	
-			$site_params['server_id'] 		= $this->getServerId();
-
-			if (empty($client_info['limit_web_quota'])) {
-			 	//Not 0 values otherwise the script will not work
-				$site_params['hd_quota'] = 1; //ISPCOnfig field
-			}
-
-			if (empty($client_info['site_infolimit_traffic_quota'])) {
-				 //Not 0 values otherwise the script will not work
-				$site_params['traffic_quota'] = 1; // ISPCOnfig field
-			}
-
-			//Hardcoded values
-			$site_params['allow_override'] 	= 'All';	
+			$client_info = $this->remote('client_get', array('client_id'=>$new_client_id));
 		
-			if(!$client_info['error']) {		
+			if(!$client_info['error']) {
+				$website_id = 1;
+				$group_id = $new_client_id + 1;
+				//Setting parameters for the sites_web_domain_add function
+				$site_params['type'] 			= 'vhost';	// harcoded in ISPConfig vhost
+				$site_params['vhost_type'] 		= 'name';	// harcoded in ISPConfig vhost 
+		
+				$site_params['sys_userid'] 		= 1;//1; force to the admin
+				$site_params['sys_groupid'] 	= 1; //ass added by the admin
+				$site_params['system_user'] 	= 'web'.$website_id;
+				$site_params['system_group'] 	= 'client'.$client_info['client_id'];				
+				$site_params['client_group_id'] = $new_client_id + 1;	 //always will be this 	groupd id +1			
+				$site_params['server_id'] 		= $this->getServerId();
+	
+				if (empty($client_info['limit_web_quota'])) {
+				 	//Not 0 values otherwise the script will not work
+					$site_params['hd_quota'] = 5; //ISPCOnfig field
+				}
+	
+				if (empty($client_info['site_infolimit_traffic_quota'])) {
+					 //Not 0 values otherwise the script will not work
+					$site_params['traffic_quota'] = 5; // ISPCOnfig field
+				}
+	
+				//Hardcoded values
+				$site_params['allow_override'] 	= 'All';
+				$site_params['errordocs'] 		= 1;
 						
 				//website_path=/var/www/clients/client[client_id]/web[website_id]
-				$site_params['document_root'] 	 = str_replace(array('[client_id]','[website_id]'),array($new_client_id, $website_id), $server_info['website_path']);
+				//$site_params['document_root'] 	 = str_replace(array('[client_id]','[website_id]'),array($new_client_id, $website_id), $server_info['website_path']);
+				$site_params['document_root'] 	 = $server_info['website_path'];
 
 				//"[website_path]/web:[website_path]/tmp:/var/www/[website_domain]/web:/srv/www/[website_domain]/web:/usr/share/php5:/tmp:/usr/share/phpmyadmin"
-				$site_params['php_open_basedir'] = str_replace(array('[website_path]','[website_domain]'),array($site_params['document_root'], $site_params['domain']), $server_info['php_open_basedir']);
-
+				//$site_params['php_open_basedir'] = str_replace(array('[website_path]','[website_domain]'),array($site_params['document_root'], $site_params['domain']), $server_info['php_open_basedir']);
+				$site_params['php_open_basedir'] = $server_info['php_open_basedir'];
+				
+				//PHP Configuration
+				$site_params['php'] 			= 'suphp'; //php available posible values
+				
+				$site_params['ip_address'] 		= '*'; //important
+				
+				//Active or not
+				if ($order_info['status'] == ORDER_STATUS_ACTIVE) {					
+					$site_params['active'] 	 	= 'y';
+				} else {
+					$site_params['active'] 	 	= 'n';
+				}
+				 
 				//Creating a site
-				$result = $this->remote('sites_web_domain_add',$site_params);					
-				
-				//Setting up the mail domain
-				$mail_domain_params['client_id'] = $new_client_id;
-				$mail_domain_params['server_id'] = $this->getServerId();
-				$mail_domain_params['domain']	 = $domain;
-				$mail_domain_params['active'] 	 = 'y';
-				$domain_id = $this->remote('mail_domain_add', $mail_domain_params);
-				
-				//Adding the DNS zone				
-				$dns_domain_params['client_id'] = $new_client_id;
-				$dns_domain_params['server_id'] = $this->getServerId();
-				$dns_domain_params['origin']	= $domain;
-				$dns_domain_params['ns']		= '8.8.8.8';
-				$dns_domain_params['mbox'] 		= 'mbox.beeznest.com.';//@todo 
-				$dns_domain_params['refresh'] 	= 28800;
-				$dns_domain_params['retry'] 	= 7200;
-				$dns_domain_params['expire']	= 604800;
-				$dns_domain_params['minimum']	= 604800;
-				$dns_domain_params['ttl']		= 604800;				
-				$dns_domain_params['active']	= 'y';		
-				
-				$result = $this->remote('dns_zone_add', $dns_domain_params);		
-						
-				/* Extra params
-				serial				
-				xfer
-				also_notify
-				update_acl
-				*/
-				return true;
-			}
-			return false;			
+				$result = $this->remote('sites_web_domain_add',$site_params);
+				if ($result) {					
+			
+					//Setting up the mail domain
+					$mail_domain_params['client_id'] = $new_client_id;
+					$mail_domain_params['server_id'] = $this->getServerId();
+					$mail_domain_params['domain']	 = $domain;
+					
+					if ($order_info['status'] == ORDER_STATUS_ACTIVE) {
+						$mail_domain_params['active'] 	 	= 'y';
+					} else {
+						$mail_domain_params['active'] 	 	= 'n';
+					}
+					
+					$domain_id = $this->remote('mail_domain_add', $mail_domain_params);
+					
+					//Adding the DNS zone				
+					$dns_domain_params['client_id'] = $new_client_id;
+					$dns_domain_params['server_id'] = $this->getServerId();
+					$dns_domain_params['origin']	= $domain;
+					
+					$dns_domain_params['ns']		= '8.8.8.8';
+					$dns_domain_params['mbox'] 		= 'mbox.beeznest.com.';//@todo 
+					$dns_domain_params['refresh'] 	= 28800;
+					$dns_domain_params['retry'] 	= 7200;
+					$dns_domain_params['expire']	= 604800;
+					$dns_domain_params['minimum']	= 604800;
+					$dns_domain_params['ttl']		= 604800;	
+					
+					if ($order_info['status'] == ORDER_STATUS_ACTIVE) {
+						$dns_domain_params['active'] 	 	= 'y';
+					} else {
+						$dns_domain_params['active'] 	 	= 'n';
+					}				
+					$result = $this->remote('dns_zone_add', $dns_domain_params);						
+					$result = $this->remote('logout');	
+								
+					/* Extra params
+					serial				
+					xfer
+					also_notify
+					update_acl
+					*/
+					return true;					
+				}		
+			}						
 		}
+		return false;
 	}
 	
 	/**
@@ -415,6 +469,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	*/
 	public function suspend($order_id, $server_id, $reason = false) {
 		global $main, $db, $order, $user;
+		
 		$order_info = $order->getOrderInfo($order_id);	
 		
 		$this->server_id = $server_id;
@@ -423,29 +478,59 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		//Getting user info
 		$user_info = $this->remote('client_get_by_username',$params);
 		
-		$site_params['sys_userid']	= $user_info['userid'];		
-		$site_params['groups'] 		= $user_info['groups'];	
-
-		//Getting all domains from this user
-		$site_info = $this->remote('client_get_sites_by_user', $site_params);
-		
-		$domain_id = 0;
-		if ($site_info !== false) {
-			foreach($site_info as $domain) {				
-				if ($order_info['domain'] == $domain['domain']) {
-					$domain_id = $domain['domain_id'];
-					break;
+		if (is_array($user_info) && !empty($user_info)) {
+			
+			$site_params['sys_userid']	= $user_info['userid'];		
+			$site_params['groups'] 		= $user_info['groups'];	
+	
+			//Getting all domains from this user
+			$site_info = $this->remote('client_get_sites_by_user', $site_params);			
+					
+			$domain_id = 0;
+			if ($site_info !== false) {
+				
+				foreach($site_info as $domain) {				
+					if ($order_info['domain'] == $domain['domain']) {
+						$domain_id = $domain['domain_id'];
+						break;
+					}
 				}
+				
+				if ($domain_id != 0) {
+					$params_get_site['primary_id'] = $domain_id;
+					
+					$result = $this->remote('sites_web_domain_inactive',$params_get_site);				
+								
+					$params['client_id'] = $user_info['client_id'];	
+					$params['server_id'] = $this->getServerId();
+					
+					$dns_zone_list = $this->remote('dns_zone_get_by_user',$params);				
+					$dns_id = 0;
+					if (is_array($dns_zone_list) && count($dns_zone_list) > 0) {
+						foreach($dns_zone_list as $dns_soa) {
+							if ($dns_soa['origin'] == $order_info['domain']) {
+								$dns_id = $dns_soa['id'];
+								break;
+							}
+						}
+					}
+									
+					if (!empty($dns_id)) {
+						$dns_domain_params['primary_id']		= $dns_id;
+						$result = $this->remote('dns_zone_inactive',$dns_domain_params);				
+					}
+					
+					/* Inactive mail domain
+					$mail_params['client_id'] = $user_info['client_id'];	
+					$mail_params['server_id'] = $this->getServerId();
+					$mail_params['active']	= 'n';				
+					$result = $this->remote('mail_domain_update',$mail_params);
+					*/					
+					return true;
+				}					
 			}
-			if ($domain_id != 0) {
-				$params_get_site['primary_id'] = $domain_id;
-				$result = $this->remote('sites_web_domain_inactive',$params_get_site);
-				return true;
-			}
-			return false;			
-		} else {
-			return false;
 		}
+		return false;
 /*
 		//Getting the site info
 		$site_info = $this->remote('sites_web_domain_get',$params_get_site);
@@ -489,29 +574,55 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		$params['username'] = $order_info['username'];
 
 		//Getting user info
-		$user_info = $this->remote('client_get_by_username',$params);
+		$user_info = $this->remote('client_get_by_username',$params);	
 
 		$site_params['sys_userid']	= $user_info['userid'];		
 		$site_params['groups'] 		= $user_info['groups'];	
 
 		$site_info = $this->remote('client_get_sites_by_user',$site_params);
+
 		$domain_id = 0;
 		if ($site_info !==false) {
+			
 			foreach($site_info as $domain) {
 				if ($order_info['domain'] == $domain['domain']) {
 					$domain_id = $domain['domain_id'];
 					break;
 				}
-			}		
-			if ($domain_id != 0) {
-				$params_get_site['primary_id'] = $domain_id;			
-				$result = $this->remote('sites_web_domain_active',$params_get_site);
-				return true;
 			}
-			return false;
-		} else {
-			return false;
+				
+			if (!empty($domain_id)) {
+				
+				$params_get_site['primary_id'] = $domain_id;
+						
+				//Inactive domain	
+				$result = $this->remote('sites_web_domain_active',$params_get_site);
+					
+				$params['client_id'] = $user_info['client_id'];	
+				$params['server_id'] = $this->getServerId();
+				
+				$dns_zone_list = $this->remote('dns_zone_get_by_user',$params);
+				
+				
+				$dns_id = 0;				
+				if (is_array($dns_zone_list) && count($dns_zone_list) > 0) {
+					foreach($dns_zone_list as $dns_soa) {
+						if ($dns_soa['origin'] == $order_info['domain']) {
+							$dns_id = $dns_soa['id'];
+							break;
+						}
+					}
+				}	
+					
+				if (!empty($dns_id)) {
+					$dns_domain_params['primary_id']		= $dns_id;
+					//Inactive zone
+					$result = $this->remote('dns_zone_active',$dns_domain_params);				
+				}								
+				return true;				
+			}			
 		}
+		return false;
 	}
 	
 	/**
@@ -519,13 +630,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	 */
 	public function installChamilo($order_id, $params = array()) {
 		global	$main, $order;
-		
-		/*$server_params['server_id'] 	= $this->getServerId();
-		$server_params['section'] 		= 'web';
-		
-		//Getting server info
-		$server_info = $this->remote('server_get',$server_params);*/
-		
+				
 		$order_info = $order->getOrderInfo($order_id);
 		//Getting user info 
 		$params['username'] = $order_info['username'];
@@ -544,43 +649,39 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					break;
 				}
 			}
-		}		
-		
-	/*	$params['client_id'] = $user_info['userid'];
-		$database_list = $this->remote('sites_database_get_all_by_user', $params);
-		
-		$i=0;
-		foreach($database_list as $database_item) {
-			$database_item[$i] = $database_item['database_name'];
 		}
-		*/
-
-		//Create a new database for chamilo		
 		
-		$mysql_params['client_id'] 			= $user_info['client_id'];				
-		$mysql_params['server_id']			= $this->getServerId();				
-		$mysql_params['type'] 				= 'mysql';
-				
-		$mysql_params['database_name'] 		= 'c'.$user_info['client_id'].'_chamilo';
-		$mysql_params['database_user'] 		= $params['username'].'_'.$main->generateUsername();		
-		$mysql_params['database_password'] 	= $main->generatePassword();
-		$mysql_params['database_charset']	= 'utf8';
-		$mysql_params['remote_access'] 		= 'n';
-		$mysql_params['active'] 			= 'y';	
-		
-		$database_id = $this->remote('sites_database_add', $mysql_params);
-		
-		if (is_numeric(($database_id))) {		
-			$install_params['package_id'] 	= 1; // chamilo package
-			$install_params['domain_id'] 	= $domain_id ; // chamilo
-			$install_params['status'] 		= 2;// 0 not install / 1 installed 2 pending 3 error
-			$install_params['database_id'] 	= $database_id;  
-			$result = $this->remote('install_chamilo', $install_params);
-		} else {
-			if ($database_id['error']) {
-				echo $database_id['text'];	
-			}			
+		if (!empty($domain_id)) {
+			//Create a new database for chamilo		
+			
+			$mysql_params['client_id'] 			= $user_info['client_id'];				
+			$mysql_params['server_id']			= $this->getServerId();				
+			$mysql_params['type'] 				= 'mysql';
+			$generate_username					= $main->generateUsername();
+			$mysql_params['database_name'] 		= 'c'.$user_info['client_id'].'_'.$generate_username.'_chamilo';
+			$mysql_params['database_user'] 		= 'c'.$user_info['client_id'].'_'.$params['username'].'_user';		
+			$mysql_params['database_password'] 	= $main->generatePassword();
+			$mysql_params['database_charset']	= 'utf8';
+			$mysql_params['remote_access'] 		= 'n';
+			$mysql_params['active'] 			= 'y';	
+			
+			$database_id = $this->remote('sites_database_add', $mysql_params);
+			
+			if (is_numeric(($database_id))) {		
+				$install_params['package_id'] 	= 1; // this value can be find in the ispconfig install_package table
+				$install_params['domain_id'] 	= $domain_id ; // chamilo
+				$install_params['status'] 		= 2;// 0 not install / 1 installed 2 pending 3 error
+				$install_params['database_id'] 	= $database_id;  
+				$result = $this->remote('install_chamilo', $install_params);
+				return true;
+			} else {
+				if ($database_id['error']) {
+					//echo $database_id['text'];
+					return false;	
+				}			
+			}
 		}
+		return false;		
 	}
 
 	/**
@@ -609,16 +710,16 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	}
 	
 	public function parseBackendInfo($data) {
-//		$html = 'No data';
-		$html .='<ul>';
-		foreach ($data as $key=>$value) {
-			$html .='<li>';
-			$html.="<strong>$key</strong> :  $value";
-			$html .='</li>';			
+		if (!empty($data)) {
+			$html .='<ul>';
+			foreach ($data as $key=>$value) {
+				$html .='<li>';
+				$html.="<strong>$key</strong> :  $value";
+				$html .='</li>';			
+			}
+			$html .='</ul>';
 		}
-		$html .='</ul>';
-		return $html;
-		
+		return $html;		
 	}
 	
 	public function getMethods() {
