@@ -8,7 +8,9 @@
 </head>
 <body>
     <div id="wrapper">
-    	<div class="logo"></div>
+    	<div class="header">
+    		<div class="logo"></div>
+    	</div>
         <div id="nav">
         	<MENU>
         </div>  
