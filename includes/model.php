@@ -34,12 +34,13 @@ class model {
 	 * @return	mixed	inserted id or false if error 
 	 */
 	public function save($attributes, $clean_token = true) {
-		global $main, $db;		
+		global $main, $db;
 		if ($main->checkToken($clean_token)) {		
 			$new_attributes = $this->filterParams($attributes, $this->getColumns());
-			$sql = 'INSERT INTO '.$this->getTableName().' '.
+			echo $sql = 'INSERT INTO '.$this->getTableName().' '.
 					'('.join(', ',array_keys($new_attributes)).') '.
 					'VALUES ('.join(',',array_values($new_attributes)).')';
+			//echo $sql; '<br />';
 			$db->query($sql);
 			return $db->insert_id();
 		}		

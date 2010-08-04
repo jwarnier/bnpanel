@@ -26,8 +26,7 @@ class invoice extends model {
 			$array['USER'] 	= $client['user'];
 			$array['DUE'] 	= strftime("%D", $params['due']);
 			$email->send($client['email'], $emailtemp['subject'], $emailtemp['content'], $array);
-			$order_id = $params['order_id'];
-			
+			$order_id 		= $params['order_id'];			
 			if (!empty($order_id)) {
 				$insert_sql = "INSERT INTO `<PRE>order_invoices` (order_id, invoice_id) VALUES('{$order_id}', '{$invoice_id}')";				
 				$db->query($insert_sql);		
@@ -45,6 +44,7 @@ class invoice extends model {
 	}
 	
 	public function edit($id, $params) { # Edit an invoice. Fields created can only be edited?
+		global $main;
 		$this->setPrimaryKey($id);
 		$this->update($params);
 		$main->addLog("Invoice updated $id deleted ");	
@@ -59,8 +59,7 @@ class invoice extends model {
 		require_once "paypal/paypal.class.php";
 		$paypal 		= new paypal_class();
 		$invoice_info 	= $this->getInvoiceInfo($invoice_id);
-		$user_id 		= $main->getCurrentUserId();
-		
+		$user_id 		= $main->getCurrentUserId();		
 		$order_id 		= $this->getOrderByInvoiceId($invoice_id);
 		$order_info		= $order->getOrderInfo($order_id);
 		
@@ -202,7 +201,8 @@ class invoice extends model {
 			}				
 			
 			//Getting the domain info
-			$order_info = $order->getOrderByUser($array['uid']);			
+			$order_id 		 = $this->getOrderByInvoiceId($array['id']);
+			$order_info 	 = $order->getOrderInfo($order_id);
 			
 			$array['domain'] 	= $order_info['domain'];
 			$package_id 	  	= $order_info['pid'];
@@ -277,8 +277,7 @@ class invoice extends model {
 			$per_page = $db->config('rows_per_page');
 			$start = ($page-1)*$per_page;
 			$limit = "LIMIT $start , $per_page";
-		}
-		
+		}		
 		$sql = "SELECT * FROM ".$this->getTableName()." WHERE status <> '".INVOICE_STATUS_DELETED."' $user_where ORDER BY id DESC $limit  ";
 		$result = $db->query($sql);
 		$invoice_list = array();
@@ -718,7 +717,7 @@ class invoice extends model {
 	 * Updates an invoice status. Also sends an email to the user order owner
 	 */
 	public function updateInvoiceStatus($invoice_id, $status) {
-		global $main, $email;		
+		global $db, $main, $email, $user;		
 		$this->setPrimaryKey($invoice_id);
 		$order_info = $this->getOrderByInvoiceId($invoice_id);
 		$user_info 	= $user->getUserById($order_info['userid']);
@@ -744,8 +743,7 @@ class invoice extends model {
 				case INVOICE_STATUS_DELETED:
 				default:
 				break;
-			}
-				
+			}				
 			$params['status'] = $status;
 			$this->update($params);
 		}		

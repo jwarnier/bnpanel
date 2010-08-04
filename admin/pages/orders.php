@@ -33,8 +33,7 @@ class page {
 			$invoice->set_unpaid($_GET['iid']);
 			echo "<span style='color:red'>Invoice {$_GET['iid']} marked as unpaid. <a href='index.php?page=invoices&iid={$_GET['iid']}&pay=true'>Undo this action</a></span>";
 		}
-		require_once LINK.'validator.class.php';
-		
+		require_once LINK.'validator.class.php';		
 		switch($main->getvar['sub']) {					
 			case 'add':
 				$asOption = array(
@@ -80,7 +79,7 @@ class page {
 						$params['billing_cycle_id'] = $main->postvar['billing_cycle_id'];
 												
 						if (!empty($params['userid']) && !empty($params['pid'])) {
-							$order_id = $order->create($params);
+							$order_id = $order->create($params, false);
 						}
 						
 						//Add addons to a new order	
@@ -88,11 +87,10 @@ class page {
 							global $server;
 							
 							$package_data = $package->getPackage($params['pid']);
-							$serverphp	  = $server->loadServer($package_data['server']); # Create server class
+							//$serverphp	  = $server->loadServer($package_data['server']); # Create server class
 							
 							//Creating the account in ISPconfig
-							$done = $serverphp->signup($order_id, $params['pid'], $params['username'], $params['password'], $params['userid'], $params['domain'], $subdomain_id);							
-							//$order->updateOrderStatus($order_id, $params['status']);
+							//$done = $serverphp->signup($order_id, $params['pid'], $params['username'], $params['password'], $params['userid'], $params['domain'], $subdomain_id);							
 							
 							//Add addons
 							$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
@@ -104,8 +102,32 @@ class page {
 								if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
 									$new_addon_list[] = $addon_id;				
 								}															
-							}												
-							$order->addAddons($order_id, $new_addon_list);
+							}
+							
+							$all_addon_list = $addon->getAllAddons();
+							foreach($new_addon_list as $addon_item) {
+								if ($all_addon_list[$addon_item]['install_package']) {
+									//Install Chamilo
+									//$serverphp->installChamilo($order_id);
+								}								
+							}														
+							$order->addAddons($order_id, $new_addon_list, false);
+							
+							//Creating an auto Invoice
+							$package_info 		= $package->getPackageByBillingCycle($main->postvar['package_id'], $main->postvar['billing_cycle_id']);
+							$addon_serialized 	= $addon->generateAddonFee($new_addon_list, $main->postvar['billing_cycle_id'], true);				
+							$billing_info 		= $billing->getBilling($main->postvar['billing_cycle_id']);
+																			
+							$invoice_params['uid'] 		= $main->postvar['user_id'];
+							$invoice_params['amount'] 	= $package_info['amount'];
+							$invoice_params['due'] 		= strtotime($main->postvar['created_at']) + $billing_info['number_months']*30*24*60*60;
+							$invoice_params['notes'] 	= 'Invoice created automatically';
+							$invoice_params['addon_fee']= $addon_serialized;
+							$invoice_params['status'] 	= INVOICE_STATUS_WAITING_PAYMENT;
+							$invoice_params['order_id'] = $order_id;										
+							$invoice_id = $invoice->create($invoice_params, false);
+							$main->clearToken();							
+							
 							if ($done)
 								$main->errors("Order has been added!");
 							else 
@@ -158,8 +180,7 @@ class page {
 				if(isset($main->getvar['do'])) {
 					$order_info = $order->getOrderInfo($main->getvar['do']);
 					if (is_array($order_info) && !empty($order_info )) {
-						if($_POST) {
-							
+						if($_POST) {							
 							foreach($main->postvar as $key => $value) {
 								//if($value == "" && !$n && $key != "admin") {
 								
@@ -168,26 +189,27 @@ class page {
 									$n++;
 								}*/
 							}							
-							if(!$n) {			
-								$main->postvar['signup'] = strtotime($main->postvar['created_at']);
-								$main->postvar['pid'] 	 = $main->postvar['package_id'];
-								
+							if(!$n) {								
+								$main->postvar['pid'] 	 = $main->postvar['package_id'];								
 								//Editing the Order								
-								$order->edit($main->getvar['do'], $main->postvar);
-								$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
-																
-								$new_addon_list = array();																
-								foreach($addon_list as $addon_id=>$value) {																								
-									$variable_name = 'addon_'.$addon_id;
-									//var_dump($variable_name);
-									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
-										$new_addon_list[] = $addon_id;				
-									}															
+								$result = $order->edit($main->getvar['do'], $main->postvar);
+								if ($result) {
+									$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
+																	
+									$new_addon_list = array();																
+									foreach($addon_list as $addon_id=>$value) {																								
+										$variable_name = 'addon_'.$addon_id;
+										//var_dump($variable_name);
+										if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
+											$new_addon_list[] = $addon_id;				
+										}															
+									}
+									//Updating addons of an Order													
+									$addon->updateAddonOrders($new_addon_list, $main->postvar['order_id'], true);		
+									$main->errors("Order has been edited!");
+								} else {
+									$main->errors("There was a problem while updating this order");
 								}
-								//Updating addons of an Order													
-								$addon->updateAddonOrders($new_addon_list, $main->postvar['order_id'], true);		
-								$main->errors("Order has been edited!");
-								
 								if ($main->postvar['status'] == ORDER_STATUS_DELETED) {
 									$main->redirect('?page=orders&sub=all');	
 								}
@@ -220,15 +242,15 @@ class page {
 				);				
 				$return_array['json_encode'] = json_encode($asOption);
 				
-				$oValidator = new Validator($asOption);
+				$oValidator = new Validator($asOption);			
 				
-				
-				if(isset($main->getvar['do'])) {											
+				if(isset($main->getvar['do'])) {										
 					$order_info = $order->getOrderInfo($main->getvar['do']);
 					$billing_id = $order_info['billing_cycle_id'];
 															
 					if($_POST) {
 						$result = $oValidator->validate($_POST);
+						
 						if (empty($result)) {					
 							$due 		= strtotime($main->postvar['due']);
 							$notes		= $main->postvar['notes'];
@@ -260,8 +282,6 @@ class page {
 							$invoice_params['order_id'] = $main->getvar['do'];
 										
 							$invoice_id = $invoice->create($invoice_params, false);
-			
-							$invoice->create($invoice_params);
 							
 							$main->errors("Invoice created!");
 							//$main->redirect("?page=invoices&sub=all");
@@ -291,7 +311,8 @@ class page {
 						$package_list[$package['id']] = $package['name'].' - '.$currency->toCurrency($package['amount']);				
 					}			
 					$return_array['PACKAGES']  		=  $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);','class'=>'required'));									
-					$return_array['DUE'] 			= date('Y-m-d');					
+					//$return_array['DUE'] 			= date('Y-m-d', time() + $billing_info['number_months']*30*24*60*60);					
+					$return_array['DUE'] 			= date('Y-m-d');
 					$return_array['ID'] 			= $main->getvar['do'];
 					$invoice_status 				= $main->getInvoiceStatusList();
 					$return_array['STATUS'] 		= $main->createSelect('status', $invoice_status,'', array('class'=>'required'));
