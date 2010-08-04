@@ -321,7 +321,8 @@ function showAddons(obj) {
                   </tr>                  
                 </table>
             </div>
-        </div>        
+        </div>  
+              
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           %PACKAGES%          
         </table>
