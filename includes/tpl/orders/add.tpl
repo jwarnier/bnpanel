@@ -146,9 +146,8 @@ function checkdomain() {
     <tr>
     <td width="20%" valign="top">User</td>
     <td >            
-	    <input name="user_id" type="hidden" id="user_id" />    
-	    
-	    <input value="Search an user" onfocus="this.value=(this.value=='Search an user') ? '' : this.value;" onblur="this.value=(this.value=='') ? 'Search an user' : this.value;" size="30" autocomplete="off" id="inputString" onkeyup="lookup(this.value);" type="text" class="required" />
+	    <input name="user_id" type="hidden" id="user_id" />
+	    <input value="Search an user" onfocus="this.value=(this.value=='Search an user') ? '' : this.value;" onblur="this.value=(this.value=='') ? 'Search an user' : this.value;" size="45" autocomplete="off" id="inputString" onkeyup="lookup(this.value);" type="text" class="required" />
 	    <img title="Reset" onclick="reset();" src="<URL>themes/icons/arrow_refresh.png">
 		<div class="suggestionsBox" id="suggestions" style="display: none;">
 			<div class="suggestionList" id="autoSuggestionsList"></div>
