@@ -240,7 +240,7 @@ function checkdomain() {
     <div id="show_preview" ></div>  	
     	<ul>	
     	<!-- onclick="send('neworder', %ID%);" -->
-  		<li><a href="?page=email&sub=templates&do=19">Edit New Order email</a> 		<a href="?page=email&sub=templates&do=19"><img src="<URL>themes/icons/pencil.png"></a></li>
+  		<li><a target="_blank" href="?page=email&sub=templates&do=19">Edit New Order email</a> 		<a href="?page=email&sub=templates&do=19"><img src="<URL>themes/icons/pencil.png"></a></li>
   		  		
   		</ul>
     </td>    
