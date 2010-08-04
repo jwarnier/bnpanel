@@ -47,7 +47,7 @@ $(document).ready(function() {
 <table width="100%" border="0" cellspacing="3" cellpadding="0">
 	<thead>
 	<tr> 
-        <td width="5%"><div align="left"><b>&nbsp;No.</b></div></td>
+        <td width="45px"><div align="left"><b>&nbsp;No.</b></div></td>
         <td><strong>User</strong></td>
         <td><strong><a title="Domain name" class="tooltip"><img src="<ICONDIR>world.png" border="0" /></a> Domain</strong></td>
         <td><strong><a title="The amount of money you owe." class="tooltip"><img src="<ICONDIR>money.png" border="0" /></a> Amount</strong></td>      	
@@ -57,7 +57,7 @@ $(document).ready(function() {
         <!--  -->
         <td><strong>Status</strong></td>
         <td><strong><a title="When it's due." class="tooltip"><img src="<ICONDIR>time.png" border="0" /></a> Due date</strong></td>
-        <td width="100px"><strong>Actions</strong></td>                
+        <td width="80px"><strong>Actions</strong></td>                
 	</tr>
 	</thead>
 	<tbody id="tbody"></tbody>	

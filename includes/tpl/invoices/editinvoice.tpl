@@ -122,9 +122,9 @@
     <td valign="top">Email center</td>
     <td>  	
     	<ul>    		
-  		<li><a href="?page=email&sub=templates&do=25">Edit Invoice Paid email</a>		<a href="?page=email&sub=templates&do=25"><img src="<URL>themes/icons/pencil.png"></a></li>
-  		<li><a href="?page=email&sub=templates&do=26">Edit Invoice Pending email</a>	<a href="?page=email&sub=templates&do=26"><img src="<URL>themes/icons/pencil.png"></a></li>
-  		<li><a href="?page=email&sub=templates&do=27">Edit Invoice Cancelled email</a>	<a href="?page=email&sub=templates&do=27"><img src="<URL>themes/icons/pencil.png"></a></li>		
+  		<li><a target="_blank" href="?page=email&sub=templates&do=25">Edit Invoice Paid email</a>		<a href="?page=email&sub=templates&do=25"><img src="<URL>themes/icons/pencil.png"></a></li>
+  		<li><a target="_blank" href="?page=email&sub=templates&do=26">Edit Invoice Pending email</a>	<a href="?page=email&sub=templates&do=26"><img src="<URL>themes/icons/pencil.png"></a></li>
+  		<li><a target="_blank" href="?page=email&sub=templates&do=27">Edit Invoice Cancelled email</a>	<a href="?page=email&sub=templates&do=27"><img src="<URL>themes/icons/pencil.png"></a></li>		
   		</ul>
     </td>    
   </tr>    
