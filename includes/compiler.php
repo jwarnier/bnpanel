@@ -25,13 +25,16 @@ define('ORDER_STATUS_WAITING_ADMIN_VALIDATION', 3); //Awaiting Validation
 define('ORDER_STATUS_CANCELLED', 				4); //Awaiting Payment
 define('ORDER_STATUS_DELETED', 					9);
 
-		
 // Invoices
 define('INVOICE_STATUS_PAID', 					1); // Active in THT 1
 define('INVOICE_STATUS_CANCELLED', 				2); // Suspended in THT 2
 define('INVOICE_STATUS_WAITING_PAYMENT', 		3); // Awaiting Payment 4
 define('INVOICE_STATUS_DELETED', 				9); // Cancelled in 9
 
+//Domain Options
+define('DOMAIN_OPTION_DOMAIN', 					1); // Cancelled in 9
+define('DOMAIN_OPTION_SUBDOMAIN', 				2); // Cancelled in 9
+define('DOMAIN_OPTION_BOTH', 					3); // Cancelled in 9
 
 //Server status
 define('SERVER_STATUS', 'test');

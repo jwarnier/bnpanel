@@ -78,11 +78,11 @@ class order extends model {
 		global $main, $server, $email, $user, $db;		
 		$this->setPrimaryKey($order_id);
 		
-		$order_info = $this->getOrder($order_id, true);
+		$order_info = $this->getOrderInfo($order_id, true);
 		$user_info 	= $user->getUserById($order_info['userid']);	
 		
 		$order_status = array_keys($main->getOrderStatusList());	
-			
+		
 		if (in_array($status, $order_status)) {				
 			switch($status) {
 				case ORDER_STATUS_ACTIVE:
@@ -94,7 +94,11 @@ class order extends model {
 				break;
 				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:
 					$emailtemp 	= $db->emailTemplate('orders_waiting_admin');
-					$array['ORDER_ID'] = $order_id;					
+					$array['ORDER_ID'] 	= $order_id;					
+					$array['USER'] 		= $order_info['username'];
+					$array['PASS'] 		= $order_info['password'];
+					$array['EMAIL'] 	= $user_info['email'];					
+					$array['DOMAIN'] 	= $order_info['domain'];		
 					$result = $server->suspend($order_id);
 					if ($result)
 						$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
@@ -108,8 +112,8 @@ class order extends model {
 				break;
 				case ORDER_STATUS_DELETED:				
 				case ORDER_STATUS_WAITING_USER_VALIDATION:
-					if ($result)					
-						$result = $server->suspend($order_id);
+					//We do not send nothing to the user
+					$result = $server->suspend($order_id);
 				break;
 				default:
 				break;
@@ -138,7 +142,7 @@ class order extends model {
 	/**
 	 * Edits an order
 	 */
-	public function edit($order_id, $params) {
+	public function edit($order_id, $params, $clean_token = true) {
 		global $main;		
 		$this->setPrimaryKey($order_id);
 		//Here we will change the status of the package in the Server
@@ -148,7 +152,7 @@ class order extends model {
 			unset($params['status']); //do not update twice 			
 		}
 		if ($result) {		
-			$this->update($params);
+			$this->update($params, $clean_token);
 			$main->addLog("Order id $order_id updated");
 			return true;
 		}

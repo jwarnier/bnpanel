@@ -50,14 +50,17 @@ class page {
 		}
 		switch($main->getvar['sub']) {
 			default:
-				$array['NAME'] 			= $db->config("name");
-				$array['URL'] 			= $db->config("url");
+				$array['NAME'] 			= $db->config('name');
+				$array['URL'] 			= $db->config('url');
 				$array['ROWS_PER_PAGE'] = $db->config('rows_per_page');
 				$array['RECURL'] 		= $_SERVER['HTTP_HOST'];
 				
 				//$array['SITE_EMAIL'] 	= $db->config('site_email');
 				
-				
+				$domain_option_id = $db->config('domain_options');
+				$domain_values = array(DOMAIN_OPTION_DOMAIN=>'Only Domains', DOMAIN_OPTION_SUBDOMAIN=>'Only Subdomains', DOMAIN_OPTION_BOTH=>'Both');
+				$array['DOMAIN_OPTIONS'] = $main->createSelect('domain_options', $domain_values, $domain_option_id);
+								
 				$values[] = array("Admin Area", "admin");
 				$values[] = array("Order Form", "order");
 				$values[] = array("Client Area", "client");

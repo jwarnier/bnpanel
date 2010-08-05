@@ -64,8 +64,7 @@ if($db->num_rows($packages2) == 0) {
 		if($n == 2) {
 			$array['PACKAGES'] .= "</tr>";	
 			$n = 0;	
-		}
-		
+		}		
 		//Selecting billing cycles
 		$billing_cycle_data = $billing->getAllBillingCycles();	
 		$array['BILLING_CYCLE'] = '';
@@ -77,14 +76,59 @@ if($db->num_rows($packages2) == 0) {
 	$array['TOS'] = $db->config('tos');
 	$array['USER'] = "";
 	$array['DOMAIN'] = '<input name="cdom" id="cdom" type="text" />';
-	$sub = $db->query("SELECT * FROM `<PRE>subdomains`");
-	$array["CANHASSUBDOMAIN"] = "";
-	if($db->num_rows($sub) > 0) {
-		$array["CANHASSUBDOMAIN"] = '<option value="sub">Subdomain</option>';
+	
+ 
+        
+	$subdomain_list = $main->getSubDomains();
+
+	
+	switch($db->config('domain_options')) {
+		case DOMAIN_OPTION_DOMAIN:	
+		$domain_options = '<div style="display:none"><select name="domain" id="domain">
+	              			<option value="dom" selected="selected">Domain</option>	              			
+	            			</select></div>';
+		break;
+		case DOMAIN_OPTION_SUBDOMAIN:
+		if (!empty($subdomain_list)) {
+			$domain_options = '<div style="display:none"><select name="domain" id="domain">
+          			<option value="sub" selected="selected">Subdomain</option>	              			
+        			</select></div>';
+		} else {
+			$domain_options = 'No current subdomain';
+		}
+		break;
+		case DOMAIN_OPTION_BOTH:		
+			$sub_domain_option = '<option value="sub">Subdomain</option>';
+			$domain_options = '
+			<div class="table">
+			    <div class="cat">Select your domain type</div>
+			    <div class="text">
+			        <table width="100%" border="0" cellspacing="2" cellpadding="0">
+			          <tr>
+			            <td width="20%">Domain/Subdomain:</td>
+			            <td>
+			            	<select name="domain" id="domain">
+			              		<option value="dom" selected="selected">Domain</option>
+			              		'.$sub_domain_option.';
+			            	</select>
+			            </td>
+			            <td width="70%">
+			            	<a title="Choose the type of hosting:<br /><strong>Domain:</strong> example.com<br /><strong>Subdomain:</strong> example.subdomain.com" class="tooltip">
+			            	<img src="<URL>themes/icons/information.png" /></a>
+			            </td>
+			          </tr>                  
+			        </table>
+			    </div>
+			</div>';
+		break;
 	}
-	while($sub2 = $db->fetch_array($sub)) {
-		$values2[] = array($sub2['subdomain'], $sub2['subdomain']);	
-	}
+	
+	$array['DOMAIN_CONFIGURATION'] = $domain_options;
+	
+	
+	
+	
+	
 	
 	/*$username = '';
 	$user_info = $main->getCurrentUserInfo();

@@ -113,11 +113,11 @@ class ispconfig extends Panel {
 					break;
 					case 'sites_web_domain_active':
 						$primary_id		= $params['primary_id']; //site id
-						$soap_result 	= $soap_client->sites_web_domain_active($this->session_id, $primary_id);
+						$soap_result 	= $soap_client->sites_web_domain_set_status($this->session_id, $primary_id, 'active');
 					break;
 					case 'sites_web_domain_inactive':	
 						$primary_id		= $params['primary_id']; //site id
-						$soap_result 	= $soap_client->sites_web_domain_inactive($this->session_id, $primary_id);
+						$soap_result 	= $soap_client->sites_web_domain_set_status($this->session_id, $primary_id,'inactive');
 					break;
 					case 'sites_web_domain_add':
 						$client_id = $params['client_id'];
@@ -165,11 +165,11 @@ class ispconfig extends Panel {
 					break;
 					case 'dns_zone_inactive':						
 						$primary_id		= $params['primary_id']; // client id
-						$soap_result 	= $soap_client->dns_zone_inactive($this->session_id, $primary_id);				
+						$soap_result 	= $soap_client->dns_zone_set_status($this->session_id, $primary_id, 'inactive');				
 					break;					
 					case 'dns_zone_active':						
 						$primary_id		= $params['primary_id']; // client id
-						$soap_result 	= $soap_client->dns_zone_active($this->session_id, $primary_id);				
+						$soap_result 	= $soap_client->dns_zone_set_status($this->session_id, $primary_id, 'active');				
 					break;
 					
 					//Add an email domain
@@ -340,7 +340,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			//Update order
 			$params['username'] = $domain_username;
 			$params['password'] = $domain_password;
-			$order->edit($order_id, $params);
+			$order->edit($order_id, $params, false);
 			$site_params['client_id'] = $new_client_id;
 		}
 		

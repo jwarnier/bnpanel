@@ -8,10 +8,8 @@
  
 class server extends Model {
 		
-	public $columns 	= array('id', 'name','host', 'user','accesshash','type');	
-	public $table_name 	= 'servers';	
-	
-	
+	public 	$columns 	= array('id', 'name','host', 'user','accesshash','type');	
+	public	$table_name 	= 'servers';	
 	private $servers = array(); # All the servers in a array
 	public 	$availableServerList = array();
 	
@@ -458,7 +456,8 @@ class server extends Model {
 			echo "There was a problem when creating a user. Please contact the system administrator.";	
 		}
 		
-		//If the package is paid			
+		//If the package is paid	
+		var_dump($package_info['type']);		
 		if($package_info['type'] == 'paid') {		
 			global $invoice, $package, $billing;
 			//The order was saved with an status of admin validation now we should create an invoice an set the status to wait payment
@@ -485,7 +484,7 @@ class server extends Model {
 			$invoice_params['addon_fee']= $addon_fee;
 			$invoice_params['status'] 	= INVOICE_STATUS_WAITING_PAYMENT;
 			$invoice_params['order_id'] = $order_id;
-						
+						var_dump($invoice_params);
 			$invoice_id = $invoice->create($invoice_params, false);
 			if ($invoice_id) {							
 				//This variable will be read in the Ajax::ispaid function

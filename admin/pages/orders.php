@@ -173,26 +173,17 @@ class page {
 					}
 					$return_array = $order->getOrder($main->getvar['do'], false, false);					
 					echo $style->replaceVar("tpl/orders/change-password.tpl", $return_array);
-				}
-				
+				}				
 			break;
 			case 'edit':
 				if(isset($main->getvar['do'])) {
 					$order_info = $order->getOrderInfo($main->getvar['do']);
 					if (is_array($order_info) && !empty($order_info )) {
-						if($_POST) {							
-							foreach($main->postvar as $key => $value) {
-								//if($value == "" && !$n && $key != "admin") {
-								
-								/*if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle"  && substr($key,0,5) != "addon" ) {
-									$main->errors("Please fill in all the fields!");
-									$n++;
-								}*/
-							}							
-							if(!$n) {								
+						if($_POST) {
+							if ($main->checkToken()) {					
 								$main->postvar['pid'] 	 = $main->postvar['package_id'];								
 								//Editing the Order								
-								$result = $order->edit($main->getvar['do'], $main->postvar);
+								$result = $order->edit($main->getvar['do'], $main->postvar, false);
 								if ($result) {
 									$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
 																	
@@ -215,13 +206,14 @@ class page {
 								}
 							}
 						}
-					} else {
-						echo "That order doesn't exist!";	
-					}			
-					$return_array = $order->getOrder($main->getvar['do'], false, false);
-					$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);					
-					echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);
-				}
+					}				
+				} else {
+					echo "That order doesn't exist!";	
+				}	
+						
+				$return_array = $order->getOrder($main->getvar['do'], false, false);
+				$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);					
+				echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);			
 			break;			
 			case 'view':				
 				if(isset($main->getvar['do'])) {					
