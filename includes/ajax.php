@@ -97,22 +97,20 @@ class AJAX {
 	public function emailcheck() {
 		global $main, $db;
 		if(!$main->getvar['email']) {
-		   $_SESSION['check']['email'] = false;
+		   $_SESSION['check']['email'] = false;		   
 		   echo 0;
 		   return;
 		}
-		$query = $db->query("SELECT * FROM `<PRE>users` WHERE `email` = '{$main->getvar['email']}'");
-		if($db->num_rows($query) != 0) {
+		$query = $db->query("SELECT id FROM `<PRE>users` WHERE `email` = '{$main->getvar['email']}'");
+		if($db->num_rows($query) != 0) {			
 		   $_SESSION['check']['email'] = false;
 		   echo 0;
 		   return;
-		}
-		else {
+		} else {
 			if($main->check_email($main->getvar['email'])) {
 				$_SESSION['check']['email'] = true;
 				echo 1;
-			}
-			else {
+			} else {
 				$_SESSION['check']['email'] = false;
 				echo 0;
 			}
