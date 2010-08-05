@@ -125,7 +125,6 @@ if (!$is_ajax_load) {
 	$token =  $_GET['_get_token'];
 }
 	
-	var_dump($token);
 if(INSTALL == 1) {
 	define("THEME", $db->config("theme")); # Set the default theme
 	define("URL", 	$db->config("url")); # Sets the URL THT is located at
