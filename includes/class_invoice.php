@@ -232,18 +232,21 @@ class invoice extends model {
 			switch ($array['status']) {
 				case INVOICE_STATUS_PAID:
 					$array['paid']	= "<span style='color:green'>Already Paid</span>";
-					$array['pay']	=  "<a href='index.php?sub=all&page=invoices&iid={$array['id']}&unpay=true' title='Mark as Pending'> <img src='../themes/icons/money_delete.png'  width=\"18px\" alt='Mark as Pending' title='Mark as Pending' /> </a>";
+					//$array['pay']	=  "<a href='index.php?sub=all&page=invoices&iid={$array['id']}&unpay=true' title='Mark as Pending'> <img src='../themes/icons/money_delete.png'  width=\"18px\" alt='Mark as Pending' title='Mark as Pending' /> </a>";
+					$array['pay'] 	= '';
 					$array['due']	=  '<span style="color:green">'.$array['due'].'</span>' ;
 					  
 				break;
 				case INVOICE_STATUS_CANCELLED:
 					$array['paid'] 	= "<span style='color:red'>Cancelled</span>";
-					$array['pay'] 	= "<a href='index.php?sub=all&page=invoices&iid={$array['id']}&pay=true' title='Mark as Paid'> <img src='../themes/icons/money_add.png' width=\"18px\" alt='Mark as Paid' title='Mark as Paid' /></a>";
+					//$array['pay'] 	= "<a href='index.php?sub=all&page=invoices&iid={$array['id']}&pay=true' title='Mark as Paid'> <img src='../themes/icons/money_add.png' width=\"18px\" alt='Mark as Paid' title='Mark as Paid' /></a>";
+					$array['pay'] 	= '';
 					$array['due']	=  '<span style="color:red">'.$array['due'].'</span>';		
 				break;
 				case INVOICE_STATUS_WAITING_PAYMENT:
 					$array['paid'] 	= "<span style='color:red'>Pending</span>";
-					$array['pay']  	= "<a href='index.php?sub=all&page=invoices&iid={$array['id']}&pay=true' title='Mark as Paid'> <img src='../themes/icons/money_add.png' width=\"18px\" alt='Mark as Paid' title='Mark as Paid' /></a>";
+					//$array['pay']  	= "<a href='index.php?sub=all&page=invoices&iid={$array['id']}&pay=true' title='Mark as Paid'> <img src='../themes/icons/money_add.png' width=\"18px\" alt='Mark as Paid' title='Mark as Paid' /></a>";
+					$array['pay'] 	= '';
 					$array['due']	= '<span style="color:red">'.$array['due'].'</span>';		
 				break;
 				case INVOICE_STATUS_DELETED:
@@ -251,7 +254,8 @@ class invoice extends model {
 				break;
 				default:
 					$array['paid']= '-';
-					$array['pay']=  ' <img src="../themes/icons/money_add_na.png" width="18px" alt="Mark as Paid" title="Mark as Paid" /> ';
+					//$array['pay']=  ' <img src="../themes/icons/money_add_na.png" width="18px" alt="Mark as Paid" title="Mark as Paid" /> ';
+					$array['pay'] 	= '';
 					$array['due']=  '<span>'.$array['due'].'</span>';						
 			}
 			$array['package']		 = $package_list[$package_id]['name'];

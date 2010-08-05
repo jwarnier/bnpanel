@@ -29,16 +29,16 @@ class page {
 	public function content() {		
 		global $style, $db, $main, $invoice,$addon, $package;
 		
-		if(isset($_GET['iid']) && isset($_GET['pay'])) {						
+		/*if(isset($_GET['iid']) && isset($_GET['pay'])) {					
 			$invoice->set_paid($_GET['iid']);
 			echo "<span style='color:green'>Invoice #{$_GET['iid']} marked as paid. <a href='index.php?sub=all&page=invoices&iid={$_GET['iid']}&unpay=true'>Undo this action</a></span>";
 		}
 		if(isset($_GET['iid']) && isset($_GET['unpay'])){	
 			$invoice->set_unpaid($_GET['iid']);
 			echo "<span style='color:red'>Invoice {$_GET['iid']} marked as unpaid. <a href='index.php?sub=all&page=invoices&iid={$_GET['iid']}&pay=true'>Undo this action</a></span>";
-		}
+		}*/
 		
-		switch($main->getvar['sub']) {						
+		switch($main->getvar['sub']) {					
 			case 'add':
 				echo $style->replaceVar("tpl/invoices/addinvoice.tpl");
 			break;
@@ -103,12 +103,15 @@ class page {
 			case 'delete':			
 				if (isset($main->getvar['do'])) { 
 					$invoice->delete($main->getvar['do']);					
+				} else {
+					$main->redirect("?page=invoices&sub=all");										
 				}
 				if (isset($main->getvar['confirm']) && $main->getvar['confirm'] == 1) {
 					$main->errors("The invoice #".$main->getvar['do']." has been  deleted!");
+					$main->redirect("?page=invoices&sub=all");	
 				}
-			case 'all':
-			default :				
+			default :			
+			case 'all':					
 				$per_page = $db->config('rows_per_page');
 				$count_sql = "SELECT count(*)  as count FROM ".$invoice->getTableName()." WHERE status <> '".INVOICE_STATUS_DELETED."'";
 				$result_max = $db->query($count_sql);		
@@ -118,8 +121,7 @@ class page {
 				$quantity = ceil($count / $per_page);							
 				$return_array['COUNT'] = $quantity;
 				echo $style->replaceVar("tpl/invoices/admin-page.tpl", $return_array);				
-			break;	
-			
+			break;			
 		}
 	}
 }

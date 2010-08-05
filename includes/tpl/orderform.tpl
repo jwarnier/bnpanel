@@ -66,10 +66,7 @@ function orderstepme(id, type) {
 	step = step + 1;
 }
 
-function showhide(hide, show) {
-	
-
-	
+function showhide(hide, show) {	
 	document.getElementById("next").disabled = true;
 	document.getElementById("back").disabled = true;
 	document.getElementById("verify").innerHTML = "";
@@ -260,6 +257,9 @@ function final(hide, show) {
      });
 }
 function previousstep() {
+	if (step == 2 ) {
+		$("#steps").hide();
+	}	
 	if(step != 1) {
 		document.getElementById("next").disabled = true;
 		document.getElementById("back").disabled = true;

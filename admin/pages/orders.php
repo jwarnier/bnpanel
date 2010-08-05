@@ -87,10 +87,10 @@ class page {
 							global $server;
 							
 							$package_data = $package->getPackage($params['pid']);
-							//$serverphp	  = $server->loadServer($package_data['server']); # Create server class
+							$serverphp	  = $server->loadServer($package_data['server']); # Create server class
 							
 							//Creating the account in ISPconfig
-							//$done = $serverphp->signup($order_id, $params['pid'], $params['username'], $params['password'], $params['userid'], $params['domain'], $subdomain_id);							
+							$done = $serverphp->signup($order_id, $params['pid'], $params['username'], $params['password'], $params['userid'], $params['domain'], $subdomain_id);							
 							
 							//Add addons
 							$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
@@ -98,7 +98,6 @@ class page {
 																				
 							foreach($addon_list as $addon_id=>$value) {																								
 								$variable_name = 'addon_'.$addon_id;
-								//var_dump($variable_name);
 								if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
 									$new_addon_list[] = $addon_id;				
 								}															
@@ -108,7 +107,7 @@ class page {
 							foreach($new_addon_list as $addon_item) {
 								if ($all_addon_list[$addon_item]['install_package']) {
 									//Install Chamilo
-									//$serverphp->installChamilo($order_id);
+									$serverphp->installChamilo($order_id);
 								}								
 							}														
 							$order->addAddons($order_id, $new_addon_list, false);
@@ -155,8 +154,7 @@ class page {
 				$array['STATUS'] 		= $main->createSelect('status', $order_list, '', array('class'=>'required'));
 				
 				$array['DOMAIN_USERNAME'] = $main->generateUsername();
-				$array['DOMAIN_PASSWORD'] = $main->generatePassword();
-				
+				$array['DOMAIN_PASSWORD'] = $main->generatePassword();				
 					
 				echo $style->replaceVar("tpl/orders/add.tpl", $array);
 			break;
@@ -196,7 +194,7 @@ class page {
 										}															
 									}
 									//Updating addons of an Order													
-									$addon->updateAddonOrders($new_addon_list, $main->postvar['order_id'], true);		
+									$addon->updateAddonOrders($new_addon_list, $main->postvar['order_id']);		
 									$main->errors("Order has been edited!");
 								} else {
 									$main->errors("There was a problem while updating this order");
@@ -307,6 +305,8 @@ class page {
 					$return_array['DUE'] 			= date('Y-m-d');
 					$return_array['ID'] 			= $main->getvar['do'];
 					$invoice_status 				= $main->getInvoiceStatusList();
+					//No need to add a deleted invoices!! daaa
+					unset($invoice_status[INVOICE_STATUS_DELETED]);
 					$return_array['STATUS'] 		= $main->createSelect('status', $invoice_status,'', array('class'=>'required'));
 					$return_array['INVOICE_LIST'] 	= $order->showAllInvoicesByOrderId($main->getvar['do']);
 													
@@ -324,7 +324,7 @@ class page {
 				}		
 				if (isset($main->getvar['confirm']) && $main->getvar['confirm'] == 1) {
 					$main->errors("The order #".$main->getvar['do']." has been  deleted!");
-				}		
+				}
 			default :	
 			case 'all':									
 				$per_page = $db->config('rows_per_page');
@@ -333,8 +333,7 @@ class page {
 				$count = $db->fetch_array($result_max);
 				$count = $count['count'];					
 				$quantity = ceil($count / $per_page);
-				$return_array['COUNT'] = $quantity;
-				
+				$return_array['COUNT'] = $quantity;				
 				echo $style->replaceVar("tpl/orders/admin-page.tpl", $return_array);				
 			break;			
 		}

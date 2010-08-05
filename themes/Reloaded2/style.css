@@ -87,12 +87,12 @@ h1 {
 }
 
 #left {
-	width:19%;
+	width:16%;
 	float:left;
 }
 
 #right {
-	width:80%;
+	width:83%;
 	float:right;
 }
 #right ul{
@@ -129,7 +129,7 @@ h1 {
 }
 .text {
 	min-height:38px;
-	padding:20px;
+	padding:2px;
 	color:#333;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size:12px;
@@ -220,16 +220,17 @@ input, option {
 .table {
 	border:1px solid #CCC;
 	background-color:#FFF;
-	padding:2px;
+	padding:2px;	
 }
 /* The content text */
 .text {
 	color:#333;
 	font-size:12px;
-	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-	padding:2px;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;	
 	text-align:left;
 }
+
+
  .noupg{
      border: 1px solid #9AFF9A;
      background: #9AFF9A;
