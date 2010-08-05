@@ -19,7 +19,7 @@
   </tr>
   <tr>
     <td>Paypal Email:</td>
-    <td><input name="paypalemail" type="text" id="paypalemail" size="20" value="%PAYPALEMAIL%" /></td>
+    <td><input name="paypalemail" type="text" id="paypalemail" size="30" value="%PAYPALEMAIL%" /></td>
     <td><a title="The email you want paypal working with." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
   </tr>
   

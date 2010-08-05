@@ -361,19 +361,15 @@ class AJAX {
 			$sql = "SELECT * FROM `<PRE>users` u WHERE u.{$type} LIKE '%{$value}%' ORDER BY u.{$type} ASC LIMIT {$lower}, {$upper}";
 			$query = $db->query($sql);
 			$rownum = $db->num_rows($query);
-			echo '
-			
-		        <table width="100%" border="0" cellpadding="0" cellspacing="2">
+			echo '<table width="100%" border="0" cellpadding="0" cellspacing="2">
 		          <tbody><tr>
-		            <td width="250px"><h3>User</h3></td>
+		            <td width="250px">User</td>
 		            <td width="250px">Status</td>
-		            <td rowspan="2" align="right">
+		            <td width="250px" rowspan="2" align="right">
 		            	Actions
 		            </td>
-		          </tr>
-		          
-		        </tbody></table>
-		    ';
+		          </tr>		          
+		        </tbody></table>';
 					
 			if($db->num_rows($query) == 0) {
 				echo "No clients found!";	
@@ -1220,7 +1216,6 @@ class AJAX {
 			$addon_list = $main->getvar['addon_list'];
 			
 			$addon_list = explode('-' , $addon_list);
-			//var_dump($addon_list);
 			
 			$new_addon_list = array();
 			foreach($addon_list as $addon) {

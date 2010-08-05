@@ -66,25 +66,22 @@ function kthx() {
                     alert("Uh oh...");
                 }
             });
-
         }
 </script>
 <ERRORS>
 <table width="100%" border="0" cellspacing="2">
   <tr>
-    <td width="30%" valign="top">
+    <td width="22%" valign="top">
     <div class="subborder">
     <table width="100%" border="0" align="center" cellspacing="2" class="sub">
     	<tr>
         <td width="1%" align="center"><img src="<URL>themes/icons/user_go.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=search&amp;do=%ID%">View User Details</a></td>
-      </tr>
-      
+      </tr>      
       <tr>
         <td width="1%" align="center"><img src="<URL>themes/icons/order.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=orders&amp;do=%ID%">View User Orders</a></td>
-      </tr>
-      
+      </tr>      
       <tr>
         <td width="1%" align="center"><img src="<URL>themes/icons/invoice.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=invoices&amp;do=%ID%">View User Invoices</a></td>
@@ -93,8 +90,7 @@ function kthx() {
       <tr>
         <td width="1%" align="center"><img src="<URL>themes/icons/pencil.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=edit&amp;do=%ID%">Edit Details</a></td>
-      </tr>
-      
+      </tr>      
       
       <!--  <tr>
         <td width="1%" align="right"><img src="<URL>themes/icons/%IMG%" /></td>
@@ -126,6 +122,6 @@ function kthx() {
 	  </table>
     </td>
     <td class="rightbreak"></td>
-    <td width="70%" valign="top">%CONTENT%%BOX%</td>
+    <td width="78%" valign="top">%CONTENT%%BOX%</td>
   </tr>
 </table>
