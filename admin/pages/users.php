@@ -36,8 +36,7 @@ class page {
 		global $user;
 		switch($main->getvar['sub']) {
 			case 'search':
-				if($main->getvar['do'] ) {
-					
+				if($main->getvar['do'] ) {					
 					$client = $user->getUserById($main->getvar['do']);
 					$array2['DATE'] 	= strftime("%D", $client['signup']);
 					$array2['EMAIL'] 	= $client['email'];
@@ -120,7 +119,8 @@ class page {
 				if($main->getvar['do']) {
 					if($_POST) {
 						global $email;
-						$email->send($client['email'] ,$main->postvar['subject'], $main->postvar['content']);
+						$user_info = $user->getUserById($main->getvar['do']);
+						$email->send($user_info['email'] ,$main->postvar['subject'], $main->postvar['content']);
 						$main->errors("Email sent!");
 					}
 					$array['BOX'] = "";
