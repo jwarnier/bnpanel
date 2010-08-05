@@ -186,10 +186,10 @@ function nextstep() {
 			
 			var domain_id 	= document.getElementById("domain").value;
 			var package_id 	= document.getElementById("package").value;
-			var final_domain		= document.getElementById("cdom").value;
-			if (document.getElementById("domain").value == 'sub') {
-				var subdomain 	= document.getElementById("csub2").value;
-				var subdomain_id = subdomain.options[subdomain.selectedIndex].value;
+			var final_domain= document.getElementById("cdom").value;
+			if (document.getElementById("domain").value == 'sub') { //this is a subdomain
+				var subdomain_id 	= document.getElementById("csub2").value;
+				// var subdomain_id = subdomain.options[subdomain.selectedIndex].value;
 			} else {
 				var subdomain_id 	= '';
 			}
@@ -239,9 +239,9 @@ function nextstep() {
 						//Check if an invoice is generated
 						$.get("<AJAX>?function=ispaid", function(invoice_id) {
 							if(invoice_id != "") {
-								window.location = "../client/?page=invoices&iid="+invoice_id;				
+								//window.location = "../client/?page=invoices&iid="+invoice_id;				
 							} else {
-								window.location = "../client/?page=invoices";
+								//window.location = "../client/?page=invoices";
 							}
 							
 						});
