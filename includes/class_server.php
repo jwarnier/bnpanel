@@ -183,22 +183,28 @@ class server extends Model {
 					} # If we get past this, its a top level domain :D yay
 				}
 			}
-			$final_domain = $main->getvar['fdom'] = $main->getvar['cdom'];
-		}
+			//In this case subdomain & domain is the same thing
+			$final_domain = $sub_domain = $main->getvar['fdom'] = $main->getvar['cdom'];
+		}		
 		
 		if($main->getvar['domain'] == 'sub') { # If Subdomain
 			if(!$main->getvar['csub']) {
 				echo "Please fill in the subdomain field!";
 				return;
 			}						
-			$final_domain = $main->getvar['csub'];
-			$subdomain_id = $main->getvar['csub2'];
+			$sub_domain 	= $main->getvar['csub'];
+			$subdomain_id 	= $main->getvar['csub2'];			
+			$subdomain_list = $main->getSubDomainByServer($package_info['server']);
+			if ($subdomain_id != 0 ) {		
+				$subdomain = $subdomain_list[$subdomain_id];
+				$final_domain = $final_domain.'.'.$subdomain;			
+			}			
 		}
-		
+						
 		if ($order->domainExistInOrder($final_domain)) {
 			echo "Domain already exists";
 			return;
-		}	
+		}
 				
 		$user_already_registered = false;
 		
@@ -430,7 +436,7 @@ class server extends Model {
 			echo ' I send this';
 			var_dump($order_id, $params['username'], $system_email, $params['password']);
 			
-			//$done = $serverphp->signup($order_id, $package_id, $params['username'], $params['password'], $user_id, $final_domain, $subdomain_id);
+			$done = $serverphp->signup($order_id, $package_id, $params['username'], $params['password'], $user_id, $sub_domain, $subdomain_id);
 			
 			//Package does not needs validation
 			if ($package_info['admin'] == 0) {

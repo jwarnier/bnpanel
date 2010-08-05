@@ -5,7 +5,7 @@
  * This class respond the AJAX calls
  */
 define('LINK', './');
-include 'compiler.php';
+require 'compiler.php';
 
 class AJAX {
 	public function orderIsUser() {
@@ -257,8 +257,7 @@ class AJAX {
 	}
 	
 	public function orderForm() {
-		global $type;
-		global $main;
+		global $type, $main;
 		$ptype = $type->determineType($main->getvar['package']);
 		
 		echo $type->orderForm($ptype);
@@ -1415,7 +1414,7 @@ class AJAX {
 				echo 0;	
 			}			
 			return;
-		}	
+		}
 		
 		public function checkSubDomainExistsSimple() {
 			global $main, $db, $package, $order;			
@@ -1430,12 +1429,11 @@ class AJAX {
 		
 }
 
-if(isset($_GET['function']) and $_GET['function'] != "") {
+if(isset($_GET['function']) and $_GET['function'] != "" ) {
 	$ajax = new AJAX();
-	if(method_exists($ajax, $_GET['function'])) {
-		$ajax->{$_GET['function']}();
-		include(LINK."output.php");
+	if(method_exists($ajax, $_GET['function'])) {		
+
+			$ajax->{$_GET['function']}();
+			include LINK."output.php";
 	}
 }
-
-?>

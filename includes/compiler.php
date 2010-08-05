@@ -51,8 +51,6 @@ define('USER_STATUS_DELETED', 					9); //cancelled deleted users
 //Used in admin/billing.php
 define('MAX_NUMBER_MONTHS',						48);
 
-
-
 #Page generated
 $starttime = explode(' ', microtime());
 $starttime = $starttime[1] + $starttime[0];
@@ -118,7 +116,9 @@ if ($handle = opendir($folder)) { # Open the folder
 }
 closedir($handle); #Close the folder
 
-$token =  $main->getToken();
+//if (!$main->tokenExists)
+	$token =  $main->getToken();
+	
 if(INSTALL == 1) {
 	define("THEME", $db->config("theme")); # Set the default theme
 	define("URL", 	$db->config("url")); # Sets the URL THT is located at
@@ -162,7 +162,6 @@ if(FOLDER == "client" && $main->getvar['page'] == "invoices" && $main->getvar['i
 	}
 	echo "You made it this far.. something went wrong.";
 }
-
 
 function checkForDependencies() {
 	//Here, we're going to see if we have the functions that we need. :D
