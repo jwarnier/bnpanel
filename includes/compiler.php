@@ -37,11 +37,10 @@ define('DOMAIN_OPTION_SUBDOMAIN', 				2); // Cancelled in 9
 define('DOMAIN_OPTION_BOTH', 					3); // Cancelled in 9
 
 //Server status
-define('SERVER_STATUS', 'test');
+define('SERVER_STATUS', 						'test'); //test or production 
 define('PAYPAL_STATUS_LIVE', 					1);
 define('PAYPAL_STATUS_SANDBOX', 				0);
 //define(SERVER_STATUS, 'test'); //show mysql errors + user paypal sandbox
-
 
 // User status 
 define('USER_STATUS_ACTIVE', 					1);// Active users
@@ -99,7 +98,7 @@ if (isset($main) && !empty($main)) {
 	global $main;		
 } else {
 	//$main->redirect('install');
-	echo 'Something goes wrong';
+	echo 'Something is wrong';
 }
 
 if ($handle = opendir($folder)) { # Open the folder
@@ -119,9 +118,14 @@ if ($handle = opendir($folder)) { # Open the folder
 }
 closedir($handle); #Close the folder
 
-//if (!$main->tokenExists)
-	$token =  $main->getToken();
+//Not generate if it comes from AJAX
+if (!$is_ajax_load) {
+	$token =  $main->generateToken();	
+} else {
+	$token =  $_GET['_get_token'];
+}
 	
+	var_dump($token);
 if(INSTALL == 1) {
 	define("THEME", $db->config("theme")); # Set the default theme
 	define("URL", 	$db->config("url")); # Sets the URL THT is located at
@@ -185,7 +189,7 @@ function checkForDependencies() {
 	}
 	else {
 		$output = "The following function(s) are/is needed for
-		TheHostingTool to run properly: <ul>";
+		BNPanel to run properly: <ul>";
 		foreach($needed as $key => $value) {
 			$output .= "<li>$value</li>";
 		}

@@ -1,10 +1,11 @@
 <?php
 /* For licensing terms, see /license.txt */
-
 /**
  * This class respond the AJAX calls
  */
+ 
 define('LINK', './');
+$is_ajax_load = true;
 require_once 'compiler.php';
 
 class AJAX {
@@ -1427,11 +1428,13 @@ class AJAX {
 		
 }
 
-if(isset($_GET['function']) and $_GET['function'] != "" ) {
+if(isset($_GET['function']) && !empty($_GET['function'])) {
 	$ajax = new AJAX();
-	if(method_exists($ajax, $_GET['function'])) {		
-
+	if (method_exists($ajax, $_GET['function'])) {
+		//Protecting AJAX calls now we need a token set in variables.php
+		if ($main->checkToken(false)) {	
 			$ajax->{$_GET['function']}();
 			include LINK."output.php";
+		}
 	}
 }

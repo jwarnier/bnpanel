@@ -9,8 +9,8 @@ $(document).ready(function() {
         $("#" + this.id).blur();
         $("#" + this.id).attr("disabled", "disabled");
         var code = cssArea.getCode();
-        $.post("<AJAX>?function=editcss", { css: code }, function(data){
-            $.get("<AJAX>?function=notice", { status: "good", message: data }, function(data2){
+        $.post("<AJAX>function=editcss", { css: code }, function(data){
+            $.get("<AJAX>function=notice", { status: "good", message: data }, function(data2){
                 $("#belowDynamic").slideUp(500, function() {
                     $("#spaceForNotice").html(data2);
                     $("#editTheCssNao").removeAttr("disabled");

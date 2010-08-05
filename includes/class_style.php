@@ -13,7 +13,7 @@ class style {
 		if(INSTALL){
 			$error['Error'] = $name;
 			$error['Function'] = $func;
-			$error['Template'] = $mysqlerror;
+			$error['Template'] = $template;
 			global $main;
 			$main->error($error);
 		}
@@ -30,8 +30,7 @@ class style {
 			$error['Path'] = $link;
 			global $main;
 			//$main->error($error);
-		}
-		else {
+		} else {
 			if($prepare) {
 				return $this->prepare(file_get_contents($link));
 			}
@@ -42,12 +41,12 @@ class style {
 	}
 
 	public function prepare($data) { # Returns the content with the THT variables replaced
-		include(LINK . "variables.php");
+		include LINK . "variables.php";
 		return $data;
 	}
 
 	private function prepareCSS($data) { # Returns the CSS with all tags removed
-		include(LINK . "css_variables.php");
+		include LINK . "css_variables.php";
 		return $data;
 	}
 

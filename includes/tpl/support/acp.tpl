@@ -5,7 +5,7 @@ function addme() {
 </script>
 <script type="text/javascript">
 function editme(id) {
-	$.get("<AJAX>?function=%AJAX%&id="+id, function(data) {
+	$.get("<AJAX>function=%AJAX%&id="+id, function(data) {
 			var result = data.split("{}[]{}");
 			if(document.getElementById("editbox").style.display == "none") {
 				document.getElementById("editname").value = result[0];

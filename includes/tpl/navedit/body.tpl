@@ -9,12 +9,12 @@
                 $("#saveorder").click(function(){
                     var order = $('#packs').sortable('serialize');
                     $("#packs").toggle("slide");
-                    $.get("<AJAX>?"+order+"&function=porder", function(data){$("#packs").toggle("slide"); document.getElementById("message").innerHTML = order;});
+                    $.get("<AJAX>"+order+"&function=porder", function(data){$("#packs").toggle("slide"); document.getElementById("message").innerHTML = order;});
                 });
                 $(".editIcon").click(function(){
                     id = this.id;
                     divId = id.split("-")[1];
-                    $.get("<AJAX>?function=nedit&do="+divId, function(data) {
+                    $.get("<AJAX>function=nedit&do="+divId, function(data) {
                         if($("#nedit").css("display") == "none") {
                             $("#nedit").html(data);
                             $("#nedit").slideDown(500);

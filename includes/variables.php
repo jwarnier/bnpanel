@@ -5,12 +5,9 @@
 if(THT != 1){die();}
 
 if(INSTALL == 1) {
-	/*
-	 * THT Page Generation Time
-	 * By Jimmie Lin + Jonny H
-	 */
-	global $db, $starttime, $style; #Define global, as we are going to pull up things from db
-	if($db->config("show_page_gentime") == 1){
+	//Define global, as we are going to pull up things from db
+	global $db, $starttime, $style; 
+	if($db->config("show_page_gentime") == 1) {
 		$mtime = explode(' ', microtime());
 		$totaltime = $mtime[0] + $mtime[1] - $starttime;
 		$gentime = substr($totaltime, 0, 5);
@@ -48,9 +45,8 @@ if(INSTALL == 1) {
 	 */
 	
 	 if($db->config("show_version_id") == 1){
-	 $version = $db->config("version");
-	}
-	else{
+	 	$version = $db->config("version");
+	} else{
 		$version = '';
 	}
 	/*
@@ -82,20 +78,22 @@ if(INSTALL == 1) {
 	$navigation = $style->replaceVar("tpl/nav.tpl", $array3);
 }
 
-/**********************************************************************/
+global $main;
+
 $data = preg_replace("/<THT TITLE>/si", NAME . " :: " . PAGE . " - " . SUB, $data);
 $data = preg_replace("/<NAME>/si", NAME, $data);
 $data = preg_replace("/<CSS>/si", $this->css(), $data);
 $data = preg_replace("/<JAVASCRIPT>/si", $this->javascript(), $data);
 $data = preg_replace("/<MENU>/si", $navigation, $data);
 $data = preg_replace("/<URL>/si", URL, $data);
-$data = preg_replace("/<AJAX>/si", URL."includes/ajax.php", $data);
+$current_token = $main->getToken();
+$data = preg_replace("/<AJAX>/si", URL."includes/ajax.php?_get_token=".$current_token."&", $data);
 $data = preg_replace("/<IMG>/si", URL . "themes/". THEME ."/images/", $data);
 $data = preg_replace("/<ICONDIR>/si", URL . "themes/icons/", $data);
 $data = preg_replace("/<PAGEGEN>/si", $pagegen, $data); #Page Generation Time
 
 $data = preg_replace("/<COPYRIGHT>/si", '<div id="footer">Powered by <a href="http://bnpanel.com" target="_blank">BNPPanel</a> '. $version .'</div>', $data);
-global $main;
+
 $data = preg_replace("/<ERRORS>/si", '<span class="errors">'.$main->errors().'</span>', $data);
 $data = preg_replace("/%INFO%/si", INFO, $data);
 ?>

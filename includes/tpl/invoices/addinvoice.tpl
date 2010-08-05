@@ -19,7 +19,7 @@
 
 	function changeAddons(obj, order_id) {	
 		var id=obj.options[obj.selectedIndex].value;
-		$.get("<AJAX>?function=changeAddons&package_id="+id+"&order_id="+order_id, function(data) {
+		$.get("<AJAX>function=changeAddons&package_id="+id+"&order_id="+order_id, function(data) {
 			document.getElementById("showdata").innerHTML = data;
 		});
 	}
@@ -28,7 +28,7 @@
 		var package_id=obj.options[obj.selectedIndex].value;				
 		var billing_id=document.getElementById("billing_id").value;
 				
-		$.get("<AJAX>?function=loadaddons&package_id="+package_id+"&billing_id="+billing_id+"&order_id="+document.getElementById("order_id").value, function(data) {
+		$.get("<AJAX>function=loadaddons&package_id="+package_id+"&billing_id="+billing_id+"&order_id="+document.getElementById("order_id").value, function(data) {
 			document.getElementById("showaddons").innerHTML = data;
 		});
 	}

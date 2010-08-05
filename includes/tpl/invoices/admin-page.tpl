@@ -17,7 +17,7 @@ $(document).ready(function() {
 	
 	Display_Load();
 	
-	$("#tbody").load("<AJAX>?function=getInvoices&page=1", Hide_Load());
+	$("#tbody").load("<AJAX>function=getInvoices&page=1", Hide_Load());
 
 	$("#pagination").paginate({
 		count 					: %COUNT%,
@@ -35,7 +35,7 @@ $(document).ready(function() {
 		onChange     			: 	function(page) {
 										var pageNum = page;
 										Display_Load();
-										$("#tbody").load("<AJAX>?function=getInvoices&page=" + pageNum, Hide_Load());
+										$("#tbody").load("<AJAX>function=getInvoices&page=" + pageNum, Hide_Load());
 									}
 	 });	
 });
