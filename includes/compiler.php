@@ -119,12 +119,14 @@ if ($handle = opendir($folder)) { # Open the folder
 closedir($handle); #Close the folder
 
 //Not generate if it comes from AJAX
+
+
 if (!$is_ajax_load) {
-	$token =  $main->generateToken();	
+	$token =  $main->generateToken();		
 } else {
 	$token =  $_GET['_get_token'];
 }
-	
+
 if(INSTALL == 1) {
 	define("THEME", $db->config("theme")); # Set the default theme
 	define("URL", 	$db->config("url")); # Sets the URL THT is located at

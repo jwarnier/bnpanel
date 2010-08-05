@@ -40,7 +40,6 @@ $(document).ready(function() {
 	 });	
 });
 </script>
-
 <p>From here you can see all invoices in your BNPanel installation.</p>
 <ERRORS>
 <div id="pagination_loading" ></div>
