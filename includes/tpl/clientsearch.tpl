@@ -2,7 +2,7 @@
         var text = "%TEXT";
 	function clientsearch(type, value, page) {
 		var num = document.getElementById('num').value;
-		ajaxSlide("clientsajax", "<AJAX>?function=search&type="+type+"&value="+value+"&page="+page+"&num="+num);
+		ajaxSlide("clientsajax", "<AJAX>function=search&type="+type+"&value="+value+"&page="+page+"&num="+num);
                 //the following code is h4xx
                 setTimeout('kthx()', 1000);
 	}

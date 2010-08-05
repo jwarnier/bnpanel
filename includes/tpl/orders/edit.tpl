@@ -18,7 +18,7 @@
 	});
 
 	function send(template, id) {		
-		$.get("<AJAX>?function=sendtemplate&template="+template+"&order_id="+id,  function(data) {
+		$.get("<AJAX>function=sendtemplate&template="+template+"&order_id="+id,  function(data) {
 			$("#show_preview").html(data);				
 		});						
 		$("#show_preview").dialog('open');
@@ -30,14 +30,14 @@
 <script type="text/javascript">
 function changeAddons(obj) {	
 	var id=obj.options[obj.selectedIndex].value;
-	$.get("<AJAX>?function=changeAddons&package_id="+id+"&order_id="+document.getElementById("order_id").value, function(data) {
+	$.get("<AJAX>function=changeAddons&package_id="+id+"&order_id="+document.getElementById("order_id").value, function(data) {
 		document.getElementById("showdata").innerHTML = data;
 	});
 }
 
 function loadPackages(obj) {
 	var id=obj.options[obj.selectedIndex].value;
-	$.get("<AJAX>?function=loadPackages&billing_id="+id+"&order_id="+document.getElementById("order_id").value, function(data) {
+	$.get("<AJAX>function=loadPackages&billing_id="+id+"&order_id="+document.getElementById("order_id").value, function(data) {
 		document.getElementById("showpackages").innerHTML = data;
 	});
 	
@@ -50,7 +50,7 @@ function loadAddons(obj) {
 	var billing_obj = document.getElementById("billing_cycle_id");
 	var billing_id=billing_obj.options[billing_obj.selectedIndex].value;
 	
-	$.get("<AJAX>?function=loadaddons&package_id="+id+"&billing_id="+billing_id+"&order_id="+document.getElementById("order_id").value, function(data) {
+	$.get("<AJAX>function=loadaddons&package_id="+id+"&billing_id="+billing_id+"&order_id="+document.getElementById("order_id").value, function(data) {
 		document.getElementById("showaddons").innerHTML = data;
 	});
 }

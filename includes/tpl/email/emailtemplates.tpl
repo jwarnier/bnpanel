@@ -18,7 +18,7 @@
 </script>
 <script type="text/javascript">
 function templates(id) {
-	$.get("<AJAX>?function=template&id="+id, function(data) {
+	$.get("<AJAX>function=template&id="+id, function(data) {
 			var result = data.split("{}[]{}");
 			
 			if(document.getElementById("templatebit").style.display == "none") {

@@ -4,7 +4,7 @@ function check(name, value) {
 	$("#"+name+"check").html(loading);
 	/* document.getElementById("next").disabled = true; */
 	window.setTimeout(function() {
-		$.get("<AJAX>?function="+name+"check&THT=1&"+name+"="+value, function(data) {
+		$.get("<AJAX>function="+name+"check&THT=1&"+name+"="+value, function(data) {
 			if(data == "1") {
 				$("#"+name+"check").html(right);
 			}

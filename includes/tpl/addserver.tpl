@@ -1,6 +1,6 @@
 <script type="text/javascript">
 function serverchange(value) {
-	$.get("<AJAX>?function=serverhash&type="+value, function(data) {
+	$.get("<AJAX>function=serverhash&type="+value, function(data) {
 		$("#passtext").slideUp(500);			
 		$("#passbox").slideUp(500, function(lol2) {
 			if(data == "1") {

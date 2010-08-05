@@ -28,7 +28,7 @@
   <tr>
     <td valign="top">Type:</td>
     <td>
-    <select name="type" id="type" onchange="ajaxSlide('customform','<AJAX>?function=acpPadd&type='+ this.value)">
+    <select name="type" id="type" onchange="ajaxSlide('customform','<AJAX>function=acpPadd&type='+ this.value)">
       <option value="free">Free</option>
       <option value="p2h">Post 2 Host</option>
       <option value="paid">Paid</option>

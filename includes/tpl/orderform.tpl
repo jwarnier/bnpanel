@@ -27,7 +27,7 @@ function check(name, value) {
 	$("#"+name+"check").html(loading);
 	document.getElementById("next").disabled = true;
 	window.setTimeout(function() {
-		$.get("<AJAX>?function="+name+"check&THT=1&"+name+"="+value, function(data) {
+		$.get("<AJAX>function="+name+"check&THT=1&"+name+"="+value, function(data) {
 			if(data == "1") {
 				$("#"+name+"check").html(right);
 			}
@@ -47,14 +47,14 @@ function orderstepme(id, type) {
 	if(document.getElementById("domain").value == "sub") {
 		document.getElementById("dom").style.display = 'none';
 		document.getElementById("sub").style.display = '';
-		$.get("<AJAX>?function=sub&pack="+document.getElementById("package").value, function(data) {
+		$.get("<AJAX>function=sub&pack="+document.getElementById("package").value, function(data) {
 			document.getElementById("dropdownboxsub").innerHTML = data;
 		});
 	} else if(document.getElementById("domain").value == "dom") {
 		document.getElementById("sub").style.display = 'none';
 		document.getElementById("dom").style.display = '';
 	}	
-	$.get('<AJAX>?function=orderForm&package='+ document.getElementById("package").value, function(stuff) {
+	$.get('<AJAX>function=orderForm&package='+ document.getElementById("package").value, function(stuff) {
 		$("#custom").html('<table width="100%" border="0" cellspacing="2" cellpadding="0" id="custom">'+stuff+'</table>');		
 	});
 	var step_hide = step;
@@ -115,7 +115,7 @@ function nextstep() {
 				var billing_id  = document.getElementById("billing_id").value;
 				showhide(step, step + 1);
 				step = step + 1;		
-				$.get("<AJAX>?function=getSummary&billing_id="+billing_id +"&addon_list="+addon_list +"&package_id="+document.getElementById("package").value, function(data) {
+				$.get("<AJAX>function=getSummary&billing_id="+billing_id +"&addon_list="+addon_list +"&package_id="+document.getElementById("package").value, function(data) {
 					document.getElementById("show_summary").innerHTML = data;
 				});				
 			} else  {
@@ -129,7 +129,7 @@ function nextstep() {
 			step = step + 1;
 			/*	
 			if(document.getElementById("agree").checked == true) {
-				$.get("<AJAX>?function=orderIsUser", function(data) {
+				$.get("<AJAX>function=orderIsUser", function(data) {
 					if (data == "1") {
 						showhide(step, step + 2)
 						step = step + 2
@@ -149,7 +149,7 @@ function nextstep() {
 		case 4:
 			//TOS				
 			if(document.getElementById("agree").checked == true) {								
-				$.get("<AJAX>?function=orderIsUser", function(data) {
+				$.get("<AJAX>function=orderIsUser", function(data) {
 					if (data == "1") {
 						showhide(step, step + 2)
 						step = step + 2
@@ -165,7 +165,7 @@ function nextstep() {
 			
 		case 5:			
 			//User form
-			$.get("<AJAX>?function=clientcheck", function(data) {
+			$.get("<AJAX>function=clientcheck", function(data) {
 				if(data == "1") {					
 					if (document.getElementById("username").value != '' ) {
 						document.getElementById("verify").innerHTML = right;
@@ -190,13 +190,13 @@ function nextstep() {
 			} else {
 				var subdomain_id 	= '';
 			}
-			$.get("<AJAX>?function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {			
+			$.get("<AJAX>function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {			
 				if (data == '1') {
 					$("#verify").html("<strong>Domain already exist</strong> "+wrong);					
 				} else {
 					final(step, step + 1);
 					step = step + 1
-					var url = "?function=create";
+					var url = "function=create";
 					var i;					
 					for(i="0"; i < document.order.length; i++) {
 						if(document.order.elements[i].type == "checkbox") {
@@ -231,7 +231,7 @@ function nextstep() {
 						document.getElementById("back").disabled = false;
 						document.getElementById("verify").innerHTML = "";				
 						//Check if an invoice is generated
-						$.get("<AJAX>?function=ispaid", function(invoice_id) {
+						$.get("<AJAX>function=ispaid", function(invoice_id) {
 							if(invoice_id != "") {
 								//window.location = "../client/?page=invoices&iid="+invoice_id;				
 							} else {
@@ -263,7 +263,7 @@ function previousstep() {
 		
 		var newstep = step - 1;
 		if (newstep == 3) {
-			$.get("<AJAX>?function=orderIsUser", function(data) {
+			$.get("<AJAX>function=orderIsUser", function(data) {
 				if (data == "1") {
 					newstep = 2
 				}
@@ -289,7 +289,7 @@ function showAddons(obj) {
 //	step = step + 1;
 	$("#verify").html('');
 	var billing_id=obj.options[obj.selectedIndex].value;	
-	$.get("<AJAX>?function=getAddons&billing_id="+billing_id +"&package_id="+document.getElementById("package").value, function(data) {
+	$.get("<AJAX>function=getAddons&billing_id="+billing_id +"&package_id="+document.getElementById("package").value, function(data) {
 		document.getElementById("showaddons").innerHTML = data;
 	});
 															

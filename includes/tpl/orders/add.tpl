@@ -28,14 +28,14 @@ var right = '<img src="<URL>themes/icons/accept.png">';
 <script type="text/javascript">
 function changeAddons(obj) {	
 	var id=obj.options[obj.selectedIndex].value;
-	$.get("<AJAX>?function=changeAddons&package_id="+id+"&order_id="+document.getElementById("order_id").value, function(data) {
+	$.get("<AJAX>function=changeAddons&package_id="+id+"&order_id="+document.getElementById("order_id").value, function(data) {
 		document.getElementById("showdata").innerHTML = data;
 	});
 }
 
 function loadPackages(obj) {
 	var id=obj.options[obj.selectedIndex].value;
-	$.get("<AJAX>?function=loadPackages&billing_id="+id, function(data) {
+	$.get("<AJAX>function=loadPackages&billing_id="+id, function(data) {
 		document.getElementById("showpackages").innerHTML = data;
 	});
 	
@@ -49,7 +49,7 @@ function loadAddons(obj) {
 	var billing_obj = document.getElementById("billing_cycle_id");
 	var billing_id=billing_obj.options[billing_obj.selectedIndex].value;
 	
-	$.get("<AJAX>?function=loadaddons&package_id="+id+"&billing_id="+billing_id, function(data) {
+	$.get("<AJAX>function=loadaddons&package_id="+id+"&billing_id="+billing_id, function(data) {
 		document.getElementById("showaddons").innerHTML = data;
 	});
 }
@@ -59,7 +59,7 @@ function lookup(inputString) {
         // Hide the suggestion box.
         $('#suggestions').hide();
     } else {
-        $.post("<AJAX>?function=searchuser", {query: ""+inputString+""}, function(data){
+        $.post("<AJAX>function=searchuser", {query: ""+inputString+""}, function(data){
             if(data.length >0) {
                 $('#suggestions').show();
                 $('#autoSuggestionsList').html(data);
@@ -77,7 +77,7 @@ function changeDomain(){
 		 $('#domain_input').html(text);
 	} else if(id == 2) {
 		var pid = document.getElementById("package_id").value;
-		$.get("<AJAX>?function=sub&pack="+pid, function(data) {		
+		$.get("<AJAX>function=sub&pack="+pid, function(data) {		
 			 if (data == '') {
 				 domain_obj.selectedIndex = 1;
 				 data = 'No subdomains available for the moment';
@@ -101,7 +101,7 @@ function reset() {
 
 function checkdomain() {
 	var domain = document.getElementById("domain").value;
-	$.get("<AJAX>?function=checkSubDomainExistsSimple&domain="+domain, function(data) {
+	$.get("<AJAX>function=checkSubDomainExistsSimple&domain="+domain, function(data) {
 		if (data == 1 ) {
 			document.getElementById("domain_result").innerHTML = wrong;	
 		} else {

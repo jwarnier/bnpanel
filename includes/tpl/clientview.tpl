@@ -2,7 +2,7 @@
 	function clientsearch() {
 		var type = document.getElementById("type").value;
 		var value = document.getElementById("value").value;
-		ajaxSlide("clientsajax", "<AJAX>?function=search&type="+type+"&value="+value);
+		ajaxSlide("clientsajax", "<AJAX>function=search&type="+type+"&value="+value);
                 kthx();
 	}
 $(document).ready(function() {
