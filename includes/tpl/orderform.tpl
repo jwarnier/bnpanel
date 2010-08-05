@@ -1,5 +1,6 @@
 <script type="text/javascript">
 var step = 1;
+var speed = 250; //default 1000
 var form = document.getElementById("order");
 var wrong = '<img src="<URL>themes/icons/cross.png">';
 var right = '<img src="<URL>themes/icons/accept.png">';
@@ -66,13 +67,16 @@ function orderstepme(id, type) {
 }
 
 function showhide(hide, show) {
+	
+
+	
 	document.getElementById("next").disabled = true;
 	document.getElementById("back").disabled = true;
 	document.getElementById("verify").innerHTML = "";
 	
-	$("#"+hide).fadeOut(1000, function() {
-		$("#steps").fadeIn(1000);
-		$("#"+show).fadeIn(1000, function() {
+	$("#"+hide).fadeOut(speed, function() {
+		$("#steps").fadeIn(speed);
+		$("#"+show).fadeIn(speed, function() {
 			document.getElementById("next").disabled = false;
 			document.getElementById("back").disabled = false;
 		});
@@ -250,9 +254,9 @@ function final(hide, show) {
 	document.getElementById("next").disabled = true;
 	document.getElementById("back").disabled = true;
 	document.getElementById("verify").innerHTML = ""
-	$("#"+hide).fadeOut(1000, function() {
+	$("#"+hide).fadeOut(speed, function() {
 		document.getElementById("verify").innerHTML = "<strong>Don't close or browse away from this page!</strong>";
-		$("#"+show).fadeIn(1000);
+		$("#"+show).fadeIn(speed);
      });
 }
 function previousstep() {
@@ -269,9 +273,9 @@ function previousstep() {
 				}
 			});
 		}
-		$("#"+step).fadeOut(1000, function() {
+		$("#"+step).fadeOut(speed, function() {
 		step = newstep;
-		$("#"+step).fadeIn(1000, function() {
+		$("#"+step).fadeIn(speed, function() {
 			document.getElementById("next").disabled = false;
 			if(step != "1") {
 				document.getElementById("back").disabled = false;
@@ -471,7 +475,7 @@ function showAddons(obj) {
         </div>
     </div>
     <div class="table" id="7" style="display:none">
-        <div class="cat">Step 5 - Create Account</div>
+        <div class="cat">Setting your account</div>
         <div class="text" id="creation">
         	<div id="finished">
             </div>

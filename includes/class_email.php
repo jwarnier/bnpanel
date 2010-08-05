@@ -69,26 +69,30 @@ class email {
 	}
 	
 	public function send($to, $subject, $content, $array = 0) { # Gets the content, edits the class vars and sends to right function
+		global $db;		 
+		$site_name = $db->config('name');
 		$this->email['to'] = strtolower($to);
-		if($array != 0) {
-			$this->email['content'] = $this->parseEmail($content, $array);
+		
+		if(empty($array)) {
+			$this->email['content'] = $content;			
 		} else {
-			$this->email['content'] = $content;	
+			$this->email['content'] = $this->parseEmail($content, $array);
 		}
 		if (SERVER_STATUS == 'test') {			
 			echo 'Email sent to :'.$to;
 			echo '<br />Email content <br />';			
 			echo '<pre>';print_r($this->email['content']).'</pre>';			
 		}
+		$subject ="[$site_name] ".$subject;
 		$this->email['subject'] = $subject;
+		
 		$method = $this->method;
 		if($method == "php") {
 			$this->phpmail();	
 		}
 		elseif($method == "smtp") {
 			$this->smtp();	
-		}
-		else {
+		} else {
 			global $main;
 			$array['Error'] = "Email method not found!";
 			$array['What happened'] = "The script couldn't found what way the host wants to send the email";
