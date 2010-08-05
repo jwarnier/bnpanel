@@ -5,7 +5,7 @@
  * This class respond the AJAX calls
  */
 define('LINK', './');
-require 'compiler.php';
+require_once 'compiler.php';
 
 class AJAX {
 	public function orderIsUser() {

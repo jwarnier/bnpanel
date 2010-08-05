@@ -37,7 +37,14 @@
     </td>
   </tr>
   
-
+  <tr>
+    <td width="20%">Domain/Subdomain options</td>
+    <td>
+      %DOMAIN_OPTIONS%
+      <a title="Rows per page " class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+    </td>
+  </tr>
+  
   
   
   <tr>

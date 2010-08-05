@@ -35,6 +35,10 @@ class model {
 	 */
 	public function save($attributes, $clean_token = true) {
 		global $main, $db;
+		echo $this->getTableName();
+		var_dump($clean_token);
+		var_dump($main->checkToken($clean_token));
+		
 		if ($main->checkToken($clean_token)) {		
 			$new_attributes = $this->filterParams($attributes, $this->getColumns());
 			echo $sql = 'INSERT INTO '.$this->getTableName().' '.

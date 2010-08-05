@@ -80,7 +80,7 @@ function showhide(hide, show) {
 }
 
 function nextstep() {
-	alert(step);
+	/* alert(step); */
 	switch(step) {
 		//addon info
 		/*case 2:
@@ -178,12 +178,9 @@ function nextstep() {
 					$("#verify").html("<strong>You must fill all the fields</strong> "+wrong);
 				}													
 			});
-			break;
-			
+			break;			
 		case 6:
-
-			//adding subdomain
-			
+			//adding subdomain			
 			var domain_id 	= document.getElementById("domain").value;
 			var package_id 	= document.getElementById("package").value;
 			var final_domain= document.getElementById("cdom").value;
@@ -193,17 +190,14 @@ function nextstep() {
 			} else {
 				var subdomain_id 	= '';
 			}
-
 			$.get("<AJAX>?function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {			
 				if (data == '1') {
 					$("#verify").html("<strong>Domain already exist</strong> "+wrong);					
 				} else {
-
 					final(step, step + 1);
 					step = step + 1
 					var url = "?function=create";
-					var i;
-					
+					var i;					
 					for(i="0"; i < document.order.length; i++) {
 						if(document.order.elements[i].type == "checkbox") {
 							if (document.order.elements[i].id != null && document.order.elements[i].value != null) {
@@ -286,11 +280,11 @@ function previousstep() {
 				document.getElementById("next").disabled = true;
 				document.getElementById("order"+pid).disabled = false;
 			}
-		});
-		
+		});		
      });
 	}
 }
+
 function showAddons(obj) {	
 //	step = step + 1;
 	$("#verify").html('');
@@ -304,32 +298,15 @@ function showAddons(obj) {
 <form action="" method="post" name="order" id="order">
 <div>	
 	<div id="1">
-    	<input name="package" id="package" type="hidden" value="" />    	
-        <div class="table">
-            <div class="cat">Step One - Choose Type/Package</div>
-            <div class="text">
-                <table width="100%" border="0" cellspacing="2" cellpadding="0">
-                  <tr>
-                    <td width="20%">Domain/Subdomain:</td>
-                    <td>
-                    	<select name="domain" id="domain">
-                      		<option value="dom" selected="selected">Domain</option>
-                      		%CANHASSUBDOMAIN%
-                    	</select>
-                    </td>
-                    <td width="70%"><a title="Choose the type of hosting:<br /><strong>Domain:</strong> example.com<br /><strong>Subdomain:</strong> example.subdomain.com" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                  </tr>                  
-                </table>
-            </div>
-        </div>  
-              
+    	<input name="package" id="package" type="hidden" value="" /> 
+		%DOMAIN_CONFIGURATION%              
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           %PACKAGES%          
         </table>
     </div>    
 	<!-- cambios por julio billing thing --> 
     <div class="table" id="2" style="display:none">
-        <div class="cat">Select</div>
+        <div class="cat">Select a billing cycle</div>
         <div class="text">
         	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
@@ -351,7 +328,7 @@ function showAddons(obj) {
     </div>    
     <!-- cambios por julio  resumen --> 
     <div class="table" id="3" style="display:none">
-        <div class="cat">Select</div>
+        <div class="cat">Summary</div>
         <div class="text">
         	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
@@ -367,7 +344,7 @@ function showAddons(obj) {
         </div>
     </div>   
     <div class="table" id="4" style="display:none">
-        <div class="cat">Step Two - Terms of Service</div>
+        <div class="cat">Terms of Service</div>
         <div class="text">
         	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
@@ -387,9 +364,9 @@ function showAddons(obj) {
         </div>
     </div>    
 	<div class="table" id="5" style="display:none">
-        <div class="cat">Step Three - Client Account</div>
+        <div class="cat">Client Account</div>
         <div class="text">
-        	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 700px;">
+        	<table class="data_table" border="0" cellspacing="2" cellpadding="0" align="center" style="width: 700px;">
               <tr>
                 <td>Username:</td>
                 <td><input type="text" name="username" id="username" /></td>
