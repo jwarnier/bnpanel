@@ -197,7 +197,7 @@ class page {
 									$addon->updateAddonOrders($new_addon_list, $main->postvar['order_id']);		
 									$main->errors("Order has been edited!");
 								} else {
-									$main->errors("There was a problem while updating this order");
+									$main->errors("There was a problem while updating Order #".$main->getvar['do']);
 								}
 								if ($main->postvar['status'] == ORDER_STATUS_DELETED) {
 									$main->redirect('?page=orders&sub=all');	
@@ -318,13 +318,17 @@ class page {
 			break;		
 			case 'delete':			
 				if (isset($main->getvar['do'])) { 
-					$order->delete($main->getvar['do']);
+					$result = $order->delete($main->getvar['do']);				
 				} else {
 					$main->redirect("?page=orders&sub=all");										
 				}		
 				if (isset($main->getvar['confirm']) && $main->getvar['confirm'] == 1) {
-					$main->errors("The order #".$main->getvar['do']." has been  deleted!");
-				}
+					if ($result == true) {
+						$main->errors("The order #".$main->getvar['do']." has been  deleted!");
+					} else {
+						$main->errors("Order cannot be deleted there is a problem please check the logs of Order #".$main->getvar['do']);
+					}
+				} 
 			default :	
 			case 'all':									
 				$per_page = $db->config('rows_per_page');

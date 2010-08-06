@@ -133,14 +133,18 @@ class order extends model {
 	 */
 	public function delete($id) { # Deletes invoice upon invoice id
 		global $main, $invoice;
-		$this->updateOrderStatus($id, ORDER_STATUS_DELETED);		
-		$main->addLog("Order id $id deleted ");
-		//Delete all invoices also
-		$invoice_list= $this->getAllInvoicesByOrderId($id);
-		foreach($invoice_list as $invoice_item) {
-			$invoice->delete($invoice_item['id']);
+		$result = $this->updateOrderStatus($id, ORDER_STATUS_DELETED);
+		if($result ) {		
+			$main->addLog("Order id $id deleted ");
+			
+			//Delete all invoices also
+			$invoice_list= $this->getAllInvoicesByOrderId($id);
+			foreach($invoice_list as $invoice_item) {
+				$invoice->delete($invoice_item['id']);
+			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	/**
