@@ -62,7 +62,7 @@ function loadAddons(obj) {
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Id:</td>
-    <td><input name="order_id" type="text" id="order_id" value="%ID%" readonly /></a></td>
+    <td>%ID%</td>
   </tr>  
      <tr>
     <td valign="top">User</td>
@@ -73,7 +73,7 @@ function loadAddons(obj) {
      <tr>
     <td valign="top">Domain</td>
     <td>
-    <input name="domain" type="text" id="domain" value="%DOMAIN%" readonly/>
+    %DOMAIN%
     </td>
   </tr>  
   <tr>

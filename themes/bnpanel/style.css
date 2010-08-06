@@ -186,7 +186,7 @@ h1 {
 }
 
 input[type="text"], input[type="email"], input[type="url"], input[type="password"], input[type="button"], input[type="submit"], textarea {
-font-family:Arial,Helvetica,sans-serif;
+	font-family:Arial,Helvetica,sans-serif;
 }
 
 input, option {
@@ -289,6 +289,12 @@ label.error {
 
 
 
+.readonly {
+   background-color:red;
+}
+
+
+
 
 .info, .success, .warning, .error, .validation {
     border: 1px solid;
@@ -296,6 +302,8 @@ label.error {
     padding:15px 10px 15px 50px;
     background-repeat: no-repeat;
     background-position: 10px center;
+    font-size:120%;
+    
 }
 .info {
     color: #00529B;

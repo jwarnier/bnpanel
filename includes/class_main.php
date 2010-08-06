@@ -1,7 +1,7 @@
 <?php/* For licensing terms, see /license.txt */
 //Check if called by script
 if(THT != 1){die();}class main {
-	public $postvar = array(), $getvar = array(); # All post/get strings		public function cron() {			}
+	public $postvar = array(), $getvar = array(); # All post/get strings		public function cron() {		global $db;		$result = $db->query("SELECT count(id) as count FROM `<PRE>logs`");		$log_count = $db->fetch_array($result);				if ($log_count['count'] > 1000) {		//	$db->query("DELETE FROM  `<PRE>logs` WHERE id > 1000");		}			}
 	public function cleaninteger($var){ # Transforms an Integer Value (1/0) to a Friendly version (Yes/No)
 	     $patterns[0] = '/0/';
          $patterns[1] = '/1/';
