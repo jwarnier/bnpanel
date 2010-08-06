@@ -129,7 +129,7 @@ INSERT INTO `%PRE%config` (`name`, `value`) VALUES
 ('whm-ssl', '0'),
 ('paypalemail', 'your@email.com'),
 ('default', 'order'),
-('theme', 'Reloaded2'),
+('theme', 'bnpanel'),
 ('name', 'BNPanel'),
 ('tos', '<p><span style="font-weight: bold;"><span style="color: #333333; font-family: Tahoma; font-size: 11px; font-weight: normal;"><span style="color: #ff0000;">The following content is prohibited on our servers:</span><ol>\r\n<li><strong>Illegal use</strong></li>\r\n<li><strong>Threatening Material</strong></li>\r\n<li><strong>Fraudulent Content</strong></li>\r\n<li><strong>Forgery or Impersonation</strong></li>\r\n<li><strong>Unsolicited Content</strong></li>\r\n<li><strong>Copyright Infringements</strong></li>\r\n<li><strong>Collection of Private Date (Unless DPA Registered)</strong></li>\r\n<li><strong>Viruses</strong></li>\r\n<li><strong>IRC Networks (Including all IRC Material)</strong></li>\r\n<li><strong>Peer to Peer software&nbsp;<br /></strong></li>\r\n<li><strong>Any Adult Content</strong></li>\r\n</ol></span></span></p>'),
 ('multiple', '1'),
