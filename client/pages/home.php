@@ -67,7 +67,14 @@ class page {
 			$array['BOX'] = "";	
 		}*/
 		$array['BOX'] = "";	
-		echo $style->replaceVar("tpl/clienthome.tpl", $array);
+		
+		$alerts = $db->config('alerts');
+		$array['ALERTS'] = '';
+		if (!empty($alerts)) {
+			$array['ALERTS'] = '<h2>Important  Announcements </h2>'.$db->config('alerts').'<br />';
+		}		
+			
+		echo $style->replaceVar("tpl/user/clienthome.tpl", $array);
 	}
 }
 ?>
