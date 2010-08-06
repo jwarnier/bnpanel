@@ -767,29 +767,10 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
  * 
 To insert in ISPConfig
 
-CREATE table install_package( 
-	package_id int NOT NULL AUTO_INCREMENT, 
-	name varchar(255), 
-	package_path varchar(255), 
-	version varchar(255) ,  
-PRIMARY KEY (id));
-
-INSERT into install_package (package_id, name, package_path, version) values ('1', 'chamilo', '/var/www/chamilo-1.8.7', '1.8.7');
+CREATE table install_package( package_id int NOT NULL AUTO_INCREMENT,name varchar(255),	package_path varchar(255),version varchar(255) ,PRIMARY KEY (package_id));
+INSERT into install_package (package_id, name, package_path, version) values ('1', 'chamilo', '/var/www/chamilo-1.8.7.1', '1.8.7.1');
 		
-CREATE table install_package_web_domain ( id int NOT NULL AUTO_INCREMENT, domain_id int,package_id int, database_id, status int,  PRIMARY KEY (id));
-
-
-
-
-
-
-
-
-
-
-
-
-
+CREATE table install_package_web_domain ( id int NOT NULL AUTO_INCREMENT, domain_id int,package_id int, database_id int, status int,  PRIMARY KEY (id));
 
  * 
  */
