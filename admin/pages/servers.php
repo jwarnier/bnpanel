@@ -29,8 +29,8 @@ class page {
 					$values[] = array($stype->name, $fname[0]);	
 				}
 			}
-		}		
-		$this->array_type = $main->dropDown("type", $values, 0, 0);
+		}
+		$this->array_type = $values; 
 	}
 	
 	public function description() {
@@ -57,7 +57,9 @@ class page {
 						$main->errors("Server has been added!");
 					}
 				}
-				$array['TYPE'] = $this->array_type;
+				//$array['TYPE'] = $this->array_type;
+				$array['TYPE'] = $main->dropDown("type", $this->array_type, 0, 0);
+				
 				echo $style->replaceVar("tpl/addserver.tpl", $array);
 			break;
 			
@@ -90,7 +92,8 @@ class page {
 						$array['NAME'] = $data['name'];
 						$array['HASH'] = $data['accesshash'];
 						$array['ID'] = $data['id'];
-						$array['TYPE'] = $this->array_type;
+										
+						$array['TYPE'] = $main->dropDown("type", $this->array_type, $data['type'], 0);
 						
 						global $server;						
 						$server_php = $server->loadServer($data['id']);

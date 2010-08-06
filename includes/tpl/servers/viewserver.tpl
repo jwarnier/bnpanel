@@ -18,7 +18,7 @@ function serverchange(value) {
 				else {
 					$("#passtext").html('Access Hash:');
 				}
-												  });
+			});
 		});
 	});
 }
@@ -54,14 +54,16 @@ $(window).load(function () {
   </tr>  
   <tr>
     <td valign="top">Type:</td>
-    <td><select name="type" id="type" onchange="serverchange(this.value)">%TYPE%</select> <a title="The control panel that this server is running." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-  </tr>
-  
+    <td>
+    <select name="type" id="type" onchange="serverchange(this.value)">%TYPE%</select>
+    <a title="The control panel that this server is running." class="tooltip">
+    <img src="<URL>themes/icons/information.png" /></a>
+    </td>
+  </tr>  
    <tr>
     <td valign="top">Server status</td>
     <td>%SERVER_STATUS%</td>
-  </tr>
-  
+  </tr>  
   <tr>
     <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Edit Server" /></td>
   </tr>
