@@ -630,20 +630,16 @@ class server extends Model {
 	 */
 	 
 	public function suspend($order_id, $reason = false) { # Suspends a user account from the package ID
-		global $db, $main, $type, $email, $serverphp, $order,$user;
+		global $db, $main, $type, $email, $order,$user;
 		$order_info = $order->getOrderInfo($order_id);
 		
 		if (is_array($order_info) && !empty($order_info)) {
 			$user_info = $user->getUserById($order_info['userid']);
-			$server_id = $type->determineServer($order_info['pid']);						
+			$server_id = $type->determineServer($order_info['pid']);
+									
+			$serverphp = $this->createServer($order_info['pid']);
+			$donestuff = $serverphp->suspend($order_id, $server_id, $reason);
 			
-			if(!is_object($this->servers[$server_id]) && !$serverphp) {				
-				$this->servers[$server_id] = $this->createServer($order_info['pid']); # Create server class
-				$donestuff = $this->servers[$server_id]->suspend($order_id, $server_id, $reason);
-			} else {				
-				$donestuff = $serverphp->suspend($order_id, $server_id, $reason);
-			}	
-					
 			if($donestuff == true) {				
 				//$order->updateOrderStatus($order_id, ORDER_STATUS_CANCELLED);
 				//$db->query("UPDATE `<PRE>users` SET `status` = '2' WHERE `id` = '{$db->strip($data['userid'])}'");
