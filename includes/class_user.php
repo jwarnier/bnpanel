@@ -58,28 +58,22 @@ class user extends model {
 		if(isset($params['status'])) {
 			
 			$order_list = $order->getAllOrdersByUser($id);		
-			//Not sure of this one depends of require
 			
 			switch($params['status']) {
 				case USER_STATUS_ACTIVE:
+					//If a user is active we do nothing  since we dont know what to update
 					//$server->unsuspend($order_id);
 				break;
-				case USER_STATUS_SUSPENDED:
-					/*//Set to suspend all website of this user				
-					if(is_array($order_list) && count($order_list) > 0) {		
-						foreach($order_list as $order_item) {
-							$server->suspend($order_item['id']);
-						}
-					}	*/
+				case USER_STATUS_SUSPENDED:					
 				case USER_STATUS_WAITING_ADMIN_VALIDATION:
 				case USER_STATUS_WAITING_USER_VALIDATION:
 				case USER_STATUS_DELETED:
 				global $server;
 				
-				//Set to suspend all website of this user				
+				//If we suspend a user all orders will be set to suspend				
 				if(is_array($order_list) && count($order_list) > 0) {		
 					foreach($order_list as $order_item) {
-						$server->cancel($order_item['id']);
+						$server->suspend($order_item['id']);
 					}
 				}
 				break;

@@ -66,7 +66,7 @@ class server extends Model {
 		global $main;
 		$this->setPrimaryKey($server_id);		
 		$this->update($params);
-		$main->addLog("Server id $server_id updated");
+		$main->addLog("Server $server_id updated");
 	}
 	
 	/**
@@ -561,7 +561,7 @@ class server extends Model {
 				
 				$emaildata 			= $db->emailTemplate('orders_cancelled');
 				$array['DOMAIN'] 	= $order_info['domain'];
-				$array['REASON'] 	= 'Web Hosting Cancelled.';
+				$array['REASON'] 	= 'Web Hosting Cancelled';
 				$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $array);
 				$order->updateOrderStatus($order_id, ORDER_STATUS_CANCELLED);
 				
@@ -751,7 +751,7 @@ class server extends Model {
 	}
 	
 	/**
-	 * Changes the order password
+	 * Changes the order (Cpanel, ISPConfig) password 
 	 * @param	int		order id
 	 * @param	string	new password
 	 */

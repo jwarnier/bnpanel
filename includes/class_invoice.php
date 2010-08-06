@@ -426,7 +426,7 @@ class invoice extends model {
 		$main->addLog('Cron executed');
 				
 		//Gets all orders 
-		$orders 			 =  $order->getAllOrders();
+		$orders 			 = $order->getAllOrders();
 		$invoice_list_status = $main->getInvoiceStatusList();
 		$order_list_status	 = $main->getOrderStatusList();
 			
@@ -434,7 +434,8 @@ class invoice extends model {
 			echo '<h1>Invoice Cron</h1><br />';
 			echo 'Total others: '.count($orders).'<br />';
 		}		
-			
+		
+		if(is_array($orders) && count($orders) >0)
 		foreach($orders as $order_item) {
 			
 			//If the Order was deleted pass to the next order
@@ -444,11 +445,11 @@ class invoice extends model {
 			
 			if ($debug) { echo '<h2>Order id:'.$order_item['id'].'</h2>';}	
 			
-			//Get the last invoice of that order
+			//Get the last invoice of this order
 			$last_invoice_id_by_order_id = $order->getLastInvoiceByOrderId($order_item['id']);
 			$user_id = $order_item['userid'];
 			
-			// GEtting the info of that invoice
+			//If invoice exists 
 			if (!empty($last_invoice_id_by_order_id)) {
 				
 				if ($debug) { echo '<h2>Invoice id:'.$last_invoice_id_by_order_id.'</h2>';}
@@ -465,10 +466,9 @@ class invoice extends model {
 				//$result_invoices = $db->query($sql);				
 				
 				
-				//If today is bigger than 30 days since the creation then create a new invoice
+				//Calculating the billing time
 				$billing_number_months_in_seconds  = intval($billing_info['number_months'])*30*24*60*60; 
-									
-								
+																	
 				//Generate a new invoice if time is exceed (first time)
 				//var_dump($today, strtotime($my_invoice['created']) + $billing_number_months_in_seconds);
 				if ($debug) {
@@ -483,8 +483,7 @@ class invoice extends model {
 				$suspendseconds 	= intval($db->config('suspensiondays')) *24*60*60;
 				
 				//I don't want to use this termination parameter. Not a priority
-				$terminateseconds 	= intval($db->config('terminationdays'))*24*60*60;				
-				
+				$terminateseconds 	= intval($db->config('terminationdays'))*24*60*60;
 				
 				//If normal time is over and he does not paid
 		//		var_dump(date('Y-m-d h:i:s',$today), date('Y-m-d h:i:s', strtotime($my_invoice['created']) + $billing_number_months_in_seconds));

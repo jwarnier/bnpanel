@@ -1,6 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
-//not implemented yet
+
+//not implemented yet for BNPanel
 exit;
 define("LINK", "../includes/");
 include(LINK ."compiler.php");

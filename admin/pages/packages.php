@@ -228,6 +228,7 @@ class page {
 							$array['CHECKED4'] = "";
 						}
 						
+						//Getting info of the server
 						$server_info = $server->getServerById($package_info['server']);
 						
 						if ($server_info['type'] == 'ispconfig') {
@@ -257,9 +258,10 @@ class page {
 						}									
 						$array['ADDON'] = $addon->generateAddonCheckboxes($myresults);	
 						global $server;
-												
+						//Loading the server			
 						$serverphp= $server->loadServer($package_info['server']);
 						
+						//Getting all client templates in ISPConfig
 						$package_list = $serverphp->getAllPackageBackEnd();
 						foreach($package_list as $package_item_panel) {
 							if ($package_item_panel['template_id'] == $package_info['backend']) {
