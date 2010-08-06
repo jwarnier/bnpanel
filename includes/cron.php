@@ -23,6 +23,9 @@ foreach($classes as $key => $value) {
 #1.2 Run the Paid CronJob. 
 $invoice->cron();
 
+//1.3 Maintenance cron jobs
+$main->cron();
+
 #Now we get the data
 $data = ob_get_contents(); # Get all the HTML created by the script
 ob_end_clean(); # Erase that data
