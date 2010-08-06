@@ -29,13 +29,8 @@ class page {
 					$values[] = array($stype->name, $fname[0]);	
 				}
 			}
-		}
-		
+		}		
 		$this->array_type = $main->dropDown("type", $values, 0, 0);
-		
-		/*$server_list = $server->getAvailablePanels();
-		$this->array_type = $main->createSelect('type', $server_list);*/
-		
 	}
 	
 	public function description() {
@@ -56,7 +51,8 @@ class page {
 						}
 					}
 					if(!$n) {
-						$main->postvar['accesshash'] = $main->postvar['hash']; 
+						$main->postvar['accesshash'] = $main->postvar['hash'];
+						//Creating a new server
 						$server->create($main->postvar);
 						$main->errors("Server has been added!");
 					}
@@ -83,7 +79,7 @@ class page {
 							if(!$n) {
 								$main->postvar['accesshash'] = $main->postvar['hash']; 
 								$server->edit($main->getvar['do'], $main->postvar);
-								$main->errors("Server edited!");
+								$main->errors("Server edited.");
 								$main->done();
 							}
 						}
@@ -97,10 +93,9 @@ class page {
 						$array['TYPE'] = $this->array_type;
 						
 						global $server;						
-						$server_php = $server->loadServer($data['id']);						
+						$server_php = $server->loadServer($data['id']);
+						//Testing connection						
 						$array['SERVER_STATUS'] = $server_php->testConnection();
-						//$server_php->installChamilo(29);
-						
 						echo $style->replaceVar("tpl/servers/viewserver.tpl", $array);
 					}
 				} else {

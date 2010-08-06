@@ -112,7 +112,7 @@ class order extends model {
 				break;
 				case ORDER_STATUS_DELETED:				
 				case ORDER_STATUS_WAITING_USER_VALIDATION:
-					//We do not send nothing to the user
+					//We just suspend the order not delete it
 					$result = $server->suspend($order_id);
 				break;
 				default:

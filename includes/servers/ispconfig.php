@@ -139,9 +139,8 @@ class ispconfig extends Panel {
 						$soap_result 	= $soap_client->sites_web_domain_get($this->session_id, $params['primary_id']);
 					break;
 					//Get server info
-					//Section Could be 'web', 'dns', 'mail', 'dns', 'cron', etc
 					case 'server_get':
-						$soap_result 	= $soap_client->server_get($this->session_id, $params['server_id'], $params['section']);
+						$soap_result 	= $soap_client->server_get($this->session_id, $params['server_id'], $params['section']);//Section Could be 'web', 'dns', 'mail', 'dns', 'cron', etc
 					break;					
 					//Adds a DNS zone
 					case 'dns_zone_add':
@@ -172,12 +171,31 @@ class ispconfig extends Panel {
 						$soap_result 	= $soap_client->dns_zone_set_status($this->session_id, $primary_id, 'active');				
 					break;
 					
+					case 'mail_domain_add':
+						$client_id 		= $params['client_id']; // client id
+						$params['client_id'] = null;
+						$soap_result 	= $soap_client->mail_domain_add($this->session_id, $client_id, $params);
+					break;					
 					//Add an email domain
 					case 'mail_domain_update':
 						$client_id 		= $params['client_id']; // client id
 						$params['client_id'] = null;
 						$soap_result 	= $soap_client->mail_domain_update($this->session_id, $client_id, $params);
-					break;
+					break;		
+					//Change domain status
+					case 'mail_domain_active':
+						$primary_id 		= $params['primary_id']; 
+						$soap_result 	= $soap_client->mail_domain_set_status($this->session_id, $primary_id, 'active');
+					break;					
+					//Change domain status
+					case 'mail_domain_inactive':
+						$primary_id 		= $params['primary_id'];						
+						$soap_result 	= $soap_client->mail_domain_set_status($this->session_id, $primary_id, 'inactive');
+					break;					
+					case 'mail_domain_get_by_domain':
+						$domain		= $params['domain'];
+						$soap_result 	= $soap_client->mail_domain_get_by_domain($this->session_id, $domain);					
+					break;					
 					//Creates a mySQL database
 					case 'sites_database_add':
 						$client_id 		= $params['client_id']; // client id
@@ -362,6 +380,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			$client_info = $this->remote('client_get', array('client_id'=>$new_client_id));
 		
 			if(!$client_info['error']) {
+				
 				$website_id = 1;
 				$group_id = $new_client_id + 1;
 				//Setting parameters for the sites_web_domain_add function
@@ -390,6 +409,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$site_params['errordocs'] 		= 1;
 						
 				//website_path=/var/www/clients/client[client_id]/web[website_id]
+				//This job will be done by the web_edit plugin in ISPConfig 
 				//$site_params['document_root'] 	 = str_replace(array('[client_id]','[website_id]'),array($new_client_id, $website_id), $server_info['website_path']);
 				$site_params['document_root'] 	 = $server_info['website_path'];
 
@@ -413,10 +433,11 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$result = $this->remote('sites_web_domain_add',$site_params);
 				if ($result) {					
 			
-					//Setting up the mail domain
-					$mail_domain_params['client_id'] = $new_client_id;
-					$mail_domain_params['server_id'] = $this->getServerId();
-					$mail_domain_params['domain']	 = $domain;
+					// ---- Setting up the mail domain
+					
+					$mail_domain_params['client_id'] 	= $new_client_id;					
+					$mail_domain_params['server_id']  	= $this->getServerId();
+					$mail_domain_params['domain']	 	= $domain;
 					
 					if ($order_info['status'] == ORDER_STATUS_ACTIVE) {
 						$mail_domain_params['active'] 	 	= 'y';
@@ -426,7 +447,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					
 					$domain_id = $this->remote('mail_domain_add', $mail_domain_params);
 					
-					//Adding the DNS zone				
+					// ---- Setting up the DNS ZONE					
+
 					$dns_domain_params['client_id'] = $new_client_id;
 					$dns_domain_params['server_id'] = $this->getServerId();
 					$dns_domain_params['origin']	= $domain;
@@ -444,7 +466,10 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					} else {
 						$dns_domain_params['active'] 	 	= 'n';
 					}				
-					$result = $this->remote('dns_zone_add', $dns_domain_params);						
+					$result = $this->remote('dns_zone_add', $dns_domain_params);
+					
+					//----- Logout of the remoting
+											
 					$result = $this->remote('logout');	
 								
 					/* Extra params
@@ -504,6 +529,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					$params['client_id'] = $user_info['client_id'];	
 					$params['server_id'] = $this->getServerId();
 					
+					//Searching fot DNS zones
 					$dns_zone_list = $this->remote('dns_zone_get_by_user',$params);				
 					$dns_id = 0;
 					if (is_array($dns_zone_list) && count($dns_zone_list) > 0) {
@@ -513,19 +539,30 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 								break;
 							}
 						}
-					}
+					}	
 									
+					//Inactive DNS ZONE					
 					if (!empty($dns_id)) {
-						$dns_domain_params['primary_id']		= $dns_id;
+						$dns_domain_params['primary_id'] = $dns_id;
 						$result = $this->remote('dns_zone_inactive',$dns_domain_params);				
 					}
 					
-					/* Inactive mail domain
-					$mail_params['client_id'] = $user_info['client_id'];	
-					$mail_params['server_id'] = $this->getServerId();
-					$mail_params['active']	= 'n';				
-					$result = $this->remote('mail_domain_update',$mail_params);
-					*/					
+					//Searching for mail domains
+					$params['domain'] = $order_info['domain'];
+					$domain_list = $this->remote('mail_domain_get_by_domain',$params);
+					$mail_domain_id = 0;
+					
+					foreach($domain_list as $domain) {
+						if ($domain['domain'] == $order_info['domain']) {
+							$mail_domain_id = $domain['domain_id'];
+							break;
+						}
+					}				
+					//Inactive mail domain	
+					if (!empty($mail_domain_id)) {						
+						$mail_update_status_params['primary_id'] = $mail_domain_id;
+						$this->remote('mail_domain_inactive', $mail_update_status_params);
+					}
 					return true;
 				}					
 			}
@@ -597,12 +634,13 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 						
 				//Inactive domain	
 				$result = $this->remote('sites_web_domain_active',$params_get_site);
-					
+				
+				// DNS SOA
+				
 				$params['client_id'] = $user_info['client_id'];	
 				$params['server_id'] = $this->getServerId();
 				
-				$dns_zone_list = $this->remote('dns_zone_get_by_user',$params);
-				
+				$dns_zone_list = $this->remote('dns_zone_get_by_user',$params);				
 				
 				$dns_id = 0;				
 				if (is_array($dns_zone_list) && count($dns_zone_list) > 0) {
@@ -612,13 +650,31 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 							break;
 						}
 					}
-				}	
+				}
 					
+				//Inactive zone
 				if (!empty($dns_id)) {
 					$dns_domain_params['primary_id']		= $dns_id;
-					//Inactive zone
 					$result = $this->remote('dns_zone_active',$dns_domain_params);				
-				}								
+				}
+				
+				//Searching for mail domains
+				$params['domain'] = $order_info['domain'];
+				$domain_list = $this->remote('mail_domain_get_by_domain',$params);
+				$mail_domain_id = 0;
+				
+				foreach($domain_list as $domain) {
+					if ($domain['domain'] == $order_info['domain']) {
+						$mail_domain_id = $domain['domain_id'];
+						break;
+					}
+				}
+						
+				//Inactive mail domain	
+				if (!empty($mail_domain_id)) {						
+					$mail_update_status_params['primary_id'] = $mail_domain_id;
+					$this->remote('mail_domain_active', $mail_update_status_params);
+				}									
 				return true;				
 			}			
 		}
@@ -690,6 +746,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		@param int		server id
 		@return bool true if sucess
 	*/
+	
 	public function terminate($username, $server_id) {
 		$this->server_id = $server_id;
 		//Getting user info
