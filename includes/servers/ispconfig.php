@@ -19,7 +19,7 @@ class ispconfig extends Panel {
 	public function testConnection() {		
 		$soap_client = $this->load();
 		if ($soap_client && $this->getSessionId()) {
-			return 'Logged into ISPConfig3 remote server sucessfully. The SessionID is '.$this->getSessionId().'<br />';
+			return 'Logged into ISPConfig3 Remote Server sucessfully. The SessionID is '.$this->getSessionId().'<br />';
 			//get the current list of methods						
 			//var_dump($soap_client->get_function_list($this->getSessionId()));
 			/*try {
@@ -29,7 +29,7 @@ class ispconfig extends Panel {
 				die('SOAP Error: '.$e->getMessage());
 			}*/
 		} else {
-			echo 'Something goes wrong please check the host name';
+			echo 'The Test Connection failed. Please check the host name parameters. You can also check the logs <a href="?page=logs">here</a>';
 		}				
 	}
 
@@ -56,7 +56,7 @@ class ispconfig extends Panel {
 				return $client;
 			}
 		} catch (SoapFault $e) {
-			$main->addLog("Soap error. Trying $soap_location - $soap_uri ".$e->getMessage());
+			$main->addLog("Soap error. Trying to load URL: $soap_location URI: $soap_uri ".$e->getMessage());
 			if ($this->debug) 			
 				//die('SOAP Error: '.$e->getMessage());
 			return false;
