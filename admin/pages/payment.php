@@ -20,9 +20,7 @@ class page {
 	public function __construct() {		
 	}
 	
-	public function description() {	
-		return "<strong>Clients</strong><br />
-		This is the area where you can manage all your clients that have signed up for your service. You can perform a variety of tasks like suspend, terminate, email and also check up on their requirements and stats.". $newest;	
+	public function description() {
 	}
 	
 	public function content() { # Displays the page		

@@ -421,17 +421,19 @@ class invoice extends model {
 	public function cron() {
 		$debug = true;
 		global $db, $main, $server, $billing, $invoice, $order, $email, $user;
-		$today = time();
-		
+		$today = time();		
 		$main->addLog('Cron executed');
 				
-		//Gets all orders 
+		//Getting all orders 
 		$orders 			 = $order->getAllOrders();
 		$invoice_list_status = $main->getInvoiceStatusList();
 		$order_list_status	 = $main->getOrderStatusList();
 			
 		if($debug) {
 			echo '<h1>Invoice Cron</h1><br />';
+			
+			echo 'Today is  : '.date('Y-m-d', time()).'<br />';
+			
 			echo 'Total others: '.count($orders).'<br />';
 		}		
 		
@@ -452,10 +454,16 @@ class invoice extends model {
 			//If invoice exists 
 			if (!empty($last_invoice_id_by_order_id)) {
 				
-				if ($debug) { echo '<h2>Invoice id:'.$last_invoice_id_by_order_id.'</h2>';}
+				if ($debug) { echo '<h3>Latest Invoice id: '.$last_invoice_id_by_order_id.'</h3>';}
 				
 				//Get invoice info					
-				$my_invoice 	= $invoice->getInvoiceInfo($last_invoice_id_by_order_id);					
+				$my_invoice 	= $invoice->getInvoiceInfo($last_invoice_id_by_order_id);		
+				
+				
+				if (empty($my_invoice)) {
+					echo 'Invoice does not exist';
+					continue;					
+				}			
 				
 				//Get billing info
 				$billing_info	= $billing->getBilling($order_item['billing_cycle_id']);					
@@ -471,11 +479,10 @@ class invoice extends model {
 																	
 				//Generate a new invoice if time is exceed (first time)
 				//var_dump($today, strtotime($my_invoice['created']) + $billing_number_months_in_seconds);
-				if ($debug) {
-					echo 'Today is  : '.date('Y-m-d', time());
-					echo '<br />Invoice info :<br />';					
-					echo 'Created date	:'.date('Y-m-d', strtotime($my_invoice['created'])).'<br />';
-					echo 'Due date	:'.date('Y-m-d', $my_invoice['due']).'<br />';
+				if ($debug) {					
+					echo '<strong>Invoice info :</strong><br />';					
+					echo 'Created at : '.date('Y-m-d', strtotime($my_invoice['created'])).'<br />';
+					echo '<strong>Due     date	: '.date('Y-m-d', $my_invoice['due']).'</strong><br />';
 				}
 				//"Terminating" a user if he does not pay
 				
@@ -495,11 +502,12 @@ class invoice extends model {
 				
 				//If the invoice was deleted pass to the next order
 					
-				if ($debug) { echo '<br/>Invoice status: ' .$invoice_list_status [$my_invoice['status']].' - Id  '.$my_invoice['status']; }
-				
-				$email_day_count = $this->calculateDaysToSendNotification($billing_info['number_months'], $my_invoice['due']);
-				var_dump($email_day_count);
-				
+				if ($debug) { echo '<br/>Invoice status: <strong>' .$invoice_list_status [$my_invoice['status']].'</strong> (Status Id  '.$my_invoice['status'].') '; }
+				if ($my_invoice['status'] == INVOICE_STATUS_DELETED) {
+					continue;					
+				}			
+				$email_day_count = $this->calculateDaysToSendNotification($billing_info['number_months'], $my_invoice['due'], $debug);
+								
 				switch($my_invoice['status']) {
 					case INVOICE_STATUS_WAITING_PAYMENT: //Pending
 						
@@ -558,9 +566,8 @@ class invoice extends model {
 							$main->addLog('Invoice created Id:'.$invoice_id);
 							
 						} else {
-							if ($debug) echo '<br />Invoice Not created because the due date of the last invoice '.date('Y-m-d',$my_invoice['due']).' +  '.$billing_info['number_months'].  '  months  = '.$mytemp.'  is greater than today - '.date('Y-m-d',$today).' this means that the invoice was already created and active<br />';								
+							if ($debug) echo '<br />Invoice Not created because the due date of the last invoice '.date('Y-m-d',$my_invoice['due']).' +  '.$billing_info['number_months'].  '  months  = '.$mytemp.'  is greater than today ('.date('Y-m-d',$today).') this means that the invoice is already Active<br />';								
 						}
-						echo 'Send email if no empty: $email_day_count';							
 						
 						//Generating email notification
 						if (!empty($email_day_count)) {
@@ -607,12 +614,13 @@ class invoice extends model {
 					default:						
 				}	
 			} else {
-				if ($debug) { echo '<h3>No Invoice id</h3><br />';}
+				if ($debug) { echo '<h3>No Invoice id. This is weird check this order.</h3><br />';}
 			}
 		}
 	}
 	
-	public function calculateDaysToSendNotification($number_months, $my_due_date) {
+	public function calculateDaysToSendNotification($number_months, $my_due_date, $debug) {
+		
 		
 		$before_list_of_days = array();
 		/*
@@ -649,21 +657,30 @@ class invoice extends model {
 		$email_day_count = '';
 							
 		//$my_invoice['due'] = '1280451661';							
-		
-		echo '<br /><br />Searching if today we are going to shoot an email:<br />';
-		echo '$number_months = '.$number_months.'<br />';
+		if ($debug) {
+			echo '<br /><br />Searching if today we are going to send a reminder:<br />';
+			echo 'Number of months for this Order : '.$number_months.'<br /><br />';
+		}
 		
 		foreach($before_list_of_days as $days) {
 			//var_dump($days);
 			$my_time_in_seconds = $my_due_date - $days*24*60*60;
 			$date_now = date('Y-m-d', time());
 			$due_date = date('Y-m-d', $my_time_in_seconds);
-			
-			echo $date_now.' - Shoots an email in : '.$due_date.' - Calculated for '.$days.' days<br />';
+			if ($debug) 
+				echo 'Today is: '.$date_now.' The script will send an email in : '.$due_date.' - '.$days.' days reminder before the due date ';
+				
 			if ($date_now  == $due_date  ) {
 				$email_day_count = $days;
 				break;
-			}						
+			}
+			
+			if ($debug) 
+			if (empty($email_day_count)) {
+				echo '(Nothing to send)<br/>';	
+			} else {
+				echo '(Sent an email Today the due date dies '.$email_day_count.')';
+			}
 		}
 		return $email_day_count;
 	}

@@ -568,33 +568,6 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			}
 		}
 		return false;
-/*
-		//Getting the site info
-		$site_info = $this->remote('sites_web_domain_get',$params_get_site);
-
-		//Suspending account active = 'n'
-		$params_get_site['domain'] 			= $site_info['domain'];
-		$params_get_site['hd_quota'] 		= $site_info['hd_quota'];
-		$params_get_site['traffic_quota'] 	= $site_info['traffic_quota'];
-		$params_get_site['allow_override'] 	= $site_info['allow_override'];
-
-		$params_get_site['sys_userid'] 		= $site_info['sys_userid'];
-		$params_get_site['sys_groupid'] 	= $site_info['sys_groupid'];
-
-		$params_get_site['php_open_basedir']= $site_info['php_open_basedir'];
-		$params_get_site['document_root'] 	= $site_info['document_root'];
-		$params_get_site['system_user'] 	= $site_info['system_user'];
-		$params_get_site['system_group'] 	= $site_info['system_group'];
-		
-		//Setting 
-		$params_get_site['active'] = 'n';
-
-		$result = $this->remote('sites_web_domain_update',$params_get_site);
-		if ($result == 1) {
-			return true;
-		} else {
-			return false;
-		}*/
 	}
 	
 	/**
