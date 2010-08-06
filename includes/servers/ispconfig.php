@@ -29,7 +29,7 @@ class ispconfig extends Panel {
 				die('SOAP Error: '.$e->getMessage());
 			}*/
 		} else {
-			echo 'The Test Connection failed. Please check the host name parameters. You can also check the logs <a href="?page=logs">here</a>';
+			return 'The Test Connection failed. Please check the host name parameters. You can also check the logs <a href="?page=logs">here</a>';
 		}				
 	}
 
@@ -205,7 +205,7 @@ class ispconfig extends Panel {
 					case 'sites_database_get':
 						$client_id 		= $params['client_id']; // client id
 						$params['client_id'] = null;
-						$soap_result 	= $soap_client->sites_database_add($this->session_id, $client_id, $params);
+						$soap_result 	= $soap_client->sites_database_get($this->session_id, $client_id, $params);
 					break;					
 					case 'sites_database_get_all_by_user':
 						$client_id 		= $params['client_id']; // client id
@@ -665,49 +665,53 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		$params['username'] = $order_info['username'];
 		$user_info = $this->remote('client_get_by_username',$params);
 		
-		$site_params['sys_userid']	= $user_info['userid'];		
-		$site_params['groups'] 		= $user_info['groups'];	
-		
-		$site_info = $this->remote('client_get_sites_by_user',$site_params);
-				
-		$domain_id = 0;
-		if ($site_info !==false) {
-			foreach($site_info as $key=>$domain) {
-				if ($order_info['domain'] == $domain['domain']) {
-					$domain_id = $domain['domain_id'];
-					break;
+		if (!empty($user_info)) {
+			
+			$site_params['sys_userid']	= $user_info['userid'];		
+			$site_params['groups'] 		= $user_info['groups'];	
+			
+			$site_info = $this->remote('client_get_sites_by_user',$site_params);
+					
+			$domain_id = 0;
+			if ($site_info !==false) {
+				foreach($site_info as $key=>$domain) {
+					if ($order_info['domain'] == $domain['domain']) {
+						$domain_id = $domain['domain_id'];
+						break;
+					}
 				}
 			}
-		}
-		
-		if (!empty($domain_id)) {
-			//Create a new database for chamilo		
 			
-			$mysql_params['client_id'] 			= $user_info['client_id'];				
-			$mysql_params['server_id']			= $this->getServerId();				
-			$mysql_params['type'] 				= 'mysql';
-			$generate_username					= $main->generateUsername();
-			$mysql_params['database_name'] 		= 'c'.$user_info['client_id'].'_'.$generate_username.'_chamilo';
-			$mysql_params['database_user'] 		= 'c'.$user_info['client_id'].'_'.$params['username'].'_user';		
-			$mysql_params['database_password'] 	= $main->generatePassword();
-			$mysql_params['database_charset']	= 'utf8';
-			$mysql_params['remote_access'] 		= 'n';
-			$mysql_params['active'] 			= 'y';	
-			
-			$database_id = $this->remote('sites_database_add', $mysql_params);
-			
-			if (is_numeric(($database_id))) {		
-				$install_params['package_id'] 	= 1; // this value can be find in the ispconfig install_package table
-				$install_params['domain_id'] 	= $domain_id ; // chamilo
-				$install_params['status'] 		= 2;// 0 not install / 1 installed 2 pending 3 error
-				$install_params['database_id'] 	= $database_id;  
-				$result = $this->remote('install_chamilo', $install_params);
-				return true;
-			} else {
-				if ($database_id['error']) {
-					//echo $database_id['text'];
-					return false;	
-				}			
+			if (!empty($domain_id)) {
+				//Create a new database for chamilo		
+				
+				$mysql_params['client_id'] 			= $user_info['client_id'];				
+				$mysql_params['server_id']			= $this->getServerId();				
+				$mysql_params['type'] 				= 'mysql';
+				//$generate_username					= $main->generateUsername();
+				$mysql_params['database_name'] 		= 'c'.$user_info['client_id'].'_'.$params['username'].'_chamilo';
+				$mysql_params['database_user'] 		= 'c'.$user_info['client_id'].'_'.$params['username'].'_user';		
+				$mysql_params['database_password'] 	= $main->generatePassword();
+				$mysql_params['database_charset']	= 'utf8';
+				$mysql_params['remote_access'] 		= 'n';
+				$mysql_params['active'] 			= 'y';	
+				
+				$database_id = $this->remote('sites_database_add', $mysql_params);
+				
+				if (is_numeric(($database_id))) {		
+					$install_params['package_id'] 	= 1; // this value can be find in the ispconfig install_package table
+					$install_params['domain_id'] 	= $domain_id ; // chamilo
+					$install_params['status'] 		= 2;// 0 not install / 1 installed 2 pending 3 error
+					$install_params['database_id'] 	= $database_id;  
+					$result = $this->remote('install_chamilo', $install_params);
+					$main->addLog("Install chamilo called: domain_id:$domain_id database_id:$database_id");
+					return true;
+				} else {
+					if ($database_id['error']) {
+						//echo $database_id['text'];
+						return false;	
+					}			
+				}
 			}
 		}
 		return false;		
@@ -758,3 +762,35 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		var_dump($soap_client ->get_class_methods());		
 	}
 }
+
+/**
+ * 
+To insert in ISPConfig
+
+CREATE table install_package( 
+	package_id int NOT NULL AUTO_INCREMENT, 
+	name varchar(255), 
+	package_path varchar(255), 
+	version varchar(255) ,  
+PRIMARY KEY (id));
+
+INSERT into install_package (package_id, name, package_path, version) values ('1', 'chamilo', '/var/www/chamilo-1.8.7', '1.8.7');
+		
+CREATE table install_package_web_domain ( id int NOT NULL AUTO_INCREMENT, domain_id int,package_id int, database_id, status int,  PRIMARY KEY (id));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ * 
+ */
+
