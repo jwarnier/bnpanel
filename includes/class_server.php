@@ -49,8 +49,7 @@ class server extends Model {
 	 * @param	array	parameters 
 	 */
 	public function create($params) {
-		global $main;
-		
+		global $main;		
 		$server_id = $this->save($params);
 		if (!empty($server_id) && is_numeric($server_id )) {
 			$main->addLog("Server created: $server_id");	
@@ -86,8 +85,7 @@ class server extends Model {
 	 * @param	int		server id	
 	 */
 	public function loadServer($server_id) {
-		$server_info = $this->getServerById($server_id); # Determine server
-		
+		$server_info = $this->getServerById($server_id); # Determine server		
 		$server_type = $server_info['type'];
 		if($this->servers[$server_type]) {
 			return $this->servers[$server_type];	
@@ -143,6 +141,8 @@ class server extends Model {
 	 */
 	public function signup() { # Echos the result of signup for ajax
 		global $main, $db, $type, $addon, $order, $package, $email, $user;
+		
+		$main->addLog("Executing server::signup function");
 			
 		//Check package details
 		$package_id 	= intval($main->getvar['package']);
@@ -379,6 +379,7 @@ class server extends Model {
 				$main->addLog('User registered user id :'.$user_id);										
 				$login = $main->clientLogin($system_username, $system_password);
 			} else {
+				$main->addLog("Error while trying to create an user $system_username $system_email ");		
 				return "Can't create an user";
 			}																		  
 		} 
@@ -431,8 +432,7 @@ class server extends Model {
 			$array['PACKAGE'] 	= $package_info['name'];
 							
 			//Register the new order to the ISPConfig/Cpanel
-			echo ' I send this';
-			var_dump($order_id, $params['username'], $system_email, $params['password']);
+//			var_dump($order_id, $params['username'], $system_email, $params['password']);
 			
 			$done = $serverphp->signup($order_id, $package_id, $params['username'], $params['password'], $user_id, $sub_domain, $subdomain_id);
 			
@@ -457,7 +457,6 @@ class server extends Model {
 		}
 		
 		//If the package is paid	
-		var_dump($package_info['type']);		
 		if($package_info['type'] == 'paid') {		
 			global $invoice, $package, $billing;
 			//The order was saved with an status of admin validation now we should create an invoice an set the status to wait payment
@@ -495,8 +494,7 @@ class server extends Model {
 			$main->clearToken();										
 			echo '<div class="errors"><b>You are being redirected to payment! It will load in a couple of seconds..</b></div>';
 		}	
-	}
-	
+	}	
 	
 	/**
 	 * 	Deletes a user account from the Control Panel System (ISPConfig, Cpanel)

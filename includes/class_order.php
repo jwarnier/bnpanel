@@ -79,8 +79,7 @@ class order extends model {
 		$this->setPrimaryKey($order_id);
 		
 		$order_info = $this->getOrderInfo($order_id, true);
-		$user_info 	= $user->getUserById($order_info['userid']);	
-		
+		$user_info 	= $user->getUserById($order_info['userid']);		
 		$order_status = array_keys($main->getOrderStatusList());	
 		
 		if (in_array($status, $order_status)) {				
@@ -133,9 +132,14 @@ class order extends model {
 	 * Deletes an order
 	 */
 	public function delete($id) { # Deletes invoice upon invoice id
-		global $main;
+		global $main, $invoice;
 		$this->updateOrderStatus($id, ORDER_STATUS_DELETED);		
 		$main->addLog("Order id $id deleted ");
+		//Delete all invoices also
+		$invoice_list= $this->getAllInvoicesByOrderId($id);
+		foreach($invoice_list as $invoice_item) {
+			$invoice->delete($invoice_item['id']);
+		}
 		return true;
 	}
 	
