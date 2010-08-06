@@ -70,7 +70,7 @@ function writeconfig($host, $user, $pass, $db, $pre, $true) {
 	}
 }
 
-define("THEME", "Reloaded2"); # Set the theme
+define("THEME", 'bnpanel'); # Set the theme
 define("URL", "../"); # Set url to blank
 
 define("NAME", "THT");
