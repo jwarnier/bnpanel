@@ -47,7 +47,7 @@ class invoice extends model {
 		global $main;
 		$this->setPrimaryKey($id);
 		$this->update($params);
-		$main->addLog("Invoice updated $id deleted ");	
+		$main->addLog("Invoice updated $id deleted");	
 	}
 	
 	/**
@@ -80,15 +80,15 @@ class invoice extends model {
 			$paypal->add_field('item_name', 		$db->config('name').' - '.$order_info['domain'].' Invoice id: '.$invoice_id);
 			//$paypal->add_field('item_number', 		$invoice_id);
 			$paypal->add_field('invoice', 			$invoice_id);
-			$paypal->add_field('no_note', 			0);
-			
-			$paypal->add_field('no_shipping', 		1);			
+			$paypal->add_field('no_note', 			0);			
+			$paypal->add_field('no_shipping', 		1);		
+				
 			//Image is 150*50
 			//$paypal->add_field('image_url', 		'http://www.beeznest.com/sites/all/themes/beeznest/images/logo-beez.png');
 
 			$paypal->add_field('amount', 			$invoice_info['total_amount']);
 			$paypal->add_field('currency_code', 	$db->config('currency'));
-			$main->addLog("Invoice pay function called Invoice id: $invoice_id Order id: $order_id Total amount: {$invoice_info['total_amount']}");
+			$main->addLog("Invoice pay function called for: Invoice id: $invoice_id Order id: $order_id Total amount: {$invoice_info['total_amount']}");
 			$paypal->submit_paypal_post(); // submit the fields to paypal
 		} else {
 			echo "You don't seem to be the person who owns that invoice!";	
@@ -108,8 +108,7 @@ class invoice extends model {
 		$array = array();
 		if ($db->num_rows($query) > 0) {
 			$array = $db->fetch_array($query, 'ASSOC');
-			$total_amount = 0;
-			
+			$total_amount = 0;			
 			//Getting addon information
 			if (!empty($array['addon_fee'])) {
 				//the addon_fee is a serialize string			

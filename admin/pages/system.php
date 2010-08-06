@@ -23,7 +23,7 @@ class page {
 	
 	public function checkDir($dir,$friendly){
     	if (is_dir($dir)) { 
-    		return "<div class='warn'><img src='../themes/icons/cross.png' alt='' /> Warning: $friendly still exists, please remove it.</div>";
+    		return "<div class='warning'><img src='../themes/icons/cross.png' alt='' /> Warning: $friendly still exists, please remove it.</div>";
 		}
 		else{
 			return "<div class='noupg'><img src='../themes/icons/accept.png' alt='' /> Check Passed: $friendly does not exist</div>";
@@ -32,7 +32,7 @@ class page {
 	
 	public function checkPerms($file,$friendly){
 		if (is_writable($file)){
-			return "<div class='warn'><img src='../themes/icons/error.png' alt='' /> Warning: $friendly is world writable, please chmod it to 644!</div>";
+			return "<div class='warning'><img src='../themes/icons/error.png' alt='' /> Warning: $friendly is world writable, please chmod it to 644!</div>";
 		}
 		else{
 			return "<div class='noupg'><img src='../themes/icons/accept.png' alt='' /> Check Passed: $friendly is not world-writable!</div>";
