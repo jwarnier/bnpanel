@@ -39,7 +39,7 @@ class model {
 		//var_dump($clean_token);
 	//	var_dump($main->checkToken($clean_token));
 		
-		if ($main->checkToken($clean_token)) {		
+		//if ($main->checkToken($clean_token)) {		
 			$new_attributes = $this->filterParams($attributes, $this->getColumns());
 			$sql = 'INSERT INTO '.$this->getTableName().' '.
 					'('.join(', ',array_keys($new_attributes)).') '.
@@ -47,8 +47,8 @@ class model {
 			//echo $sql; '<br />';
 			$db->query($sql);
 			return $db->insert_id();
-		}		
-	    return false;
+		//}		
+	    //return false;
 	}
 	
 	/**
