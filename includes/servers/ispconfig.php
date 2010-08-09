@@ -551,17 +551,18 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					$params['domain'] = $order_info['domain'];
 					$domain_list = $this->remote('mail_domain_get_by_domain',$params);
 					$mail_domain_id = 0;
-					
-					foreach($domain_list as $domain) {
-						if ($domain['domain'] == $order_info['domain']) {
-							$mail_domain_id = $domain['domain_id'];
-							break;
+					if(!empty($domain_list)) {
+						foreach($domain_list as $domain) {
+							if ($domain['domain'] == $order_info['domain']) {
+								$mail_domain_id = $domain['domain_id'];
+								break;
+							}
+						}				
+						//Inactive mail domain	
+						if (!empty($mail_domain_id)) {						
+							$mail_update_status_params['primary_id'] = $mail_domain_id;
+							$this->remote('mail_domain_inactive', $mail_update_status_params);
 						}
-					}				
-					//Inactive mail domain	
-					if (!empty($mail_domain_id)) {						
-						$mail_update_status_params['primary_id'] = $mail_domain_id;
-						$this->remote('mail_domain_inactive', $mail_update_status_params);
 					}
 					return true;
 				}					
@@ -768,8 +769,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 To insert in ISPConfig
 
 CREATE table install_package( package_id int NOT NULL AUTO_INCREMENT,name varchar(255),	package_path varchar(255),version varchar(255) ,PRIMARY KEY (package_id));
-INSERT into install_package (package_id, name, package_path, version) values ('1', 'chamilo', '/var/www/chamilo-1.8.7.1', '1.8.7.1');
-		
+INSERT into install_package (package_id, name, package_path, version) values ('1', 'chamilo', '/var/www/chamilo-1.8.7.1-stable', '1.8.7.1');		
 CREATE table install_package_web_domain ( id int NOT NULL AUTO_INCREMENT, domain_id int,package_id int, database_id int, status int,  PRIMARY KEY (id));
 
  * 
