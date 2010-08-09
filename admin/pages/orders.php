@@ -65,9 +65,10 @@ class page {
 						$params['domain'] 		= $main->postvar['domain'];
 						
 						$subdomain_id = 0;
+						$package_data	= $package->getPackage($params['pid'] );
+						
 						if (isset($main->postvar['csub2'])) {
-							$subdomain_id 	= $main->postvar['csub2'];		
-							$package_data	= $package->getPackage($params['pid'] );
+							$subdomain_id 	= $main->postvar['csub2'];
 							$subdomain_list = $main->getSubDomainByServer($package_data['server']);
 							$subdomain = $subdomain_list[$subdomain_id];
 							$domain = $domain.'.'.$subdomain;			
@@ -78,61 +79,69 @@ class page {
 						$params['additional']	= '';
 						$params['billing_cycle_id'] = $main->postvar['billing_cycle_id'];
 												
-						if (!empty($params['userid']) && !empty($params['pid'])) {
-							$order_id = $order->create($params, false);
-						}
+												
+						//Test server connection
+						$serverphp	  = $server->loadServer($package_data['server']); # Create server class
 						
-						//Add addons to a new order	
-						if (!empty($order_id) && is_numeric($order_id)) {
-							global $server;
-							
-							$package_data = $package->getPackage($params['pid']);
-							$serverphp	  = $server->loadServer($package_data['server']); # Create server class
-							
-							//Creating the account in ISPconfig
-							$done = $serverphp->signup($order_id, $params['pid'], $params['username'], $params['password'], $params['userid'], $params['domain'], $subdomain_id);							
-							
-							//Add addons
-							$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
-							$new_addon_list = array();
-																				
-							foreach($addon_list as $addon_id=>$value) {																								
-								$variable_name = 'addon_'.$addon_id;
-								if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
-									$new_addon_list[] = $addon_id;				
-								}															
+						if($serverphp !== false) {
+												
+							if (!empty($params['userid']) && !empty($params['pid'])) {
+								$order_id = $order->create($params, false);
 							}
 							
-							$all_addon_list = $addon->getAllAddons();
-							foreach($new_addon_list as $addon_item) {
-								if ($all_addon_list[$addon_item]['install_package']) {
-									//Install Chamilo
-									$serverphp->installChamilo($order_id);
-								}								
-							}														
-							$order->addAddons($order_id, $new_addon_list, false);
-							
-							//Creating an auto Invoice
-							$package_info 		= $package->getPackageByBillingCycle($main->postvar['package_id'], $main->postvar['billing_cycle_id']);
-							$addon_serialized 	= $addon->generateAddonFee($new_addon_list, $main->postvar['billing_cycle_id'], true);				
-							$billing_info 		= $billing->getBilling($main->postvar['billing_cycle_id']);
-																			
-							$invoice_params['uid'] 		= $main->postvar['user_id'];
-							$invoice_params['amount'] 	= $package_info['amount'];
-							$invoice_params['due'] 		= strtotime($main->postvar['created_at']) + $billing_info['number_months']*30*24*60*60;
-							$invoice_params['notes'] 	= 'Invoice created automatically';
-							$invoice_params['addon_fee']= $addon_serialized;
-							$invoice_params['status'] 	= INVOICE_STATUS_WAITING_PAYMENT;
-							$invoice_params['order_id'] = $order_id;										
-							$invoice_id = $invoice->create($invoice_params, false);
-							$main->clearToken();							
-							
-							if ($done)
-								$main->errors("Order has been added!");
-							else 
-								$main->errors("Order has been added to BNPanel. Order is not updated in the Control Panel. Please trying updating this order.");
+							//Add addons to a new order	
+							if (!empty($order_id) && is_numeric($order_id)) {
+								global $server;
+								
+								$package_data = $package->getPackage($params['pid']);								
+								
+								//Creating the account in ISPconfig
+								$done = $serverphp->signup($order_id, $params['pid'], $params['username'], $params['password'], $params['userid'], $params['domain'], $subdomain_id);							
+								
+								//Add addons
+								$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
+								$new_addon_list = array();
+																					
+								foreach($addon_list as $addon_id=>$value) {																								
+									$variable_name = 'addon_'.$addon_id;
+									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
+										$new_addon_list[] = $addon_id;				
+									}															
+								}
+								
+								$all_addon_list = $addon->getAllAddons();
+								foreach($new_addon_list as $addon_item) {
+									if ($all_addon_list[$addon_item]['install_package']) {
+										//Install Chamilo
+										$serverphp->installChamilo($order_id);
+									}								
+								}														
+								$order->addAddons($order_id, $new_addon_list, false);
+								
+								//Creating an auto Invoice
+								$package_info 		= $package->getPackageByBillingCycle($main->postvar['package_id'], $main->postvar['billing_cycle_id']);
+								$addon_serialized 	= $addon->generateAddonFee($new_addon_list, $main->postvar['billing_cycle_id'], true);				
+								$billing_info 		= $billing->getBilling($main->postvar['billing_cycle_id']);
+																				
+								$invoice_params['uid'] 		= $main->postvar['user_id'];
+								$invoice_params['amount'] 	= $package_info['amount'];
+								$invoice_params['due'] 		= strtotime($main->postvar['created_at']) + $billing_info['number_months']*30*24*60*60;
+								$invoice_params['notes'] 	= 'Invoice created automatically';
+								$invoice_params['addon_fee']= $addon_serialized;
+								$invoice_params['status'] 	= INVOICE_STATUS_WAITING_PAYMENT;
+								$invoice_params['order_id'] = $order_id;										
+								$invoice_id = $invoice->create($invoice_params, false);
+								$main->clearToken();							
+								
+								if ($done)
+									$main->errors("Order has been added!");
+								else 
+									$main->errors("Order has been added to BNPanel. Order is not updated in the Control Panel. Please trying updating this order.");
+							} else {
+								$main->errors("There was a problem!");
+							}
 						} else {
-							$main->errors("There was a problem!");
+							$main->errors("Can't stablish connection with the remote server. Please try again later.");
 						}
 					} else {
 						//$main->errors("There was a problem!");
