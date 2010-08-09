@@ -145,8 +145,7 @@ function nextstep() {
 				document.getElementById("verify").innerHTML = wrong
 			}*/
 			
-			break;
-			
+			break;			
 		case 4:
 			//TOS				
 			if(document.getElementById("agree").checked == true) {								
@@ -185,12 +184,30 @@ function nextstep() {
 			var domain_id 	= document.getElementById("domain").value;
 			var package_id 	= document.getElementById("package").value;
 			var final_domain= document.getElementById("cdom").value;
+
+					
 			if (document.getElementById("domain").value == 'sub') { //this is a subdomain
 				var subdomain_id 	= document.getElementById("csub2").value;
+				var subdomain		= document.getElementById("csub").value;
+				
+				if (subdomain == '') {
+					$("#verify").html("<strong>You must fill a domain name</strong> "+wrong);
+					break;
+				}
+				if (subdomain_id == '' ) {
+					$("#verify").html("<strong>You must select a sub domain</strong> "+wrong);
+					break;
+				}
 				// var subdomain_id = subdomain.options[subdomain.selectedIndex].value;
 			} else {
 				var subdomain_id 	= '';
+				var subdomain       = '';
+				if (final_domain == '') {
+					$("#verify").html("<strong>You must fill a domain name</strong> "+wrong);
+					break;
+				}
 			}
+			
 			$.get("<AJAX>function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {			
 				if (data == '1') {
 					$("#verify").html("<strong>Domain already exist</strong> "+wrong);					
@@ -451,7 +468,7 @@ function showAddons(obj) {
         </div>
     </div>
     <div class="table" id="6" style="display:none">
-        <div class="cat">Step Four - Hosting Account</div>
+        <div class="cat">Hosting Account</div>
         <div class="text">
         	<table width="100%" border="0" cellspacing="2" cellpadding="0">
               <tr id="dom">
@@ -460,8 +477,7 @@ function showAddons(obj) {
                 <td width="2%" align="left" id="domaincheck"><a title="Your domain, this must be in the format: <strong>example.com</strong>" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
               </tr>
               <tr id="sub">
-                <td width="20%" id="domtitle">Subdomain:</td>
-                
+                <td width="20%" id="domtitle">Subdomain:</td>                
                 <td id="domcontent"><input name="csub" id="csub" type="text" />.<span id="dropdownboxsub"></span></td>
                 <td id="domaincheck" align="left">
                 	<a title="Your subdomain, this must be in the format: <strong>subdomain.example.com</strong>" class="tooltip">
