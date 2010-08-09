@@ -686,12 +686,14 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			if (!empty($domain_id)) {
 				//Create a new database for chamilo		
 				
+				$db_part_name = substr($order_info['domain'],0,6);
+				
 				$mysql_params['client_id'] 			= $user_info['client_id'];				
 				$mysql_params['server_id']			= $this->getServerId();				
 				$mysql_params['type'] 				= 'mysql';
 				//$generate_username					= $main->generateUsername();
-				$mysql_params['database_name'] 		= 'c'.$user_info['client_id'].'_'.$params['username'].'_chamilo';
-				$mysql_params['database_user'] 		= 'c'.$user_info['client_id'].'_'.$params['username'].'_user';		
+				$mysql_params['database_name'] 		= 'c'.$user_info['client_id'].'-'.$db_part_name.'-chamilo';
+				$mysql_params['database_user'] 		= 'c'.$user_info['client_id'].'-'.$db_part_name.'-user';	
 				$mysql_params['database_password'] 	= $main->generatePassword();
 				$mysql_params['database_charset']	= 'utf8';
 				$mysql_params['remote_access'] 		= 'n';
@@ -705,7 +707,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					$install_params['status'] 		= 2;// 0 not install / 1 installed 2 pending 3 error
 					$install_params['database_id'] 	= $database_id;  
 					$result = $this->remote('install_chamilo', $install_params);
-					$main->addLog("Install chamilo called: domain_id:$domain_id database_id:$database_id");
+					$main->addLog("Install chamilo called: domain_id: $domain_id database_id: $database_id");
 					return true;
 				} else {
 					if ($database_id['error']) {
@@ -766,7 +768,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 
 /**
  * 
-To insert in ISPConfig
+To insert in the ISPConfig 
 
 CREATE table install_package( package_id int NOT NULL AUTO_INCREMENT,name varchar(255),	package_path varchar(255),version varchar(255) ,PRIMARY KEY (package_id));
 INSERT into install_package (package_id, name, package_path, version) values ('1', 'chamilo', '/var/www/chamilo-1.8.7.1-stable', '1.8.7.1');		
