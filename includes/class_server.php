@@ -31,7 +31,7 @@ class server extends Model {
 		$my_list = array();
 		if (is_dir($server_path) && $handle_type = opendir($server_path)) {
 			while (FALSE !== ($file = readdir($handle_type))) {  		
-	    		if (!in_array($file, array('.','..')) && $file != 'panel.php') {
+	    		if (!in_array($file, array('.','..')) && !in_array($file,array('panel.php', 'index.html'))) {
 	    			$my_list[] = basename($file,'.php');	    			
 	    		}
 			}
@@ -87,13 +87,11 @@ class server extends Model {
 	public function loadServer($server_id) {
 		$server_info = $this->getServerById($server_id); # Determine server		
 		$server_type = $server_info['type'];
-		if($this->servers[$server_type]) {
-			return $this->servers[$server_type];	
-		}
+		
 		//Abstract class Panel added
-		require_once LINK."servers/panel.php";
+		require_once LINK."servers/panel.php";		
 		if (in_array($server_type, $this->getAvailablePanels())) {
-			$link = LINK."servers/".$server_type.".php";
+			echo $link = LINK."servers/".$server_type.".php"; 
 			if(!file_exists($link)) {
 				$array['Error'] = "The server  $server_type doesn't exist!";
 				$array['Server ID'] = $server_type;
@@ -106,6 +104,7 @@ class server extends Model {
 				return $serverphp;
 			}
 		}
+		return false;
 	}
 	
 	/**
@@ -117,13 +116,11 @@ class server extends Model {
 		global $type, $main;		
 		$server_id 	 = $type->determineServer($package_id);
 		$server_type = $type->determineServerType($server_id); # Determine server		
-		if($this->servers[$server_type]) {
-			return true;	
-		}		
 		//Abstract class Panel added
 		require_once LINK."servers/panel.php";
 		$link = LINK."servers/".$server_type.".php";
 		if(!file_exists($link)) {
+			
 			$array['Error'] = "The server .php doesn't exist!";
 			$array['Server ID'] = $server_type;
 			$array['Path'] = $link;
@@ -160,6 +157,7 @@ class server extends Model {
 		
 		$final_domain = '';
 		$subdomain_id = 0;
+		
 		if($main->getvar['domain'] == 'dom') { # If Domain
 			if(!$main->getvar['cdom']) {
 				echo "Please fill in the domain field!";
@@ -483,13 +481,15 @@ class server extends Model {
 			$invoice_params['addon_fee']= $addon_fee;
 			$invoice_params['status'] 	= INVOICE_STATUS_WAITING_PAYMENT;
 			$invoice_params['order_id'] = $order_id;
-						var_dump($invoice_params);
+			var_dump($invoice_params);
 			$invoice_id = $invoice->create($invoice_params, false);
 			if ($invoice_id) {							
 				//This variable will be read in the Ajax::ispaid function
 				$_SESSION['last_invoice_id'] = $invoice_id;
 			}
+			
 			//4. Suspend the hosting if is not already suspended
+			
 			$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);			
 			$main->clearToken();										
 			echo '<div class="errors"><b>You are being redirected to payment! It will load in a couple of seconds..</b></div>';
