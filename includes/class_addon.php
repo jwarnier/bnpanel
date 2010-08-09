@@ -82,17 +82,17 @@ class addon extends model {
 		$total = 0;		
 		if (is_array($values) && count($values) > 0 ){	
 			foreach($values as $value ) {
-					$checked = false;
-					if (isset($selected_addon_list[$value['id']])) {
-						$checked = true;	
-						$total = $total + $value['amount'];		
-						if ($generate_checkboxes == false) {
-							$html .= $value['name'].' - '.$currency->toCurrency($value['amount']).'<br />';
-						}							
-					}
-					if($generate_checkboxes == true) {
-						$html .= $main->createCheckbox($value['name'].' - '.$currency->toCurrency($value['amount']), 'addon_'.$value['id'], $checked);
-					} 				
+				$checked = false;
+				if (isset($selected_addon_list[$value['id']])) {
+					$checked = true;	
+					$total = $total + $value['amount'];		
+					if ($generate_checkboxes == false) {
+						$html .= $value['name'].' - '.$currency->toCurrency($value['amount']).'<br />';
+					}							
+				}
+				if($generate_checkboxes == true) {
+					$html .= $main->createCheckbox($value['name'].' - '.$currency->toCurrency($value['amount']), 'addon_'.$value['id'], $checked);
+				} 				
 			}
 		} else {
 			$html = ' - ';

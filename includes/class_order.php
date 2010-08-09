@@ -369,8 +369,7 @@ class order extends model {
 			$package_id 	  	= $order_info['pid'];
 			$billing_cycle_id 	= $order_info['billing_cycle_id'];
 			$addon_selected_list= $order_info['addons'];	
-			
-			
+						
 			//User info
 			$user_info = $user->getUserById($user_id);
 						
@@ -387,7 +386,7 @@ class order extends model {
 			} else {
 				$show_checkboxes = true;	
 			}
-			
+			$show_checkboxes = false;	
 			$result = $addon->showAllAddonsByBillingCycleAndPackage($billing_cycle_id, $package_id, array_flip($addon_selected_list), $show_checkboxes);
 			
 			$array['ADDON'] = $result['html'];
@@ -395,7 +394,7 @@ class order extends model {
 			$total = $total + $result['total'];
 
 			//Package info
-			$package_list		= $package->getAllPackages();
+			$package_list		 = $package->getAllPackages();
 		
 			$package_with_amount = $package->getAllPackagesByBillingCycle($billing_cycle_id);				
 			
@@ -408,7 +407,8 @@ class order extends model {
 				foreach($package_list as $package_item) {
 					$package_list[$package_item['id']] = $package_item['name'].' - '.$currency->toCurrency($package_with_amount[$package_item['id']]['amount']);									
 				}				
-				$array['PACKAGES'] = $main->createSelect('package_id', $package_list, $package_id, array('onchange'=>'loadAddons(this);'));				
+				//$array['PACKAGES'] = $main->createSelect('package_id', $package_list, $package_id, array('onchange'=>'loadAddons(this);'));
+				$array['PACKAGES'] 		 = $package_list[$package_id];				
 			}		
 			
 			//Billing cycle

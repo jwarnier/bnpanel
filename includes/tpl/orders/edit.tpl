@@ -14,7 +14,6 @@
 		});*/
 
 		$("#show_preview").dialog({ autoOpen: false, width: '400px' });
-
 	});
 
 	function send(template, id) {		
@@ -83,8 +82,6 @@ function loadAddons(obj) {
     <div id = "showdata"></div>
     </td>
   </tr>
-  
-    
      <tr>
     <td valign="top">Packages</td>
     <td>
