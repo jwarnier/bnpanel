@@ -334,6 +334,7 @@ class page {
 				if (isset($main->getvar['confirm']) && $main->getvar['confirm'] == 1) {
 					if ($result == true) {
 						$main->errors("The order #".$main->getvar['do']." has been  deleted!");
+						$main->redirect("?page=orders&sub=all");
 					} else {
 						$main->errors("Order cannot be deleted there is a problem please check the logs of Order #".$main->getvar['do']);
 					}
