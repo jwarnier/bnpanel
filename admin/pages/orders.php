@@ -250,7 +250,7 @@ class page {
 					$return_array['SITE_STATUS_INFO'] = $site_info;
 				} else {
 					$return_array['SITE_STATUS_CLASS'] = 'warning';
-					$return_array['SITE_STATUS'] = 'The current order is not regitered in the Control Panel Server';
+					$return_array['SITE_STATUS'] = 'The current order is not registered in the Control Panel Server';
 					$return_array['SITE_STATUS_INFO'] = '';
 				}				
 				echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);			
