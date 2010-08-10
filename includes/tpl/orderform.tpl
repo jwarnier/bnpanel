@@ -81,7 +81,7 @@ function showhide(hide, show) {
 }
 
 function nextstep() {
-	/* alert(step); */
+	 //alert(step); 
 	switch(step) {
 		//addon info
 		/*case 2:
@@ -101,16 +101,20 @@ function nextstep() {
 				// If no addons
 				if (document.getElementById("addon_ids") != null) {
 					//Only one addon present
-					if (document.order.addon_ids.length ==  null) {					
-						addon_list  = document.order.addon_ids.value;
+					if (document.order.addon_ids.length ==  null) {	
+						if(document.order.addon_ids.checked) {			
+							addon_list  = document.order.addon_ids.value;
+						}											
 					} else {				
 						for (var i=0; i < document.order.addon_ids.length; i++) {	
+							//alert(document.order.addon_ids[i].checked);
 							if (document.order.addon_ids[i].checked) {
 						   		if (document.order.addon_ids[i].value != 'undefined' ) { 
 						      		addon_list = addon_list + document.order.addon_ids[i].value + '-';
 								}				      
 							}
-						}						
+						}	
+						//alert(addon_list);					
 					}
 				}				
 				var billing_id  = document.getElementById("billing_id").value;
@@ -219,9 +223,12 @@ function nextstep() {
 					for(i="0"; i < document.order.length; i++) {
 						if(document.order.elements[i].type == "checkbox") {
 							if (document.order.elements[i].id != null && document.order.elements[i].value != null) {
+								//alert(document.order.elements[i].name);
 								//fix to work with addons					
 								if (document.order.elements[i].name == 'addon_ids') {
-									url = url+"&"+document.order.elements[i].id+"[]="+document.order.elements[i].value;
+									if (document.order.elements[i].checked) {								
+										url = url+"&"+document.order.elements[i].id+"[]="+document.order.elements[i].value;
+									}	
 								} else {
 									url = url+"&"+document.order.elements[i].id+"="+document.order.elements[i].checked;
 								}
