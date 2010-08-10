@@ -237,7 +237,22 @@ class page {
 				}	
 						
 				$return_array = $order->getOrder($main->getvar['do'], false, false);
-				$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);					
+				$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);
+				
+				$order_info 	= $order->getOrderInfo($main->getvar['do']);
+				$package_info 	= $package->getPackage($order_info['pid']);				
+				$serverphp		= $server->loadServer($package_info['server']); # Create server class
+				
+				$site_info 		= $serverphp->getStatus($main->getvar['do']);
+				if ($site_info != false) {					
+					$return_array['SITE_STATUS_CLASS'] = 'success';
+					$return_array['SITE_STATUS'] = '<strong>Site exists in Control Panel</strong>';
+					$return_array['SITE_STATUS_INFO'] = $site_info;
+				} else {
+					$return_array['SITE_STATUS_CLASS'] = 'warning';
+					$return_array['SITE_STATUS'] = 'The current order is not regitered in the Control Panel Server';
+					$return_array['SITE_STATUS_INFO'] = '';
+				}				
 				echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);			
 			break;			
 			case 'view':				

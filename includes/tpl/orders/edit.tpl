@@ -133,7 +133,8 @@ function loadAddons(obj) {
     </td>
 </tr>
   
-    
+  
+     
   
   <tr>
     <td valign="top">Emails sent when editing this order</td>
@@ -151,7 +152,13 @@ function loadAddons(obj) {
    
 </table>
 <br />
-%INVOICE_LIST% 
+%INVOICE_LIST%
+
+<div class="%SITE_STATUS_CLASS%">
+  %SITE_STATUS%<br />
+  %SITE_STATUS_INFO%
+</div>
+   
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Edit order" /></td>
