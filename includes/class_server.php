@@ -91,7 +91,7 @@ class server extends Model {
 		//Abstract class Panel added
 		require_once LINK."servers/panel.php";		
 		if (in_array($server_type, $this->getAvailablePanels())) {
-			echo $link = LINK."servers/".$server_type.".php"; 
+			$link = LINK."servers/".$server_type.".php"; 
 			if(!file_exists($link)) {
 				$array['Error'] = "The server  $server_type doesn't exist!";
 				$array['Server ID'] = $server_type;
