@@ -686,14 +686,21 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			if (!empty($domain_id)) {
 				//Create a new database for chamilo		
 				
-				$db_part_name = substr($order_info['domain'],0,6);
+				//$db_part_name = substr($order_info['domain'],0,6);
+								
+				$url_parts = $main->parseUrl($order_info['domain']);
+				if ($url_parts['subdomain'] != '') {
+					$url_parts['domain'] = $url_parts['subdomain'];					
+				} else {
+					$url_parts['domain'] = substr($url_parts['domain'], 0 , strlen($url_parts['domain']) - ( strlen($url_parts['extension']) + 1) );
+				}
 				
 				$mysql_params['client_id'] 			= $user_info['client_id'];				
 				$mysql_params['server_id']			= $this->getServerId();				
 				$mysql_params['type'] 				= 'mysql';
 				//$generate_username					= $main->generateUsername();
-				$mysql_params['database_name'] 		= 'c'.$user_info['client_id'].'-'.$db_part_name.'-chamilo';
-				$mysql_params['database_user'] 		= 'c'.$user_info['client_id'].'-'.$db_part_name.'-user';	
+				$mysql_params['database_name'] 		= 'c'.$user_info['client_id'].'_'.$url_parts['domain'].'_chamilo_main';
+				$mysql_params['database_user'] 		= 'c'.$user_info['client_id'].'_'.$url_parts['domain'];
 				$mysql_params['database_password'] 	= $main->generatePassword();
 				$mysql_params['database_charset']	= 'utf8';
 				$mysql_params['remote_access'] 		= 'n';
