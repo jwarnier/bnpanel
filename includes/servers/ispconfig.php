@@ -771,6 +771,37 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		var_dump($soap_client);
 		var_dump($soap_client ->get_class_methods());		
 	}
+	
+	public function getStatus($order_id) {
+		global $order;
+		$order_info = $order->getOrderInfo($order_id);		
+		$params['username'] = $order_info['username'];
+		//Getting user info
+		$user_info = $this->remote('client_get_by_username',$params);
+		
+		if (is_array($user_info) && !empty($user_info)) {			
+			$site_params['sys_userid']	= $user_info['userid'];		
+			$site_params['groups'] 		= $user_info['groups'];	
+	
+			//Getting all domains from this user
+			$site_info = $this->remote('client_get_sites_by_user', $site_params);
+			$domain_id = 0;
+			if ($site_info !==false) {
+				foreach($site_info as $key=>$domain) {
+					if ($order_info['domain'] == $domain['domain']) {
+						$my_domain = $domain;
+						break;
+					}
+				}
+			}
+			if 	(!empty($my_domain) && is_array($my_domain)) {
+				return 'Registed Domain: '.$my_domain['domain'].' <br /> Domain id: '.$my_domain['domain_id'].' <br /> Document root: '.$my_domain['document_root'];
+			}					
+		}		
+		return false;	
+		
+		
+	}
 }
 
 /**
