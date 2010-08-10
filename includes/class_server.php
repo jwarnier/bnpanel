@@ -352,7 +352,7 @@ class server extends Model {
 		}
 
 		//$main->getvar['fplan'] = $package_info['backend']; 		//useless right now
-		$serverphp = $this->loadServer($package_info['server']); # Create server class
+		//$serverphp = $this->loadServer($package_info['server']); # Create server class
 		
 		$date 				= time();
 		$billing_cycle_id 	= $main->getvar['billing_id'];
@@ -392,11 +392,14 @@ class server extends Model {
 			$params['signup'] 			= $date;
 			
 			//Change the order status it depends on the package
+			/*
 			if ($package_info['admin'] == 1) {
 				$params['status'] 		= ORDER_STATUS_WAITING_ADMIN_VALIDATION;
 			} else {
 				$params['status'] 		= ORDER_STATUS_ACTIVE;
-			}
+			}*/
+			
+			$params['status'] 		= ORDER_STATUS_WAITING_USER_VALIDATION;
 			
 			//Always set the server to waiting admin validation
 			//$params['status'] 			= ORDER_STATUS_WAITING_ADMIN_VALIDATION;
@@ -413,6 +416,7 @@ class server extends Model {
 				$order_id = $order->create($params, false);
 				//Add addons to the new order		
 				$order->addAddons($order_id, $main->getvar['addon_ids'], false);
+				var_dump($main->getvar['addon_ids']);
 			}
 			
 			$array['USER']		= $system_username;				
@@ -430,9 +434,11 @@ class server extends Model {
 			$array['PACKAGE'] 	= $package_info['name'];
 							
 			//Register the new order to the ISPConfig/Cpanel
-//			var_dump($order_id, $params['username'], $system_email, $params['password']);
+			$additional= "$order_id,$package_id,{$params['username']},{$params['password']},$user_id,$sub_domain,$subdomain_id";
+			$params=array('additional'=>$additional);
+			$order->edit($order_id, $params);		
 			
-			$done = $serverphp->signup($order_id, $package_id, $params['username'], $params['password'], $user_id, $sub_domain, $subdomain_id);
+			//$done = $serverphp->signup($order_id, $package_id, $params['username'], $params['password'], $user_id, $sub_domain, $subdomain_id);
 			
 			//Package does not needs validation
 			if ($package_info['admin'] == 0) {
@@ -440,7 +446,7 @@ class server extends Model {
 				echo "<strong>Your account has been completed!</strong><br />You may now use the client login bar to see your client area or proceed to your control panel.";							
 			} elseif($package_info['admin'] == 1) {				
 				//Needs admin validation so we suspend the order
-				$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);					
+				//$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);					
 				
 				//$email_to_admin = $db->emailTemplate('adminval');
 				$email_to_admin = $db->emailTemplate('orders_needs_validation');				
@@ -481,7 +487,7 @@ class server extends Model {
 			$invoice_params['addon_fee']= $addon_fee;
 			$invoice_params['status'] 	= INVOICE_STATUS_WAITING_PAYMENT;
 			$invoice_params['order_id'] = $order_id;
-			var_dump($invoice_params);
+			
 			$invoice_id = $invoice->create($invoice_params, false);
 			if ($invoice_id) {							
 				//This variable will be read in the Ajax::ispaid function
@@ -490,7 +496,7 @@ class server extends Model {
 			
 			//4. Suspend the hosting if is not already suspended
 			
-			$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);			
+			//$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);			
 			$main->clearToken();										
 			echo '<div class="errors"><b>You are being redirected to payment! It will load in a couple of seconds..</b></div>';
 		}	

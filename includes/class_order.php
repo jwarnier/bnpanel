@@ -168,6 +168,15 @@ class order extends model {
 		return false;
 	}
 	
+	public function sendOrderToControlPanel($order_id) {
+		global $package, $server;		
+		$order_info = $this->getOrderInfo($order_id);		
+		$pacakge_info = $package->getPackage($order_info['pid']);		
+		$serverphp = $server->loadServer($pacakge_info['server']); # Create server class		
+		$additional = explode(',', $order_info['additional']);		
+		return $serverphp->signup($additional[0], $additional[1], $additional[2], $additional[3], $additional[4],$additional[5], $additional[6]);
+	}
+	
 	/**
 	 * Gets an order by user 
 	 * IMPORTANT only 1 order per user

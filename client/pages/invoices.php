@@ -35,8 +35,13 @@ class page {
 						$user_id = $main->getCurrentUserId();
 						$order_id = $invoice->getOrderByInvoiceId($invoice_id);
 						
-						//Unsuspend order status + unsuspend the webhosting 
-						$order->updateOrderStatus($order_id, ORDER_STATUS_ACTIVE);
+						//We send to the server finally
+						$result = $order->sendOrderToControlPanel($order_id);
+						
+						if ($result) {
+							//Unsuspend order status + unsuspend the webhosting just in case 
+							$order->updateOrderStatus($order_id, ORDER_STATUS_ACTIVE);
+						}
 						
 						//Adding the transaction id (comes from a post of paypal)
 						$transaction_id = $main->postvar['txn_id'];
