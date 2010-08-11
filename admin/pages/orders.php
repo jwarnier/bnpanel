@@ -92,8 +92,7 @@ class page {
 							$params['signup'] 		= strtotime($main->postvar['created_at']);
 							$params['status'] 		= $main->postvar['status'];
 							$params['additional']	= '';
-							$params['billing_cycle_id'] = $main->postvar['billing_cycle_id'];
-													
+							$params['billing_cycle_id'] = $main->postvar['billing_cycle_id'];													
 													
 							//Test server connection
 							$serverphp	  = $server->loadServer($package_data['server']); # Create server class
@@ -108,7 +107,7 @@ class page {
 								if (!empty($order_id) && is_numeric($order_id)) {
 									global $server;
 									
-									$package_data = $package->getPackage($params['pid']);								
+									$package_data = $package->getPackage($params['pid']);
 									
 									//Creating the account in ISPconfig
 									$done = $serverphp->signup($order_id, $params['pid'], $params['username'], $params['password'], $params['userid'], $params['domain'], $subdomain_id);							
@@ -130,7 +129,7 @@ class page {
 											//Install Chamilo
 											$serverphp->installChamilo($order_id);
 										}								
-									}														
+									}
 									$order->addAddons($order_id, $new_addon_list, false);
 									
 									//Creating an auto Invoice
@@ -176,8 +175,9 @@ class page {
 				$array['PACKAGES'] 		= '-';
 				$array['ADDON'] 		= '-';
 				$order_list = $main->getOrderStatusList();
-				//removing the deleted option useless when creating an order
+				//Removing the deleted/cancelled option useless when creating an order I hope!
 				unset($order_list[ORDER_STATUS_DELETED]);
+				unset($order_list[ORDER_STATUS_CANCELLED]);
 				$array['STATUS'] 		= $main->createSelect('status', $order_list, '', array('class'=>'required'));
 				
 				$array['DOMAIN_USERNAME'] = $main->generateUsername();
