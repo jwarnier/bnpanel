@@ -85,10 +85,10 @@ class order extends model {
 		if (in_array($status, $order_status)) {				
 			switch($status) {
 				case ORDER_STATUS_ACTIVE:
-					$package_info   = $package->getPackage($order_info);
+					$package_info   = $package->getPackage($order_info['pid']);
 					$serverphp		= $server->loadServer($package_info['server']); # Create server class				
-					$site_info 		= $serverphp->getStatus($main->getvar['do']);
-					
+					$site_info 		= $serverphp->getStatus($order_id);
+										
 					//Setting email
 					$send_email = false;
 					if ($site_info != false) {
@@ -103,7 +103,7 @@ class order extends model {
 						} else {
 							$send_email = true;
 						}				
-					}					
+					}						
 					if ($send_email) {
 						$emailtemp 	= $db->emailTemplate('orders_active');
 						$array['ORDER_ID'] = $order_id;						

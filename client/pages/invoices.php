@@ -17,7 +17,7 @@ class page {
 	}	
 	
 	public function content() {
-		global $style, $db, $main, $invoice,  $addon, $billing, $order;
+		global $style, $db, $main, $invoice,  $addon, $billing, $order, $server, $package;
 
 		switch($main->getvar['sub']) {
 			case 'paid':				
@@ -35,8 +35,19 @@ class page {
 						$user_id = $main->getCurrentUserId();
 						$order_id = $invoice->getOrderByInvoiceId($invoice_id);
 						
-						//We send to the server finally
-						$result = $order->sendOrderToControlPanel($order_id);
+						$order_info = $order->getOrderInfo($order_id);
+						$package_info = $package->getPackage($order_info['pid']);
+						
+												
+						//we check if the site was not already sent
+						$serverphp = $server->loadServer($package_info['server']);
+						$site_status = $serverphp->getStatus($order_id);
+						$result = true;
+						
+						if ($site_status == false) {
+							//We send to the server finally
+							$result = $order->sendOrderToControlPanel($order_id);
+						}
 						
 						if ($result) {
 							//Unsuspend order status + unsuspend the webhosting just in case 
@@ -128,8 +139,7 @@ class page {
 					
 					//$array['addon_fee'] = $addon_fee_string;
 					$total_amount 		= $total_amount + $invoice_item['amount'];
-					$array['amount'] 	= $total_amount." ".$db->config('currency');		
-					
+					$array['amount'] 	= $total_amount." ".$db->config('currency');
 					$array2['list'] 	.= $style->replaceVar("tpl/invoices/invoice-list-item-client.tpl", $array);
 				}
 				echo $style->replaceVar('tpl/invoices/client-page.tpl', $array2);
