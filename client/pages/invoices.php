@@ -74,10 +74,14 @@ class page {
 				$invoice_list = $invoice->getAllInvoices($user_id);
 							
 				$array2['list'] = "";
-				foreach($invoice_list as $invoice_item) {			
+				foreach($invoice_list as $invoice_item) {
 							
 					$total_amount = 0;				
 					$array['id'] = $invoice_item['id'];
+					$order_id = $invoice->getOrderByInvoiceId($invoice_item['id']);
+					$order_info = $order->getOrderInfo($order_id);
+					
+					$array['domain'] = $order_info['domain'];
 					$array['due'] = date('Y-m-d', $invoice_item['due']);
 					
 					switch ($invoice_item['status']) {
@@ -125,7 +129,8 @@ class page {
 					//$array['addon_fee'] = $addon_fee_string;
 					$total_amount 		= $total_amount + $invoice_item['amount'];
 					$array['amount'] 	= $total_amount." ".$db->config('currency');		
-					$array2['list'] .= $style->replaceVar("tpl/invoices/invoice-list-item-client.tpl", $array);
+					
+					$array2['list'] 	.= $style->replaceVar("tpl/invoices/invoice-list-item-client.tpl", $array);
 				}
 				echo $style->replaceVar('tpl/invoices/client-page.tpl', $array2);
 				break;		

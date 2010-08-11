@@ -694,7 +694,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					$url_parts['domain'] = substr($url_parts['domain'], 0 , strlen($url_parts['domain']) - ( strlen($url_parts['extension']) + 1) );
 				}
 				
-				//We only take 8 chars
+				//We take only 20 chars
 				$url_parts['domain'] = substr($url_parts['domain'], 0, 20);
 				
 				$mysql_params['client_id'] 			= $user_info['client_id'];				
