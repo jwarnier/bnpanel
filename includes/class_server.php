@@ -86,6 +86,7 @@ class server extends Model {
 	 */
 	public function loadServer($server_id) {
 		$server_info = $this->getServerById($server_id); # Determine server		
+		
 		$server_type = $server_info['type'];
 		
 		//Abstract class Panel added
@@ -410,13 +411,14 @@ class server extends Model {
 			//Username + password for the ISPConfig
 			$params['password']			= $main->generateUsername();
 			$params['username']			= $main->generatePassword();
+			$params['subdomain_id']			= $subdomain_id;
+			
 			
 			//Create an order
 			if (!empty($params['userid']) && !empty($params['pid'])) {
 				$order_id = $order->create($params, false);
 				//Add addons to the new order		
-				$order->addAddons($order_id, $main->getvar['addon_ids'], false);
-				var_dump($main->getvar['addon_ids']);
+				$order->addAddons($order_id, $main->getvar['addon_ids'], false);				
 			}
 			
 			$array['USER']		= $system_username;				
@@ -432,12 +434,8 @@ class server extends Model {
 				$array['CONFIRM'] 	= '';
 			}			
 			$array['PACKAGE'] 	= $package_info['name'];
-							
-			//Register the new order to the ISPConfig/Cpanel
-			$additional= "$order_id,$package_id,{$params['username']},{$params['password']},$user_id,$sub_domain,$subdomain_id";
-			$params=array('additional'=>$additional);
-			$order->edit($order_id, $params);		
-			
+								
+			//We do not sent tout suite the ISPConfig calls to create a new site, we wait that a user paid the invoice! 
 			//$done = $serverphp->signup($order_id, $package_id, $params['username'], $params['password'], $user_id, $sub_domain, $subdomain_id);
 			
 			//Package does not needs validation
@@ -450,8 +448,7 @@ class server extends Model {
 				
 				//$email_to_admin = $db->emailTemplate('adminval');
 				$email_to_admin = $db->emailTemplate('orders_needs_validation');				
-				$email->staff($email_to_admin['subject'], $email_to_admin['content']);
-				
+				$email->staff($email_to_admin['subject'], $email_to_admin['content']);				
 				echo "<strong>Your order is awaiting admin validation!</strong><br />An email has been dispatched to the address on file. You will recieve another email when the admin has overlooked your account.";				
 			} else {				
 				echo "Something with admin validation went wrong. Your account should be running but contact your host administrator.";	
