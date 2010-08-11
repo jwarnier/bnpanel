@@ -257,7 +257,7 @@ class addon extends model {
 		$result = $db->query("SELECT * FROM `<PRE>addons` WHERE status = ".$status);
 		$addon_list = array();				
 		if($db->num_rows($result) > 0) {
-			while($data = $db->fetch_array($result)) {		
+			while($data = $db->fetch_array($result, 'ASSOC')) {		
 				$addon_list[$data['id']] = $data;
 			}								
 		}
