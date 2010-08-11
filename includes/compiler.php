@@ -24,7 +24,6 @@ define('ORDER_STATUS_WAITING_USER_VALIDATION', 	2); //before ORDER_STATUS_INACTI
 define('ORDER_STATUS_WAITING_ADMIN_VALIDATION', 3); //Awaiting Validation
 define('ORDER_STATUS_CANCELLED', 				4); //Awaiting Payment
 define('ORDER_STATUS_FAILED',					5); //Means that an order try
-
 define('ORDER_STATUS_DELETED', 					9);
 
 // Invoices
