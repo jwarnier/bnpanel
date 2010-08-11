@@ -205,13 +205,12 @@ class page {
 					$order_info = $order->getOrderInfo($main->getvar['do']);
 					if (is_array($order_info) && !empty($order_info )) {
 						if($_POST) {
-							if ($main->checkToken()) {					
+							if ($main->checkToken(false)) {			
 								$main->postvar['pid'] 	 = $main->postvar['package_id'];								
 								//Editing the Order								
 								$result = $order->edit($main->getvar['do'], $main->postvar, false);
 								if ($result) {
-									$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
-																	
+									$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);																	
 									$new_addon_list = array();																
 									foreach($addon_list as $addon_id=>$value) {																								
 										$variable_name = 'addon_'.$addon_id;
@@ -230,6 +229,7 @@ class page {
 									$main->redirect('?page=orders&sub=all');	
 								}
 							}
+							$main->clearToken();
 						}
 					}				
 				} else {
@@ -241,16 +241,16 @@ class page {
 				
 				$order_info 	= $order->getOrderInfo($main->getvar['do']);
 				$package_info 	= $package->getPackage($order_info['pid']);				
-				$serverphp		= $server->loadServer($package_info['server']); # Create server class
-				
+				$serverphp		= $server->loadServer($package_info['server']); # Create server class				
 				$site_info 		= $serverphp->getStatus($main->getvar['do']);
+				
 				if ($site_info != false) {					
 					$return_array['SITE_STATUS_CLASS'] = 'success';
 					$return_array['SITE_STATUS'] = '<strong>Site exists in Control Panel</strong>';
 					$return_array['SITE_STATUS_INFO'] = $site_info;
 				} else {
 					$return_array['SITE_STATUS_CLASS'] = 'warning';
-					$return_array['SITE_STATUS'] = 'The current order is not registered in the Control Panel Server. <br />You should change the status to Active';
+					$return_array['SITE_STATUS'] = 'The current order is not registered in the Control Panel Server. <br />To send this order to the Control Panel just change the status to Active';
 					$return_array['SITE_STATUS_INFO'] = '';
 				}				
 				echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);			

@@ -756,11 +756,10 @@ class server extends Model {
 		global $order, $package;
 		$order_info = $order->getOrderInfo($order_id);
 		$package_info = $package->getPackage($order_info['pid']);
-		$server_id = $package_info['server'];
-		if(!is_object($this->servers[$server_id])) {
-			$this->servers[$server_id] = $this->createServer($order_info['pid']); # Create server class
-		}
-		if($this->servers[$server_id]->changePwd($order_info['username'], $new_password, $server_id) == true) {
+		$server_id = $package_info['server'];	
+		$serverphp = $this->createServer($order_info['pid']); # Create server class
+		
+		if($serverphp->changePwd($order_info['username'], $new_password, $server_id) == true) {
 			$order->edit($order_id, array('password'=>$new_password));
 			return true;
 		}

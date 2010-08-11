@@ -75,21 +75,40 @@ class order extends model {
 	 * Updates an order status. Also sends an email to the user order owner
 	 */
 	public function updateOrderStatus($order_id, $status) {
-		global $main, $server, $email, $user, $db;		
+		global $main, $server, $email, $user, $db, $package;		
 		$this->setPrimaryKey($order_id);
 		
 		$order_info = $this->getOrderInfo($order_id, true);
 		$user_info 	= $user->getUserById($order_info['userid']);		
-		$order_status = array_keys($main->getOrderStatusList());	
+		$order_status = array_keys($main->getOrderStatusList());
 		
 		if (in_array($status, $order_status)) {				
 			switch($status) {
 				case ORDER_STATUS_ACTIVE:
-					$emailtemp 	= $db->emailTemplate('orders_active');
-					$array['ORDER_ID'] = $order_id;
-					$result = $server->unsuspend($order_id);
-					if ($result)
-						$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+					$package_info   = $package->getPackage($order_info);
+					$serverphp		= $server->loadServer($package_info['server']); # Create server class				
+					$site_info 		= $serverphp->getStatus($main->getvar['do']);
+					
+					//Setting email
+					$send_email = false;
+					if ($site_info != false) {
+						$result = $server->unsuspend($order_id);	
+						if($result) { $send_email = true; }																	
+					} else {
+						//Sent to ISPConfiG!!!!
+						$result = $this->sendOrderToControlPanel($order_id);						
+						if (!$result) {
+							$result = true;
+							$status = ORDER_STATUS_FAILED;					
+						} else {
+							$send_email = true;
+						}				
+					}					
+					if ($send_email) {
+						$emailtemp 	= $db->emailTemplate('orders_active');
+						$array['ORDER_ID'] = $order_id;						
+						$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);				
+					}				
 				break;
 				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:
 					$emailtemp 	= $db->emailTemplate('orders_waiting_admin');
@@ -114,13 +133,15 @@ class order extends model {
 					//We just suspend the order not delete it
 					$result = $server->suspend($order_id);
 				break;
-				case ORDER_STATUS_NOT_SYNCRONIZED:
+				case ORDER_STATUS_FAILED:
 					$result = true;
+				break;
 				default:
 				break;
 			}			
+			
 			$params['status'] = $status;
-			if ($result) {		
+			if ($result) {
 				$this->update($params);
 				$main->addLog("updateOrderStatus function called: $order_id changed to $status");
 				return true;
@@ -157,7 +178,7 @@ class order extends model {
 		$this->setPrimaryKey($order_id);
 		//Here we will change the status of the package in the Server
 		$result = true;
-		if(isset($params['status']) && !empty($params['status'])) {
+		if(isset($params['status']) && !empty($params['status'])) {			
 			$result = $this->updateOrderStatus($order_id, $params['status']);
 			unset($params['status']); //do not update twice 			
 		}

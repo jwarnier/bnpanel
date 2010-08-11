@@ -779,6 +779,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		global $order;
 		$order_info = $order->getOrderInfo($order_id);		
 		$params['username'] = $order_info['username'];
+		
 		//Getting user info
 		$user_info = $this->remote('client_get_by_username',$params);
 		
