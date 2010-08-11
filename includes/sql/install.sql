@@ -156,7 +156,7 @@ INSERT INTO `%PRE%config` (`name`, `value`) VALUES
 ('ui-theme', 'cupertino'),
 ('rows_per_page', '20'),
 ('paypal_mode', '0'),
-('domain_options', '3'); 
+('domain_options', '2'); //1 only domains, 2 only subdomains, 3 both 
 
 
 -- --------------------------------------------------------
