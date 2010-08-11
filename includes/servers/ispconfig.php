@@ -689,11 +689,15 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				//$db_part_name = substr($order_info['domain'],0,6);
 								
 				$url_parts = $main->parseUrl($order_info['domain']);
+				
 				if ($url_parts['subdomain'] != '') {
 					$url_parts['domain'] = $url_parts['subdomain'];					
 				} else {
 					$url_parts['domain'] = substr($url_parts['domain'], 0 , strlen($url_parts['domain']) - ( strlen($url_parts['extension']) + 1) );
 				}
+				
+				//We only take 8 chars
+				$url_parts['domain'] = substr($url_parts['domain'], 0, 20);
 				
 				$mysql_params['client_id'] 			= $user_info['client_id'];				
 				$mysql_params['server_id']			= $this->getServerId();				
