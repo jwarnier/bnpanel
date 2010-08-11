@@ -271,13 +271,20 @@ class ispconfig extends Panel {
 		
 		@author Julio Montoya <gugli100@gmail.com> Beeznest	2010
 	*/
-	public function signup($order_id, $package_id, $domain_username, $domain_password, $user_id, $domain, $sub_domain_id) {		
+	public function signup($order_id) {		
 		global $main, $db, $package, $order, $user;
 		
-		$main->addLog('Server::signup loaded Order id:'.$order_id.' Domain: '.$domain);
+		$order_info			= $order->getOrderInfo($order_id);
+		$package_id 		= $order_info['pid'];
+		$domain_username 	= $order_info['username'];
+		$domain_password 	= $order_info['password'];
+		$user_id 			= $order_info['userid'];
+		$domain 			= $order_info['domain'];
+		$sub_domain_id 		= $order_info['subdomain_id'];
+				
+		$main->addLog('Server::signup loaded Order id:'.$order_id.' Domain: '.$domain);		
 		
-		$order_info		= $order->getOrderInfo($order_id);
-		$package_info 	= $package->getPackage($order_info['pid']);
+		$package_info 	= $package->getPackage($package_id);
 		
 		// Sets the current server
 		$this->server_id = $package_info['server'];
@@ -353,20 +360,12 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 
 		//Adding the client
 		$new_client_id = $this->remote('client_add',$params);
-		if(is_numeric($new_client_id) && !empty($new_client_id)){
-			//update the order
-			//Update order
-			$params['username'] = $domain_username;
-			$params['password'] = $domain_password;
-			$order->edit($order_id, $params, false);
-			$site_params['client_id'] = $new_client_id;
-		}
-		
+				
 		//If no error 
 		if($new_client_id['error']) {
 			echo "<strong>".$new_client_id['text']."</strong><br />";
 			return false;
-		} else {
+		} elseif(is_numeric($new_client_id)) {
 			//If client is added we have the new client id	
 
 			//Preparing variables to send to server_get
@@ -389,6 +388,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		
 				$site_params['sys_userid'] 		= 1;//1; force to the admin
 				$site_params['sys_groupid'] 	= 1; //ass added by the admin
+				
 				$site_params['system_user'] 	= 'web'.$website_id;
 				$site_params['system_group'] 	= 'client'.$client_info['client_id'];				
 				$site_params['client_group_id'] = $new_client_id + 1;	 //always will be this 	groupd id +1			
@@ -418,8 +418,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$site_params['php_open_basedir'] = $server_info['php_open_basedir'];
 				
 				//PHP Configuration
-				$site_params['php'] 			= 'suphp'; //php available posible values
-				
+				$site_params['php'] 			= 'suphp'; //php available posible values				
 				$site_params['ip_address'] 		= '*'; //important
 				
 				//Active or not
@@ -470,8 +469,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					
 					//----- Logout of the remoting
 											
-					$result = $this->remote('logout');	
-								
+					$result = $this->remote('logout');								
 					/* Extra params
 					serial				
 					xfer
@@ -702,6 +700,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$mysql_params['client_id'] 			= $user_info['client_id'];				
 				$mysql_params['server_id']			= $this->getServerId();				
 				$mysql_params['type'] 				= 'mysql';
+				
 				//$generate_username					= $main->generateUsername();
 				$mysql_params['database_name'] 		= 'c'.$user_info['client_id'].'_'.$url_parts['domain'].'_chamilo_main';
 				$mysql_params['database_user'] 		= 'c'.$user_info['client_id'].'_'.$url_parts['domain'];

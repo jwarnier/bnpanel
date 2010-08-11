@@ -8,7 +8,7 @@ if(THT != 1){
 
 class order extends model {
 	
-	public $columns 	= array('id', 'userid','username', 'password','domain','pid', 'signup', 'status', 'additional', 'billing_cycle_id');	
+	public $columns 	= array('id', 'userid','username', 'password','domain','pid', 'signup', 'status', 'additional', 'billing_cycle_id','subdomain_id');	
 	public $table_name 	= 'orders';	
 	
 	/** 
@@ -114,6 +114,8 @@ class order extends model {
 					//We just suspend the order not delete it
 					$result = $server->suspend($order_id);
 				break;
+				case ORDER_STATUS_NOT_SYNCRONIZED:
+					$result = true;
 				default:
 				break;
 			}			
@@ -168,13 +170,34 @@ class order extends model {
 		return false;
 	}
 	
+	/**
+	 * Sends an order to the Control Panel. The additional order field must be filled
+	 * @param	int		order id
+	 * @return	bool	boolean 
+	 */
+	 
 	public function sendOrderToControlPanel($order_id) {
-		global $package, $server;		
-		$order_info = $this->getOrderInfo($order_id);		
-		$pacakge_info = $package->getPackage($order_info['pid']);		
-		$serverphp = $server->loadServer($pacakge_info['server']); # Create server class		
-		$additional = explode(',', $order_info['additional']);		
-		return $serverphp->signup($additional[0], $additional[1], $additional[2], $additional[3], $additional[4],$additional[5], $additional[6]);
+		global $package, $server, $addon;		
+		$order_info		= $this->getOrderInfo($order_id);
+		$package_info 	= $package->getPackage($order_info['pid']);
+		$serverphp 		= $server->loadServer($package_info['server']); # Create server class	
+		if ($serverphp != false ) {
+			$result 	= $serverphp->signup($order_id);
+			if ($result) {
+				$all_addons_info = $addon->getAllAddons();	
+				$addon_list = $order_info['addons'];
+				if(is_array($addon_list) && count($addon_list) > 0) {
+					foreach($addon_list as $addon_item) {					
+						if ($all_addons_info[$addon_item]['install_package']) {						
+							$serverphp->installChamilo($order_id);
+							break;// Install Chamilo just once	
+						}
+					}						
+				}
+				return true;	
+			}
+		}		
+		return false;		
 	}
 	
 	/**

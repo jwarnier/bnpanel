@@ -67,8 +67,9 @@ class page {
 						$url_parts = $main->parseUrl($params['domain']);
 												
 						$subdomain_id = 0;
-						$package_data	= $package->getPackage($params['pid'] );
+						$package_data	= $package->getPackage($params['pid']);
 						$domain_correct = true;
+						
 						if (isset($main->postvar['csub2'])) {
 							//Is a subdomain	
 							if (!empty($subdomain_id)) {				
@@ -89,15 +90,14 @@ class page {
 						}
 						
 						if ($domain_correct) {
-							$params['signup'] 		= strtotime($main->postvar['created_at']);
-							$params['status'] 		= $main->postvar['status'];
-							$params['additional']	= '';
-							$params['billing_cycle_id'] = $main->postvar['billing_cycle_id'];													
-													
-							//Test server connection
-							$serverphp	  = $server->loadServer($package_data['server']); # Create server class
 							
-							if($serverphp !== false ) {
+							$params['signup'] 		= strtotime($main->postvar['created_at']);
+							$params['status'] 		= $main->postvar['status'];			
+							$params['additional']	= '';
+							$params['subdomain_id']	= $subdomain_id;
+							$params['billing_cycle_id'] = $main->postvar['billing_cycle_id'];			
+							
+							if(1) {
 													
 								if (!empty($params['userid']) && !empty($params['pid'])) {
 									$order_id = $order->create($params, false);
@@ -105,32 +105,29 @@ class page {
 								
 								//Add addons to a new order	
 								if (!empty($order_id) && is_numeric($order_id)) {
-									global $server;
-									
-									$package_data = $package->getPackage($params['pid']);
-									
-									//Creating the account in ISPconfig
-									$done = $serverphp->signup($order_id, $params['pid'], $params['username'], $params['password'], $params['userid'], $params['domain'], $subdomain_id);							
-									
+																											
 									//Add addons
 									$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
-									$new_addon_list = array();
-																						
-									foreach($addon_list as $addon_id=>$value) {																								
-										$variable_name = 'addon_'.$addon_id;
-										if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
-											$new_addon_list[] = $addon_id;				
-										}															
+									$new_addon_list = array();			
+									if (is_array($addon_list)) {																		
+										foreach($addon_list as $addon_id=>$value) {																								
+											$variable_name = 'addon_'.$addon_id;
+											if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
+												$new_addon_list[] = $addon_id;				
+											}															
+										}
 									}
 									
-									$all_addon_list = $addon->getAllAddons();
-									foreach($new_addon_list as $addon_item) {
-										if ($all_addon_list[$addon_item]['install_package']) {
-											//Install Chamilo
-											$serverphp->installChamilo($order_id);
-										}								
-									}
 									$order->addAddons($order_id, $new_addon_list, false);
+									
+									if ($main->postvar['status'] == ORDER_STATUS_ACTIVE) {
+										
+										//Creating the account in ISPconfig only if order is active									
+										$result = $order->sendOrderToControlPanel($order_id);
+										if (!$result) {
+											$order->edit($order_id, ORDER_STATUS_FAILED);
+										}
+									}
 									
 									//Creating an auto Invoice
 									$package_info 		= $package->getPackageByBillingCycle($main->postvar['package_id'], $main->postvar['billing_cycle_id']);
@@ -162,9 +159,9 @@ class page {
 						}
 					} else {
 						//$main->errors("There was a problem!");
-					}
-																		
+					}																		
 				}
+				
 				$array['CREATED_AT'] 	= date('Y-m-d');
 				$billing_list = $billing->getAllBillingCycles();
 				$new_billing_list = array();
@@ -175,9 +172,12 @@ class page {
 				$array['PACKAGES'] 		= '-';
 				$array['ADDON'] 		= '-';
 				$order_list = $main->getOrderStatusList();
+				
 				//Removing the deleted/cancelled option useless when creating an order I hope!
 				unset($order_list[ORDER_STATUS_DELETED]);
 				unset($order_list[ORDER_STATUS_CANCELLED]);
+				unset($order_list[ORDER_STATUS_FAILED]);
+				
 				$array['STATUS'] 		= $main->createSelect('status', $order_list, '', array('class'=>'required'));
 				
 				$array['DOMAIN_USERNAME'] = $main->generateUsername();
@@ -250,7 +250,7 @@ class page {
 					$return_array['SITE_STATUS_INFO'] = $site_info;
 				} else {
 					$return_array['SITE_STATUS_CLASS'] = 'warning';
-					$return_array['SITE_STATUS'] = 'The current order is not registered in the Control Panel Server';
+					$return_array['SITE_STATUS'] = 'The current order is not registered in the Control Panel Server. <br />You should change the status to Active';
 					$return_array['SITE_STATUS_INFO'] = '';
 				}				
 				echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);			
@@ -272,8 +272,7 @@ class page {
 				    'messages' => array(				        			       
 				    )
 				);				
-				$return_array['json_encode'] = json_encode($asOption);
-				
+				$return_array['json_encode'] = json_encode($asOption);				
 				$oValidator = new Validator($asOption);			
 				
 				if(isset($main->getvar['do'])) {										
@@ -367,11 +366,13 @@ class page {
 				if (isset($main->getvar['confirm']) && $main->getvar['confirm'] == 1) {
 					if ($result == true) {
 						$main->errors("The order #".$main->getvar['do']." has been  deleted!");
-						$main->redirect("?page=orders&sub=all");
+						echo '<ERRORS>';
+						//$main->redirect("?page=orders&sub=all");
 					} else {
 						$main->errors("Order cannot be deleted there is a problem please check the logs of Order #".$main->getvar['do']);
 					}
 				} 
+			break;
 			default :	
 			case 'all':									
 				$per_page = $db->config('rows_per_page');
