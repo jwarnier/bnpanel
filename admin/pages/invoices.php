@@ -28,16 +28,7 @@ class page {
 	
 	public function content() {		
 		global $style, $db, $main, $invoice,$addon, $package;
-		
-		/*if(isset($_GET['iid']) && isset($_GET['pay'])) {					
-			$invoice->set_paid($_GET['iid']);
-			echo "<span style='color:green'>Invoice #{$_GET['iid']} marked as paid. <a href='index.php?sub=all&page=invoices&iid={$_GET['iid']}&unpay=true'>Undo this action</a></span>";
-		}
-		if(isset($_GET['iid']) && isset($_GET['unpay'])){	
-			$invoice->set_unpaid($_GET['iid']);
-			echo "<span style='color:red'>Invoice {$_GET['iid']} marked as unpaid. <a href='index.php?sub=all&page=invoices&iid={$_GET['iid']}&pay=true'>Undo this action</a></span>";
-		}*/
-		
+			
 		switch($main->getvar['sub']) {					
 			case 'add':
 				echo $style->replaceVar("tpl/invoices/addinvoice.tpl");

@@ -462,6 +462,7 @@ class invoice extends model {
 			//Get the last invoice of this order
 			$last_invoice_id_by_order_id = $order->getLastInvoiceByOrderId($order_item['id']);
 			$user_id = $order_item['userid'];
+			$user_info = $user->getUserById($user_id);
 			
 			//If invoice exists 
 			if (!empty($last_invoice_id_by_order_id)) {
@@ -523,7 +524,7 @@ class invoice extends model {
 				switch($my_invoice['status']) {
 					case INVOICE_STATUS_WAITING_PAYMENT: //Pending
 						
-						//1. Due date of the last invoice has exceed
+						//1.Check if the due date is dead if so, we suspend the service						
 						if ($my_invoice['due'] < $today) {
 							
 							echo 'Invoice due is bigger than today so we suspend the hosting';
@@ -553,9 +554,25 @@ class invoice extends model {
 									echo 'Checking the tolerance (suspensiondays variable) <br />';
 									echo 'Order Suspended <br />';
 									$server->suspend($order_item['id']);
+									
+									//@todo send an email
 								}
 							}			
 						}
+						
+						//2. Send a reminder to a user that have an invoice but he does not pay check every 2 days
+						$days = 2;
+						$send_reminder_every = $days*24*60*60; //1 day
+						$time_passed = strtotime($my_invoice['created']) + $send_reminder_every;			
+						$time_passed_to_date = date('Y-m-d', $time_passed);			
+						if( $time_passed < $today ) {
+							echo "<br />Send reminder because the invoice was created on ".$my_invoice['created']." and user does not pay".$time_passed_to_date;		
+							$emailtemp 	= $db->emailTemplate('invoices_pending');							
+							$array['INVOICE_ID'] = $my_invoice['id'];							
+							$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);		
+						}
+						
+						
 						//Send a notification
 						if (!empty($email_day_count)) {
 							//If the invoices is pending and the user do nothing
