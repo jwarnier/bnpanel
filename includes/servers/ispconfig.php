@@ -430,10 +430,10 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				 
 				//Creating a site
 				$result = $this->remote('sites_web_domain_add',$site_params);
-				if ($result) {					
+				if ($result) {				
 			
 					// ---- Setting up the mail domain
-					
+					/*
 					$mail_domain_params['client_id'] 	= $new_client_id;					
 					$mail_domain_params['server_id']  	= $this->getServerId();
 					$mail_domain_params['domain']	 	= $domain;
@@ -466,7 +466,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 						$dns_domain_params['active'] 	 	= 'n';
 					}				
 					$result = $this->remote('dns_zone_add', $dns_domain_params);
-					
+					*/
 					//----- Logout of the remoting
 											
 					$result = $this->remote('logout');								
@@ -523,7 +523,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					$params_get_site['primary_id'] = $domain_id;
 					
 					$result = $this->remote('sites_web_domain_inactive',$params_get_site);				
-								
+					/*	
 					$params['client_id'] = $user_info['client_id'];	
 					$params['server_id'] = $this->getServerId();
 					
@@ -538,7 +538,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 							}
 						}
 					}	
-									
+								
 					//Inactive DNS ZONE					
 					if (!empty($dns_id)) {
 						$dns_domain_params['primary_id'] = $dns_id;
@@ -562,6 +562,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 							$this->remote('mail_domain_inactive', $mail_update_status_params);
 						}
 					}
+					*/
 					return true;
 				}					
 			}
@@ -607,8 +608,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				//Inactive domain	
 				$result = $this->remote('sites_web_domain_active',$params_get_site);
 				
-				// DNS SOA
-				
+				/*
+				// DNS SOA				
 				$params['client_id'] = $user_info['client_id'];	
 				$params['server_id'] = $this->getServerId();
 				
@@ -646,7 +647,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				if (!empty($mail_domain_id)) {						
 					$mail_update_status_params['primary_id'] = $mail_domain_id;
 					$this->remote('mail_domain_active', $mail_update_status_params);
-				}									
+				}	
+				*/								
 				return true;				
 			}			
 		}
