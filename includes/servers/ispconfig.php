@@ -772,12 +772,19 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	}
 	
 	public function getStatus($order_id) {
-		global $order;
+		global $main, $order;
 		$order_info = $order->getOrderInfo($order_id);		
 		$params['username'] = $order_info['username'];
+		$main->addlog("Calling the getstatus for order id: $order_id");
 		
 		//Getting user info
 		$user_info = $this->remote('client_get_by_username',$params);
+		$subdomain_list = $main->getSubDomains();
+		if (!empty($order_info['subdomain_id'])) {			
+			$new_order = $order_info['domain'].'.'.$subdomain_list[$order_info['subdomain_id']];
+		} else {
+			$new_order = $order_info['domain'];
+		}		
 		
 		if (is_array($user_info) && !empty($user_info)) {			
 			$site_params['sys_userid']	= $user_info['userid'];		
@@ -785,22 +792,22 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	
 			//Getting all domains from this user
 			$site_info = $this->remote('client_get_sites_by_user', $site_params);
-			$domain_id = 0;
-			if ($site_info !==false) {
+						
+			if (isset($site_info) && is_array($site_info) ) {
 				foreach($site_info as $key=>$domain) {
-					if ($order_info['domain'] == $domain['domain']) {
+					if ($new_order == $domain['domain']) {
 						$my_domain = $domain;
 						break;
 					}
 				}
-			}
-			if 	(!empty($my_domain) && is_array($my_domain)) {
-				return 'Registed Domain: '.$my_domain['domain'].' <br /> Domain id: '.$my_domain['domain_id'].' <br /> Document root: '.$my_domain['document_root'];
-			}					
+				
+				if 	(!empty($my_domain) && is_array($my_domain)) {
+					$main->addlog("Domain exists: {$my_domain['domain']} {$my_domain['domain_id']}");
+					return 'Registed Domain: '.$my_domain['domain'].' <br /> Domain id: '.$my_domain['domain_id'].' <br /> Document root: '.$my_domain['document_root'];
+				}			
+			}							
 		}		
 		return false;	
-		
-		
 	}
 }
 

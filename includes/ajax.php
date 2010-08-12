@@ -1425,8 +1425,7 @@ class AJAX {
 				echo 0;	
 			}			
 			return;
-		}
-		
+		}		
 }
 
 if(isset($_GET['function']) && !empty($_GET['function'])) {
