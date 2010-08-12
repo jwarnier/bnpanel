@@ -84,16 +84,15 @@ function loadAddons(obj) {
   </tr>
      <tr>
     <td valign="top">Packages</td>
-    <td>
-   
-    <div id = "showpackages"> %PACKAGES% </div>
+    <td>   
+    	<div id = "showpackages"> %PACKAGES% </div>
     </td>
   </tr>
   
-       <tr>
+    <tr>
     <td valign="top">Addons</td>
     <td>
-   <div id = "showaddons"> %ADDON% </div>
+   		<div id = "showaddons"> %ADDON% </div>
     </td>
   </tr>
    

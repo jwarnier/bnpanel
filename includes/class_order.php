@@ -261,8 +261,7 @@ class order extends model {
 		$id = intval($id);
 		$sql = "SELECT * FROM ".$this->getTableName()." up WHERE up.id = '{$id}'";
 		$result = $db->query($sql);
-		$array = array();
-		
+		$array = array();	
 		
 		if ($db->num_rows($result) > 0 ) {
 			$array = $db->fetch_array($result, 'ASSOC');
@@ -426,21 +425,17 @@ class order extends model {
 			echo "That order doesn't exist!";	
 		} else {			
 			$total = 0;			
-			$array['ID'] 		= $order_info['id'];
-			
-			$array['domain'] 	= $order_info['final_domain'];
-			
+			$array['ID'] 		= $order_info['id'];			
+			$array['DOMAIN'] 	= $order_info['domain'];			
 			$array['USERNAME'] 	= $order_info['username'];
-			$array['PASSWORD'] 	= $order_info['password'];	
-					
-			$user_id 			= $order_info['userid'];
-			$array['USER_ID'] 	= $user_id;			
+			$array['PASSWORD'] 	= $order_info['password'];								
+			$array['USER_ID'] 	= $order_info['userid'];			
 			$package_id 	  	= $order_info['pid'];
 			$billing_cycle_id 	= $order_info['billing_cycle_id'];
 			$addon_selected_list= $order_info['addons'];	
 						
 			//User info
-			$user_info = $user->getUserById($user_id);
+			$user_info = $user->getUserById($order_info['userid']);
 						
 			$array['USER'] 		= $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';	
 			if(!empty($order_info['signup'])) {								
