@@ -106,8 +106,9 @@ class user extends model {
 	public function delete($id) {
 		global $order, $invoice, $main; 
 		//User deleted
-		$this->updateUserStatus($id,USER_STATUS_DELETED);
 		$main->addLog("User deleted: $id");
+		
+		$this->updateUserStatus($id,USER_STATUS_DELETED);		
 		
 		//@todo check this funcionality
 		$order_list = $order->getAllOrdersByUser($id);
@@ -184,7 +185,7 @@ class user extends model {
 		if (in_array($status, $user_status_list)) {		
 			$params['status'] = $status;
 			$main->addLog("updateUserStatus function called: $user_id");
-			$this->update($params);
+			$this->update($params, false);
 		}		
 	}
 	

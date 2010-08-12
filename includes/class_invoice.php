@@ -444,10 +444,8 @@ class invoice extends model {
 		$order_list_status	 = $main->getOrderStatusList();
 			
 		if($debug) {
-			echo '<h1>Invoice Cron</h1><br />';
-			
-			echo 'Today is  : '.date('Y-m-d', time()).'<br />';
-			
+			echo '<h1>Invoice Cron</h1><br />';			
+			echo 'Today is  : '.date('Y-m-d', time()).'<br />';			
 			echo 'Total others: '.count($orders).'<br />';
 		}		
 		
@@ -779,7 +777,7 @@ class invoice extends model {
 				break;
 			}				
 			$params['status'] = $status;
-			$this->update($params);
+			$this->update($params, false);
 		}		
 	}
 }
