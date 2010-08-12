@@ -269,7 +269,7 @@ class order extends model {
 			$subdomain_list = $main->getSubDomains();
 			
 			if (!empty($array['subdomain_id'])) {
-				$array['real_domain'] = $array['real_domain'].'.'.$subdomain_list[$array['domain']];	
+				$array['real_domain'] = $array['domain'].'.'.$subdomain_list[$array['subdomain_id']];	
 			} else {
 				$array['real_domain'] = $array['domain'];
 			}
