@@ -131,8 +131,8 @@ h1 {
 	min-height:38px;
 	padding:2px;
 	color:#333;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size:12px;
+	font-family:'Trebuchet MS','Lucida Grande',Verdana,Arial,Sans-Serif;
+	font-size:90%	
 }
 .gap {
 	clear:both;
@@ -159,11 +159,9 @@ h1 {
 	color:#F00;
 }
 .sub {
-	background: #F0F0F0;
+	background: #FFF;
 	padding:3px;
-	color:#333;
-	font-family:"Arial", Helvetica, sans-serif;
-	font-size:11px;
+	color:#333;		
 	text-align:left;
 }
 .sub a{
@@ -230,25 +228,17 @@ input, option {
 	background-color:#FFF;
 	padding:2px;	
 }
-/* The content text */
-.text {
-	color:#333;
-	font-size:12px;
-	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;	
-	text-align:left;
-}
-
 
  .noupg{
-     border: 1px solid #9AFF9A;
-     background: #9AFF9A;
-     color: #003300;
-     padding: 3px;
-     font-weight: bold;
-     -moz-border-radius: "4px";
-     -webkit-border-radius: "4px";
-     margin-bottom: 5px;
-     }
+    border: 1px solid #9AFF9A;
+    background: #9AFF9A;
+    color: #003300;
+    padding: 3px;
+    font-weight: bold;
+    -moz-border-radius: "4px";
+    -webkit-border-radius: "4px";
+    margin-bottom: 5px;
+    }
  .warn{
      border: 1px solid #FFA500;
      background: #FFA500;
@@ -315,7 +305,7 @@ label.error {
     background-color: #DFF2BF;
     background-image:url('success.png');
 }
-.warning {
+.warning{
     color: #9F6000;
     background-color: #FEEFB3;
     background-image: url('warning.png');
@@ -324,4 +314,9 @@ label.error {
     color: #D8000C;
     background-color: #FFBABA;
     background-image: url('error.png');
+}
+
+
+#description {
+	background-color:white;	
 }
