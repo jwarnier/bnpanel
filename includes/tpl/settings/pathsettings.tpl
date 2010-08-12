@@ -33,7 +33,7 @@
     <td width="20%">Rows per page</td>
     <td>
       <input name="rows_per_page" type="text" id="rows_per_page" value="%ROWS_PER_PAGE%" />
-      <a title="Rows per page " class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+      <a title="Rows per page in orders, invoices, etc " class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>
   
@@ -41,12 +41,9 @@
     <td width="20%">Domain/Subdomain options</td>
     <td>
       %DOMAIN_OPTIONS%
-      <a title="Rows per page " class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+      <a title="Allow the registration of Domains, Subdomains or Both" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
-  </tr>
-  
-  
-  
+  </tr>  
   <tr>
     <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Edit Settings" /></td>
   </tr>
