@@ -251,7 +251,7 @@ function nextstep() {
 					document.getElementById("next").disabled = true;
 					document.getElementById("back").disabled = true;
 					//showing the signup code
-					alert(url);
+					//alert(url);
 					$.get("<AJAX>"+url, function(data) {
 						document.getElementById("finished").innerHTML = data;
 						document.getElementById("back").disabled = false;
