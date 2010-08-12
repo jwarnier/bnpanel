@@ -1130,7 +1130,9 @@ class AJAX {
 			} else {
 				echo 0;
 			}
-			unset($_SESSION['last_invoice_id']);	
+			unset($_SESSION['last_invoice_id']);
+			//Last event before redirect
+			$main->clearToken();
 	   }
 	   
 	   function deleteTicket() {
