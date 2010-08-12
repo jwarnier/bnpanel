@@ -793,7 +793,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 						$my_domain = $domain;
 						break;
 					}
-				}				
+				} 				
 				if 	(!empty($my_domain) && is_array($my_domain)) {
 					$main->addlog("Domain exists: {$my_domain['domain']} {$my_domain['domain_id']}");
 					return $my_domain;

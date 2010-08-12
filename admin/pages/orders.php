@@ -269,8 +269,7 @@ class page {
 				$serverphp		= $server->loadServer($package_info['server']); # Create server class				
 				$site_info 		= $serverphp->getStatus($main->getvar['do']);
 				
-				if ($site_info != false) {
-									
+				if ($site_info != false) { 									
 					if($site_info['active'] == 'y') {	
 						$return_array['SITE_STATUS_CLASS'] = 'success';
 						$return_array['SITE_STATUS_INFO'] .= 'Status active';
