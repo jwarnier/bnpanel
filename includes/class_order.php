@@ -542,13 +542,14 @@ class order extends model {
 	 * Gets an order by user 
 	 * IMPORTANT only 1 order per user
 	 */
-	public function	domainExistInOrder($domain) {
+	public function	domainExistInOrder($domain, $subdomain_id = 0) {
 		global $db;
 		if (!empty($domain)) {
 			$domain = trim($domain);
 			$domain = $db->strip($domain);
+			$subdomain_id = intval($subdomain_id);
 			//Getting the domain info
-			$sql 	= "SELECT domain FROM ".$this->getTableName()." WHERE domain = '".$domain."'";
+			$sql 	= "SELECT domain FROM ".$this->getTableName()." WHERE domain = '".$domain."' AND subdomain_id = $subdomain_id ";
 			$result = $db->query($sql);
 			if($db->num_rows($result) > 0 ) {
 				return true;

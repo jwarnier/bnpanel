@@ -1398,13 +1398,15 @@ class AJAX {
 			$domain  		= $main->getvar['domain'];
 			$package_id  	= $main->getvar['package_id'];			
 			$package_info 	= $package->getPackage($package_id);		
-			$final_domain 	= $main->getvar['final_domain'];			
+			$final_domain 	= $main->getvar['final_domain'];		
+			$subdomain_id 	= 0;
+			
 			if($main->getvar['domain'] == 'sub') { # If Subdomain				
 				$subdomain_list = $main->getSubDomainByServer($package_info['server']);			
 				$subdomain 		= $subdomain_list[$main->getvar['subdomain_id']];			
-				$final_domain 	= $final_domain.".".$subdomain;
+				$subdomain_id	= $main->getvar['subdomain_id'];	
 			}			
-			if ($order->domainExistInOrder($final_domain) ) {
+			if ($order->domainExistInOrder($final_domain, $subdomain_id) ) {
 				echo 1;				
 			} else {
 				echo 0;	

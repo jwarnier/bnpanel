@@ -153,6 +153,7 @@ class server extends Model {
 		
 		if (!$main->checkToken(false)) {
 			echo 'Token Error';
+			return;
 		}
 		$user_id = '';
 		
@@ -193,12 +194,14 @@ class server extends Model {
 			$subdomain_id 	= $main->getvar['csub2'];			
 			$subdomain_list = $main->getSubDomainByServer($package_info['server']);
 			if ($subdomain_id != 0 ) {		
-				$subdomain = $subdomain_list[$subdomain_id];
-				$final_domain = $final_domain.'.'.$subdomain;			
-			}			
+				if (isset($subdomain_list[$subdomain_id])) {
+					$domain_is_correct = true;
+					$final_domain = $sub_domain;
+				}			
+			}
 		}
 						
-		if ($order->domainExistInOrder($final_domain)) {
+		if ($order->domainExistInOrder($sub_domain, $subdomain_id)) {
 			echo "Domain already exists";
 			return;
 		}
