@@ -62,6 +62,7 @@ class invoice extends model {
 		$user_id 		= $main->getCurrentUserId();		
 		$order_id 		= $this->getOrderByInvoiceId($invoice_id);
 		$order_info		= $order->getOrderInfo($order_id);
+		$subdomain_list = $main->getSubDomains();
 		
 		if($user_id == $invoice_info['uid']) {
 			
@@ -76,6 +77,12 @@ class invoice extends model {
 			$paypal->add_field('return', 			urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
 			$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
 			$paypal->add_field('notify_url',  		urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
+			
+			if (empty($order_info['subdomain_id'])) {
+				$order_info['domain'] 	= $order_info['domain'];
+			} else {
+				$order_info['domain'] 	= $order_info['domain'].'.'.$subdomain_list[$order_info['subdomain_id']];
+			}
 			
 			$paypal->add_field('item_name', 		$db->config('name').' - '.$order_info['domain'].' Invoice id: '.$invoice_id);
 			//$paypal->add_field('item_number', 		$invoice_id);
@@ -172,17 +179,18 @@ class invoice extends model {
 			$invoice_list	=$this->getAllInvoices($user_id, $page);  
 		}	
 		
-		$result['list'] = "";
+		$result['list'] = '';
 		
+		$total_amount = 0;		           
 		//Package info
 		$package_list 	= $package->getAllPackages();				
 		//Billing cycles
 		$billing_list 	= $billing->getAllBillingCycles();		
 		//Addons		
-		$addon_list		= $addon->getAllAddons();
+		$addon_list		= $addon->getAllAddons();		
+		//Subdomain list
+		$subdomain_list = $main->getSubDomains();
 		
-		$total_amount = 0;		           
-		 	    	
 		foreach($invoice_list as $array) {
 			
 			//Getting the user info
@@ -199,11 +207,19 @@ class invoice extends model {
 				$array['due'] = '-';
 			}				
 			
-			//Getting the domain info
+			//Getting the k info
 			$order_id 		 = $this->getOrderByInvoiceId($array['id']);
 			$order_info 	 = $order->getOrderInfo($order_id);
 			
 			$array['domain'] 	= $order_info['domain'];
+			
+			//Getting the domain info					
+			if (empty($order_info['subdomain_id'])) {
+				$array['domain'] 	= $order_info['domain'];
+			} else {
+				$array['domain'] 	= $order_info['domain'].'.'.$subdomain_list[$order_info['subdomain_id']];
+			}
+			
 			$package_id 	  	= $order_info['pid'];
 			$billing_cycle_id 	= $order_info['billing_cycle_id'];			
 			
@@ -351,11 +367,20 @@ class invoice extends model {
 					}							
 				}
 			}							
+			$subdomain_list = $main->getSubDomains();
 			
 			$order_id 	= $this->getOrderByInvoiceId($invoice_id);			
-			$order_info = $order->getOrderInfo($order_id);			
-				
-			$array['domain'] 	= $order_info['domain'];
+			$order_info = $order->getOrderInfo($order_id);
+						
+			//Getting the domain info					
+			if (empty($order_info['subdomain_id'])) {
+				$array['domain'] 	= $order_info['domain'];
+			} else {
+				$array['domain'] 	= $order_info['domain'].'.'.$subdomain_list[$order_info['subdomain_id']];
+			}
+			
+			
+			
 			$package_id 	  	= $order_info['pid'];
 			$billing_cycle_id 	= $order_info['billing_cycle_id'];							
 						

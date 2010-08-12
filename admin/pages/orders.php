@@ -36,8 +36,10 @@ class page {
 		require_once LINK.'validator.class.php';		
 		switch($main->getvar['sub']) {					
 			case 'add':
+						
 				$asOption = array(
-				    'rules' => array(				    	
+				    'rules' => array(
+				        'domain_type' 		=> 'required',				        
 				        'domain' 			=> 'required',
 				        'billing_cycle_id' 	=> 'required',
 				        'package_id' 		=> 'required',
@@ -49,12 +51,19 @@ class page {
 				    'messages' => array(
 				        //'domain' => array( 'required' => 'Domain is required'),			       
 				    )
-				);				
+				);
+				
+				
+				if ($db->config('domain_options') == DOMAIN_OPTION_SUBDOMAIN)
+					$asOption['rules']['csub2'] = 'required';
+				
 				$array['json_encode'] = json_encode($asOption);				
 				$oValidator = new Validator($asOption);				
 			
-				if($_POST) {	
-					$result = $oValidator->validate($_POST);
+				if ($_POST) {					
+					
+					$result = $oValidator->validate($_POST);										
+					
 					if (empty($result)) {				
 						
 						//Creating an order		
@@ -70,18 +79,14 @@ class page {
 						$package_data	= $package->getPackage($params['pid']);
 						$domain_correct = true;
 						
-						if (isset($main->postvar['csub2'])) {
+						if ($main->postvar['domain_type'] == DOMAIN_OPTION_SUBDOMAIN) {
 							//Is a subdomain	
-							if (!empty($subdomain_id)) {				
-								$subdomain_id 	= $main->postvar['csub2'];
-								$subdomain_list = $main->getSubDomainByServer($package_data['server']);
-								$subdomain = $subdomain_list[$subdomain_id];
-								$domain = $domain.'.'.$subdomain;
-							} else {
+							$subdomain_id 	= $main->postvar['csub2'];
+							if (empty($subdomain_id)) {
 								$main->errors('Subdomain is not valid');
 								$domain_correct = false;
 							}
-						} else {
+						} elseif ($main->postvar['domain_type'] == DOMAIN_OPTION_DOMAIN) {
 							//is a domain
 							if (empty($url_parts['domain']) || empty($url_parts['extension'])) {
 								$main->errors('Select a correct domain');	
@@ -97,8 +102,7 @@ class page {
 							$params['subdomain_id']	= $subdomain_id;
 							$params['billing_cycle_id'] = $main->postvar['billing_cycle_id'];			
 							
-							if(1) {
-													
+							if (1) {													
 								if (!empty($params['userid']) && !empty($params['pid'])) {
 									$order_id = $order->create($params, false);
 								}
@@ -143,11 +147,9 @@ class page {
 									$invoice_params['order_id'] = $order_id;										
 									$invoice_id = $invoice->create($invoice_params, false);
 									$main->clearToken();							
+									$main->errors("Order has been added!");
 									
-									if ($done)
-										$main->errors("Order has been added!");
-									else 
-										$main->errors("Order has been added to BNPanel. Order is not updated in the Control Panel. Please trying updating this order.");
+									//$main->errors("Order has been added to BNPanel. Order is not updated in the Control Panel. Please trying updating this order.");
 								} else {
 									$main->errors("There was a problem!");
 								}
@@ -168,7 +170,7 @@ class page {
 				foreach($billing_list as $billing_item) {
 					$new_billing_list[$billing_item['id']] =$billing_item['name']; 
 				}
-				$array['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, '', array('onchange'=>'loadPackages(this);', 'class'=>'required'));				
+				$array['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, $default['billing_cycle_id'], array('onchange'=>'loadPackages(this);', 'class'=>'required'));				
 				$array['PACKAGES'] 		= '-';
 				$array['ADDON'] 		= '-';
 				$order_list = $main->getOrderStatusList();
@@ -178,11 +180,31 @@ class page {
 				unset($order_list[ORDER_STATUS_CANCELLED]);
 				unset($order_list[ORDER_STATUS_FAILED]);
 				
-				$array['STATUS'] 		= $main->createSelect('status', $order_list, '', array('class'=>'required'));
+				$array['STATUS']			= $main->createSelect('status', $order_list, '', array('class'=>'required'));
 				
-				$array['DOMAIN_USERNAME'] = $main->generateUsername();
-				$array['DOMAIN_PASSWORD'] = $main->generatePassword();				
-					
+				$array['DOMAIN_USERNAME'] 	= $main->generateUsername();
+				$array['DOMAIN_PASSWORD'] 	= $main->generatePassword();	
+				
+				switch($db->config('domain_options')) {					
+					case DOMAIN_OPTION_DOMAIN:
+						$values = array(DOMAIN_OPTION_DOMAIN=>'Domain');
+					break;
+					case DOMAIN_OPTION_SUBDOMAIN:
+						$values = array(DOMAIN_OPTION_SUBDOMAIN=>'Subdomain');
+					break;
+					case DOMAIN_OPTION_BOTH:
+						$values = array(DOMAIN_OPTION_DOMAIN=>'Domain', DOMAIN_OPTION_SUBDOMAIN=>'Subdomain');
+					break;
+				}
+							
+    			$array['DOMAIN_TYPE'] = $main->createSelect('domain_type',$values, '', array('onchange'=>'changeDomain();'));
+    			 
+				if ($db->config('domain_options') == DOMAIN_OPTION_SUBDOMAIN) {
+					$subdomain_list = $main->getSubDomains();
+					if( empty($subdomain_list)) {
+						echo '<div class ="warning">No subdomains available click <a href="?page=sub&sub=add">here</a> to add new subdomains</div>';		
+					}
+				}				
 				echo $style->replaceVar("tpl/orders/add.tpl", $array);
 			break;
 			case 'change_pass':			
@@ -237,6 +259,7 @@ class page {
 				}	
 						
 				$return_array = $order->getOrder($main->getvar['do'], false, false);
+				
 				$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);
 				
 				$order_info 	= $order->getOrderInfo($main->getvar['do']);
@@ -314,10 +337,10 @@ class page {
 										
 							$invoice_id = $invoice->create($invoice_params, false);
 							
-							$main->errors("Invoice created!");
+							$main->errors('Invoice created!');
 							//$main->redirect("?page=invoices&sub=all");
 						} else {
-							$main->errors("Please fill all the fields");
+							$main->errors('Please fill all the fields');
 						}						
 					}
 					
@@ -351,21 +374,21 @@ class page {
 					$return_array['STATUS'] 		= $main->createSelect('status', $invoice_status,'', array('class'=>'required'));
 					$return_array['INVOICE_LIST'] 	= $order->showAllInvoicesByOrderId($main->getvar['do']);
 													
-					echo $style->replaceVar("tpl/invoices/addinvoice.tpl", $return_array);					
+					echo $style->replaceVar('tpl/invoices/addinvoice.tpl', $return_array);					
 				
 				} else {
-					$main->errors("You need an order before create an invoice!");
+					$main->errors('You need an order before create an invoice!');
 				}			
 			break;		
 			case 'delete':			
 				if (isset($main->getvar['do'])) { 
 					$result = $order->delete($main->getvar['do']);				
 				} else {
-					$main->redirect("?page=orders&sub=all");										
+					$main->redirect('?page=orders&sub=all');										
 				}		
 				if (isset($main->getvar['confirm']) && $main->getvar['confirm'] == 1) {
 					if ($result == true) {
-						$main->errors("The order #".$main->getvar['do']." has been  deleted!");
+						$main->errors('The order #'.$main->getvar['do'].' has been  deleted!');
 						echo '<ERRORS>';
 						//$main->redirect("?page=orders&sub=all");
 					} else {

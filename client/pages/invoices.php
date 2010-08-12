@@ -36,8 +36,7 @@ class page {
 						$order_id = $invoice->getOrderByInvoiceId($invoice_id);
 						
 						$order_info = $order->getOrderInfo($order_id);
-						$package_info = $package->getPackage($order_info['pid']);
-						
+						$package_info = $package->getPackage($order_info['pid']);						
 												
 						//we check if the site was not already sent
 						$serverphp = $server->loadServer($package_info['server']);
@@ -74,8 +73,7 @@ class page {
 			break;					
 			case 'all':
 			default :
-				$user_id = $main->getCurrentUserId();
-				
+				$user_id = $main->getCurrentUserId();				
 				$billing_cycle_name_list = $billing->getAllBillingCycles();
 				
 				//Addons
@@ -83,6 +81,9 @@ class page {
 				
 				// List of invoices. :)
 				$invoice_list = $invoice->getAllInvoices($user_id);
+				
+				//Subdomains list
+				$subdomain_list = $main->getSubDomains();
 							
 				$array2['list'] = "";
 				foreach($invoice_list as $invoice_item) {
@@ -92,15 +93,21 @@ class page {
 					$order_id = $invoice->getOrderByInvoiceId($invoice_item['id']);
 					$order_info = $order->getOrderInfo($order_id);
 					
-					$array['domain'] = $order_info['domain'];
+					//Getting the domain info					
+					if (empty($order_info['subdomain_id'])) {
+						$array['domain'] 	= $order_info['domain'];
+					} else {
+						$array['domain'] 	= $order_info['domain'].'.'.$subdomain_list[$order_info['subdomain_id']];
+					}
+					
+					
 					$array['due'] = date('Y-m-d', $invoice_item['due']);
 					
 					switch ($invoice_item['status']) {
 						case INVOICE_STATUS_PAID:
 							$array['paid']	=  '<span style="color:green">Already Paid</span>';
 							$array['pay']	=  '<span style="color:green">Already Paid</span>';
-							$array['due']	=  '<span style="color:green">'.$array['due'].'</span>' ;
-							  
+							$array['due']	=  '<span style="color:green">'.$array['due'].'</span>' ;						  
 						break;
 						case INVOICE_STATUS_CANCELLED:
 							$array['paid'] 	= "<span style='color:red'>Canceled</span>";

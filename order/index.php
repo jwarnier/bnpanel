@@ -76,12 +76,8 @@ if($db->num_rows($packages2) == 0) {
 	$array['TOS'] = $db->config('tos');
 	$array['USER'] = "";
 	$array['DOMAIN'] = '<input name="cdom" id="cdom" type="text" />';
-	
- 
-        
 	$subdomain_list = $main->getSubDomains();
-
-	
+		
 	switch($db->config('domain_options')) {
 		case DOMAIN_OPTION_DOMAIN:	
 		$domain_options = '<div style="display:none"><select name="domain" id="domain">
@@ -125,18 +121,6 @@ if($db->num_rows($packages2) == 0) {
 	
 	$array['DOMAIN_CONFIGURATION'] = $domain_options;
 	
-	
-	
-	
-	
-	
-	/*$username = '';
-	$user_info = $main->getCurrentUserInfo();
-	$array['USERNAME'] = '';
-	if (!empty($user_info)) {	
-		$array['USERNAME'] = '<input type="hidden" name="username" value="'.$user_info['user'].'">';	
-	}*/	
-	 
 	//Determine what to show in Client box
 	if(!$_SESSION['clogged']) {
 		$content = $style->replaceVar("tpl/clogin.tpl");
