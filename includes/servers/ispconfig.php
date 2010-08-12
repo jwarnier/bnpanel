@@ -508,7 +508,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			if ($site_info !== false) {
 				
 				foreach($site_info as $domain) {				
-					if ($order_info['domain'] == $domain['domain']) {
+					if ($order_info['real_domain'] == $domain['domain']) {
 						$domain_id = $domain['domain_id'];
 						break;
 					}
@@ -590,7 +590,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		if ($site_info !==false) {
 			
 			foreach($site_info as $domain) {
-				if ($order_info['domain'] == $domain['domain']) {
+				if ($order_info['real_domain'] == $domain['domain']) {
 					$domain_id = $domain['domain_id'];
 					break;
 				}
@@ -671,7 +671,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			$domain_id = 0;
 			if ($site_info !==false) {
 				foreach($site_info as $key=>$domain) {
-					if ($order_info['domain'] == $domain['domain']) {
+					if ($order_info['real_domain'] == $domain['domain']) {
 						$domain_id = $domain['domain_id'];
 						break;
 					}
@@ -779,13 +779,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		
 		//Getting user info
 		$user_info = $this->remote('client_get_by_username',$params);
-		$subdomain_list = $main->getSubDomains();
-		if (!empty($order_info['subdomain_id'])) {			
-			$new_order = $order_info['domain'].'.'.$subdomain_list[$order_info['subdomain_id']];
-		} else {
-			$new_order = $order_info['domain'];
-		}		
-		
+				
 		if (is_array($user_info) && !empty($user_info)) {			
 			$site_params['sys_userid']	= $user_info['userid'];		
 			$site_params['groups'] 		= $user_info['groups'];	
@@ -795,7 +789,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 						
 			if (isset($site_info) && is_array($site_info) ) {
 				foreach($site_info as $key=>$domain) {
-					if ($new_order == $domain['domain']) {
+					if ($order_info['real_domain'] == $domain['domain']) {
 						$my_domain = $domain;
 						break;
 					}

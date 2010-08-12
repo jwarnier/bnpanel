@@ -103,13 +103,8 @@ class page {
 					$order_info = $order->getOrderInfo($order_id);
 					
 					//Getting the domain info					
-					if (empty($order_info['subdomain_id'])) {
-						$array['domain'] 	= $order_info['domain'];
-					} else {
-						$array['domain'] 	= $order_info['domain'].'.'.$subdomain_list[$order_info['subdomain_id']];
-					}
-					
-					
+					$array['domain'] 	= $order_info['real_domain'];
+										
 					$array['due'] = date('Y-m-d', $invoice_item['due']);
 					
 					switch ($invoice_item['status']) {

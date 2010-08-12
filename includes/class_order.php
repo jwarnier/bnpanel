@@ -257,13 +257,23 @@ class order extends model {
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
 	 */
 	public function getOrderInfo($id) {
-		global $db;		
+		global $db, $main;		
 		$id = intval($id);
 		$sql = "SELECT * FROM ".$this->getTableName()." up WHERE up.id = '{$id}'";
 		$result = $db->query($sql);
-		$array = array(); 
+		$array = array();
+		
+		
 		if ($db->num_rows($result) > 0 ) {
-			$array = $db->fetch_array($result, 'ASSOC');						
+			$array = $db->fetch_array($result, 'ASSOC');
+			$subdomain_list = $main->getSubDomains();
+			
+			if (!empty($array['subdomain_id'])) {
+				$array['real_domain'] = $array['real_domain'].'.'.$subdomain_list[$array['domain']];	
+			} else {
+				$array['real_domain'] = $array['domain'];
+			}
+			
 			$sql = "SELECT addon_id FROM  `<PRE>order_addons` WHERE order_id = '{$id}'";
 			$result_addons = $db->query($sql);
 			$addon_list = array();
@@ -410,19 +420,16 @@ class order extends model {
 	 */
 	public function getOrder($order_id, $read_only = false, $show_price = true) {
 		global $main, $db, $currency, $addon, $package, $billing, $user;	
-		
 		$order_info = $this->getOrderInfo($order_id);
-		$subdomain_list = $main->getSubDomains();
+		
 		if(empty($order_info)) {
 			echo "That order doesn't exist!";	
 		} else {			
 			$total = 0;			
 			$array['ID'] 		= $order_info['id'];
-			if (empty($order_info['subdomain_id'])) {
-				$array['domain'] 	= $order_info['domain'];
-			} else {
-				$array['domain'] 	= $order_info['domain'].'.'.$subdomain_list[$order_info['subdomain_id']];
-			}
+			
+			$array['domain'] 	= $order_info['final_domain'];
+			
 			$array['USERNAME'] 	= $order_info['username'];
 			$array['PASSWORD'] 	= $order_info['password'];	
 					
