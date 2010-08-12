@@ -62,7 +62,7 @@ class invoice extends model {
 		$user_id 		= $main->getCurrentUserId();		
 		$order_id 		= $this->getOrderByInvoiceId($invoice_id);
 		$order_info		= $order->getOrderInfo($order_id);
-		$subdomain_list = $main->getSubDomains();
+
 		
 		if($user_id == $invoice_info['uid']) {
 			
@@ -78,11 +78,7 @@ class invoice extends model {
 			$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
 			$paypal->add_field('notify_url',  		urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
 			
-			if (empty($order_info['subdomain_id'])) {
-				$order_info['domain'] 	= $order_info['domain'];
-			} else {
-				$order_info['domain'] 	= $order_info['domain'].'.'.$subdomain_list[$order_info['subdomain_id']];
-			}
+			$order_info['domain'] 	= $order_info['final_domain'];			
 			
 			$paypal->add_field('item_name', 		$db->config('name').' - '.$order_info['domain'].' Invoice id: '.$invoice_id);
 			//$paypal->add_field('item_number', 		$invoice_id);
