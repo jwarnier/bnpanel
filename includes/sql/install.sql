@@ -28,7 +28,7 @@ INSERT INTO `%PRE%acpnav` (`visual`, `icon`, `link`) VALUES
 ('Addons', 'rainbow.png', 'addons'),
 ('Staff Accounts', 'user_gray.png', 'staff'),
 ('Clients', 'group.png', 'users'),
-('Client Importer', 'user_orange.png', 'import'),
+-- ('Client Importer', 'user_orange.png', 'import'),
 ('Mail Center', 'email_open.png', 'email'),
 ('Tickets', 'page_white_text.png', 'tickets'),
 ('Knowledge Base', 'folder.png', 'kb'),

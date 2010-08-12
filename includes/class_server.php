@@ -492,12 +492,7 @@ class server extends Model {
 			if ($invoice_id) {							
 				//This variable will be read in the Ajax::ispaid function
 				$_SESSION['last_invoice_id'] = $invoice_id;
-			}
-			
-			//4. Suspend the hosting if is not already suspended
-			
-			//$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);			
-			$main->clearToken();										
+			}												
 			echo '<div class="errors"><b>You are being redirected to payment! It will load in a couple of seconds..</b></div>';
 		}	
 	}	
