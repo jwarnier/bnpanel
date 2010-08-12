@@ -20,14 +20,6 @@ class ispconfig extends Panel {
 		$soap_client = $this->load();
 		if ($soap_client && $this->getSessionId()) {
 			return 'Logged into ISPConfig3 Remote Server sucessfully. The SessionID is '.$this->getSessionId().'<br />';
-			//get the current list of methods						
-			//var_dump($soap_client->get_function_list($this->getSessionId()));
-			/*try {
-				//$soap_client->get_function_list();		
-				var_dump($this->session_id);			
-			} catch (SoapFault $e) {				
-				die('SOAP Error: '.$e->getMessage());
-			}*/
 		} else {
 			return 'The Test Connection failed. Please check the host name parameters. You can also check the logs <a href="?page=logs">here</a>';
 		}				
@@ -772,8 +764,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	}
 	
 	public function getMethods() {
-		$soap_client = $this->load();
-		var_dump($soap_client);
+		$soap_client = $this->load();		
 		var_dump($soap_client ->get_class_methods());		
 	}
 	
