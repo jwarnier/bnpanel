@@ -51,14 +51,23 @@ class page {
 						if ($result) {
 							//Unsuspend order status + unsuspend the webhosting just in case 
 							$order->updateOrderStatus($order_id, ORDER_STATUS_ACTIVE);
+						} else {
+							$order->updateOrderStatus($order_id, ORDER_STATUS_FAILED);
 						}
 						
 						//Adding the transaction id (comes from a post of paypal)
 						$transaction_id = $main->postvar['txn_id'];
 						$params['transaction_id'] = $transaction_id;						
-						$invoice->edit($invoice_id, $params);		
-										
-						$main->errors("Your invoice is paid!");										
+						$invoice->edit($invoice_id, $params);										
+						$message = 'Your invoice is paid!<br />';
+						
+						if ($result) {
+							$message .= 'You order has been also proceed';	
+						} else {
+							$message .= 'There was a problem while dealing with you order please contact the administrator.';
+						}
+						
+						$main->errors($message);										
 					} else {						
 						$main->errors("Your invoice hasn't been paid!");						
 					}

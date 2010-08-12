@@ -274,7 +274,7 @@ class ispconfig extends Panel {
 		$domain 			= $order_info['domain'];
 		$sub_domain_id 		= $order_info['subdomain_id'];
 				
-		$main->addLog('Server::signup loaded Order id:'.$order_id.' Domain: '.$domain);		
+		$main->addLog('ISPConfig3::signup Order id:'.$order_id.' Domain: '.$domain);		
 		
 		$package_info 	= $package->getPackage($package_id);
 		
@@ -355,7 +355,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				
 		//If no error 
 		if($new_client_id['error']) {
-			echo "<strong>".$new_client_id['text']."</strong><br />";
+			//echo "<strong>".$new_client_id['text']."</strong><br />";
+			$main->addlog($new_client_id['text']);
 			return false;
 		} elseif(is_numeric($new_client_id)) {
 			//If client is added we have the new client id	
@@ -470,7 +471,9 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					*/
 					return true;					
 				}		
-			}						
+			} else {
+				$main->addlog($client_info['error']);
+			}					
 		}
 		return false;
 	}
