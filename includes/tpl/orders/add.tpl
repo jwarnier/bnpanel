@@ -6,21 +6,18 @@ var wrong = '<img src="<URL>themes/icons/cross.png">';
 var right = '<img src="<URL>themes/icons/accept.png">';
 
 	tinyMCE.init({
-	mode : "textareas",
-	skin : "o2k7",
-	theme : "simple"
+		mode : "textareas",
+		skin : "o2k7",
+		theme : "simple"
 	});
-
 	$(function() {
-		$( "#created_at" ).datepicker({ 
+		$("#created_at").datepicker({ 
 			dateFormat: 'yy-mm-dd',
 			showOn: 'button',
 			buttonImage: '<URL>themes/icons/calendar_add.png'			 
-			});
-
+		});
 		 /* $("#addorder").validate(); */
-		$("#addorder").validate(%json_encode%);
-		
+		$("#addorder").validate(%json_encode%);		
 	});
 	
 </script>
@@ -68,22 +65,36 @@ function lookup(inputString) {
     }
 } // lookup
 
-function changeDomain(){
+function changeDomain() {
 	var domain_obj = document.getElementById("domain_type");
 	var id=domain_obj.options[domain_obj.selectedIndex].value;
-	
+		
 	var text = '<input name="domain" autocomplete="off" type="text" id="domain" class="required" /><span id="domain_result"></span>';
 	if (id == 1) {
 		 $('#domain_input').html(text);
 	} else if(id == 2) {
-		var pid = document.getElementById("package_id").value;
-		$.get("<AJAX>function=sub&pack="+pid, function(data) {		
-			 if (data == '') {
-				 domain_obj.selectedIndex = 1;
-				 data = 'No subdomains available for the moment';
-			 }			 
-			 $('#domain_input').html(text + data);			 
-		});		
+		
+		if (document.getElementById("package_id") != undefined) {
+			var pid = document.getElementById("package_id").value;
+			if (pid != '') {				
+				$.get("<AJAX>function=sub&pack="+pid, function(data) {		
+					 if (data == '') {		
+						 domain_obj.selectedIndex = 0;				 
+						 data = 'No subdomains available for the moment';					 
+					 } else {
+					 	//domain_obj.selectedIndex = 2;		 
+					 	$('#domain_input').html(text + data);
+					 }			 
+				});
+			} else {
+				domain_obj.selectedIndex = 0;
+				$('#domain_input').html("Select a package");
+			}		
+		} else {
+			domain_obj.selectedIndex = 0;		
+			$('#domain_input').html('Select a billing cycle and a package first');	
+			
+		}
 	}
 }
 
@@ -184,20 +195,14 @@ function checkdomain() {
     <tr>
     <td valign="top">Domain type</td>
     <td>
-    	<select id="domain_type" onchange="changeDomain();">
-    	<option value="0">Select</option>
-    	<option value="1">Domain</option>
-    	<option value="2">Subdomain</option>
-    	</select>	    
+		%DOMAIN_TYPE%    
     </td>
   </tr> 
   
 	<tr>
     	<td valign="top">Domain</td>
     	<td>
-    		<div id="domain_input">---</div>
-    		
-    		<!--  <br/><a href="#" onclick="checkdomain();">Check availavility</a> -->    		
+    		<div id="domain_input">---</div>    		
     	</td>
   	</tr>
     
@@ -239,14 +244,10 @@ function checkdomain() {
     <div id="show_preview" ></div>  	
     	<ul>	
     	<!-- onclick="send('neworder', %ID%);" -->
-  		<li><a target="_blank" href="?page=email&sub=templates&do=19">Edit New Order email</a> 		<a href="?page=email&sub=templates&do=19"><img src="<URL>themes/icons/pencil.png"></a></li>
-  		  		
+  		<li><a target="_blank" href="?page=email&sub=templates&do=19">Edit New Order email</a> 		<a href="?page=email&sub=templates&do=19"><img src="<URL>themes/icons/pencil.png"></a></li>  		  		
   		</ul>
     </td>    
-  </tr>  
-   
-   
-   
+  </tr>   
 </table>
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>

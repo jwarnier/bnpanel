@@ -297,7 +297,7 @@ class order extends model {
 			$sql =  "SELECT * FROM ".$this->getTableName()." WHERE status <> '".ORDER_STATUS_DELETED."' ORDER BY id DESC  $limit ";	
 		} else {
 			$user_id = intval($user_id);
-			$sql = "SELECT * FROM ".$this->getTableName()." WHERE status <> '".ORDER_STATUS_DELETED."' AND userid = '".$user_id."' ORDER BY id DESC $limit ";
+			$sql = "SELECT * FROM ".$this->getTableName()."  WHERE status <> '".ORDER_STATUS_DELETED."' AND userid = '".$user_id."' ORDER BY id DESC $limit ";
 		}	
 		
 		$result_order  = $db->query($sql);
@@ -311,13 +311,14 @@ class order extends model {
 		//Selecting addons
 		$addons_list 		= $addon->getAllAddons();		
 		$total_amount = 0;                
-    	$user_pack_status = $main->getOrderStatusList();
+    	$user_pack_status  	= $main->getOrderStatusList();
+    	$subdomain_list		= $main->getSubDomains();
     	
-		while($order_item = $db->fetch_array($result_order)) {
+		while($order_item = $db->fetch_array($result_order, 'ASSOC')) {
+			
 			//Getting the user info			
-			$user_info = $user->getUserById($order_item['userid']);
-						
-			$array['ID']		= $order_item['id'];
+			$user_info 		= $user->getUserById($order_item['userid']);						
+			$array['ID']	= $order_item['id'];
 			
 			if (in_array($order_item['status'], array_keys($user_pack_status))) {
 				$array['STATUS'] = $user_pack_status[$order_item['status']];
@@ -337,8 +338,13 @@ class order extends model {
 			}
 			//$array['due'] 		= strftime("%D", $array['due']);
 			
-			//Getting the domain info			
-			$array['DOMAIN'] 	= $order_item['domain'];
+			//Getting the domain info					
+			if (empty($order_item['subdomain_id'])) {
+				$array['DOMAIN'] 	= $order_item['domain'];
+			} else {
+				$array['DOMAIN'] 	= $order_item['domain'].'.'.$subdomain_list[$order_item['subdomain_id']];
+			}
+			
 			$package_id 	  	= $order_item['pid'];
 			$billing_cycle_id 	= $order_item['billing_cycle_id'];			
 			
@@ -406,14 +412,17 @@ class order extends model {
 		global $main, $db, $currency, $addon, $package, $billing, $user;	
 		
 		$order_info = $this->getOrderInfo($order_id);
-		
+		$subdomain_list = $main->getSubDomains();
 		if(empty($order_info)) {
 			echo "That order doesn't exist!";	
 		} else {			
 			$total = 0;			
 			$array['ID'] 		= $order_info['id'];
-			$array['domain'] 	= $order_info['domain'];
-			
+			if (empty($order_info['subdomain_id'])) {
+				$array['domain'] 	= $order_info['domain'];
+			} else {
+				$array['domain'] 	= $order_info['domain'].'.'.$subdomain_list[$order_info['subdomain_id']];
+			}
 			$array['USERNAME'] 	= $order_info['username'];
 			$array['PASSWORD'] 	= $order_info['password'];	
 					

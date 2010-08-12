@@ -456,12 +456,14 @@ class AJAX {
 	 */
 	public function sub() {
 		global $main, $db, $type;
-		$pack = $main->getvar['pack'];
-		$server = $type->determineServer($pack);	
-		$values = $main->getSubDomainByServer($server);
-		if (!empty($values)) {
-			echo $main->createSelect('csub2', $values);
-		}		
+		$package_id = $main->getvar['pack'];
+		if (!empty($package_id)) {
+			$server_id = $type->determineServer($package_id);	
+			$values = $main->getSubDomainByServer($server_id);
+			if (!empty($values)) {
+				echo $main->createSelect('csub2', $values);
+			}		
+		}
 	}
 	
 	public function phpinfo() {
