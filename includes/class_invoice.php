@@ -177,7 +177,7 @@ class invoice extends model {
 		
 		$result['list'] = '';
 		
-		$total_amount = 0;		           
+				           
 		//Package info
 		$package_list 	= $package->getAllPackages();				
 		//Billing cycles
@@ -188,6 +188,8 @@ class invoice extends model {
 		$subdomain_list = $main->getSubDomains();
 		
 		foreach($invoice_list as $array) {
+			
+			$total_amount = 0;
 			
 			//Getting the user info
 			if(!empty($array['uid'])) {
@@ -207,15 +209,7 @@ class invoice extends model {
 			$order_id 		 = $this->getOrderByInvoiceId($array['id']);
 			$order_info 	 = $order->getOrderInfo($order_id);
 			
-			$array['domain'] 	= $order_info['domain'];
-			
-			//Getting the domain info					
-			if (empty($order_info['subdomain_id'])) {
-				$array['domain'] 	= $order_info['domain'];
-			} else {
-				$array['domain'] 	= $order_info['domain'].'.'.$subdomain_list[$order_info['subdomain_id']];
-			}
-			
+			$array['domain'] 	= $order_info['real_domain'];					
 			$package_id 	  	= $order_info['pid'];
 			$billing_cycle_id 	= $order_info['billing_cycle_id'];			
 			
