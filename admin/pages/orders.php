@@ -147,7 +147,7 @@ class page {
 									$invoice_params['order_id'] = $order_id;										
 									$invoice_id = $invoice->create($invoice_params, false);
 									$main->clearToken();							
-									$main->errors("Order has been added into BNPanel");
+									$main->errors("Order has been added");
 									if (!$result) {
 										$main->errors("There was a problem with the Control Panel, please check the logs");	
 									}									
@@ -350,44 +350,45 @@ class page {
 							$invoice_id = $invoice->create($invoice_params, false);
 							
 							$main->errors('Invoice created!');
-							//$main->redirect("?page=invoices&sub=all");
+							echo '<ERRORS>';
 						} else {
 							$main->errors('Please fill all the fields');
 						}						
-					}
+					} else {
 					
-					$user_info  =  $user->getUserById($order_info['userid']);				
-					
-					$return_array['USER'] 			= $user_info['firstname'].' '.$user_info['lastname'];
-					$return_array['DOMAIN'] 		= $order_info['domain'];					
-					$billing_info 					= $billing->getBilling($billing_id);
-					$return_array['BILLING_CYCLES'] = $billing_info ['name'];
-					$return_array['BILLING_ID'] 	= $billing_id;
-					
-					$addon_list = $addon->getAddonsByPackage($billing_id);
-					$result 	= $addon->showAllAddonsByBillingCycleAndPackage($billing_id, $order_info['pid'], array_flip($order_info['addons']));
-					
-					$return_array['ADDON'] 	=  $result['html'];
-
-					$packages = $package->getAllPackagesByBillingCycle($billing_id);
-										
-			   		$package_list = array();
-			   		
-					foreach($packages as $package) {
-						$package_list[$package['id']] = $package['name'].' - '.$currency->toCurrency($package['amount']);				
+						$user_info  =  $user->getUserById($order_info['userid']);				
+						
+						$return_array['USER'] 			= $user_info['firstname'].' '.$user_info['lastname'];
+						$return_array['DOMAIN'] 		= $order_info['domain'];					
+						$billing_info 					= $billing->getBilling($billing_id);
+						$return_array['BILLING_CYCLES'] = $billing_info ['name'];
+						$return_array['BILLING_ID'] 	= $billing_id;
+						
+						$addon_list = $addon->getAddonsByPackage($billing_id);
+						$result 	= $addon->showAllAddonsByBillingCycleAndPackage($billing_id, $order_info['pid'], array_flip($order_info['addons']));
+						
+						$return_array['ADDON'] 	=  $result['html'];
+	
+						$packages = $package->getAllPackagesByBillingCycle($billing_id);
+											
+				   		$package_list = array();
+				   		
+						foreach($packages as $package) {
+							$package_list[$package['id']] = $package['name'].' - '.$currency->toCurrency($package['amount']);				
+						}			
+						$return_array['PACKAGES']  		=  $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);','class'=>'required'));									
+						//$return_array['DUE'] 			= date('Y-m-d', time() + $billing_info['number_months']*30*24*60*60);					
+						$return_array['DUE'] 			= date('Y-m-d');
+						$return_array['ID'] 			= $main->getvar['do'];
+						$invoice_status 				= $main->getInvoiceStatusList();
+						//No need to add a deleted invoices!! daaa
+						unset($invoice_status[INVOICE_STATUS_DELETED]);
+						$return_array['STATUS'] 		= $main->createSelect('status', $invoice_status,'', array('class'=>'required'));
+						$return_array['INVOICE_LIST'] 	= $order->showAllInvoicesByOrderId($main->getvar['do']);
+														
+						echo $style->replaceVar('tpl/invoices/addinvoice.tpl', $return_array);	
 					}			
-					$return_array['PACKAGES']  		=  $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);','class'=>'required'));									
-					//$return_array['DUE'] 			= date('Y-m-d', time() + $billing_info['number_months']*30*24*60*60);					
-					$return_array['DUE'] 			= date('Y-m-d');
-					$return_array['ID'] 			= $main->getvar['do'];
-					$invoice_status 				= $main->getInvoiceStatusList();
-					//No need to add a deleted invoices!! daaa
-					unset($invoice_status[INVOICE_STATUS_DELETED]);
-					$return_array['STATUS'] 		= $main->createSelect('status', $invoice_status,'', array('class'=>'required'));
-					$return_array['INVOICE_LIST'] 	= $order->showAllInvoicesByOrderId($main->getvar['do']);
-													
-					echo $style->replaceVar('tpl/invoices/addinvoice.tpl', $return_array);					
-				
+					
 				} else {
 					$main->errors('You need an order before create an invoice!');
 				}			

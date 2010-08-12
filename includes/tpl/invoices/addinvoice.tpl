@@ -39,7 +39,7 @@
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Order id:</td>
-    <td><input name="order_id" type="text" id="order_id" value="%ID%" readonly /></td>
+    <td>%ID%</td>
   </tr>
      <tr>
     <td valign="top">User</td>
@@ -51,7 +51,7 @@
      <tr>
     <td valign="top">Domain</td>
     <td>
-    <input name="name" type="text" id="name" value="%DOMAIN%" readonly />
+    	%DOMAIN%
     </td>
   </tr>
   

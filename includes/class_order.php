@@ -142,7 +142,7 @@ class order extends model {
 			
 			$params['status'] = $status;
 			if ($result) {
-				$this->update($params);
+				$this->update($params, false);
 				$main->addLog("updateOrderStatus function called: $order_id changed to $status");
 				return true;
 			}			

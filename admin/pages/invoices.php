@@ -58,6 +58,7 @@ class page {
 								}*/
 							}							
 							if(!$n) {
+								
 								if ($main->postvar['status'] == INVOICE_STATUS_PAID) {
 									$invoice->set_paid($main->getvar['do']);
 								} else {
