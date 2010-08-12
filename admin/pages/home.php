@@ -43,17 +43,14 @@ class page {
 	}
     
 	public function content() { # Displays the page 
-		global $db;
-		global $main;
-		global $style;
-		global $page;
-		/*
-		 * Updates System by Jimmie Lin
-		 */
-		$current_version = rtrim($this->curl_get_content('http://thehostingtool.com/updates/version.txt')); #Clears the end whitespace. ARGHHH
-		$running_version = $main->cleanwip($db->config('version')); 
+		global $db,$main, $style, $page;		
+		//$current_version = rtrim($this->curl_get_content('http://thehostingtool.com/updates/version.txt')); #Clears the end whitespace. ARGHHH
+		$current_version = '1.2.3';
+		
+		$running_version = $main->cleanwip($db->config('version'));
 		$install_check = $this->checkDir(LINK ."../install/");
 		$conf_check = $this->checkPerms(LINK ."conf.inc.php");
+		
 		if($current_version == $running_version){
 			$updatemsg = "<span style='color:green'>Up-To-Date</span>";
 			$upgrademsg = "";
