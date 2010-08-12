@@ -276,17 +276,18 @@ class page {
 					} else {
 						$return_array['SITE_STATUS_CLASS'] = 'warning';
 						$return_array['SITE_STATUS_INFO'] .= 'Status inactive';					
-					}
-					
+					}					
 					$return_array['SITE_STATUS'] = '<strong>Site exists in Control Panel</strong>';					
-					$return_array['SITE_STATUS_INFO'] = '<br />Registered Domain: '.$site_info['domain'].' <br /> Domain id: '.$site_info['domain_id'].' <br /> Document root: '.$site_info['document_root'];
-					
+					$return_array['SITE_STATUS_INFO'] .= '<br />Registered Domain: '.$site_info['domain'].' <br /> Domain id: '.$site_info['domain_id'].' <br /> Document root: '.$site_info['document_root'];					
 					
 				} else {
 					$return_array['SITE_STATUS_CLASS'] = 'warning';
 					$return_array['SITE_STATUS'] = 'The current order is not registered in the Control Panel Server. <br />To send this order to the Control Panel just change the status to Active';
 					$return_array['SITE_STATUS_INFO'] = '';
 				}				
+				
+				$return_array['DOMAIN'] = $order_info['real_domain'];
+				
 				echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);			
 			break;			
 			case 'view':				
