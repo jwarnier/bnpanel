@@ -296,7 +296,7 @@ label.error {
 
 
 
-.info, .success, .warning, .error, .validation {
+.info, .success, .warning, .error_message, .validation {
     border: 1px solid;
     margin: 10px 0px;
     padding:15px 10px 15px 50px;
@@ -320,7 +320,7 @@ label.error {
     background-color: #FEEFB3;
     background-image: url('warning.png');
 }
-.error {
+.error_message {
     color: #D8000C;
     background-color: #FFBABA;
     background-image: url('error.png');
