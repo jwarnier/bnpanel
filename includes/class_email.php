@@ -78,11 +78,12 @@ class email {
 		} else {
 			$this->email['content'] = $this->parseEmail($content, $array);
 		}
+		/*
 		if (SERVER_STATUS == 'test') {			
 			echo 'Email sent to :'.$to;
 			echo '<br />Email content <br />';			
 			echo '<pre>';print_r($this->email['content']).'</pre>';			
-		}
+		}*/
 		$subject ="[$site_name] ".$subject;
 		$this->email['subject'] = $subject;
 		

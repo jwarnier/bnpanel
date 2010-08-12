@@ -147,8 +147,10 @@ class page {
 									$invoice_params['order_id'] = $order_id;										
 									$invoice_id = $invoice->create($invoice_params, false);
 									$main->clearToken();							
-									$main->errors("Order has been added!");
-									
+									$main->errors("Order has been added into BNPanel");
+									if (!$result) {
+										$main->errors("There was a problem with the Control Panel, please check the logs");	
+									}									
 									//$main->errors("Order has been added to BNPanel. Order is not updated in the Control Panel. Please trying updating this order.");
 								} else {
 									$main->errors("There was a problem!");

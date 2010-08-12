@@ -91,9 +91,10 @@ $data = preg_replace("/<AJAX>/si", URL."includes/ajax.php?_get_token=".$current_
 $data = preg_replace("/<IMG>/si", URL . "themes/". THEME ."/images/", $data);
 $data = preg_replace("/<ICONDIR>/si", URL . "themes/icons/", $data);
 $data = preg_replace("/<PAGEGEN>/si", $pagegen, $data); #Page Generation Time
-
-$data = preg_replace("/<COPYRIGHT>/si", '<div id="footer">Powered by <a href="http://bnpanel.com" target="_blank">BNPPanel</a> '. $version .'</div>', $data);
-
-$data = preg_replace("/<ERRORS>/si", '<span class="errors">'.$main->errors().'</span>', $data);
+$data = preg_replace("/<COPYRIGHT>/si", '<div id="footer">Powered by <a href="http://www.beeznest.com" target="_blank">BNPPanel</a> '. $version .'</div>', $data);
+$error_messages = $main->errors();
+if (!empty($error_messages)) {
+	$data = preg_replace("/<ERRORS>/si", '<div class="info">'.$error_messages.'</div>', $data);
+}
 $data = preg_replace("/%INFO%/si", INFO, $data);
 ?>
