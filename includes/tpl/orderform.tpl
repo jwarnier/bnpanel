@@ -202,6 +202,7 @@ function nextstep() {
 					$("#verify").html("<strong>You must select a sub domain</strong> "+wrong);
 					break;
 				}
+				final_domain = subdomain;
 				// var subdomain_id = subdomain.options[subdomain.selectedIndex].value;
 			} else {
 				var subdomain_id 	= '';
@@ -212,10 +213,10 @@ function nextstep() {
 				}
 			}
 			
-			$.get("<AJAX>function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {			
+			$.get("<AJAX>function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {							
 				if (data == '1') {
 					$("#verify").html("<strong>Domain already exist</strong> "+wrong);					
-				} else {
+				} else if(data == '0') {
 					final(step, step + 1);
 					step = step + 1
 					var url = "function=create";
@@ -258,14 +259,16 @@ function nextstep() {
 						//Check if an invoice is generated
 						$.get("<AJAX>function=ispaid", function(invoice_id) {
 							if(invoice_id != "") {
-								window.location = "../client/?page=invoices&iid="+invoice_id;				
+								//window.location = "../client/?page=invoices&iid="+invoice_id;				
 							} else {
-								window.location = "../client/?page=invoices";
+								//window.location = "../client/?page=invoices";
 							}
 							
 						});
 					});
-				}				
+				} else {
+					$("#verify").html("<strong>Seems that you took a lot of time to decide...</strong> "+wrong);		
+				}			
 			});			
 			break;
 	}
@@ -394,7 +397,7 @@ function showAddons(obj) {
 	<div class="table" id="5" style="display:none">
         <div class="cat">Client Account</div>
         <div class="text">
-        	<table class="data_table" border="0" cellspacing="2" cellpadding="0" align="center" style="width: 700px;">
+        	<table class="data_table" border="0" cellspacing="2" cellpadding="0" align="center" style="width: 400px;">
               <tr>
                 <td>Username:</td>
                 <td><input type="text" name="username" id="username" /></td>
