@@ -259,9 +259,9 @@ function nextstep() {
 						//Check if an invoice is generated
 						$.get("<AJAX>function=ispaid", function(invoice_id) {
 							if(invoice_id != "") {
-								//window.location = "../client/?page=invoices&iid="+invoice_id;				
+								window.location = "../client/?page=invoices&iid="+invoice_id;				
 							} else {
-								//window.location = "../client/?page=invoices";
+								window.location = "../client/?page=invoices";
 							}
 							
 						});
