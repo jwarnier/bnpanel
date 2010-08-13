@@ -1,8 +1,9 @@
-<table width="100%" border="0" cellspacing="2" cellpadding="0">
-  <tr>
-    <td width="20%">Id:</td>
-    <td>%ID%</td>
-  </tr>
+<div class="contextual">
+	<a href="?page=orders&sub=edit&do=%ID%"> <img src="<URL>themes/icons/pencil.png"> Edit</a> 
+</div>
+<h2>Order #%ID%</h2>
+
+<table width="100%" border="0" cellspacing="2" cellpadding="0"> 
      <tr>
     <td valign="top">User</td>
     <td>
@@ -14,8 +15,7 @@
     <td>
    %DOMAIN%
     </td>
-  </tr>
-  
+  </tr>  
       <tr>
     <td valign="top">Billing cycles</td>
     <td>
@@ -55,9 +55,7 @@
     %CREATED_AT%
     </td>
   </tr>
-  
-  
-          <tr>
+	<tr>
     <td valign="top">Control Panel Username</td>
     <td>  		
 		%USERNAME%
@@ -70,13 +68,6 @@
 		%PASSWORD%
     </td>
   </tr>
-  
-  
-
-   <!-- <tr>
-    <td >Total:</td>
-    <td valign="top" ><h2>%TOTAL%</h2></td>
-  </tr>  -->   
 </table>
 %INVOICE_LIST%
  

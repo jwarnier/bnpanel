@@ -381,7 +381,7 @@ class order extends model {
 			$array['PACKAGE']		 = $package_list[$package_id]['name'];
 			$array['billing_cycle']  = $billing_cycle_list[$billing_cycle_id]['name'];
 			if (empty($user_id)) {
-				$array['EDIT']  	= '<a href="index.php?page=orders&sub=edit&do='.$order_item['id'].'"><img src="../themes/icons/note_edit.png" title="Edit" alt="Edit" /></a>';			
+				$array['EDIT']  	= '<a href="index.php?page=orders&sub=edit&do='.$order_item['id'].'"><img src="../themes/icons/pencil.png" title="Edit" alt="Edit" /></a>';			
 				$array['DELETE']  	= '<a href="index.php?page=orders&sub=delete&do='.$order_item['id'].'"><img src="../themes/icons/delete.png" title="Delete"  alt="Delete" /></a>';
 				$array['ADD_INVOICE']='<a href="index.php?page=orders&sub=add_invoice&do='.$order_item['id'].'"><img src="../themes/icons/note_add.png" title="Add invoice"  alt="Add invoice" /></a>';				
 				$array['CHANGE_PASS']='<a href="index.php?page=orders&sub=change_pass&do='.$order_item['id'].'"><img src="../themes/icons/key.png" title="Change Control Panel password"  alt="Change Control Panel password" /></a>';
@@ -525,7 +525,7 @@ class order extends model {
 		$invoice_list = $this->getAllInvoicesByOrderId($order_id);		
 		$html = '';
 		if (is_array($invoice_list) && count($invoice_list) > 0) {
-			$html  = '<h2>Invoices for this Order</h2>';
+			$html  = '<h3>Invoices for this Order</h3>';
 			$html .= '<ul>';
 			foreach($invoice_list as $invoice_item) {				
 				$my_invoice = $invoice->getInvoiceInfo($invoice_item['invoice_id']);

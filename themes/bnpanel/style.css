@@ -1,3 +1,7 @@
+* {
+	margin:0px;
+	padding:0px;
+}
 body {
 	margin:0;
 	background:url(<IMG>background.png) repeat-x #eeeff1;
@@ -319,4 +323,19 @@ label.error {
 
 #description {
 	background-color:white;	
+}
+
+.contextual {
+	float:right;
+	font-size:0.9em;
+	line-height:1.4em;
+	margin-top:5px;
+	padding-left:10px;
+	white-space:nowrap;
+}
+
+h2, h3 {
+	border-bottom:1px solid #BBBBBB;	
+	margin:0 0 10px;
+	padding:2px 10px 1px 0;
 }

@@ -1282,8 +1282,8 @@ class AJAX {
 			$html .="<tr>
 			            <td></td>
 			            <td></td>
-			            <td><b><h2>Total</h2></b></td>
-			            <td align=\"right\"><h2>{$total_to_show}</h2></td>
+			            <td><b><h3>Total</h3></b></td>
+			            <td align=\"right\"><h3>{$total_to_show}</h3></td>
 			            <td></td>
 			        </tr>";
 			$html .='</table>';

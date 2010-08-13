@@ -1,32 +1,29 @@
 <script type="text/javascript" src="<URL>includes/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
-	tinyMCE.init({
-	mode : "textareas",
-	skin : "o2k7",
-	theme : "simple"
-	});
 
-	$(function() {
-	/*	$( "#created_at" ).datepicker({
-			dateFormat: 'yy-mm-dd',
-			showOn: 'button',
-			buttonImage: '<URL>themes/icons/calendar_add.png'			 
-		});*/
+tinyMCE.init({
+mode : "textareas",
+skin : "o2k7",
+theme : "simple"
+});
 
-		$("#show_preview").dialog({ autoOpen: false, width: '400px' });
-	});
+$(function() {
+/*	$( "#created_at" ).datepicker({
+		dateFormat: 'yy-mm-dd',
+		showOn: 'button',
+		buttonImage: '<URL>themes/icons/calendar_add.png'			 
+	});*/
 
-	function send(template, id) {		
-		$.get("<AJAX>function=sendtemplate&template="+template+"&order_id="+id,  function(data) {
-			$("#show_preview").html(data);				
-		});						
-		$("#show_preview").dialog('open');
-	}
+	$("#show_preview").dialog({ autoOpen: false, width: '400px' });
+});
 
+function send(template, id) {		
+	$.get("<AJAX>function=sendtemplate&template="+template+"&order_id="+id,  function(data) {
+		$("#show_preview").html(data);				
+	});						
+	$("#show_preview").dialog('open');
+}
 
-</script>
-
-<script type="text/javascript">
 function changeAddons(obj) {	
 	var id=obj.options[obj.selectedIndex].value;
 	$.get("<AJAX>function=changeAddons&package_id="+id+"&order_id="+document.getElementById("order_id").value, function(data) {
@@ -53,18 +50,16 @@ function loadAddons(obj) {
 		document.getElementById("showaddons").innerHTML = data;
 	});
 }
-
 </script>
+
+<h2>Order #%ID%</h2>
+
 
 <ERRORS>
 <form id="addpackage" name="addpackage" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
-  <tr>
-    <td width="20%">Id:</td>
-    <td>%ID%</td>
-  </tr>  
      <tr>
-    <td valign="top">User</td>
+    <td width="20%">User</td>
     <td>
     %USER%
     </td>
