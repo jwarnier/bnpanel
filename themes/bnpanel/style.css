@@ -352,3 +352,8 @@ h2, h3 {
 	float:left;	
 	padding:0px 4px 0px 4px;
 }
+
+fieldset {
+	margin:5px;
+	padding:5px;
+}

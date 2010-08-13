@@ -354,9 +354,6 @@ class server extends Model {
 				return ;
 			}
 		}
-
-		//$main->getvar['fplan'] = $package_info['backend']; 		//useless right now
-		//$serverphp = $this->loadServer($package_info['server']); # Create server class
 		
 		$date 				= time();
 		$billing_cycle_id 	= $main->getvar['billing_id'];
@@ -416,11 +413,22 @@ class server extends Model {
 			$params['username']			= $main->generatePassword();
 			$params['subdomain_id']			= $subdomain_id;
 			
+
+			//Getting mandatory addons and adding if somebody 
+			$mandatory_addons = $addon->getMandatoryAddonsByPackage($package_id);
+			foreach($mandatory_addons as $key=>$addon_item) {
+				if (in_array($key, $main->getvar['addon_ids'])) {
+					continue;
+				} else {
+					array_push($main->getvar['addon_ids'], $key);
+				}				
+			}
 			
 			//Create an order
 			if (!empty($params['userid']) && !empty($params['pid'])) {
 				$order_id = $order->create($params, false);
-				//Add addons to the new order		
+				
+				//Add addons to the new order						
 				$order->addAddons($order_id, $main->getvar['addon_ids'], false);				
 			}
 			

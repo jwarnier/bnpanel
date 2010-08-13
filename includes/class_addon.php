@@ -8,7 +8,7 @@ if(THT != 1){
 
 class addon extends model {
 	
-	public $columns 	= array('id', 'name','setup_fee', 'description','status', 'install_package');
+	public $columns 	= array('id', 'name','setup_fee', 'description','status', 'install_package', 'mandatory');
 	public $table_name = 'addons';
 	
 	public function create($params) {
@@ -220,7 +220,11 @@ class addon extends model {
 				if (isset($selected_values[$data['id']])) {
 					$checked = true;
 				}	
-				$html .= $main->createCheckbox($data['name'], 'addon_'.$data['id'], $checked);					
+				$mandatory_message = '';
+				if (isset($data['mandatory']) && $data['mandatory'] == 1) {
+					$mandatory_message = '(Mandatory)';
+				}
+				$html .= $main->createCheckbox($data['name'].' '.$mandatory_message, 'addon_'.$data['id'], $checked);					
 			}
 		}
 		if (empty($html)) {
@@ -264,6 +268,7 @@ class addon extends model {
 		return $addon_list; 	
 	}
 	
+	
 	/**
 	 * Gets all addons by billing id
 	 */
@@ -299,6 +304,26 @@ class addon extends model {
 		}
 		return $addon_list;
 	}	
+	
+	/**
+	 * Gets all addons by package id
+	 */
+	public function getMandatoryAddonsByPackage($package_id) {
+		global $db, $main;
+		$package_id = intval($package_id);
+		$addon_list = array();	
+		if (!empty($package_id)) {
+			$result = $db->query("SELECT id FROM `<PRE>addons` a INNER JOIN  `<PRE>package_addons` pa ON (pa.addon_id = a.id) WHERE package_id = ".$package_id." AND mandatory = 1");						
+			if($db->num_rows($result) > 0) {
+				while($data = $db->fetch_array($result, 'ASSOC')) {		
+					$addon_list[$data['id']] = $data;
+				}								
+			}
+		}
+		return $addon_list;
+	}	
+	
+	
 	
 	/*
 	public function getAddonByBillingCycleByOrder($addon_id, $billing_id) {

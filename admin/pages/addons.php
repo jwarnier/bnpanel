@@ -56,9 +56,19 @@ class page {
 							$main->postvar['status'] = ADDON_STATUS_ACTIVE;
 						} else {
 							$main->postvar['status'] = ADDON_STATUS_INACTIVE;
+						}				
+						
+
+  
+					  	//Chamilo install
+						if ($main->postvar['mandatory'] == 'on') {
+							$main->postvar['mandatory'] = 1;
+						} else {
+							$main->postvar['mandatory'] = 0;
 						}
 						
-						
+  		
+						//Chamilo install
 						if ($main->postvar['install_package'] == 'on') {
 							$main->postvar['install_package'] = 1;
 						} else {
@@ -69,7 +79,7 @@ class page {
 						$product_id = $addon->create($main->postvar);					
 						$billing_list = $billing->getAllBillings();
 						$billing_cycle_result = '';			
-						var_dump($billing_list);				
+									
 						foreach($billing_list as $billing_item) {
 							$variable_name = 'billing_cycle_'.$billing_item['id'];
 							//var_dump($variable_name);
@@ -84,7 +94,8 @@ class page {
 				$billing_cycle_result 	= $billing->generateBillingInputs();
 				$array['BILLING_CYCLE'] = $billing_cycle_result;
 				$array['STATUS'] 		= $main->createCheckbox('', 'status');
-				$array['INSTALL_PACKAGE'] 		= $main->createCheckbox('', 'install_package');
+				$array['INSTALL_PACKAGE']= $main->createCheckbox('', 'install_package');
+				$array['MANDATORY'] 	= $main->createCheckbox('', 'mandatory');
 	
 				//----- Finish billing cycle					
 				echo $style->replaceVar("tpl/addons/add.tpl", $array);
@@ -122,6 +133,15 @@ class page {
 								} else {
 									$main->postvar['status'] = ADDON_STATUS_INACTIVE;
 								}
+															
+		  
+							  	//Chamilo install
+								if ($main->postvar['mandatory'] == 'on') {
+									$main->postvar['mandatory'] = 1;
+								} else {
+									$main->postvar['mandatory'] = 0;
+								}						
+								
 								
 								if ($main->postvar['install_package'] == 'on') {
 									$main->postvar['install_package'] = 1;
@@ -163,12 +183,9 @@ class page {
 						
 						$array['BACKEND'] 		= $data['backend'];
 						$array['DESCRIPTION']	= $data['description'];						
-						$array['STATUS'] 		= $main->createCheckbox('', 'status', $data['status']);
-							
+						$array['STATUS'] 		= $main->createCheckbox('', 'status', $data['status']);							
 						$array['INSTALL_PACKAGE']= $main->createCheckbox('', 'install_package', $data['install_package']);
-						
-						
-											
+						$array['MANDATORY']		= $main->createCheckbox('', 'mandatory', $data['mandatory']);											
 						$array['NAME'] 			= $data['name'];
 						
 						$array['ID'] = $data['id'];

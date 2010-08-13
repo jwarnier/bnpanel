@@ -12,7 +12,8 @@
   <tr>
     <td width="20%">Name:</td>
     <td>
-      <input name="name" type="text" id="name" value="%NAME%" /><a title="The package name" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+      <input name="name" type="text" id="name" value="%NAME%" />
+      <a title="The package name" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>  
   <tr>
@@ -36,7 +37,13 @@
     </td>
   </tr>
   
-  
+	<tr>
+    <td valign="top">Mandatory</td>
+    <td>
+	 %MANDATORY%	
+	 <a title="When a client tries to buy a package with this addon related, this addon will be added as mandatory" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+    </td>
+  </tr>
     
            <tr>
     <td valign="top">Install Chamilo</td>

@@ -19,9 +19,7 @@
   <tr>
     <td valign="top">Description:</td>
     <td><textarea name="description" id="description" cols="45" rows="5"></textarea></td>
-  </tr> 
-
-  
+  </tr>  
     
   <!--
 	<tr>
@@ -45,7 +43,14 @@
     </td>
   </tr>
   
-           <tr>
+  	<tr>
+    <td valign="top">Mandatory</td>
+    <td>
+	 %MANDATORY%	
+    </td>
+  </tr>
+  
+	<tr>
     <td valign="top">Install Chamilo</td>
     <td>
 	 %INSTALL_PACKAGE%	

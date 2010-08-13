@@ -1151,8 +1151,7 @@ class AJAX {
 	   function getAddons() {
 	   		global $main, $db, $currency;
 			$billing_id = $main->getvar['billing_id'];			
-	   		$package_id = $main->getvar['package_id'];
-	   		
+	   		$package_id = $main->getvar['package_id'];	   		
 	   		
 	   		$html = '<fieldset style="width: 98%;"><legend><b>Package Order</b></legend><table width="100%" >';
 	   		
@@ -1184,25 +1183,29 @@ class AJAX {
 		   		$html .= '<table width="100%" >';
 		   		
 		   		while($data = $db->fetch_array($result)) {		   			
-		   			$sql = "SELECT a.name, description, setup_fee, bc.name as billing_name, b.amount FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
+		   			$sql = "SELECT a.name, a.mandatory, description, setup_fee, bc.name as billing_name, b.amount FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 							ON (bc.id = b.billing_id) WHERE a.status = ".ADDON_STATUS_ACTIVE." AND a.id = {$data['addon_id']} AND bc.id = {$main->getvar['billing_id']}  AND b.type = '".BILLING_TYPE_ADDON."' ORDER BY a.name";
 					$addon_result = $db->query($sql);
 					if ($db->num_rows($addon_result) > 0) {
-						$addon = $db->fetch_array($addon_result);
+						$addon = $db->fetch_array($addon_result, 'ASSOC');
 						
 						$addon['amount'] = $currency->toCurrency($addon['amount']);
 					
 						//@todo setup feee per 	
 						//$setup_fee = '<b>Setup Fee:</b></td><td align="right">'.$addon['setup_fee'];
 						$setup_fee ='';
-						$html .='<tr><td width="1%"><input id="addon_ids" value="'.$data['addon_id'].'" name="addon_ids" type="checkbox"></td>';
+						$html .='<tr><td width="1%">';
+						$checked = '';						
+						if ($addon['mandatory'] == 1) {
+							$checked = 'checked="on" disabled';	
+						}						
+						$html .='<input id="addon_ids" '.$checked.' value="'.$data['addon_id'].'" name="addon_ids" type="checkbox"></td>';
 						$html .='<td width="33%">'.$addon['name'].'</td><td align="right">'.$setup_fee.'</td><td align="right"><strong>'.$addon['billing_name'].'</strong></td>';
 						$html .='<td width="33%" align="right">'.$addon['amount'].'</td></tr>';
 						$info_exist = true;
 					}
 		   		}
-		   		$html .='</table></fieldset>';		   		
-		   		
+		   		$html .='</table></fieldset>';
 		   		$html .='<input type="hidden" name="billing_id" value="'.$billing_id.'">';
 	   		}
    			if ($package_billing_info_exist) {
