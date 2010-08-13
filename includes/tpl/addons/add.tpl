@@ -46,17 +46,16 @@
   	<tr>
     <td valign="top">Mandatory</td>
     <td>
-	 %MANDATORY%	
+	 %MANDATORY% <a title="This addon will be set to mandatory for a related package" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>
-  
+    
 	<tr>
     <td valign="top">Install Chamilo</td>
     <td>
-	 %INSTALL_PACKAGE%	
+	 %INSTALL_PACKAGE%	<a title="Install chamilo using the Control Panel" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
-  </tr>
-  
+  </tr>  
 
 </table>
 <table width="100%" border="0" cellspacing="2" cellpadding="0">

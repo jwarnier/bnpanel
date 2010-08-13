@@ -525,7 +525,7 @@ class order extends model {
 		$invoice_list = $this->getAllInvoicesByOrderId($order_id);		
 		$html = '';
 		if (is_array($invoice_list) && count($invoice_list) > 0) {
-			$html  = '<h3>Invoices for this Order</h3>';
+			$html  = '<br /><h3>Invoices for this Order</h3>';
 			$html .= '<ul>';
 			foreach($invoice_list as $invoice_item) {				
 				$my_invoice = $invoice->getInvoiceInfo($invoice_item['invoice_id']);
