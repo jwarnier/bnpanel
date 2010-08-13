@@ -224,7 +224,7 @@ class addon extends model {
 				if (isset($data['mandatory']) && $data['mandatory'] == 1) {
 					$mandatory_message = '(Mandatory)';
 				}
-				$html .= $main->createCheckbox($data['name'].' '.$mandatory_message, 'addon_'.$data['id'], $checked);					
+				$html .= $main->createCheckbox($data['name'].' '.$mandatory_message, 'addon_'.$data['id'], $checked).'<br />';					
 			}
 		}
 		if (empty($html)) {

@@ -38,10 +38,10 @@
   </tr>
   
 	<tr>
-    <td valign="top">Mandatory</td>
+    <td valign="top">Mandatory 
+    </td>
     <td>
-	 %MANDATORY%	
-	 <a title="When a client tries to buy a package with this addon related, this addon will be added as mandatory" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+	 %MANDATORY% <a title="This addon will be set to mandatory for a related package" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>
     
