@@ -550,6 +550,7 @@ CREATE TABLE  `%PRE%addons` (
   `description` varchar(255) NOT NULL,
   `status` int NOT NULL,
   `install_package` int NOT NULL,
+  `mandatory` int NOT NULL,  
   PRIMARY KEY (`id`)
 );
 
