@@ -266,7 +266,7 @@ class invoice extends model {
 			$array['package']		 = $package_list[$package_id]['name'];
 			$array['billing_cycle']  = $billing_list[$billing_cycle_id]['name'];
 			
-			$array['edit']  	= '<a href="index.php?page=invoices&sub=edit&do='.$array['id'].'"><img src="../themes/icons/note_edit.png" alt="Edit" /></a>';			
+			$array['edit']  	= '<a href="index.php?page=invoices&sub=edit&do='.$array['id'].'"><img src="../themes/icons/pencil.png" alt="Edit" /></a>';			
 			$array['delete']  	= '<a href="index.php?page=invoices&sub=delete&do='.$array['id'].'"><img src="../themes/icons/delete.png" alt="Delete" /></a>';
 			
 			$result['list'] .= $style->replaceVar("tpl/invoices/invoice-list-item.tpl", $array);
@@ -562,6 +562,7 @@ class invoice extends model {
 						
 						//2. Send a reminder to a user that have an invoice but he does not pay check every 2 days
 						$days = 2;
+						
 						$send_reminder_every = $days*24*60*60; //1 day
 						$time_passed = strtotime($my_invoice['created']) + $send_reminder_every;			
 						$time_passed_to_date = date('Y-m-d', $time_passed);			

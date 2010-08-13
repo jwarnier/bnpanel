@@ -1,10 +1,11 @@
+<div class="contextual">
+	<a href="?page=invoices&sub=edit&do=%ID%"> <img src="<URL>themes/icons/pencil.png"> Edit</a> 
+</div>
+<h2>Invoice #%ID%</h2>
+
 <form id="addpackage" name="addpackage" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
-  <tr>
-    <td width="20%">Invoice id:</td>
-    <td>%ID%</td>
-  </tr>
-  
+
   <tr>
     <td width="20%">Order id:</td>
     <td>%ORDER_ID%</td>
@@ -73,7 +74,7 @@
   
    <tr>
     <td >Total:</td>
-    <td valign="top" ><h2>%TOTAL%</h2></td>
+    <td valign="top" ><h3>%TOTAL%</h3></td>
   </tr>
     
 </table>
