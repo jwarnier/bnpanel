@@ -79,15 +79,24 @@ function acp() {
 			$sidebar = $style->replaceVar("tpl/sidebar.tpl", $array);
 			
 			//Page Sidebar
+			
+			$sidebar_link_link = "tpl/sidebarlink.tpl";
+			$sidebar_link =  "tpl/sidebar.tpl";	
+				
+			if (isset($main->getvar['sub'])) {
+				$sidebar_link_link = "tpl/page/sidebarlink.tpl";
+				$sidebar_link =  "tpl/page/sidebar.tpl";							
+			}
+			
 			if($content->navtitle) {
 				$subnav = $content->navtitle;				
 				foreach($content->navlist as $key => $value) {
 					$array2['IMGURL'] = $value[1];
 					$array2['LINK'] = "?page=".$main->getvar['page']."&sub=".$value[2];
 					$array2['VISUAL'] = $value[0];
-					$array3['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);
+					$array3['LINKS'] .= $style->replaceVar($sidebar_link_link, $array2);
 				}
-				$subsidebar = $style->replaceVar("tpl/sidebar.tpl", $array3);
+				$subsidebar = $style->replaceVar($sidebar_link, $array3);
 			}
 			
 			if($main->getvar['sub'] && $main->getvar['page'] != "type") {
@@ -114,10 +123,7 @@ function acp() {
 				$html = $style->replaceVar("tpl/warning.tpl", $array);
 				
 			} elseif($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
-				if($main->postvar['yes']) {
-					
-			
-				
+				if($main->postvar['yes']) {	
 					foreach($main->getvar as $key => $value) {
 					  if($i) {
 						  $i = "&";	
@@ -132,15 +138,13 @@ function acp() {
 				} elseif($main->postvar['no']) {
 					$main->done();	
 				}
-			}
-			else {
+			} else {
 				if(isset($main->getvar['sub'])) {
 					ob_start();
 					$content->content();
 					$html = ob_get_contents(); # Retrieve the HTML
 					ob_clean(); # Flush the HTML
-				}
-				elseif($content->navlist) {
+				} elseif($content->navlist) {
 					$html .= $content->description(); # First, we gotta get the page description.
                     $html .= "<br /><br />"; # Break it up
                     // Now we should prepend some stuff here
@@ -148,8 +152,7 @@ function acp() {
                     $subsidebar2 .= $subsidebar;
                     // Done, now output it in a sub() table
                     $html .= $main->sub($subsidebar2, NULL); # Initial implementation, add the SubSidebar(var) into the description, basically append it 
-				}
-				else {
+				} else {
 					ob_start();
 					$content->content();
 					$html = ob_get_contents(); # Retrieve the HTML
@@ -166,15 +169,16 @@ function acp() {
 	define("SUB", $header);
 	define("INFO", '<b>Welcome back, '. strip_tags($staffuser['name']) .'</b><br />'. SUB);
 	
-	echo '<div id="left">';
-	echo $main->table($nav, $sidebar);
-	if($content->navtitle) {
-		echo "<br />";
-		echo $main->table($subnav, $subsidebar);
-	}
-	echo '</div>';
-	
-	echo '<div id="right">';
+	echo '<div id="left">';	
+		echo $main->table($nav, $sidebar);
+	echo '</div>';	
+	echo '<div id="right">';	
+		if (isset($main->getvar['sub'])) {
+			if($content->navtitle) {				
+				echo $main->table($subnav, $subsidebar);
+			}
+		}
+		
 	echo $main->table($header, $html);
 	echo '</div>';
 	
