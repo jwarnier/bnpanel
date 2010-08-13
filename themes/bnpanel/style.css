@@ -339,3 +339,16 @@ h2, h3 {
 	margin:0 0 10px;
 	padding:2px 10px 1px 0;
 }
+
+.submenu {
+	font-size:80%;
+	height:25px;
+	list-style-type:none;
+	margin:11px 0 0;
+	padding-left:0;	
+}
+
+.submenu li{
+	float:left;	
+	padding:0px 4px 0px 4px;
+}
