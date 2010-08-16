@@ -13,8 +13,8 @@ class page {
 		$this->navlist[] = array("Theme Chooser", "layout.png", "tchoose");
 	//	$this->navlist[] = array("Theme Uploader", "layout_add.png", "tupload"); Disabling for security reasons
         $this->navlist[] = array("jQuery UI Theme", "palette.png", "ui-theme");
-		$this->navlist[] = array("CSS Editor", "css.png", "cssedit");
-		$this->navlist[] = array("TPL Editor", "xhtml.png", "tpledit");
+//		$this->navlist[] = array("CSS Editor", "css.png", "cssedit");
+//		$this->navlist[] = array("TPL Editor", "xhtml.png", "tpledit");
 		$this->navlist[] = array("NavBar Editor", "link_edit.png", "navedit");
 	}
 	
@@ -75,30 +75,34 @@ class page {
 				//echo '<ERRORS>'; 
 				break;
 			case "cssedit": #CSS Editor - Thanks Jimmie & Kevin!
+				echo '<div class="warning">This feature is disable for security reasons</div>';	
+				/*
 			  	$url = $db->config('url')."themes/".$db->config('theme')."/images/";
 			  	$filetochange = LINK."../themes/".$db->config('theme')."/style.css";
 			  	$filetochangeOpen = file_get_contents($filetochange);
 			  	$filetochangeStripped = str_replace("<IMG>", "&lt;IMG&gt;", $filetochangeOpen);
 			  	$css['CSSCONTENT'] = $filetochangeStripped;
-                                if($this->checkWritable($filetochange)) {
-                                    $css['DISABLED'] = '';
-                                    $css['READONLY'] = '';
-                                    $css['CODEPRESS'] = 'codepress ';
-                                    $css['NOTICE'] = '';
-                                }
-                                else {
-                                    $css['DISABLED'] = ' disabled="disabled"';
-                                    $css['READONLY'] = ' readonly="readonly"';
-                                    $css['CODEPRESS'] = '';
-                                    $css['NOTICE'] = $style->notice(false, "In order to make changes to this file, please CHMOD it to 666.");
-                                }
+                if($this->checkWritable($filetochange)) {
+                    $css['DISABLED'] = '';
+                    $css['READONLY'] = '';
+                    $css['CODEPRESS'] = 'codepress ';
+                    $css['NOTICE'] = '';
+                }
+                else {
+                    $css['DISABLED'] = ' disabled="disabled"';
+                    $css['READONLY'] = ' readonly="readonly"';
+                    $css['CODEPRESS'] = '';
+                    $css['NOTICE'] = $style->notice(false, "In order to make changes to this file, please CHMOD it to 666.");
+                }
 
 			  	echo $style->replaceVar('tpl/cssedit.tpl', $css);
+			  	*/
 			  	
 				break;
 			case "tpledit": #TPL Editor -  Thanks Jimmie & Kevin!
+				echo '<div class="warning">This feature is disable for security reasons</div>';
 				# Quite simple redir-tor
-		      		echo $style->replaceVar('tpl/tpledit.tpl');
+		      	//echo $style->replaceVar('tpl/tpledit.tpl');
 				break;
 			case "navedit"; # Navbar Editor - Not Yet Finished
                                     echo $style->replaceVar("tpl/navedit/top.tpl");

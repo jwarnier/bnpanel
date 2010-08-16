@@ -824,6 +824,7 @@ class AJAX {
         function editcss() {
             global $main, $db, $style;
             if($_SESSION['logged']) {
+            	/*
                 if(isset($_POST['css'])) {
                     $url = $db->config('url')."themes/".$db->config('theme')."/images/";
                     $slash = stripslashes(str_replace("&lt;IMG&gt;", "<IMG>", $_POST['css'])); #Strip it back
@@ -833,7 +834,8 @@ class AJAX {
                 }
                 else {
                     return;
-                }
+                }*/
+                
             }
             return true;
         }
@@ -842,6 +844,7 @@ class AJAX {
             global $main, $db, $style;
             if($_SESSION['logged']) {
                 if(isset($_POST['file']) and isset($_POST['contents'])) {
+                	/*
                     $file = $_POST['file'];
                     $contents = $_POST['contents'];
                     $slash = $contents;
@@ -881,6 +884,7 @@ class AJAX {
                     fclose($filetochangeOpen) or die ("Error Closing File!");
                     echo $file . '.tpl Modified! Refresh for changes.';
                     die();
+                    */
                 }
             }
             return true;
