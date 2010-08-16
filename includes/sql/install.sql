@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%invoices` (
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%navbar` (
-  `id` smallint(6) NOT NULL auto_increment,
+  `id` int NOT NULL auto_increment,
   `icon` varchar(20) NOT NULL,
   `visual` varchar(70) NOT NULL,
   `link` varchar(20) NOT NULL,
@@ -205,11 +205,11 @@ CREATE TABLE IF NOT EXISTS `%PRE%navbar` (
 -- Dumping data for table `%PRE%navbar`
 --
 
-INSERT INTO `%PRE%navbar` (`id`, `icon`, `visual`, `link`, `order`) VALUES
-(1, 'cart.png', 'Order Form', 'order', 1),
-(2, 'user.png', 'Client Area', 'client', 0),
-(3, 'key.png', 'Admin Area', 'admin', 2),
-(4, 'report_magnify.png', 'Knowledge Base', 'support', 3);
+INSERT INTO `%PRE%navbar` (`icon`, `visual`, `link`, `order`) VALUES
+('cart.png', 'Order Form', 'order', 1),
+('user.png', 'Client Area', 'client', 0),
+('key.png', 'Admin Area', 'admin', 2),
+('report_magnify.png', 'Knowledge Base', 'support', 3);
 
 -- --------------------------------------------------------
 
@@ -335,10 +335,10 @@ CREATE TABLE IF NOT EXISTS `%PRE%supportnav` (
 -- Dumping data for table `%PRE%supportnav`
 --
 
-INSERT INTO `%PRE%supportnav` (`id`, `visual`, `icon`, `link`) VALUES
-(1, 'Home', 'house.png', 'home'),
-(2, 'Tickets', 'page_white_text.png', 'tickets'),
-(3, 'Knowledgebase', 'folder_explore.png', 'kb');
+INSERT INTO `%PRE%supportnav` (`visual`, `icon`, `link`) VALUES
+('Home', 'house.png', 'home'),
+('Tickets', 'page_white_text.png', 'tickets'),
+('Knowledgebase', 'folder_explore.png', 'kb');
 
 -- --------------------------------------------------------
 

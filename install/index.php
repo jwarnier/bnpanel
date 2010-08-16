@@ -15,8 +15,7 @@
 if(strtoupper(substr(PHP_OS, 0, 3)) === "WIN") {
 	$file = str_replace("\\", "/", __FILE__);
 	$prepend = "/";
-}
-else {
+} else {
 	$file = __FILE__;
 	$prepend = "";
 }
@@ -51,28 +50,9 @@ define("NVER", "1.2.3");
 define("LINK", "../includes/"); # Set link
 include LINK."compiler.php"; # Get compiler
 
-function writeconfig($host, $user, $pass, $db, $pre, $true) {
-	global $style;
-	$array['HOST'] =  $host;
-	$array['USER'] =  $user;
-	$array['PASS'] =  $pass;
-	$array['DB'] =  $db;
-	$array['PRE'] =  $pre;
-	$array['TRUE'] = $true;
-	$tpl = $style->replaceVar("tpl/install/conftemp.tpl", $array);
-	$link = LINK."conf.inc.php";
-	if(is_writable($link)) {
-		file_put_contents($link, $tpl);
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
 define("THEME", 'bnpanel'); # Set the theme
 define("URL", "../"); # Set url to blank
-define("NAME", "THT");
+define("NAME", "BNPanel");
 define("PAGE", "Install");
 define("SUB", "Choose Method");
 
@@ -80,15 +60,25 @@ $array['VERSION'] = NVER;
 $array['ANYTHING'] = "";
 $link = LINK."conf.inc.php";
 $disable = false;
+
+echo $style->get("header.tpl");
+
+$values=array('install'=>'Install');  
+
 if(INSTALL == 1) {
+	$main->errors('The system has already been installed. If you want to re-install you should delete the conf.inc.php file. If you want to update just continue this procedure.');
+ 	//$values['upgrade'] = 'Upgrade';
+ 	$values=array('upgrade'=>'Upgrade');
+	/*
 	include LINK."conf.inc.php";
 	if(!writeconfig($sql['host'], $sql['user'], $sql['pass'], $sql['db'], $sql['pre'], "false")) {
 		$array['ANYTHING'] = "Your $link isn't writeable or does not exist! Please CHMOD it to 666 and make sure it exists!!";
 		$disable = true;
 	} else {
 		$array['ANYTHING'] = "Since you've already ran the install your config has been re-written to not installed. If you are upgrading, this is fine!";
-	}
+	}*/
 }
+	
 if(!file_exists($link)) {
 	$array["ANYTHING"] = "Your $link file doesn't exist! Please create it!";
 	$disable = true;
@@ -96,14 +86,15 @@ if(!file_exists($link)) {
 	$array['ANYTHING'] = "Your $link isn't writeable! Please CHMOD it to 666!";
 	$disable = true;
 }
-echo $style->get("header.tpl");
+
 if($disable) {
 	echo '<script type="text/javascript">$(function(){$(".twobutton").attr("disabled", "true");$("#method").attr("disabled", "true");});</script>';
 }
-$array['GENERATED_URL'] = generateSiteUrl();
-$array['SITE_NAME'] 	= 'BNPanel';
-$array['SITE_EMAIL'] 	= 'example@example.com';
-
+$array['GENERATED_URL'] 	= generateSiteUrl();
+$array['SITE_NAME'] 		= 'BNPanel';
+$array['SITE_EMAIL'] 		= 'example@example.com';
+$array['INSTALL_OPTIONS'] 	= $main->createSelect('method', $values);
 echo $style->replaceVar("tpl/install/install.tpl", $array);
+
 echo $style->get("footer.tpl");
 require LINK."output.php"; #Output it

@@ -523,12 +523,12 @@ class AJAX {
 	}
 	private function writeconfig($host, $user, $pass, $db, $pre, $true) {
 		global $style;
-		$array['HOST'] =  $host;
-		$array['USER'] =  $user;
-		$array['PASS'] =  $pass;
-		$array['DB'] =  $db;
-		$array['PRE'] =  $pre;
-		$array['TRUE'] = $true;
+		$array['HOST'] 	=  $host;
+		$array['USER'] 	=  $user;
+		$array['PASS'] 	=  $pass;
+		$array['DB'] 	=  $db;
+		$array['PRE'] 	=  $pre;
+		$array['TRUE'] 	=  $true;
 		$tpl = $style->replaceVar("tpl/install/conftemp.tpl", $array);
 		$link = LINK."conf.inc.php";
 		if(is_writable($link)) {
@@ -540,43 +540,30 @@ class AJAX {
 	}
 	public function install() {
 		global $style, $db, $main;
-		if(INSTALL != 1) {
-			include(LINK."conf.inc.php");
+		$conf_file = LINK."conf.inc.php";		 
+		if (file_exists($conf_file)) {
+			include $conf_file;
 			$dbCon = mysql_connect($sql['host'], $sql['user'], $sql['pass']);
 			$dbSel = mysql_select_db($sql['db'], $dbCon);
+			
 			if($main->getvar['type'] == "install") {
 				$errors = $this->installsql("sql/install.sql", $sql['pre'], $dbCon);
-			}
-			elseif($main->getvar['type'] == "upgrade") {
-				$errors = $this->installsql("sql/upgrade.sql", $sql['pre'], $dbCon); 
-				$porders = mysql_query("SELECT * FROM `{$sql['pre']}packages`", $dbCon);
-				$n = 1;
-				while($data = mysql_fetch_array($porders)) {
-					if($data['oid'] == "0") {
-						mysql_query("UPDATE `{$sql['pre']}packages` SET `oid` = '{$n}' WHERE `id` = '{$data['id']}'", $dbCon);
-						$n++;
-					}
-				}
-				if($n > 1) {
-					mysql_query("ALTER TABLE `{$sql['pre']}packages` ADD UNIQUE (`oid`)", $dbCon);
-				}
-			}
-			else {
+			} elseif($main->getvar['type'] == "upgrade") {				
+				$errors = $this->installsql("sql/upgrade.sql", $sql['pre'], $dbCon);
+			} else {
 				echo "Fatal Error Debug: ". $main->getvar['type'];
-			}
-			$ver = mysql_real_escape_string($_GET['version']);
-			$query = mysql_query("UPDATE `{$sql['pre']}config` SET `value` = '{$ver}' WHERE `name` = 'version'");
+			}			
 			if(!$query) {
 				echo '<div class="errors">There was a problem editing your script version!</div>';
 			}
 			echo "Complete!<br /><strong>There were ".$errors['n']." errors while executing the SQL!</strong><br />";
+			
 			if(!$this->writeconfig($sql['host'], $sql['user'], $sql['pass'], $sql['db'], $sql['pre'], "true")) {
 				echo '<div class="errors">There was a problem re-writing to the config!</div>';	
 			}
 			if($main->getvar['type'] == "install") {
 				echo '<div align="center"><input type="button" name="button4" id="button4" value="Next Step" onclick="change()" /></div>';
-			}
-			elseif($main->getvar['type'] == "upgrade") {
+			} elseif($main->getvar['type'] == "upgrade") {
 				echo '<div class="errors">Your upgrade is now complete! You can use the script as normal.</div>';	
 			}
 			if($errors['n']) {
@@ -587,11 +574,13 @@ class AJAX {
 			}
 		}
 	}
+	
 	private function installsql($data, $pre, $con = 0) {
 		global $style, $db;
 		$array['PRE'] = $pre;
-                $array['API-KEY'] = hash('sha512', $this->randomString());
+		$array['API-KEY'] = hash('sha512', $this->randomString());
 		$sContents = $style->replaceVar($data, $array);
+		
 		// replace slash quotes so they don't get in the way during parse
 		// tried a replacement array for this but it didn't work
 		// what's a couple extra lines of code, anyway?
@@ -612,6 +601,7 @@ class AJAX {
 		$sDelimiter = $sDefaultDelimiter;
 		$iDelimiter = strlen($sDelimiter);
 		$aQuote = array("'", '"');
+		
 		for ($i = 0;  $i < $iContents;  $i++) {
 			if ($sContents[$i] == "\n"
 			||  $sContents[$i] == "\r") {
@@ -684,6 +674,7 @@ class AJAX {
 		$stuff['errors'] = $errors;
 		return $stuff;
 	}
+	
 	public function installfinal() {
 		global $db, $main;
 		$query = $db->query("SELECT * FROM `<PRE>staff`");
@@ -698,7 +689,6 @@ class AJAX {
 				$db->updateConfig('url', 		$main->getvar['url']);
 				$db->updateConfig('name', 		$main->getvar['site_name']);
 				$db->updateConfig('emailfrom', 	$main->getvar['site_email']);
-				
 				
 				$salt = md5(rand(0,99999));
 				$password = md5(md5($main->getvar['pass']).md5($salt));
@@ -727,15 +717,18 @@ class AJAX {
 			echo 1;
 		}
 	}
+	
 	function porder() {
 		global $main, $db;
 		$order = $main->getvar['order'];
 		print_r($main->getvar);
 	}
+	
 	function padd() {
 		global $style;
 		echo $style->replaceVar("tpl/acppacks/addbox.tpl");	
 	}
+	
 	function pedit() {
 		if($_SESSION['logged']) {
 			global $db, $style, $main;
@@ -773,637 +766,636 @@ class AJAX {
 		}
 	}
 
-        function nedit() {
-            if($_SESSION['logged']) {
-                global $db, $style, $main;
-                $query = $db->query("SELECT * FROM `<PRE>navbar` WHERE `id` = '{$main->getvar['do']}'");
-                $data = $db->fetch_array($query);
-                $array['ID'] = $data['id'];
-                $array['NAME'] = $data['name'];
-                $array['VISUAL']= $data['visual'];
-                $array['LINK'] = $data['link'];
-                $array['ICON'] = $data['icon'];
-                //echo $style->replaceVar("tpl/navedit/pbox.tpl", $array);
-                //echo "\n<!-- O NOEZ IT R H4XX -->\n"; // <-- Don't remove this.
-                echo $style->replaceVar("tpl/navedit/editbox.tpl", $array);
-                return true;
-            }
-        }
-
-        private function randomString($length = 8, $possible = '0123456789bcdfghjkmnpqrstvwxyz') {
-                $string = "";
-                $i = 0;
-                while($i < $length) {
-                    $char = substr($possible, mt_rand(0, strlen($possible)-1), 1);
-                    if(!strstr($salt, $char)) {
-                        $string .= $char;
-                        $i++;
-                    }
-                }
-                return $string;
-        }
-
-        function genkey() {
-            global $main, $db;
-            if($_SESSION['logged'] and $main->getvar['do'] == "it") {
-                $random = $this->randomString();
-                $key = hash('sha512', $random);
-                $db->updateConfig('api-key', $key);
-                echo '<span style="color:green;">API Key Generated!</span>'."\n".
-                '<br /> To get your new key go to the Get API Key page.';
-                echo "\n<br />";
-                return true;
-            }
-        }
-
-        function editcss() {
-            global $main, $db, $style;
-            if($_SESSION['logged']) {
-            	/*
-                if(isset($_POST['css'])) {
-                    $url = $db->config('url')."themes/".$db->config('theme')."/images/";
-                    $slash = stripslashes(str_replace("&lt;IMG&gt;", "<IMG>", $_POST['css'])); #Strip it back
-                    $filetochange = LINK."../themes/".$db->config('theme')."/style.css";
-                    file_put_contents($filetochange, $slash);
-                    echo "CSS File Modified! Refresh for changes.";
-                }
-                else {
-                    return;
-                }*/
-                
-            }
+    function nedit() {
+        if($_SESSION['logged']) {
+            global $db, $style, $main;
+            $query = $db->query("SELECT * FROM `<PRE>navbar` WHERE `id` = '{$main->getvar['do']}'");
+            $data = $db->fetch_array($query);
+            $array['ID'] = $data['id'];
+            $array['NAME'] = $data['name'];
+            $array['VISUAL']= $data['visual'];
+            $array['LINK'] = $data['link'];
+            $array['ICON'] = $data['icon'];
+            //echo $style->replaceVar("tpl/navedit/pbox.tpl", $array);
+            //echo "\n<!-- O NOEZ IT R H4XX -->\n"; // <-- Don't remove this.
+            echo $style->replaceVar("tpl/navedit/editbox.tpl", $array);
             return true;
         }
+    }
 
-        function edittpl() {
-            global $main, $db, $style;
-            if($_SESSION['logged']) {
-                if(isset($_POST['file']) and isset($_POST['contents'])) {
-                	/*
-                    $file = $_POST['file'];
-                    $contents = $_POST['contents'];
-                    $slash = $contents;
-                    //We have to do some special stuff for the footer.
-                    //This gets complex. But it works. I might simplify it sometime.
-                    if($file == "footer") {
-                        $foundcopy = false;
-                        $diemsg = 'Trying to remove the copyright? No thanks.';
-                        if(!strstr($contents, '<COPYRIGHT>')) {
-                            $slash = str_replace("&lt;COPYRIGHT&gt;", "<COPYRIGHT>", $slash);
-                            if(!strstr($slash, '<COPYRIGHT>')) {
-                                die($diemsg);
-                            }
-                            else {
-                                $foundcopy = true;
-                            }
+    private function randomString($length = 8, $possible = '0123456789bcdfghjkmnpqrstvwxyz') {
+            $string = "";
+            $i = 0;
+            while($i < $length) {
+                $char = substr($possible, mt_rand(0, strlen($possible)-1), 1);
+                if(!strstr($salt, $char)) {
+                    $string .= $char;
+                    $i++;
+                }
+            }
+            return $string;
+    }
+
+    function genkey() {
+        global $main, $db;
+        if($_SESSION['logged'] and $main->getvar['do'] == "it") {
+            $random = $this->randomString();
+            $key = hash('sha512', $random);
+            $db->updateConfig('api-key', $key);
+            echo '<span style="color:green;">API Key Generated!</span>'."\n".
+            '<br /> To get your new key go to the Get API Key page.';
+            echo "\n<br />";
+            return true;
+        }
+    }
+
+    function editcss() {
+        global $main, $db, $style;
+        if($_SESSION['logged']) {
+        	/*
+            if(isset($_POST['css'])) {
+                $url = $db->config('url')."themes/".$db->config('theme')."/images/";
+                $slash = stripslashes(str_replace("&lt;IMG&gt;", "<IMG>", $_POST['css'])); #Strip it back
+                $filetochange = LINK."../themes/".$db->config('theme')."/style.css";
+                file_put_contents($filetochange, $slash);
+                echo "CSS File Modified! Refresh for changes.";
+            }
+            else {
+                return;
+            }*/
+            
+        }
+        return true;
+    }
+
+    function edittpl() {
+        global $main, $db, $style;
+        if($_SESSION['logged']) {
+            if(isset($_POST['file']) and isset($_POST['contents'])) {
+            	/*
+                $file = $_POST['file'];
+                $contents = $_POST['contents'];
+                $slash = $contents;
+                //We have to do some special stuff for the footer.
+                //This gets complex. But it works. I might simplify it sometime.
+                if($file == "footer") {
+                    $foundcopy = false;
+                    $diemsg = 'Trying to remove the copyright? No thanks.';
+                    if(!strstr($contents, '<COPYRIGHT>')) {
+                        $slash = str_replace("&lt;COPYRIGHT&gt;", "<COPYRIGHT>", $slash);
+                        if(!strstr($slash, '<COPYRIGHT>')) {
+                            die($diemsg);
                         }
                         else {
                             $foundcopy = true;
                         }
-                        if($foundcopy == true) {
-                            $slash = stripslashes(str_replace("&lt;PAGEGEN&gt;", "<PAGEGEN>", $slash)); # Yay, strip it
-                            //$slash = str_replace("&lt;COPYRIGHT&gt;", "<COPYRIGHT>", $slash);
-                        }
                     }
-                    $slash = stripslashes(str_replace("&lt;THT TITLE&gt;", "<THT TITLE>", $slash)); # Yay, strip it
-                    $slash = str_replace("&lt;JAVASCRIPT&gt;", "<JAVASCRIPT>", $slash); #jav
-                    $slash = str_replace("&lt;CSS&gt;", "<CSS>", $slash); #css
-                    $slash = str_replace("&lt;ICONDIR&gt;", "<ICONDIR>", $slash); #icondir
-                    $slash = str_replace("&lt;IMG&gt;", "<IMG>", $slash);
-                    $slash = str_replace("&lt;MENU&gt;", "<MENU>", $slash);
-                    $slash = str_replace("&#37;INFO%", "%INFO%", $slash);
-                    #Alrighty, what to do nexty?
-                    $filetochange = LINK."../themes/".$db->config('theme')."/".$file.".tpl";
-                    $filetochangeOpen = fopen($filetochange,"w");
-                    fputs($filetochangeOpen,$slash);
-                    fclose($filetochangeOpen) or die ("Error Closing File!");
-                    echo $file . '.tpl Modified! Refresh for changes.';
-                    die();
-                    */
+                    else {
+                        $foundcopy = true;
+                    }
+                    if($foundcopy == true) {
+                        $slash = stripslashes(str_replace("&lt;PAGEGEN&gt;", "<PAGEGEN>", $slash)); # Yay, strip it
+                        //$slash = str_replace("&lt;COPYRIGHT&gt;", "<COPYRIGHT>", $slash);
+                    }
                 }
+                $slash = stripslashes(str_replace("&lt;THT TITLE&gt;", "<THT TITLE>", $slash)); # Yay, strip it
+                $slash = str_replace("&lt;JAVASCRIPT&gt;", "<JAVASCRIPT>", $slash); #jav
+                $slash = str_replace("&lt;CSS&gt;", "<CSS>", $slash); #css
+                $slash = str_replace("&lt;ICONDIR&gt;", "<ICONDIR>", $slash); #icondir
+                $slash = str_replace("&lt;IMG&gt;", "<IMG>", $slash);
+                $slash = str_replace("&lt;MENU&gt;", "<MENU>", $slash);
+                $slash = str_replace("&#37;INFO%", "%INFO%", $slash);
+                #Alrighty, what to do nexty?
+                $filetochange = LINK."../themes/".$db->config('theme')."/".$file.".tpl";
+                $filetochangeOpen = fopen($filetochange,"w");
+                fputs($filetochangeOpen,$slash);
+                fclose($filetochangeOpen) or die ("Error Closing File!");
+                echo $file . '.tpl Modified! Refresh for changes.';
+                die();
+                */
             }
-            return true;
         }
+        return true;
+    }
 
-        function notice() {
-        	/*
-            global $style;
-            if(isset($_REQUEST['status']) and isset ($_REQUEST['message'])) {
-                if($_REQUEST['status'] == "good") {
-                    $status = true;
-                }
-                else {
-                    $status = false;
-                }
-                echo $style->notice($status, $_REQUEST['message']);
+    function notice() {
+    	/*
+        global $style;
+        if(isset($_REQUEST['status']) and isset ($_REQUEST['message'])) {
+            if($_REQUEST['status'] == "good") {
+                $status = true;
             }
-            return true;*/
+            else {
+                $status = false;
+            }
+            echo $style->notice($status, $_REQUEST['message']);
         }
+        return true;*/
+    }
 
-       function upload() {
-           global $main;
-           if($_SESSION['logged']) {               
-           }
+   function upload() {
+       global $main;
+       if($_SESSION['logged']) {               
        }
+   }
 
-       function navbar() {
-           global $main, $db;
-           if($_SESSION['logged']) {
-               //Cause I'm fairly lazy
-               $P = $_POST;
-               if(isset($P['action']) or $_GET['action']) {
-                   //Even lazier?
-                   $action = $_REQUEST['action'];
-                   $id = $main->postvar['id'];
-                   $name = $main->postvar['name'];
-                   $icon = $main->postvar['icon'];
-                   $link = $main->postvar['link'];
-                   switch($action) {
-                       case "add":
-                           if(isset($P['name']) and
-                               isset($P['icon']) and isset($P['link'])
-                           ) {
-                                $db->query("INSERT INTO `<pre>navbar` (visual, icon, link) VALUES('{$name}', '{$icon}','{$link}')");
-                           }
-                           break;
-                       case "edit":
-                           if(isset($P['id']) and isset($P['name']) and
-                               isset($P['icon']) and isset($P['link'])
-                           ) {
-                                $db->query("UPDATE `<pre>navbar` SET
-                                `visual` = '{$name}',
-                                `icon` = '{$icon}',
-                                `link` = '{$link}'
-                                WHERE `id` = '{$id}'");
-                           }
-                           break;
-                       case "delete":
-                           if(isset($_GET['id'])) {
-                               $db->query("DELETE FROM `<PRE>navbar` WHERE `id` = '{$main->getvar['id']}'");
-                           }
-                           break;
-                       case "order":
-                           if(isset($P['order'])) {
-                               $ids = explode("-", $main->postvar['order']);
-                               $i = 0;
-                               foreach($ids as $id) {
-                                   $db->query("UPDATE `<PRE>navbar` SET `order` = {$i} WHERE `id` = {$id}");
-                                   $i++;
-                               }
-                           }
-                           break;
-                   }
-               }
-           }
-       }
-
-       function acpPackages() {
-           global $main, $db, $type;
-           if($_SESSION['logged']) {
-                $P = $_POST;
-               $G = $_GET;
-               $R = $_REQUEST;
-               $action = $R['action'];
+   function navbar() {
+       global $main, $db;
+       if($_SESSION['logged']) {
+           //Cause I'm fairly lazy
+           $P = $_POST;
+           if(isset($P['action']) or $_GET['action']) {
+               //Even lazier?
+               $action = $_REQUEST['action'];
                $id = $main->postvar['id'];
                $name = $main->postvar['name'];
-               $backend = $main->postvar['backend'];
-               $description = $main->postvar['description'];
-               $type2 = $main->postvar['type'];
-               $val = $main->postvar['val'];
-               $reseller = $main->postvar['reseller'];
-               $order = $main->postvar['order'];
-               $additional = $main->postvar['additional'];
-               $server = $main->postvar['server'];
-
-               if(isset($P['action']) or $G['action']) {
-                   switch($action) {
-                       case "edit":
-                           if(empty($P['additional']) or $P['additional'] == "undefined") {
-                               $db->query("UPDATE `<PRE>packages` SET
-                            `name` = '{$name}',
-                            `backend` = '{$backend}',
-                            `description` = '{$description}',
-                            `admin` = '{$val}',
-                            `reseller` = '{$reseller}'
+               $icon = $main->postvar['icon'];
+               $link = $main->postvar['link'];
+               switch($action) {
+                   case "add":
+                       if(isset($P['name']) and
+                           isset($P['icon']) and isset($P['link'])
+                       ) {
+                            $db->query("INSERT INTO `<pre>navbar` (visual, icon, link) VALUES('{$name}', '{$icon}','{$link}')");
+                       }
+                       break;
+                   case "edit":
+                       if(isset($P['id']) and isset($P['name']) and
+                           isset($P['icon']) and isset($P['link'])
+                       ) {
+                            $db->query("UPDATE `<pre>navbar` SET
+                            `visual` = '{$name}',
+                            `icon` = '{$icon}',
+                            `link` = '{$link}'
                             WHERE `id` = '{$id}'");
+                       }
+                       break;
+                   case "delete":
+                       if(isset($_GET['id'])) {
+                           $db->query("DELETE FROM `<PRE>navbar` WHERE `id` = '{$main->getvar['id']}'");
+                       }
+                       break;
+                   case "order":
+                       if(isset($P['order'])) {
+                           $ids = explode("-", $main->postvar['order']);
+                           $i = 0;
+                           foreach($ids as $id) {
+                               $db->query("UPDATE `<PRE>navbar` SET `order` = {$i} WHERE `id` = {$id}");
+                               $i++;
                            }
-                           else {
-                            $db->query("UPDATE `<PRE>packages` SET
-                            `name` = '{$name}',
-                            `backend` = '{$backend}',
-                            `description` = '{$description}',
-                            `admin` = '{$val}',
-                            `reseller` = '{$reseller}',
-                            `additional` = '{$additional}'
-                            WHERE `id` = '{$id}'");
-                           }
-                           break;
+                       }
+                       break;
+               }
+           }
+       }
+   }
 
-                       case "add":
-                           if(empty($P['additional']) or $P['additional'] == "undefined") {
-                               $db->query("INSERT INTO <PRE>packages
-                               (
-                               `name`,
-                               `backend`,
-                               `description`,
-                               `type`,
-                               `server`,
-                               `admin`,
-                               `reseller`
-                               )
-                               VALUES
-                               (
-                               '{$name}',
-                               '{$backend}',
-                               '{$description}',
-                               '{$type2}',
-                               '{$server}',
-                               '{$val}',
-                               '{$reseller}'
-                               );
-                                ");
-                           }
-                           else {
-                               $db->query("INSERT INTO <PRE>packages
-                               (
-                               `name`,
-                               `backend`,
-                               `description`,
-                               `type`,
-                               `server`,
-                               `admin`,
-                               `reseller`,
-                               `additional`
-                               )
-                               VALUES
-                               (
-                               '{$name}',
-                               '{$backend}',
-                               '{$description}',
-                               '{$type2}',
-                               '{$server}',
-                               '{$val}',
-                               '{$reseller}',
-                               '{$additional}'
-                               );
-                                ");
-                           }
-                           break;
+   function acpPackages() {
+       global $main, $db, $type;
+       if($_SESSION['logged']) {
+            $P = $_POST;
+           $G = $_GET;
+           $R = $_REQUEST;
+           $action = $R['action'];
+           $id = $main->postvar['id'];
+           $name = $main->postvar['name'];
+           $backend = $main->postvar['backend'];
+           $description = $main->postvar['description'];
+           $type2 = $main->postvar['type'];
+           $val = $main->postvar['val'];
+           $reseller = $main->postvar['reseller'];
+           $order = $main->postvar['order'];
+           $additional = $main->postvar['additional'];
+           $server = $main->postvar['server'];
 
-                       case "delete":
-                           if(isset($G['id'])) {
-                               $db->query("DELETE FROM `<PRE>packages` WHERE `id` = '{$main->getvar['id']}'");
-                           }
-                           break;
-
-
-                       case "order":
-                            if(isset($P['order'])) {
-                                $ids = explode("-", $order);
-                                $i = 0;
-                                foreach($ids as $id) {
-                                    $db->query("UPDATE `<PRE>packages` SET `order` = '{$i}' WHERE `id` = '{$id}'");
-                                    $i++;
-                                }
-                            }
+           if(isset($P['action']) or $G['action']) {
+               switch($action) {
+                   case "edit":
+                       if(empty($P['additional']) or $P['additional'] == "undefined") {
+                           $db->query("UPDATE `<PRE>packages` SET
+                        `name` = '{$name}',
+                        `backend` = '{$backend}',
+                        `description` = '{$description}',
+                        `admin` = '{$val}',
+                        `reseller` = '{$reseller}'
+                        WHERE `id` = '{$id}'");
+                       }
+                       else {
+                        $db->query("UPDATE `<PRE>packages` SET
+                        `name` = '{$name}',
+                        `backend` = '{$backend}',
+                        `description` = '{$description}',
+                        `admin` = '{$val}',
+                        `reseller` = '{$reseller}',
+                        `additional` = '{$additional}'
+                        WHERE `id` = '{$id}'");
+                       }
                        break;
 
-                       case "typeInfo":
-                           if(isset($G['type'])) {
-                            echo $type->acpPadd($G['type']);
-                           }
-                           break;
-                   }
+                   case "add":
+                       if(empty($P['additional']) or $P['additional'] == "undefined") {
+                           $db->query("INSERT INTO <PRE>packages
+                           (
+                           `name`,
+                           `backend`,
+                           `description`,
+                           `type`,
+                           `server`,
+                           `admin`,
+                           `reseller`
+                           )
+                           VALUES
+                           (
+                           '{$name}',
+                           '{$backend}',
+                           '{$description}',
+                           '{$type2}',
+                           '{$server}',
+                           '{$val}',
+                           '{$reseller}'
+                           );
+                            ");
+                       }
+                       else {
+                           $db->query("INSERT INTO <PRE>packages
+                           (
+                           `name`,
+                           `backend`,
+                           `description`,
+                           `type`,
+                           `server`,
+                           `admin`,
+                           `reseller`,
+                           `additional`
+                           )
+                           VALUES
+                           (
+                           '{$name}',
+                           '{$backend}',
+                           '{$description}',
+                           '{$type2}',
+                           '{$server}',
+                           '{$val}',
+                           '{$reseller}',
+                           '{$additional}'
+                           );
+                            ");
+                       }
+                       break;
+
+                   case "delete":
+                       if(isset($G['id'])) {
+                           $db->query("DELETE FROM `<PRE>packages` WHERE `id` = '{$main->getvar['id']}'");
+                       }
+                       break;
+
+
+                   case "order":
+                        if(isset($P['order'])) {
+                            $ids = explode("-", $order);
+                            $i = 0;
+                            foreach($ids as $id) {
+                                $db->query("UPDATE `<PRE>packages` SET `order` = '{$i}' WHERE `id` = '{$id}'");
+                                $i++;
+                            }
+                        }
+                   break;
+
+                   case "typeInfo":
+                       if(isset($G['type'])) {
+                        echo $type->acpPadd($G['type']);
+                       }
+                       break;
                }
            }
-
        }
 
-       function uiThemeChange() {
-           global $main, $db;
-           if($_SESSION['logged']) {
-               if(isset($_GET['theme'])) {
-                   $db->updateConfig('ui-theme', $main->getvar['theme']);
-               }
+   }
+
+   function uiThemeChange() {
+       global $main, $db;
+       if($_SESSION['logged']) {
+           if(isset($_GET['theme'])) {
+               $db->updateConfig('ui-theme', $main->getvar['theme']);
            }
        }
-	   
-	   function ispaid() {
-			global $db, $main, $invoice;
-			if (isset($_SESSION['last_invoice_id']) && !empty($_SESSION['last_invoice_id']) && is_numeric($_SESSION['last_invoice_id'])) {
-				//$invoice_info = $invoice->getInvoiceInfo($_SESSION['last_invoice_id']);
-				echo intval($_SESSION['last_invoice_id']);
-				//Deleting session	
-				unset($_SESSION['last_invoice_id']);				
-			} else {
-				echo 0;
-			}
-			unset($_SESSION['last_invoice_id']);
-			//Last event before redirect
-			$main->clearToken();
-	   }
-	   
-	   function deleteTicket() {
-		   if($_SESSION['logged']) {
-			   global $main, $db;
-			   $tid = $main->getvar['ticket'];
-			   if($tid != "" and is_numeric($tid)) {
-				   $query = "DELETE FROM `<PRE>tickets` WHERE `id` = {$tid}";
-				   $db->query($query);
-				   $query = "DELETE FROM `<PRE>tickets` WHERE `ticketid` = {$tid}";
-				   $db->query($query);
-			   }
+   }
+   
+   function ispaid() {
+		global $db, $main, $invoice;
+		if (isset($_SESSION['last_invoice_id']) && !empty($_SESSION['last_invoice_id']) && is_numeric($_SESSION['last_invoice_id'])) {
+			//$invoice_info = $invoice->getInvoiceInfo($_SESSION['last_invoice_id']);
+			echo intval($_SESSION['last_invoice_id']);
+			//Deleting session	
+			unset($_SESSION['last_invoice_id']);				
+		} else {
+			echo 0;
+		}
+		unset($_SESSION['last_invoice_id']);
+		//Last event before redirect
+		$main->clearToken();
+   }
+   
+   function deleteTicket() {
+	   if($_SESSION['logged']) {
+		   global $main, $db;
+		   $tid = $main->getvar['ticket'];
+		   if($tid != "" and is_numeric($tid)) {
+			   $query = "DELETE FROM `<PRE>tickets` WHERE `id` = {$tid}";
+			   $db->query($query);
+			   $query = "DELETE FROM `<PRE>tickets` WHERE `ticketid` = {$tid}";
+			   $db->query($query);
 		   }
 	   }
-	   
-	   function getAddons() {
-	   		global $main, $db, $currency;
-			$billing_id = $main->getvar['billing_id'];			
-	   		$package_id = $main->getvar['package_id'];	   		
-	   		
-	   		$html = '<fieldset style="width: 98%;"><legend><b>Package Order</b></legend><table width="100%" >';
-	   		
-	   		$sql = "SELECT a.name, amount, bc.name  as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-					ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = {$main->getvar['billing_id']}  AND b.type = '".BILLING_TYPE_PACKAGE."' ";
-			$result = $db->query($sql); 
-			$package_billing_info_exist = false;
-			if ($db->num_rows($result) > 0) {				
-				while($data = $db->fetch_array($result)) {
-					$amount_to_show  = $currency->toCurrency($data['amount']);			
-			       	$html .= "<tr><td width=\"33%\"> {$data['name']}</td>
-			            <td width=\"33%\" align=\"right\"><strong>{$data['billing_name']}</strong></td>
-			            <td width=\"33%\" align=\"right\">{$amount_to_show}</td>		     
-			        	</tr>";
-			        $package_billing_info_exist = true;
-				} 
-			} else {
-				$html .='No data for this package at the moment'; 					
-			}
-			
-	   		$html .='</table></fieldset><br />';
-	   		
-	   		$sql = "SELECT * FROM `<PRE>package_addons` WHERE `package_id` = '{$main->getvar['package_id']}' ";
-	   		$result = $db->query($sql); 		
-	   		
-	   		if ($db->num_rows($result) > 0) {
-	   			$info_exist = false;
-		   		$html .= '<fieldset  style="width: 98%;"> <legend><b>Order Add-Ons</b></legend>';
-		   		$html .= '<table width="100%" >';
-		   		
-		   		while($data = $db->fetch_array($result)) {		   			
-		   			$sql = "SELECT a.name, a.mandatory, description, setup_fee, bc.name as billing_name, b.amount FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-							ON (bc.id = b.billing_id) WHERE a.status = ".ADDON_STATUS_ACTIVE." AND a.id = {$data['addon_id']} AND bc.id = {$main->getvar['billing_id']}  AND b.type = '".BILLING_TYPE_ADDON."' ORDER BY a.name";
-					$addon_result = $db->query($sql);
-					if ($db->num_rows($addon_result) > 0) {
-						$addon = $db->fetch_array($addon_result, 'ASSOC');
-						
-						$addon['amount'] = $currency->toCurrency($addon['amount']);
-					
-						//@todo setup feee per 	
-						//$setup_fee = '<b>Setup Fee:</b></td><td align="right">'.$addon['setup_fee'];
-						$setup_fee ='';
-						$html .='<tr><td width="1%">';
-						$checked = '';						
-						if ($addon['mandatory'] == 1) {
-							$checked = 'checked="on" disabled';	
-						}						
-						$html .='<input id="addon_ids" '.$checked.' value="'.$data['addon_id'].'" name="addon_ids" type="checkbox"></td>';
-						$html .='<td width="33%">'.$addon['name'].'</td><td align="right">'.$setup_fee.'</td><td align="right"><strong>'.$addon['billing_name'].'</strong></td>';
-						$html .='<td width="33%" align="right">'.$addon['amount'].'</td></tr>';
-						$info_exist = true;
-					}
-		   		}
-		   		$html .='</table></fieldset>';
-		   		$html .='<input type="hidden" name="billing_id" value="'.$billing_id.'">';
-	   		}
-   			if ($package_billing_info_exist) {
-	   			echo $html;
-	   		} else {
-	   			echo 'No billing cycle for this package';
-	   		}
-	   }
-	   
-	   function getSummary() {
-	   		global $main, $db, $currency;
-	   		
-	   		$package_id = $main->getvar['package_id'];
-			$billing_id = $main->getvar['billing_id'];
-			$addon_list = $main->getvar['addon_list'];
-			
-			$addon_list = explode('-' , $addon_list);
-			
-			$new_addon_list = array();
-			foreach($addon_list as $addon) {
-				if (!empty($addon) && is_numeric($addon)) {
-					$addon = intval($addon);
-					$addon = "'$addon'";
-					$new_addon_list[] =  $addon;
-				}
-			}
-			$new_addon_list = implode(',', $new_addon_list);
-			
-			$sql = "SELECT a.name, amount , bc.name as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-					ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = {$main->getvar['billing_id']} AND b.type = '".BILLING_TYPE_PACKAGE."'";
-			$result = $db->query($sql); 
-			$html = '';
-			$total = 0;
-			
-			$html  = '<fieldset  style="width: 98%;"> <legend><b>Summary</b></legend>';
-			$html .= '<table width="100%" align="center" border="0" cellpadding="3" cellspacing="3">
-					        <tr>
-					            <td width="2%"></td>
-					            <td width="28%"><b>Items in basket</b></td>
-					            <td width="50%"><b>Description</b></td>
-					            <td width="18%" align="right"><b>Cost</b></td>
-					            <td width="2%"></td>
-					        </tr>';
-					        					        
-			while($data = $db->fetch_array($result,'ASSOC')) {	
+   }
+   
+   function getAddons() {
+   		global $main, $db, $currency;
+		$billing_id = $main->getvar['billing_id'];			
+   		$package_id = $main->getvar['package_id'];	   		
+   		
+   		$html = '<fieldset style="width: 98%;"><legend><b>Package Order</b></legend><table width="100%" >';
+   		
+   		$sql = "SELECT a.name, amount, bc.name  as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
+				ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = {$main->getvar['billing_id']}  AND b.type = '".BILLING_TYPE_PACKAGE."' ";
+		$result = $db->query($sql); 
+		$package_billing_info_exist = false;
+		if ($db->num_rows($result) > 0) {				
+			while($data = $db->fetch_array($result)) {
 				$amount_to_show  = $currency->toCurrency($data['amount']);			
+		       	$html .= "<tr><td width=\"33%\"> {$data['name']}</td>
+		            <td width=\"33%\" align=\"right\"><strong>{$data['billing_name']}</strong></td>
+		            <td width=\"33%\" align=\"right\">{$amount_to_show}</td>		     
+		        	</tr>";
+		        $package_billing_info_exist = true;
+			} 
+		} else {
+			$html .='No data for this package at the moment'; 					
+		}
+		
+   		$html .='</table></fieldset><br />';
+   		
+   		$sql = "SELECT * FROM `<PRE>package_addons` WHERE `package_id` = '{$main->getvar['package_id']}' ";
+   		$result = $db->query($sql); 		
+   		
+   		if ($db->num_rows($result) > 0) {
+   			$info_exist = false;
+	   		$html .= '<fieldset  style="width: 98%;"> <legend><b>Order Add-Ons</b></legend>';
+	   		$html .= '<table width="100%" >';
+	   		
+	   		while($data = $db->fetch_array($result)) {		   			
+	   			$sql = "SELECT a.name, a.mandatory, description, setup_fee, bc.name as billing_name, b.amount FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
+						ON (bc.id = b.billing_id) WHERE a.status = ".ADDON_STATUS_ACTIVE." AND a.id = {$data['addon_id']} AND bc.id = {$main->getvar['billing_id']}  AND b.type = '".BILLING_TYPE_ADDON."' ORDER BY a.name";
+				$addon_result = $db->query($sql);
+				if ($db->num_rows($addon_result) > 0) {
+					$addon = $db->fetch_array($addon_result, 'ASSOC');
+					
+					$addon['amount'] = $currency->toCurrency($addon['amount']);
+				
+					//@todo setup feee per 	
+					//$setup_fee = '<b>Setup Fee:</b></td><td align="right">'.$addon['setup_fee'];
+					$setup_fee ='';
+					$html .='<tr><td width="1%">';
+					$checked = '';						
+					if ($addon['mandatory'] == 1) {
+						$checked = 'checked="on" disabled';	
+					}						
+					$html .='<input id="addon_ids" '.$checked.' value="'.$data['addon_id'].'" name="addon_ids" type="checkbox"></td>';
+					$html .='<td width="33%">'.$addon['name'].'</td><td align="right">'.$setup_fee.'</td><td align="right"><strong>'.$addon['billing_name'].'</strong></td>';
+					$html .='<td width="33%" align="right">'.$addon['amount'].'</td></tr>';
+					$info_exist = true;
+				}
+	   		}
+	   		$html .='</table></fieldset>';
+	   		$html .='<input type="hidden" name="billing_id" value="'.$billing_id.'">';
+   		}
+		if ($package_billing_info_exist) {
+   			echo $html;
+   		} else {
+   			echo 'No billing cycle for this package';
+   		}
+   }
+   
+   function getSummary() {
+   		global $main, $db, $currency;
+   		
+   		$package_id = $main->getvar['package_id'];
+		$billing_id = $main->getvar['billing_id'];
+		$addon_list = $main->getvar['addon_list'];
+		
+		$addon_list = explode('-' , $addon_list);
+		
+		$new_addon_list = array();
+		foreach($addon_list as $addon) {
+			if (!empty($addon) && is_numeric($addon)) {
+				$addon = intval($addon);
+				$addon = "'$addon'";
+				$new_addon_list[] =  $addon;
+			}
+		}
+		$new_addon_list = implode(',', $new_addon_list);
+		
+		$sql = "SELECT a.name, amount , bc.name as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
+				ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = {$main->getvar['billing_id']} AND b.type = '".BILLING_TYPE_PACKAGE."'";
+		$result = $db->query($sql); 
+		$html = '';
+		$total = 0;
+		
+		$html  = '<fieldset  style="width: 98%;"> <legend><b>Summary</b></legend>';
+		$html .= '<table width="100%" align="center" border="0" cellpadding="3" cellspacing="3">
+				        <tr>
+				            <td width="2%"></td>
+				            <td width="28%"><b>Items in basket</b></td>
+				            <td width="50%"><b>Description</b></td>
+				            <td width="18%" align="right"><b>Cost</b></td>
+				            <td width="2%"></td>
+				        </tr>';
+				        					        
+		while($data = $db->fetch_array($result,'ASSOC')) {	
+			$amount_to_show  = $currency->toCurrency($data['amount']);			
+	       	$html .= "<tr>
+	            <td></td>
+	            <td>{$data['name']}</td>
+	            <td>{$data['billing_name']} {$amount_to_show}</td>
+	            <td align=\"right\">{$amount_to_show}</td>
+	            <td></td>
+	        	</tr>";		        	
+	        	$total = $total + $data['amount'];
+		}			
+		
+		if (!empty($new_addon_list) && !empty($main->getvar['billing_id'])) {
+			$sql = "SELECT a.name, setup_fee, bc.name as billing_name, b.amount FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
+					ON (bc.id = b.billing_id) WHERE a.id IN ({$new_addon_list}) AND bc.id = {$main->getvar['billing_id']} AND b.type = '".BILLING_TYPE_ADDON."' ORDER BY a.name";
+			$result = $db->query($sql); 
+		
+			while($data = $db->fetch_array($result)) {
+				$amount_to_show  = $currency->toCurrency($data['amount']);	
+				
 		       	$html .= "<tr>
 		            <td></td>
 		            <td>{$data['name']}</td>
 		            <td>{$data['billing_name']} {$amount_to_show}</td>
 		            <td align=\"right\">{$amount_to_show}</td>
 		            <td></td>
-		        	</tr>";		        	
-		        	$total = $total + $data['amount'];
-			}			
-			
-			if (!empty($new_addon_list) && !empty($main->getvar['billing_id'])) {
-				$sql = "SELECT a.name, setup_fee, bc.name as billing_name, b.amount FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-						ON (bc.id = b.billing_id) WHERE a.id IN ({$new_addon_list}) AND bc.id = {$main->getvar['billing_id']} AND b.type = '".BILLING_TYPE_ADDON."' ORDER BY a.name";
-				$result = $db->query($sql); 
-			
-				while($data = $db->fetch_array($result)) {
-					$amount_to_show  = $currency->toCurrency($data['amount']);	
-					
-			       	$html .= "<tr>
-			            <td></td>
-			            <td>{$data['name']}</td>
-			            <td>{$data['billing_name']} {$amount_to_show}</td>
-			            <td align=\"right\">{$amount_to_show}</td>
-			            <td></td>
-			        	</tr>";
-			        $total = $total + $data['amount'];
-				}
+		        	</tr>";
+		        $total = $total + $data['amount'];
 			}
-			
-			$total_to_show  = $currency->toCurrency($total);	
-			$html .="<tr>
-			            <td></td>
-			            <td></td>
-			            <td><b><h3>Total</h3></b></td>
-			            <td align=\"right\"><h3>{$total_to_show}</h3></td>
-			            <td></td>
-			        </tr>";
-			$html .='</table>';
-			$html .='</fieldset>';	  	        
-			echo $html;
-	   }
-	   
-	   function changeAddons() {
-	   		global $main, $db, $addon, $currency, $order;
-	   		$package_id = $main->getvar['package_id'];
-			$order_id	= $main->getvar['order_id'];	  
-			 		
-	   		$order_info = $order->getOrderInfo($order_id);	   		
-	   		$billing_id = $order_info['billing_cycle_id'];
-	   		
-	   		$addon_list = $addon->getAddonsByPackage($package_id);
-	   		
-	   		foreach($addon_list as $addon_item) {
-				$checked = false;
-				if (isset($selected_values[$addon_item['id']])) {
-					$checked = true;
-				}	
-				$html .= $main->createCheckbox($addon_item['name'], 'addon_'.$addon_item['id'], $checked);					
-			}
-			echo $html;
-	   		
-	   }	   
-	   
-	   function loadaddons() {
-	   		global $main, $db, $addon, $currency, $order;
-	   		
-	   		$package_id = $main->getvar['package_id'];
-			$billing_id	= $main->getvar['billing_id'];
-			$order_id	= $main->getvar['order_id'];
-			$addon_selected_list = array();
-			if (!empty($order_id)) {
-				$order_info = $order->getOrderInfo($order_id);
-				$addon_selected_list = $order_info['addons'];
-			}									
-			$result = $addon->showAllAddonsByBillingCycleAndPackage($billing_id, $package_id,array_flip($addon_selected_list));
-			echo $result['html'];			
-	   }
-	   
-	   
-	   function searchuser() {
-			global $main, $user;
-	   		$query = $main->postvar['query'];
-	   		$user_list = $user->searchUser($query);
-	   		foreach($user_list as $user) {
-	   			$user_name = $user['firstname']." - ".$user['lastname']." ( ".$user['email'].")";
-	   			echo "<li onclick=\"fill('{$user_name}', '{$user['id']}');\">$user_name</li>";	
-	   		}	       
-	   }
-	   
-	   function loadpackages() {
-	   		global $main, $db, $addon, $currency, $order, $package;
-	   		$billing_id = $main->getvar['billing_id'];
-	   		$order_id	= $main->getvar['order_id'];
-			$order_info = $order->getOrderInfo($order_id);
-			
-			$packages = $package->getAllPackagesByBillingCycle($billing_id);
-					
-	   		$package_list = array();
-	   		
-			foreach($packages as $package) {
-				$package_list[$package['id']] = $package['name'].' - '.$currency->toCurrency($package['amount']);				
-			}	
-			echo $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);', 'class'=>'required'));
-	   }
-	   
-	   function sendtemplate() {
-			global $db, $main, $email,$user, $order;	
-				
-			$template = $main->getvar['template'];
-			$order_id = $main->getvar['order_id'];
-			
-			$order_info 			= $order->getOrder($order_id, true);		
-			
-			$emailtemp 				= $db->emailTemplate($template);
-			$user_info 				= $user->getUserById($order_info['USER_ID']);			
-						
-			$array['FIRSTNAME']		= $user_info['firstname'];
-			$array['LASTNAME'] 		= $user_info['lastname'];			
-			$array['SITENAME'] 		= $db->config('name');
-			$array['ORDER_ID'] 		= $order_id;
-			$array['PACKAGE'] 		= $order_info['PACKAGES'];
-			$array['ADDONS'] 		= $order_info['ADDON'];
-			$array['DOMAIN'] 		= $order_info['domain'];
-			$array['BILLING_CYCLE'] = $order_info['BILLING_CYCLES'];
-			$array['TOTAL'] 		= $order_info['TOTAL'];
-			$array['TOS'] 		    = $db->config('TOS');
-			//$array['ADMIN_EMAIL'] 	= $db->config('EMAIL');
-			
-			$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
-			echo 'Email sent';		
-	   }
-	   
-	   function getOrders() {
-	   		global	$main, $order;
-	   		$page = $main->getvar['page'];	   			   		
-			$array = $order->getAllOrdersToArray('', $page);
-			echo $array['list'];
-	   }
-	   
-	   function getInvoices() {
-	   		global	$main, $invoice;
-	   		$page = $main->getvar['page'];	   			   		
-			$array = $invoice->getAllInvoicesToArray('', $page);
-			echo $array['list'];
-	   }
-	   
-	   	public function checkSubDomainExists() {
-			global $main, $db, $package, $order;			
-			$domain  		= $main->getvar['domain'];
-			$package_id  	= $main->getvar['package_id'];			
-			$package_info 	= $package->getPackage($package_id);		
-			$final_domain 	= $main->getvar['final_domain'];		
-			$subdomain_id 	= 0;
-			
-			if($main->getvar['domain'] == 'sub') { # If Subdomain				
-				$subdomain_list = $main->getSubDomainByServer($package_info['server']);			
-				$subdomain 		= $subdomain_list[$main->getvar['subdomain_id']];			
-				$subdomain_id	= $main->getvar['subdomain_id'];	
-			}			
-			if ($order->domainExistInOrder($final_domain, $subdomain_id) ) {
-				echo 1;				
-			} else {
-				echo 0;	
-			}			
-			return;
 		}
 		
-		public function checkSubDomainExistsSimple() {
-			global $main, $db, $package, $order;			
-			$final_domain  = $main->getvar['domain'];			
-			if ($order->domainExistInOrder($final_domain) ) {
-				echo 1;				
-			} else {
-				echo 0;	
-			}			
-			return;
-		}		
+		$total_to_show  = $currency->toCurrency($total);	
+		$html .="<tr>
+		            <td></td>
+		            <td></td>
+		            <td><b><h3>Total</h3></b></td>
+		            <td align=\"right\"><h3>{$total_to_show}</h3></td>
+		            <td></td>
+		        </tr>";
+		$html .='</table>';
+		$html .='</fieldset>';	  	        
+		echo $html;
+   }
+   
+   function changeAddons() {
+   		global $main, $db, $addon, $currency, $order;
+   		$package_id = $main->getvar['package_id'];
+		$order_id	= $main->getvar['order_id'];	  
+		 		
+   		$order_info = $order->getOrderInfo($order_id);	   		
+   		$billing_id = $order_info['billing_cycle_id'];
+   		
+   		$addon_list = $addon->getAddonsByPackage($package_id);
+   		
+   		foreach($addon_list as $addon_item) {
+			$checked = false;
+			if (isset($selected_values[$addon_item['id']])) {
+				$checked = true;
+			}	
+			$html .= $main->createCheckbox($addon_item['name'], 'addon_'.$addon_item['id'], $checked);					
+		}
+		echo $html;
+   		
+   }	   
+   
+   function loadaddons() {
+   		global $main, $db, $addon, $currency, $order;
+   		
+   		$package_id = $main->getvar['package_id'];
+		$billing_id	= $main->getvar['billing_id'];
+		$order_id	= $main->getvar['order_id'];
+		$addon_selected_list = array();
+		if (!empty($order_id)) {
+			$order_info = $order->getOrderInfo($order_id);
+			$addon_selected_list = $order_info['addons'];
+		}									
+		$result = $addon->showAllAddonsByBillingCycleAndPackage($billing_id, $package_id,array_flip($addon_selected_list));
+		echo $result['html'];			
+   }
+   
+   
+   function searchuser() {
+		global $main, $user;
+   		$query = $main->postvar['query'];
+   		$user_list = $user->searchUser($query);
+   		foreach($user_list as $user) {
+   			$user_name = $user['firstname']." - ".$user['lastname']." ( ".$user['email'].")";
+   			echo "<li onclick=\"fill('{$user_name}', '{$user['id']}');\">$user_name</li>";	
+   		}	       
+   }
+   
+   function loadpackages() {
+   		global $main, $db, $addon, $currency, $order, $package;
+   		$billing_id = $main->getvar['billing_id'];
+   		$order_id	= $main->getvar['order_id'];
+		$order_info = $order->getOrderInfo($order_id);
+		
+		$packages = $package->getAllPackagesByBillingCycle($billing_id);
+				
+   		$package_list = array();
+   		
+		foreach($packages as $package) {
+			$package_list[$package['id']] = $package['name'].' - '.$currency->toCurrency($package['amount']);				
+		}	
+		echo $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);', 'class'=>'required'));
+   }
+   
+   function sendtemplate() {
+		global $db, $main, $email,$user, $order;	
+			
+		$template 				= $main->getvar['template'];
+		$order_id 				= $main->getvar['order_id'];
+		
+		$order_info 			= $order->getOrder($order_id, true);		
+		$emailtemp 				= $db->emailTemplate($template);
+		$user_info 				= $user->getUserById($order_info['USER_ID']);			
+					
+		$array['FIRSTNAME']		= $user_info['firstname'];
+		$array['LASTNAME'] 		= $user_info['lastname'];			
+		$array['SITENAME'] 		= $db->config('name');
+		$array['ORDER_ID'] 		= $order_id;
+		$array['PACKAGE'] 		= $order_info['PACKAGES'];
+		$array['ADDONS'] 		= $order_info['ADDON'];
+		$array['DOMAIN'] 		= $order_info['domain'];
+		$array['BILLING_CYCLE'] = $order_info['BILLING_CYCLES'];
+		$array['TOTAL'] 		= $order_info['TOTAL'];
+		$array['TOS'] 		    = $db->config('TOS');
+		//$array['ADMIN_EMAIL'] 	= $db->config('EMAIL');
+		
+		$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+		echo 'Email sent';		
+   }
+   
+   function getOrders() {
+   		global	$main, $order;
+   		$page = $main->getvar['page'];	   			   		
+		$array = $order->getAllOrdersToArray('', $page);
+		echo $array['list'];
+   }
+   
+   function getInvoices() {
+   		global	$main, $invoice;
+   		$page = $main->getvar['page'];	   			   		
+		$array = $invoice->getAllInvoicesToArray('', $page);
+		echo $array['list'];
+   }
+   
+   	public function checkSubDomainExists() {
+		global $main, $db, $package, $order;			
+		$domain  		= $main->getvar['domain'];
+		$package_id  	= $main->getvar['package_id'];			
+		$package_info 	= $package->getPackage($package_id);		
+		$final_domain 	= $main->getvar['final_domain'];		
+		$subdomain_id 	= 0;
+		
+		if($main->getvar['domain'] == 'sub') { # If Subdomain				
+			$subdomain_list = $main->getSubDomainByServer($package_info['server']);			
+			$subdomain 		= $subdomain_list[$main->getvar['subdomain_id']];			
+			$subdomain_id	= $main->getvar['subdomain_id'];	
+		}			
+		if ($order->domainExistInOrder($final_domain, $subdomain_id) ) {
+			echo 1;				
+		} else {
+			echo 0;	
+		}			
+		return;
+	}
+	
+	public function checkSubDomainExistsSimple() {
+		global $main, $db, $package, $order;			
+		$final_domain  = $main->getvar['domain'];			
+		if ($order->domainExistInOrder($final_domain) ) {
+			echo 1;				
+		} else {
+			echo 0;	
+		}			
+		return;
+	}		
 }
 
 if(isset($_GET['function']) && !empty($_GET['function'])) {
 	$ajax = new AJAX();
 	if (method_exists($ajax, $_GET['function'])) {
 		//Protecting AJAX calls now we need a token set in variables.php
-		if ($main->checkToken(false)) {	
+		if ($main->checkToken(false)) {
 			$ajax->{$_GET['function']}();
 			include LINK."output.php";
 		}
