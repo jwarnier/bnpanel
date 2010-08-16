@@ -21,18 +21,20 @@ class page {
 		To get started, just choose a link from the sidebar's SubMenu.";	
 	}
 	public function content() { # Displays the page 
-		global $main, $style, $db, $staff;
+		global $main, $style, $db, $staff, $user;
+		
+		$admin_navigation = $user->getAdminNavigation();		
 		
 		switch($main->getvar['sub']) {
 			default:
-				if($_POST) {
+				if($_POST) {					
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n) {
 							$main->errors("Please fill in all the fields!");
 							$n++;
 						}
 						$broke = explode("_", $key);
-						if($broke[0] == "pages") {
+						if($broke[0] == 'pages') {							
 							$main->postvar['perms'][$broke[1]] = $value;	
 						}
 					}
@@ -45,28 +47,30 @@ class page {
 							} elseif($main->postvar['pass'] != $main->postvar['conpass']) {
 								$main->errors("Passwords don't match!");								
 							}						
+							
 							if($main->postvar['perms']) {
 								foreach($main->postvar['perms'] as $key => $value) {
 									if($n) {
 										$string .= ",";	
 									}
-									if($value == "1") {
+									if($value == '1') {
 										$string .= $key;
 									}
 									$n++;
 								}
-							}
+							}							
 							$main->postvar['perms'] 	= $string;
 							$main->postvar['password'] 	= $main->postvar['pass'];
 							$staff->create($main->postvar);	
 							$main->errors('Account added!');	
 						}
 					}
-				}
-				$query = $db->query("SELECT * FROM `<PRE>acpnav`");
+				}				
+							
 				$array['PAGES'] = '<table width="100%" border="0" cellspacing="0" cellpadding="1">';
-				while($data = $db->fetch_array($query)) {
-					$array['PAGES'] .= '<tr><td width="30%" align="left">'.$data['visual'].':</td><td><input name="pages_'.$data['id'].'" id="pages_'.$data['id'].'" type="checkbox" value="1" /></td></tr>';
+				
+				foreach( $admin_navigation as $data) {
+					$array['PAGES'] .= '<tr><td width="30%" align="left">'.$data['visual'].':</td><td><input name="pages_'.$data['link'].'" id="pages_'.$data['link'].'" type="checkbox" value="1" /></td></tr>';
 				}
 				$array['PAGES'] .= "</table>";
 				echo $style->replaceVar("tpl/staff/addstaff.tpl", $array);
@@ -90,6 +94,7 @@ class page {
 								}
 							}
 							if(!$n) {
+								
 								if(!$main->check_email($main->postvar['email'])) {
 									$main->errors("Your email is the wrong format!");
 								} else {
@@ -102,10 +107,11 @@ class page {
 										}
 										$n++;
 									}
+									
 									$main->postvar['perms'] = $string;
 									$staff->edit($main->getvar['do'], $main->postvar);									
 									$main->errors("Staff account edited!");
-									$main->done();
+									//$main->done();
 								}
 							}
 						}
@@ -119,13 +125,14 @@ class page {
 						foreach($perms as $value) {
 							$perm_list[]= $value;						
 						}
-						$query = $db->query("SELECT * FROM `<PRE>acpnav`");
+						
 						$array['PAGES'] = '<table width="100%" border="0" cellspacing="0" cellpadding="1">';
-						while($data2 = $db->fetch_array($query)) {
-							if(in_array($data2['id'],$perm_list)) {
+						
+						foreach( $admin_navigation as $data2) {
+							if(in_array($data2['link'], $perm_list)) {
 								$string = 'checked="checked"';	
 							}
-							$array['PAGES'] .= '<tr><td width="30%" align="left">'.$data2['visual'].':</td><td><input name="pages_'.$data2['id'].'" id="pages_'.$data2['id'].'" type="checkbox" value="1" '.$string.'/></td></tr>';
+							$array['PAGES'] .= '<tr><td width="30%" align="left">'.$data2['visual'].':</td><td><input name="pages_'.$data2['link'].'" id="pages_'.$data2['link'].'" type="checkbox" value="1" '.$string.'/></td></tr>';
 							$string = NULL;
 						}
 						$array['PAGES'] .= "</table>";
