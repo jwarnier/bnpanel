@@ -18,7 +18,7 @@ class page {
 		$this->navlist[] = array("Terms of Service", "application_edit.png", "tos");
 		$this->navlist[] = array("Client Area", "user_go.png", "client");
 		$this->navlist[] = array("Support Area", "help.png", "support");
-		//$this->navlist[] = array("Paid Configuration", "coins.png", "Paid Configuration");
+		$this->navlist[] = array("Paid Configuration", "coins.png", "paid_configuration");
 		
 	}
 	
@@ -125,6 +125,39 @@ class page {
 				$array['SMTP_PASS'] = $db->config("smtp_password");
 				echo $style->replaceVar("tpl/email/emailsettings.tpl", $array);
 				break;
+				
+			case 'paid_configuration':
+			
+				$values[] = array("Pound Sterling","GBP");
+				$values[] = array("US Dollars","USD");
+				$values[] = array("Australian Dollars","AUD");
+				$values[] = array("Canadian Dollars","CAD");
+				$values[] = array("Euros","EUR");
+				$values[] = array("Yen","JPY");
+				$values[] = array("New Zealand Dollar","NZD");
+				$values[] = array("Swiss Franc","CHF");
+				$values[] = array("Hong Kong Dollar","HKD");
+				$values[] = array("Singapore Dollar","SGD");
+				$values[] = array("Swedish Krona","SEK");
+				$values[] = array("Danish Krone","DKK");
+				$values[] = array("Polish Zloty","PLN");
+				$values[] = array("Norwegian Krone","NOK");
+				$values[] = array("Hungarian Forint","HUF");
+				$values[] = array("Czech Koruna","CZK");
+				$values[] = array("Israeli Shekel","ILS");
+				$values[] = array("Mexican Peso","MXN");
+				
+				$array['CURRENCY'] = $main->dropDown("currency", $values, $db->config("currency"));
+				$array['SUSDAYS'] = $db->config("suspensiondays");
+				$array['TERDAYS'] = $db->config("terminationdays");
+				
+				$selected_id = $db->config('paypal_mode');
+				$values=array(0=>'Sandbox',1=>'Live');			
+				$array['PAYPAL_MODE'] = $main->createSelect('paypal_mode', $values, $selected_id);
+				
+				$array['PAYPALEMAIL'] = $db->config("paypalemail");
+				echo $style->replaceVar("tpl/paid/acp.tpl", $array);
+			break;
 		}
 	}
 }

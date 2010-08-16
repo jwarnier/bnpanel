@@ -8,7 +8,7 @@
 
 //Check if called by script
 if(THT != 1){die();}
-
+exit;
 //Create the class
 class p2h {
 
@@ -38,7 +38,7 @@ class p2h {
 			$fname = $content[2];
 		}
 		$this->acpForm[] = array("Forum", $main->dropDown("forum", $values), 'forum');
-		$this->acpNav[] = array("P2H Forums", "forums", "lightning.png", "P2H Forums");
+		//$this->acpNav[] = array("P2H Forums", "forums", "lightning.png", "P2H Forums");
 		$this->clientNav[] = array("Forum Posting", "forums", "lightning.png", "Forum Posting");
 	}
 

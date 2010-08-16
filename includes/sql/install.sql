@@ -34,8 +34,8 @@ INSERT INTO `%PRE%acpnav` (`visual`, `icon`, `link`) VALUES
 ('Knowledge Base', 'folder.png', 'kb'),
 ('Orders', 'order.png', 'orders'),
 ('Invoices', 'invoice.png', 'invoices'),
---('Payments', 	'money_dollar.png', 'payment'),
---('Plugins', 'plugin.png', 'plugins'),
+-- ('Payments', 	'money_dollar.png', 'payment'),
+-- ('Plugins', 'plugin.png', 'plugins'),
 ('Change Password', 'shield.png', 'pass'),
 ('Server Status', 'computer.png', 'status'),
 ('Logs', 'report.png', 'logs');
@@ -156,7 +156,7 @@ INSERT INTO `%PRE%config` (`name`, `value`) VALUES
 ('ui-theme', 'cupertino'),
 ('rows_per_page', '20'),
 ('paypal_mode', '0'),
-('domain_options', '2'); //1 only domains, 2 only subdomains, 3 both 
+('domain_options', '2'); -- 1 only domains, 2 only subdomains, 3 both 
 
 
 -- --------------------------------------------------------
