@@ -145,8 +145,11 @@ function acp() {
 					$html = ob_get_contents(); # Retrieve the HTML
 					ob_clean(); # Flush the HTML
 				} elseif($content->navlist) {
-					$html .= $content->description(); # First, we gotta get the page description.
-                    $html .= "<br /><br />"; # Break it up
+					$description = $content->description();
+					if (!empty($description)) {
+						$html .= $description; # First, we gotta get the page description.
+                    	$html .= "<br /><br />"; # Break it up
+					}
                     // Now we should prepend some stuff here
                     $subsidebar2 .= "<strong>Page Submenu</strong><div class='break'></div>";
                     $subsidebar2 .= $subsidebar;

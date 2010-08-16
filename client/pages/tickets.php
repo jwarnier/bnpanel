@@ -20,82 +20,9 @@ class page {
 		This is the area where you can add/view tickets that you've created or just created. Any tickets, responses will be sent via email.";	
 	}
 	
-	private function lastUpdated($id) { # Returns a the date of last updated on ticket id
-		global $db;
-		$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `ticketid` = '{$db->strip($id)}' AND `reply` = '1' ORDER BY `time` DESC");
-		if(!$db->num_rows($query)) {
-			return "None";	
-		}
-		else {
-			$data = $db->fetch_array($query);
-			$username = $this->determineAuthor($data['userid'], $data['staff']);
-			return strftime("%D - %T", $data['time']) ." by ". $username;
-		}
-	}
-	
-	private function status($status) { # Returns the text of the status
-		switch($status) {
-			default:
-				return "Other";
-				break;
-			
-			case 1:
-				return "Open";
-				break;
-				
-			case 2:
-				return "On Hold";
-				break;
-				
-			case 3:
-				return "Closed";
-				break;
-		}
-	}
-	
-	private function determineAuthor($id, $staff) { # Returns the text of the author of a reply
-		global $db;
-		switch($staff) {
-			case 0:
-				$client = $db->client($id);
-				$username = $client['user'];
-				break;
-				
-			case 1:
-				$client = $db->staff($id);
-				$username = $client['name'];
-				break;
-		}
-		return $username;
-	}
-	
-	private function showReply($id) { # Returns the HTML for a ticket box
-		global $db, $main, $style;
-		$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `id` = '{$id}'");
-		$data = $db->fetch_array($query);
-		$array['AUTHOR'] = $this->determineAuthor($data['userid'], $data['staff']);
-		$array['CREATED'] = "Posted on: ". strftime("%D at %T", $data['time']);
-		$array['REPLY'] = $data['content'];
-		$array['TITLE'] = $data['title'];
-		$orig = $db->query("SELECT * FROM `<PRE>tickets` WHERE `id` = '{$data['ticketid']}'");
-		$dataorig = $db->fetch_array($orig);
-		if($dataorig['userid'] == $data['userid']) {
-			$array['DETAILS'] = "Original Poster";	
-		}
-		elseif($data['staff'] == 1) {
-			$array['DETAILS'] = "Staff Member";
-		}
-		else {
-			$array['DETAILS'] = "";	
-		}
-		return $style->replaceVar("tpl/support/replybox.tpl", $array);
-	}
-	
 	public function content() { # Displays the page 
-		global $main;
-		global $style;
-		global $db;
-		global $email;
+		global $main, $style, $db, $email, $ticket;
+		
 		$user_id = $main->getCurrentUserId();
 		switch($main->getvar['sub']) {
 			default:
@@ -129,7 +56,7 @@ class page {
 					else {
 						while($data = $db->fetch_array($query)) {
 							$array['TITLE'] = $data['title'];
-							$array['UPDATE'] = $this->lastUpdated($data['id']);
+							$array['UPDATE'] = $ticket->lastUpdated($data['id']);
 							$array['ID'] = $data['id'];
 							echo $style->replaceVar("tpl/support/ticketviewbox.tpl", $array);
 						}
@@ -163,13 +90,13 @@ class page {
 							}
 						}
 						$data = $db->fetch_array($query);
-						$array['AUTHOR'] = $this->determineAuthor($data['userid'], $data['staff']);
+						$array['AUTHOR'] = $ticket->determineAuthor($data['userid'], $data['staff']);
 						$array['TIME'] = strftime("%D", $data['time']);
 						$array['NUMREPLIES'] = $db->num_rows($query) - 1;
-						$array['UPDATED'] = $this->lastUpdated($data['id']);
-						$array['ORIG'] = $this->showReply($data['id']);
+						$array['UPDATED'] = $ticket->lastUpdated($data['id']);
+						$array['ORIG'] = $ticket->showReply($data['id']);
 						$array['URGENCY'] = $data['urgency'];
-						$array['STATUS'] = $this->status($data['status']);
+						$array['STATUS'] = $ticket->status($data['status']);
 						
 						$n = 0;
 						$array['REPLIES'] = "";
@@ -177,7 +104,7 @@ class page {
 							if(!$n) {
 								$array['REPLIES'] .= "<br /><b>Replies</b>";
 							}
-							$array['REPLIES'] .= $this->showReply($reply['id']);
+							$array['REPLIES'] .= $ticket->showReply($reply['id']);
 							$n++;
 						}
 						

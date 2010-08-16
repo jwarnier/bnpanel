@@ -46,14 +46,17 @@ $(window).load(function () {
 });
 
 </script>
-<ERRORS>
-<table width="100%" border="0" cellspacing="2">
-  <tr>
-    <td width="30%" valign="top">
-    <div class="subborder">
+<ERRORS>         
     <table width="100%" border="0" align="center" cellspacing="2" class="sub">
       <tr>
-        <td width="40%" align="right">Search Type:</td>
+           <tr>
+        <td >Search</td>
+        <td><label>
+          <input type="text" name="value" id="value" />
+        </label></td>
+      </tr>
+      
+        <td width="4%" >Search Type:</td>
         <td width="11%"><label>
           <select name="type" id="type">
             <option value="user">Username</option>
@@ -64,14 +67,9 @@ $(window).load(function () {
           </select>
         </label></td>
       </tr>
+ 
       <tr>
-        <td align="right">Search Criteria:</td>
-        <td><label>
-          <input type="text" name="value" id="value" />
-        </label></td>
-      </tr>
-      <tr>
-        <td align="right">Clients Per Page:</td>
+        <td >Clients Per Page:</td>
         <td><label>
           <select name="num" id="num">
             <option>5</option>
@@ -84,15 +82,16 @@ $(window).load(function () {
         </label></td>
       </tr>
       <tr>
-        <td colspan="2" align="center"><input type="button" name="search" id="search" value="Search" onclick="clientsearch(document.getElementById('type').value, document.getElementById('value').value, 1)" />
-          <input type="button" name="search2" id="search2" value="Reset Search" onclick="clientsearch(document.getElementById('type').value, '', 1); document.getElementById('value').value = '';" /></td>
+        <td colspan="2" align="left">
+        	<input type="button" name="search" id="search" value="Search" onclick="clientsearch(document.getElementById('type').value, document.getElementById('value').value, 1)" />
+          	<input type="button" name="search2" id="search2" value="Reset Search" onclick="clientsearch(document.getElementById('type').value, '', 1); document.getElementById('value').value = '';" /></td>
       </tr>
     </table>
-    </div>
-    </td>
-    <td class="rightbreak"></td>
+    
+<table width="100%" border="0" cellspacing="2">
+  <tr>
     <td width="70%" valign="top">
-<div id="clientsajax" style="display:none;">
-</div></td>
+	<div id="clientsajax" style="display:none;"></div>
+	</td>
   </tr>
 </table>
