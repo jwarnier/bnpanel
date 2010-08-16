@@ -107,7 +107,7 @@ class invoice extends model {
 	public function getInvoiceInfo($id) {
 		global $db;		
 		$id = intval($id);
-		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `id` = '{$id}'");
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE id = '{$id}'");
 		$array = array();
 		if ($db->num_rows($query) > 0) {
 			$array = $db->fetch_array($query, 'ASSOC');
@@ -133,7 +133,7 @@ class invoice extends model {
 	public function getInvoicesByUser($user_id) {
 		global $db;		
 		$user_id = intval($user_id);		
-		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `uid` = '{$user_id}'");
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE uid = '{$user_id}'");
 		$invoice_list = array();
 		while ($array = $db->fetch_array($query, 'ASSOC')) {				
 			$total_amount = 0;		
@@ -307,7 +307,7 @@ class invoice extends model {
 	public function getInvoice($invoice_id, $read_only = false, $show_price = true) {
 		global $main, $db, $currency, $addon, $email, $package, $order, $user,$billing;	
 		
-		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `id` = '{$invoice_id}'");
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE id = '{$invoice_id}'");
 		if($db->num_rows($query) == 0) {
 			echo "That invoice doesn't exist!";	
 		} else {
@@ -415,7 +415,7 @@ class invoice extends model {
 				$array['BILLING_CYCLES'] = $billing_list[$billing_cycle_id]['name'].'<input type="hidden" id="billing_id" name="billing_id" value="'.$billing_cycle_id.'">';
 			}
 			
-			$query = $db->query("SELECT * FROM `<PRE>order_invoices` WHERE `invoice_id` = '{$invoice_id}'");
+			$query = $db->query("SELECT * FROM `<PRE>order_invoices` WHERE invoice_id = '{$invoice_id}'");
 			$order_item = $db->fetch_array($query);
 			
 			if (!empty($order_item['order_id'])) {
@@ -718,7 +718,7 @@ class invoice extends model {
 	public function getLastInvoiceByUser($user_id) {
 		global $db;
 		$user_id = intval($user_id);
-		$sql = "SELECT id FROM ".$this->getTableName()." WHERE `uid` = ".$user_id." ORDER BY id DESC LIMIT 1";
+		$sql = "SELECT id FROM ".$this->getTableName()." WHERE uid = ".$user_id." ORDER BY id DESC LIMIT 1";
 		
 		$result	= $db->query($sql);
 		$invoice = array();
@@ -748,14 +748,14 @@ class invoice extends model {
 	public function getOrderByInvoiceId($invoice_id) {
 		global $db;
 		$invoice_id = intval($invoice_id);
-		$query = $db->query("SELECT order_id FROM `<PRE>order_invoices` WHERE `invoice_id` = '{$invoice_id}' LIMIT 1");
+		$query = $db->query("SELECT order_id FROM `<PRE>order_invoices` WHERE invoice_id = '{$invoice_id}' LIMIT 1");
 		$data = $db->fetch_array($query);
 		return $data['order_id'];
 	}
 	
 	public function is_paid($id) { # Is the invoice paid - True = Paid / False = Not
 		global $db;
-		$data = $db->fetch_array($db->query("SELECT status FROM ".$this->getTableName()." WHERE `id` = '{$id}'"));
+		$data = $db->fetch_array($db->query("SELECT status FROM ".$this->getTableName()." WHERE id = '{$id}'"));
 		if($data['status'] == INVOICE_STATUS_PAID) {
 			return true;	
 		} else {

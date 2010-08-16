@@ -139,23 +139,12 @@ if(THT != 1){die();}class main {
 	}
 		/**	 * Checks the staff permissions for a nav item	 * @param	int		permission id	 * @param 	int		user id	 */	 
 	public function checkPerms($id, $user = 0) {
-		global $main, $db;
+		global $main, $db, $staff;
 		if(empty($user)) {
 			$user =  $main->getCurrentStaffId();
-		}				//Use now session to avoid useless query calls to the DB		if (isset($_SESSION['user_permissions'])) {			foreach($_SESSION['user_permissions'] as $value) {				if($value == $id) {					return false;					}			}			return true;		} else {
-			$query = $db->query("SELECT * FROM `<PRE>staff` WHERE `id` = '{$user}'");
-			if($db->num_rows($query) == 0) {
-				$array['Error'] = "Staff member not found";
-				$array['Staff ID'] = $id;
-				$main->error($array);
-			} else {
-				$data = $db->fetch_array($query);			
-				$perms = explode(",", $data['perms']);											$_SESSION['user_permissions'] = $perms;				
-				foreach($perms as $value) {
-					if($value == $id) {
-						return false;	
-					}
-				}
+		}						//Use now session to avoid useless query calls to the DB		if (isset($_SESSION['user_permissions'])) {								foreach($_SESSION['user_permissions'] as $value) {								if($value == $id) {								return false;					}			}			return true;		} else {						$staff_info = $staff->getStaffById($user);			
+			if (!empty($staff_info)) {										$perms = explode(",", $staff_info['perms']);												$_SESSION['user_permissions'] = $perms;								foreach($perms as $value) {					if($value == $id) {												return false;						}									}					return true;	
+			} else {				$array['Error'] = "Staff member not found";				$array['Staff ID'] = $id;				$main->error($array);
 				return true;
 			}		}
 	}		/**	 * Checks the credentails of the client and logs in, returns true or false	 * 	 */

@@ -22,8 +22,6 @@ function acp() {
 		$main->getvar['page'] = 'home';
 	}
 	$admin_navigation = $user->getAdminNavigation();
-	
-	//$admin_navigation['']
 	$admin_nave_item = $admin_navigation[$main->getvar['page']];
 	
 	$link ='pages/home.php';
@@ -31,10 +29,9 @@ function acp() {
 		$header = $admin_nave_item['visual'];
 		$link = 'pages/'. $admin_nave_item['link'].'.php';
 	}
-	
 	if(!file_exists($link)) {	
 		$html = "<strong>Fatal Error:</strong> Seems like the .php is non existant. Is it deleted?";	
-	} elseif(!$main->checkPerms($admin_nave_item['id'])) {		
+	} elseif(!$main->checkPerms($admin_nave_item['link'])) {		
 		$html = "You don't have access to this page.";	
 	} else {		
 		//If deleting something
@@ -46,7 +43,7 @@ function acp() {
 			$nav = "Sidebar Menu";		
 						
 			foreach ($admin_navigation as $row) {
-				if($main->checkPerms($row['id'])) {
+				if($main->checkPerms($row['link'])) {
 					$array2['IMGURL'] = $row['icon'];
 					$array2['LINK'] = "?page=".$row['link'];
 					$array2['VISUAL'] = $row['visual'];
