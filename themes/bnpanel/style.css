@@ -96,7 +96,7 @@ h1 {
 }
 
 #right {
-	width:83%;
+	width:84%;
 	float:right;
 }
 #right ul{
@@ -340,6 +340,30 @@ h2, h3 {
 	padding:2px 10px 1px 0;
 }
 
+
+.leftmenu {
+	font-size:90%;
+	color:#21759B;
+	list-style-type:none;
+	padding:0px;
+	border-color:#E3E3E3;	
+}
+
+.leftmenu li:hover {	
+	background-color:#eaf2fa;
+}
+
+.leftmenu li {	
+	padding-left:5px;
+}
+
+
+
+.leftmenu a {	
+	text-decoration:underline;
+	
+}
+
 .submenu {
 	font-size:80%;
 	height:25px;
@@ -348,9 +372,15 @@ h2, h3 {
 	padding-left:0;	
 }
 
-.submenu li{
+.submenu li {
+
 	float:left;	
 	padding:0px 4px 0px 4px;
+}
+
+.submenu a:hover {
+		
+	text-decoration:underline;
 }
 
 fieldset {
