@@ -15,19 +15,21 @@ define("PAGE", "Admin Area");
 
 //Main ACP Function - Creates the ACP basically
 function acp() {
-	global $main, $db, $style,$type, $email;
+	global $main, $db, $style,$type, $email, $user;
 	ob_start(); # Stop the output buffer
 	
 	if(!$main->getvar['page']) { 
 		$main->getvar['page'] = 'home';
 	}
 	$admin_navigation = $user->getAdminNavigation();
+	
+	//$admin_navigation['']
 	$admin_nave_item = $admin_navigation[$main->getvar['page']];
 	
 	$link ='pages/home.php';
-	if (isset($admin_nave_item) && !empty($admin_nave_item)) {
+	if (isset($admin_nave_item) && !empty($admin_nave_item)) {		
 		$header = $admin_nave_item['visual'];
-		$link = 'pages/'. $admin_nave_item['page'].'.php';
+		$link = 'pages/'. $admin_nave_item['link'].'.php';
 	}
 	
 	if(!file_exists($link)) {	

@@ -17,7 +17,7 @@ class paid {
 
         public function __construct() { # Assign stuff to variables on creation
 			global $main, $db, $invoice,$billing;
-			$this->acpNav[] = array("Paid Configuration", "paid", "coins.png", "Paid Configuration");
+			//$this->acpNav[] = array("Paid Configuration", "paid", "coins.png", "Paid Configuration");
 			
 			//Adding billing cycle
 			$myresults = array();
@@ -54,7 +54,7 @@ class paid {
 					}
 				}
 				if(!$n) {
-					if(is_numeric($main->postvar['susdays']) && is_numeric($main->postvar['termdays'])) {
+					/*if(is_numeric($main->postvar['susdays']) && is_numeric($main->postvar['termdays'])) {
 						$db->updateConfig("suspensiondays",		$main->postvar['susdays']);
 						$db->updateConfig("terminationdays", 	$main->postvar['termdays']);
 						$db->updateConfig("currency", 			$main->postvar['currency']);
@@ -64,10 +64,12 @@ class paid {
 					}
 					else {
 						$main->errors("Please enter a valid value!");	
-					}
+					}*/
 				}
 			}
-			$values[] = array("Pound Sterling","GBP");
+			//this code was moved to 	admin/settings.php
+			
+			/*$values[] = array("Pound Sterling","GBP");
 			$values[] = array("US Dollars","USD");
 			$values[] = array("Australian Dollars","AUD");
 			$values[] = array("Canadian Dollars","CAD");
@@ -96,6 +98,7 @@ class paid {
 			
 			$array['PAYPALEMAIL'] = $db->config("paypalemail");
 			echo $style->replaceVar("tpl/paid/acp.tpl", $array);
+			*/
 		}
 	
 	public function signup() {
