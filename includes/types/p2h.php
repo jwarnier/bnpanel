@@ -8,7 +8,7 @@
 
 //Check if called by script
 if(THT != 1){die();}
-exit;
+
 //Create the class
 class p2h {
 

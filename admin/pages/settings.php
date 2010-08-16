@@ -104,7 +104,7 @@ class page {
 				$array['CENABLED'] = $main->dropDown("cenabled", $values, $db->config("cenabled"));
 				$array['CMESSAGE'] = $db->config("cmessage");
 				$array['ALERTS'] = $db->config("alerts");
-				echo $style->replaceVar("tpl/clientsettings.tpl", $array);
+				echo $style->replaceVar("tpl/user/clientsettings.tpl", $array);
 				break;
 				
 		    case "support":

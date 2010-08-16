@@ -123,12 +123,12 @@ if($db->num_rows($packages2) == 0) {
 	
 	//Determine what to show in Client box
 	if(!$_SESSION['clogged']) {
-		$content = $style->replaceVar("tpl/clogin.tpl");
+		$content = $style->replaceVar("tpl/user/clogin.tpl");
 	} else {		
 		$user_id = $main->getCurrentUserId();
 		$clientdata = $db->client($user_id);		
 		$array['NAME'] = $clientdata['user'];
-		$content = $style->replaceVar("tpl/cdetails.tpl", $array);
+		$content = $style->replaceVar("tpl/user/cdetails.tpl", $array);
 	}
 	if(!$maincontent) {
 		$maincontent = $style->replaceVar("tpl/orderform.tpl", $array);

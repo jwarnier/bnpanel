@@ -408,7 +408,7 @@ class AJAX {
 							$array['FUNC'] = "none";	
 							$array['IMG'] = "help.png";	
 						}*/
-						echo $style->replaceVar("tpl/clientsearchbox.tpl", $array);	
+						echo $style->replaceVar("tpl/user/clientsearchbox.tpl", $array);	
 						$n++;
 					}
 				}
@@ -567,18 +567,12 @@ class AJAX {
 				}
 			}
 			else {
-				echo "Eh? Fatal Error Debug: ". $main->getvar['type'];
+				echo "Fatal Error Debug: ". $main->getvar['type'];
 			}
 			$ver = mysql_real_escape_string($_GET['version']);
 			$query = mysql_query("UPDATE `{$sql['pre']}config` SET `value` = '{$ver}' WHERE `name` = 'version'");
 			if(!$query) {
 				echo '<div class="errors">There was a problem editing your script version!</div>';
-			}
-			if($main->getvar['type'] == "install") {
-				$query = mysql_query("UPDATE `{$sql['pre']}config` SET `value` = 'Reloaded2' WHERE `name` = 'theme'");
-				if(!$query) {
-					echo '<div class="errors">There was a problem setting your default theme!</div>';
-				}
 			}
 			echo "Complete!<br /><strong>There were ".$errors['n']." errors while executing the SQL!</strong><br />";
 			if(!$this->writeconfig($sql['host'], $sql['user'], $sql['pass'], $sql['db'], $sql['pre'], "true")) {

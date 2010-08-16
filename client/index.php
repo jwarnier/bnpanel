@@ -172,7 +172,7 @@ if(!$_SESSION['clogged']) {
 				}
 			}
 		}
-		echo '<div align="center">'.$main->table("Client Area - Reset Password", $style->replaceVar("tpl/creset.tpl", $array), "300px").'</div>';		
+		echo '<div align="center">'.$main->table("Client Area - Reset Password", $style->replaceVar("tpl/user/creset.tpl", $array), "300px").'</div>';		
 		echo $style->get("footer.tpl");
 	} else {
 		define("SUB", "Login");
@@ -192,7 +192,7 @@ if(!$_SESSION['clogged']) {
 			define("INFO", SUB);
 			echo '<div align="center">'.$main->table("Client Area - Disabled", $db->config("cmessage"), "300px").'</div>';
 		} else {
-			echo '<div align="center">'.$main->table("Client Area - Login", $style->replaceVar("tpl/clogin.tpl", $array), "300px").'</div>';
+			echo '<div align="center">'.$main->table("Client Area - Login", $style->replaceVar("tpl/user/clogin.tpl", $array), "300px").'</div>';
 		}
 		echo $style->get("footer.tpl");
 	}
