@@ -80,13 +80,13 @@ require LINK."/class_db.php"; # Get the file
 if(file_exists(LINK."/conf.inc.php")) {
 	include LINK."/conf.inc.php"; # Get the config
 	define("NOCONFIG", false);
-}
-else {
+} else {
 	define("NOCONFIG", true);
 }
+
 if($sql['install']) {
 	define("INSTALL", 1);
-	$db = new db; # Create the class
+	$db = new db(); # Create the class	
 	global $db; # Globalise it
 }
 
