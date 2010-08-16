@@ -39,7 +39,7 @@ function client() {
 				$array2['IMGURL'] = $row['icon'];
 				$array2['LINK'] = "?page=".$row['link'];
 				$array2['VISUAL'] = $row['visual'];
-				$array['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);			
+				$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array2);			
 			}
 			
 			# Types Navbar
@@ -48,8 +48,8 @@ function client() {
 			$array2['IMGURL'] = "logout.png";
 			$array2['LINK'] = "?page=logout";
 			$array2['VISUAL'] = "Logout";
-			$array['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);
-			$sidebar = $style->replaceVar("tpl/sidebar.tpl", $array);
+			$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array2);
+			$sidebar = $style->replaceVar("tpl/menu/leftmenu_main.tpl", $array);
 			
 			//Page Sidebar
 			
@@ -60,9 +60,9 @@ function client() {
 					$array2['IMGURL'] = $value[1];
 					$array2['LINK'] = "?page=".$main->getvar['page']."&sub=".$value[2];
 					$array2['VISUAL'] = $value[0];
-					$array3['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);
+					$array3['LINKS'] .= $style->replaceVar("tpl/menu/submenu_link.tpl", $array2);
 				}
-				$subsidebar = $style->replaceVar("tpl/sidebar.tpl", $array3);
+				$subsidebar = $style->replaceVar("tpl/menu/submenu_main.tpl", $array3);
 			}
 			
 			if($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {

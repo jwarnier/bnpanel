@@ -21,55 +21,55 @@ class page {
 		To get started, choose a link from the sidebar's SubMenu.";	
 	}
 	public function content() { # Displays the page 
-		global $main;
-		global $style;
-		global $db;
+		global $main, $style, $db, $server;
+		
 		switch($main->getvar['sub']) {
 			default:
 				if($_POST) {
-					foreach($main->postvar as $key => $value) {
-						if($value == "" && !$n) {
-							$main->errors("Please fill in all the fields!");
-							$n++;
+					if($main->checkToken()) {
+						foreach($main->postvar as $key => $value) {
+							if($value == "" && !$n) {
+								$main->errors("Please fill in all the fields!");
+								$n++;
+							}
 						}
-					}
-					if(!$n) {
-						$db->query("INSERT INTO `<PRE>subdomains` (subdomain, server) VALUES('{$main->postvar['subdomain']}', '{$main->postvar['server']}')");
-						$main->errors("Subdomain has been added!");
-					}
+						if(!$n) {
+							$db->query("INSERT INTO `<PRE>subdomains` (subdomain, server) VALUES('{$main->postvar['subdomain']}', '{$main->postvar['server']}')");
+							$main->errors("Subdomain has been added!");
+						}
+					}					
 				}
-				$query = $db->query("SELECT * FROM `<PRE>servers`");
-				if($db->num_rows($query) == 0) {
-					echo "There are no servers, you need to add a server first!";
-					return;
-				}
-				while($data = $db->fetch_array($query)) {
-					$values[] = array($data['name'], $data['id']);	
-				}
-				$array['SERVER'] = $main->dropDown("server", $values);
-				echo $style->replaceVar("tpl/addsubdomain.tpl", $array);
-			break;
-			
-			case "edit":
+				$all_servers = $server->getAllServers();
+				
+				if (!empty($all_servers)) {
+					$array['SERVER'] = $main->createSelect("server", $all_servers);
+					echo $style->replaceVar("tpl/subdomain/addsubdomain.tpl", $array);
+				} else {
+					$main->errors('There are no servers, you need to add a Server first <a href="?page=servers&sub=add">here</a>');
+					echo '<ERRORS>';
+				}				
+			break;			
+			case 'edit':
 				if(isset($main->getvar['do'])) {
 					$query = $db->query("SELECT * FROM `<PRE>subdomains` WHERE `id` = '{$main->getvar['do']}'");
 					if($db->num_rows($query) == 0) {
 						echo "That subdomain doesn't exist!";	
-					}
-					else {
+					} else {
 						if($_POST) {
-							foreach($main->postvar as $key => $value) {
-								if($value == "" && !$n) {
-									$main->errors("Please fill in all the fields!");
-									$n++;
+							if($main->checkToken()) {		
+								foreach($main->postvar as $key => $value) {
+									if($value == "" && !$n) {
+										$main->errors("Please fill in all the fields!");
+										$n++;
+									}
 								}
-							}
-							if(!$n) {
-								$db->query("UPDATE `<PRE>subdomains` SET `subdomain` = '{$main->postvar['subdomain']}', 
-																	  `server` = '{$main->postvar['server']}'
-																	   WHERE `id` = '{$main->getvar['do']}'");
-								$main->errors("Subdomain edited!");
-								$main->done();
+								if(!$n) {
+									$db->query("UPDATE `<PRE>subdomains` SET `subdomain` = '{$main->postvar['subdomain']}', 
+																		  `server` = '{$main->postvar['server']}'
+																		   WHERE `id` = '{$main->getvar['do']}'");
+									$main->errors("Subdomain edited!");
+									$main->done();
+								}
 							}
 						}
 						$data = $db->fetch_array($query);
@@ -79,15 +79,14 @@ class page {
 							$values[] = array($data['name'], $data['id']);	
 						}
 						$array['SERVER'] = $array['THEME'] = $main->dropDown("server", $values, $data['server']);
-						echo $style->replaceVar("tpl/editsubdomain.tpl", $array);
+						echo $style->replaceVar("tpl/subdomain/editsubdomain.tpl", $array);
 					}
 				}
 				else {
 					$query = $db->query("SELECT * FROM `<PRE>subdomains`");
 					if($db->num_rows($query) == 0) {
 						echo "There are no subdomains to edit!";	
-					}
-					else {
+					} else {
 						echo "<ERRORS>";
 						while($data = $db->fetch_array($query)) {
 							echo $main->sub("<strong>".$data['subdomain']."</strong>", '<a href="?page=sub&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>');
@@ -98,8 +97,10 @@ class page {
 			
 			case "delete":
 				if(isset($main->getvar['do'])) {
-					$db->query("DELETE FROM `<PRE>subdomains` WHERE `id` = '{$main->getvar['do']}'");
-					$main->errors("Subdomain Deleted!");		
+					if($main->checkToken()) {	
+						$db->query("DELETE FROM `<PRE>subdomains` WHERE `id` = '{$main->getvar['do']}'");
+						$main->errors("Subdomain Deleted!");
+					}		
 				}
 				$query = $db->query("SELECT * FROM `<PRE>subdomains`");
 				if($db->num_rows($query) == 0) {
@@ -115,4 +116,3 @@ class page {
 		}
 	}
 }
-?>

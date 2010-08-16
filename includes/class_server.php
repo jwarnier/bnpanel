@@ -603,8 +603,7 @@ class server extends Model {
 			$array['User PID'] = $id;
 			$main->error($array);
 			return;	
-		}
-		else {
+		} else {
 			$data = $db->fetch_array($query);
 			$query2 = $db->query("SELECT * FROM `<PRE>users` WHERE `id` = '{$db->strip($data['userid'])}'");
 			$data2 = $db->fetch_array($query2);
@@ -831,8 +830,7 @@ class server extends Model {
 				case USER_STATUS_WAITING_ADMIN_VALIDATION:
 					//$date = time();
 					//$db->query("UPDATE `<PRE>users` SET `status` = '".USER_STATUS_ACTIVE."' WHERE `user` = '{$username}'");
-					$user->updateUserStatus($data['id'], USER_STATUS_ACTIVE);
-					
+					$user->updateUserStatus($data['id'], USER_STATUS_ACTIVE);					
 					$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
 														  '{$db->strip($data['userid'])}',
 														  '{$data['user']}',
@@ -851,6 +849,16 @@ class server extends Model {
 	
 	public function	getAllServers() {
 		global $db, $main;	
+		$sql = "SELECT *  FROM `<PRE>servers`";
+		$query = $db->query($sql);
+		$server_list = array();
+		if($db->num_rows($query) > 0) {
+			$server_list = array();
+			while ($row =  $db->fetch_array($query,'ASSOC')) {
+				$server_list[$row['id']]=$row;
+			}			
+		}
+		return $server_list;
 	}
 	
 	public function getServerById($server_id) {

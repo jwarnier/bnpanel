@@ -98,22 +98,20 @@ class page {
 						$main->errors("Package has been added!");						
 					}
 				}
-				$query = $db->query("SELECT * FROM `<PRE>servers`");
-				if($db->num_rows($query) == 0) {
-					echo "There are no servers, you need to add a server first!";
-					return;
+				
+				$all_servers = $server->getAllServers();
+				if (!empty($all_servers)) {
+					$array['SERVER'] = $main->createSelect("server", $all_servers);
+						
+					//Addon feature added
+					$array['ADDON'] = $addon->generateAddonCheckboxes();
+					//finish 				
+									
+					echo $style->replaceVar("tpl/packages/addpackage.tpl", $array);
+				} else {
+					$main->errors('There are no servers, you need to add a Server first <a href="?page=servers&sub=add">here</a>');
+					echo '<ERRORS>';
 				}
-				while($data = $db->fetch_array($query)) {
-					$values[] = array($data['name'], $data['id']);	
-				}				
-				$array['SERVER'] = $main->dropDown("server", $values);
-				
-				
-				//Addon feature added
-				$array['ADDON'] = $addon->generateAddonCheckboxes();
-				//finish 				
-								
-				echo $style->replaceVar("tpl/packages/addpackage.tpl", $array);
 				break;
 				
 			case 'edit':
@@ -121,9 +119,9 @@ class page {
 					$package_info = $package->getPackage($main->getvar['do']);
 					
 					if(empty($package_info)) {
-						echo "That package doesn't exist!";	
+						$main->errors('That package doesn\'t exist!');						
 					} else {
-						if($_POST) {
+						if($_POST && $main->checkToken() ) {
 							
 							foreach($main->postvar as $key => $value) {
 								//if($value == "" && !$n && $key != "admin") {
@@ -144,6 +142,7 @@ class page {
 										$n++;
 									}
 								}
+								
 								$db->query("UPDATE `<PRE>packages` SET
 										   `name` = '{$main->postvar['name']}',
 										   `backend` = '{$main->postvar['backend']}',
@@ -270,11 +269,7 @@ class page {
 							}							
 						}
 						$html_result = $serverphp->parseBackendInfo($my_package_back_end);
-						$array['BACKEND_INFO'] = $html_result;
-						
-						//data['backend']
-											
-						
+						$array['BACKEND_INFO'] = $html_result;						
 						echo $style->replaceVar("tpl/packages/editpackage.tpl", $array);
 					}
 				} else {
@@ -294,12 +289,13 @@ class page {
 				
 			case 'delete':
 				if($main->getvar['do']) {
-					
-					$db->query("DELETE FROM `<PRE>packages` 		WHERE `id` = '{$main->getvar['do']}'");
-					$db->query("DELETE FROM `<PRE>billing_products` WHERE `product_id` = '{$main->getvar['do']}' AND type = '".BILLING_TYPE_PACKAGE."'");
-					$db->query("DELETE FROM `<PRE>package_addons`	WHERE `package_id` = '{$main->getvar['do']}'");
-									
-					$main->errors("Package has been Deleted!");		
+					if ($main->checkToken()) {					
+						$db->query("DELETE FROM `<PRE>packages` 		WHERE id = '{$main->getvar['do']}'");
+						$db->query("DELETE FROM `<PRE>billing_products` WHERE product_id = '{$main->getvar['do']}' AND type = '".BILLING_TYPE_PACKAGE."'");
+						$db->query("DELETE FROM `<PRE>package_addons`	WHERE package_id = '{$main->getvar['do']}'");
+										
+						$main->errors("Package has been Deleted!");
+					}		
 				}
 				$query = $db->query("SELECT * FROM `<PRE>packages`");
 				if($db->num_rows($query) == 0) {
