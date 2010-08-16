@@ -47,7 +47,7 @@ function acp() {
 					$array2['IMGURL'] = $row['icon'];
 					$array2['LINK'] = "?page=".$row['link'];
 					$array2['VISUAL'] = $row['visual'];
-					$array['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);
+					$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array2);
 				}
 			}
 			
@@ -63,7 +63,7 @@ function acp() {
 						$array2['IMGURL'] = $value[2];
 						$array2['LINK'] = "?page=type&type=".$key."&sub=".$value[1];
 						$array2['VISUAL'] = $value[0];
-						$array['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);	
+						$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array2);	
 						if($main->getvar['page'] == "type" && $main->getvar['type'] == $key && $main->getvar['sub'] == $value[1]) {
 							define("SUB", $value[3]);
 							$header = $value[3];
@@ -75,17 +75,17 @@ function acp() {
 			$array2['IMGURL'] = "logout.png";
 			$array2['LINK'] = "?page=logout";
 			$array2['VISUAL'] = "Logout";
-			$array['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);
-			$sidebar = $style->replaceVar("tpl/sidebar.tpl", $array);
+			$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array2);
+			$sidebar = $style->replaceVar("tpl/menu/leftmenu_main.tpl", $array);
 			
 			//Page Sidebar
 			
-			$sidebar_link_link = "tpl/sidebarlink.tpl";
-			$sidebar_link =  "tpl/sidebar.tpl";	
+			$sidebar_link_link = "tpl/menu/leftmenu_link.tpl";
+			$sidebar_link =  "tpl/menu/leftmenu_main.tpl";	
 				
 			if (isset($main->getvar['sub'])) {
-				$sidebar_link_link = "tpl/page/sidebarlink.tpl";
-				$sidebar_link =  "tpl/page/sidebar.tpl";							
+				$sidebar_link_link = "tpl/menu/submenu_link.tpl";
+				$sidebar_link =  "tpl/menu/submenu_main.tpl";							
 			}
 			
 			if($content->navtitle) {
