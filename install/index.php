@@ -67,16 +67,7 @@ $values=array('install'=>'Install');
 
 if(INSTALL == 1) {
 	$main->errors('The system has already been installed. If you want to re-install you should delete the conf.inc.php file. If you want to update just continue this procedure.');
- 	//$values['upgrade'] = 'Upgrade';
- 	$values=array('upgrade'=>'Upgrade');
-	/*
-	include LINK."conf.inc.php";
-	if(!writeconfig($sql['host'], $sql['user'], $sql['pass'], $sql['db'], $sql['pre'], "false")) {
-		$array['ANYTHING'] = "Your $link isn't writeable or does not exist! Please CHMOD it to 666 and make sure it exists!!";
-		$disable = true;
-	} else {
-		$array['ANYTHING'] = "Since you've already ran the install your config has been re-written to not installed. If you are upgrading, this is fine!";
-	}*/
+	$values=array('upgrade'=>'Upgrade');
 }
 	
 if(!file_exists($link)) {

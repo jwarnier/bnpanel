@@ -510,7 +510,7 @@ class AJAX {
 				if(!$seldb) {
 					echo 1;	
 				} else {
-					if($this->writeconfig($host, $user, $pass, $db, $pre, "false")) {
+					if ($this->writeconfig($host, $user, $pass, $db, $pre, "false")) {
 						echo 2;	
 					} else {
 						echo 3;	
@@ -521,51 +521,58 @@ class AJAX {
 			echo 4;	
 		}
 	}
-	private function writeconfig($host, $user, $pass, $db, $pre, $true) {
+	
+	private function writeconfig($host, $user, $pass, $db, $pre, $true, $upgrade = 'false') {
 		global $style;
-		$array['HOST'] 	=  $host;
-		$array['USER'] 	=  $user;
-		$array['PASS'] 	=  $pass;
-		$array['DB'] 	=  $db;
-		$array['PRE'] 	=  $pre;
-		$array['TRUE'] 	=  $true;
+		
+		$array['HOST'] 		=  $host;
+		$array['USER'] 		=  $user;
+		$array['PASS'] 		=  $pass;
+		$array['DB'] 		=  $db;
+		$array['PRE'] 		=  $pre;
+		$array['TRUE'] 		=  $true;		
+		$array['UPGRADE'] 	=  $upgrade;		
+		
 		$tpl = $style->replaceVar("tpl/install/conftemp.tpl", $array);
-		$link = LINK."conf.inc.php";
-		if(is_writable($link)) {
+		$link = LINK."conf.inc.php";		
+		if (is_writable($link)) {
 			file_put_contents($link, $tpl);
 			return true;
 		} else {
 			return false;
 		}
 	}
+	
 	public function install() {
 		global $style, $db, $main;
-		$conf_file = LINK."conf.inc.php";		 
-		if (file_exists($conf_file)) {
+		$conf_file = LINK."conf.inc.php";
+		
+		if (file_exists($conf_file) && is_writable($conf_file)) {
 			include $conf_file;
 			$dbCon = mysql_connect($sql['host'], $sql['user'], $sql['pass']);
 			$dbSel = mysql_select_db($sql['db'], $dbCon);
 			
 			if($main->getvar['type'] == "install") {
 				$errors = $this->installsql("sql/install.sql", $sql['pre'], $dbCon);
-			} elseif($main->getvar['type'] == "upgrade") {				
-				$errors = $this->installsql("sql/upgrade.sql", $sql['pre'], $dbCon);
+				echo "Complete!<br /><strong>There were ".$errors['n']." errors while executing the SQL!</strong><br />";
+				echo '<div align="center"><input type="button" name="button4" id="button4" value="Next Step" onclick="change()" /></div>';
+					
+			} elseif($main->getvar['type'] == "upgrade") {									
+				if ($sql['upgrade'] == true) {
+					$errors = $this->installsql("sql/upgrade.sql", $sql['pre'], $dbCon);
+					echo "Complete!<br /><strong>There were ".$errors['n']." errors while executing the SQL!</strong><br />";
+					echo '<div class="errors">Your upgrade is now complete.</div>';
+				} else {
+					echo 'Change the upgrade variable to true in conf.inc.php. Then try again.';					
+				}				
 			} else {
 				echo "Fatal Error Debug: ". $main->getvar['type'];
-			}			
-			if(!$query) {
-				echo '<div class="errors">There was a problem editing your script version!</div>';
 			}
-			echo "Complete!<br /><strong>There were ".$errors['n']." errors while executing the SQL!</strong><br />";
 			
 			if(!$this->writeconfig($sql['host'], $sql['user'], $sql['pass'], $sql['db'], $sql['pre'], "true")) {
 				echo '<div class="errors">There was a problem re-writing to the config!</div>';	
 			}
-			if($main->getvar['type'] == "install") {
-				echo '<div align="center"><input type="button" name="button4" id="button4" value="Next Step" onclick="change()" /></div>';
-			} elseif($main->getvar['type'] == "upgrade") {
-				echo '<div class="errors">Your upgrade is now complete! You can use the script as normal.</div>';	
-			}
+						
 			if($errors['n']) {
 				echo "<strong>SQL Queries (Broke):</strong><br />";
 				foreach($errors['errors'] as $value) {

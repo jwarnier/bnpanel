@@ -12,5 +12,6 @@ $sql['db']		= "%DB%"; #The mySQL DB, remember to have your username prefix
 $sql['pre'] 	= "%PRE%"; #The mySQL Prefix, usually default unless otherwise
 
 //LEAVE
-$sql['install'] = %TRUE%;
+$sql['install'] = %TRUE%;	//Determines if the system is installed or not
+$sql['upgrade'] = %UPGRADE%; // set to true to update the system
 ?>
