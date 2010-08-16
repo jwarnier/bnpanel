@@ -6,7 +6,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%acpnav` (
-  `id` mediumint(9) NOT NULL auto_increment,
+  `id` int NOT NULL auto_increment,
   `visual` varchar(20) NOT NULL,
   `icon` varchar(50) NOT NULL,
   `link` varchar(20) NOT NULL,
@@ -18,27 +18,27 @@ CREATE TABLE IF NOT EXISTS `%PRE%acpnav` (
 --
 
 INSERT INTO `%PRE%acpnav` (`visual`, `icon`, `link`) VALUES
-('Home', 'house.png', 'home'),
-('General Settings', 'cog.png', 'settings'),
-('Look & Feel', 'rainbow.png', 'lof'),
-('Servers', 'server.png', 'servers'),
-('Billing Cycles', 'rainbow.png', 'billing'),
-('Subdomains', 'link.png', 'sub'),
-('Packages', 'package_green.png', 'packages'),
-('Addons', 'rainbow.png', 'addons'),
-('Staff Accounts', 'user_gray.png', 'staff'),
-('Clients', 'group.png', 'users'),
--- ('Client Importer', 'user_orange.png', 'import'),
-('Mail Center', 'email_open.png', 'email'),
-('Tickets', 'page_white_text.png', 'tickets'),
-('Knowledge Base', 'folder.png', 'kb'),
-('Orders', 'order.png', 'orders'),
-('Invoices', 'invoice.png', 'invoices'),
--- ('Payments', 	'money_dollar.png', 'payment'),
--- ('Plugins', 'plugin.png', 'plugins'),
-('Change Password', 'shield.png', 'pass'),
-('Server Status', 'computer.png', 'status'),
-('Logs', 'report.png', 'logs');
+('Home', 				'house.png', 'home'),
+('General Settings', 	'cog.png', 'settings'),
+('Look & Feel', 		'rainbow.png', 'lof'),
+('Servers', 			'server.png', 'servers'),
+('Billing Cycles', 		'rainbow.png', 'billing'),
+('Subdomains', 			'link.png', 'sub'),
+('Packages', 			'package_green.png', 'packages'),
+('Addons', 				'rainbow.png', 'addons'),
+('Staff Accounts',		'user_gray.png', 'staff'),
+('Clients', 			'group.png', 'users'),
+-- ('Client Importer', 	'user_orange.png', 'import'),
+('Mail Center',			'email_open.png', 'email'),
+('Tickets', 			'page_white_text.png', 'tickets'),
+('Knowledge Base', 		'folder.png', 'kb'),
+('Orders', 				'order.png', 'orders'),
+('Invoices', 			'invoice.png', 'invoices'),
+-- ('Payments', 		'money_dollar.png', 'payment'),
+-- ('Plugins', 			'plugin.png', 'plugins'),
+('Change Password', 	'shield.png', 'pass'),
+('Server Status', 		'computer.png', 'status'),
+('Logs',				'report.png', 'logs');
 
 -- --------------------------------------------------------
 
@@ -47,8 +47,8 @@ INSERT INTO `%PRE%acpnav` (`visual`, `icon`, `link`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%articles` (
-  `id` mediumint(9) NOT NULL auto_increment,
-  `catid` mediumint(9) NOT NULL,
+  `id` int NOT NULL auto_increment,
+  `catid` int NOT NULL,
   `name` varchar(100) NOT NULL,
   `content` text NOT NULL,
   PRIMARY KEY  (`id`)
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%articles` (
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%cats` (
-  `id` mediumint(9) NOT NULL auto_increment,
+  `id` int NOT NULL auto_increment,
   `name` varchar(50) NOT NULL,
   `description` text NOT NULL,
   PRIMARY KEY  (`id`)
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%cats` (
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%clientnav` (
-  `id` mediumint(9) NOT NULL auto_increment,
+  `id` int NOT NULL auto_increment,
   `visual` varchar(20) NOT NULL,
   `icon` varchar(50) NOT NULL,
   `link` varchar(20) NOT NULL,
@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%navbar` (
   `icon` varchar(20) NOT NULL,
   `visual` varchar(70) NOT NULL,
   `link` varchar(20) NOT NULL,
-  `order` int(11) NOT NULL default '0',
+  `order` int NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 
@@ -218,18 +218,18 @@ INSERT INTO `%PRE%navbar` (`id`, `icon`, `visual`, `link`, `order`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%packages` (
-  `id` mediumint(9) NOT NULL auto_increment,
+  `id` int NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
   `backend` varchar(50) NOT NULL,
   `description` text NOT NULL,
   `type` varchar(10) NOT NULL,
   `server` varchar(20) NOT NULL,
-  `admin` tinyint(1) NOT NULL,
-  `reseller` tinyint(4) NOT NULL,
+  `admin` int NOT NULL,
+  `reseller` int NOT NULL,
   `additional` text NOT NULL,
-  `order` int(11) NOT NULL default '0',
-  `is_hidden` int(1) NOT NULL,
-  `is_disabled` int(1) NOT NULL,
+  `order` int NOT NULL default '0',
+  `is_hidden` int NOT NULL,
+  `is_disabled` int NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -284,7 +284,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%servers` (
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%staff` (
-  `id` mediumint(9) NOT NULL auto_increment,
+  `id` int NOT NULL auto_increment,
   `user` varchar(20) NOT NULL,
   `email` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -306,7 +306,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%staff` (
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%subdomains` (
-  `id` mediumint(9) NOT NULL auto_increment,
+  `id` int NOT NULL auto_increment,
   `subdomain` varchar(20) NOT NULL,
   `server` varchar(5) NOT NULL,
   PRIMARY KEY  (`id`)
@@ -324,7 +324,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%subdomains` (
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%supportnav` (
-  `id` mediumint(9) NOT NULL auto_increment,
+  `id` int NOT NULL auto_increment,
   `visual` varchar(50) NOT NULL,
   `icon` varchar(20) NOT NULL,
   `link` varchar(20) NOT NULL,
@@ -424,7 +424,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%tickets` (
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%types` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+  `id` int unsigned NOT NULL auto_increment,
   `name` varchar(15) NOT NULL,
   `visual` varchar(20) NOT NULL,
   PRIMARY KEY  (`id`)
@@ -446,22 +446,22 @@ INSERT INTO `%PRE%types` (`id`, `name`, `visual`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%users` (
-  `id` mediumint(9) NOT NULL auto_increment,
-  `user` varchar(50) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  `salt` varchar(50) NOT NULL,
-  `signup` varchar(20) NOT NULL,
-  `ip` text NOT NULL,
-  `firstname` varchar(50) NOT NULL,
-  `lastname` varchar(50) NOT NULL,
-  `address` varchar(50) NOT NULL,
-  `city` varchar(50) NOT NULL,
-  `zip` varchar(7) NOT NULL,
-  `state` varchar(55) NOT NULL,
-  `country` varchar(2) NOT NULL,
-  `phone` varchar(15) NOT NULL,
-  `status` varchar(1) NOT NULL default '0',
+  `id` 			int NOT NULL auto_increment,
+  `user` 		varchar(50) NOT NULL,
+  `email` 		varchar(50) NOT NULL,
+  `password` 	varchar(50) NOT NULL,
+  `salt` 		varchar(50) NOT NULL,
+  `signup` 		varchar(20) NOT NULL,
+  `ip` 			text NOT NULL,
+  `firstname` 	varchar(50) NOT NULL,
+  `lastname` 	varchar(50) NOT NULL,
+  `address` 	varchar(50) NOT NULL,
+  `city` 		varchar(50) NOT NULL,
+  `zip` 		varchar(7) NOT NULL,
+  `state` 		varchar(55) NOT NULL,
+  `country` 	varchar(2) NOT NULL,
+  `phone` 		varchar(15) NOT NULL,
+  `status` 		varchar(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -477,7 +477,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%users` (
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%orders` (
-  `id` mediumint(9) NOT NULL auto_increment,
+  `id` int NOT NULL auto_increment,
   `userid` varchar(5) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -502,7 +502,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%orders` (
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%logs` (
-  `id` mediumint(9) NOT NULL auto_increment,
+  `id` int NOT NULL auto_increment,
   `uid` varchar(5) NOT NULL,
   `loguser` varchar(50) NOT NULL,
   `logtime` varchar(20) NOT NULL,
@@ -566,7 +566,7 @@ CREATE TABLE  `%PRE%package_addons` (
 CREATE TABLE `%PRE%order_addons` (
   `order_id` int NOT NULL,
   `addon_id` int NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
 );
 
@@ -574,8 +574,8 @@ CREATE TABLE `%PRE%order_addons` (
 
 CREATE TABLE `%PRE%order_invoices` (
   `id` INT  NOT NULL AUTO_INCREMENT,
-  `order_id` INT  NOT NULL,
-  `invoice_id` INT  NOT NULL,
+  `order_id` int  NOT NULL,
+  `invoice_id` int  NOT NULL,
   PRIMARY KEY (`id`)
 );
 
