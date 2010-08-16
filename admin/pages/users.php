@@ -52,10 +52,10 @@ class page {
 					
 					$user_status_list 	= $main->getUserStatusList();										
 					$array2['STATUS']  	= $user_status_list[$client['status']];					
-					$array['CONTENT'] 	= $style->replaceVar("tpl/clientdetails.tpl", $array2);					
+					$array['CONTENT'] 	= $style->replaceVar("tpl/user/clientdetails.tpl", $array2);					
 					$array['URL'] 		= URL;
 					$array['ID'] 		= $client['id'];
-					echo $style->replaceVar("tpl/clientview.tpl", $array);
+					echo $style->replaceVar("tpl/user/clientview.tpl", $array);
 					
 				} else {
 					//selecting all clients
@@ -65,7 +65,7 @@ class page {
 					$values[] = array("Order Form", "order");
 					$values[] = array("Client Area", "client");
 					$array['DROPDOWN'] = $main->dropDown("default", $values, $db->config("default"));
-					echo $style->replaceVar("tpl/clientsearch.tpl", $array);			
+					echo $style->replaceVar("tpl/user/clientsearch.tpl", $array);			
 				}
 			break;
 			
@@ -76,7 +76,7 @@ class page {
 					$array['BOX'] 		= "";										
 					$array['URL'] 		= URL;
 					$array['ID'] 		= $main->getvar['do'];			
-					echo $style->replaceVar("tpl/clientview.tpl", $array);											
+					echo $style->replaceVar("tpl/user/clientview.tpl", $array);											
 				}			
 			break;
 			
@@ -88,7 +88,7 @@ class page {
 					$array['URL'] 		= URL;
 					$array['ID'] 		= $main->getvar['do'];
 					
-					echo $style->replaceVar("tpl/clientview.tpl", $array);	
+					echo $style->replaceVar("tpl/user/clientview.tpl", $array);	
 				}			
 			break;			
 			case 'edit':
@@ -109,7 +109,7 @@ class page {
 					$main_array['BOX'] 		= "";
 					$main_array['ID'] 		= $main->getvar['do'];
 										
-					echo $style->replaceVar("tpl/clientview.tpl", $main_array);							
+					echo $style->replaceVar("tpl/user/clientview.tpl", $main_array);							
 				}
 			break;
 			
@@ -124,7 +124,7 @@ class page {
 					$array['BOX'] = "";
 					$array['CONTENT'] = $style->replaceVar("tpl/email/emailclient.tpl");
 					$array['ID'] 	  = $main->getvar['do'];
-					echo $style->replaceVar("tpl/clientview.tpl", $array);
+					echo $style->replaceVar("tpl/user/clientview.tpl", $array);
 				}
 			break;
 			
@@ -134,7 +134,7 @@ class page {
 						if(empty($main->postvar['passwd'])) {
 							$main->errors('A password was not provided.');
 							$array['BOX'] = "";
-							$array['CONTENT'] = $style->replaceVar("tpl/clientpwd.tpl");
+							$array['CONTENT'] = $style->replaceVar("tpl/user/clientpwd.tpl");
 						} else {						
 							$command = $user->changeClientPassword($main->getvar['do'], $main->postvar['passwd']);
 							if($command === true) {
@@ -146,8 +146,8 @@ class page {
 					}
 					$array['ID'] 		= $main->getvar['do'];
 					$array['BOX'] = "";
-					$array['CONTENT'] = $style->replaceVar("tpl/clientpwd.tpl");
-					echo $style->replaceVar("tpl/clientview.tpl", $array);
+					$array['CONTENT'] = $style->replaceVar("tpl/user/clientpwd.tpl");
+					echo $style->replaceVar("tpl/user/clientview.tpl", $array);
 				}
 			break;	
 			
@@ -155,7 +155,7 @@ class page {
 			break;
 			case 'search':
 				if($main->getvar['do'] ) {					
-					echo $style->replaceVar("tpl/clientview.tpl", $array);
+					echo $style->replaceVar("tpl/user/clientview.tpl", $array);
 				} else {
 					$array['NAME'] = $db->config("name");
 					$array['URL'] = $db->config("url");
@@ -163,7 +163,7 @@ class page {
 					$values[] = array("Order Form", "order");
 					$values[] = array("Client Area", "client");
 					$array['DROPDOWN'] = $main->dropDown("default", $values, $db->config("default"));
-					echo $style->replaceVar("tpl/clientsearch.tpl", $array);
+					echo $style->replaceVar("tpl/user/clientsearch.tpl", $array);
 				}
 				break;
 			case 'stats':
@@ -182,7 +182,7 @@ class page {
 				$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `status` = '".USER_STATUS_DELETED."'"); 
 				$array['CANCELLED'] = $db->num_rows($query);
 				
-				echo $style->replaceVar("tpl/clientstats.tpl", $array);
+				echo $style->replaceVar("tpl/user/clientstats.tpl", $array);
 				break;
 			
 			case 'add':

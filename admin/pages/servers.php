@@ -60,7 +60,7 @@ class page {
 				//$array['TYPE'] = $this->array_type;
 				$array['TYPE'] = $main->dropDown("type", $this->array_type, 0, 0);
 				
-				echo $style->replaceVar("tpl/addserver.tpl", $array);
+				echo $style->replaceVar("tpl/servers/addserver.tpl", $array);
 			break;
 			
 			case 'view':

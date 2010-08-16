@@ -69,7 +69,7 @@ class page {
 					$array['PAGES'] .= '<tr><td width="30%" align="left">'.$data['visual'].':</td><td><input name="pages_'.$data['id'].'" id="pages_'.$data['id'].'" type="checkbox" value="1" /></td></tr>';
 				}
 				$array['PAGES'] .= "</table>";
-				echo $style->replaceVar("tpl/addstaff.tpl", $array);
+				echo $style->replaceVar("tpl/staff/addstaff.tpl", $array);
 			break;
 			
 			case 'edit':
@@ -130,7 +130,7 @@ class page {
 						}
 						$array['PAGES'] .= "</table>";
 						
-						echo $style->replaceVar("tpl/editstaff.tpl", $array);	
+						echo $style->replaceVar("tpl/staff/editstaff.tpl", $array);	
 					}
 				} else {					
 					$staff_list = $staff->gettAllStaff();

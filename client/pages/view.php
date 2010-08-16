@@ -52,7 +52,7 @@ class page {
 				}
 		}
 		
-		echo $style->replaceVar("tpl/cview.tpl", $array);
+		echo $style->replaceVar("tpl/user/cview.tpl", $array);
 	}
 }
 ?>
