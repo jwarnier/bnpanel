@@ -3,7 +3,7 @@
 
 //Check if called by script
 if(THT != 1){die();}
-
+exit; //disabled for security reasons
 class page {
 			 	
 	public $navtitle;
@@ -33,30 +33,22 @@ class page {
 	
 	
 	public function content() { # Displays the page 
-		global $main;
-		global $page;
-		global $style;
-		global $db;
-		
-		switch($main->getvar['sub']) {
-		   
+		global $main, $page, $style, $db;		
+		switch($main->getvar['sub']) {		   
 		   case "switcher":
 		      # Switches it!
 		      if($_POST['tpl']){
 		      	$tpl = $_POST['tpl'];
 		      	$url = $db->config('url')."admin/";
 		      	header("Location: $url?page=stylechanger&sub=$tpl");
-			  }
-			  else{
+			  } else {	
 			  	echo "Sorry, a few required vars are missing. You can't access this page individually!";
 			  }
-		   break;
-		   
+		   break;		   
 		   case "tpls":
 		      # Quite simple redir-tor
 		      echo $style->replaceVar('tpl/tpledit.tpl');
-		   break;
-		   
+		   break;		   
 		   case "css":
 		      /*unset($css);
 		      unset($url);
@@ -70,8 +62,7 @@ class page {
 				  $filetochange = LINK."../themes/".$db->config('theme')."/style.css";
 				  file_put_contents($filetochange, $slash);
 				  $css['EDITED'] = "Edited CSS Successfully";
-		      }
-			  else {
+		      } else {
 				$css['EDITED'] = "Editing CSS Style..";  
 			  }
 			  $url = $db->config('url')."themes/".$db->config('theme')."/images/";
@@ -80,15 +71,15 @@ class page {
 			  $filetochangeStripped = str_replace("<IMG>", "&lt;IMG&gt;", $filetochangeOpen);
 			  $css['CSSCONTENT'] = $filetochangeStripped;
 			  $css['BUTTON'] = $this->checkWritable($filetochange);
-                          if(!is_writable($filetochange)) {
-                              $css['READONLY'] = ' readonly="readonly"';
-                              $css['CODEPRESS'] = '';
-                              
-                          }
-                          else {
-                              $css['READONLY'] = '';
-                              $css['CODEPRESS'] = 'codepress ';
-                          }
+              if(!is_writable($filetochange)) {
+                  $css['READONLY'] = ' readonly="readonly"';
+                  $css['CODEPRESS'] = '';
+                  
+              }
+              else {
+                  $css['READONLY'] = '';
+                  $css['CODEPRESS'] = 'codepress ';
+              }
 			  echo $style->replaceVar('tpl/cssedit.tpl', $css);
 		   break;
 		   
@@ -100,51 +91,50 @@ class page {
 		      unset($filetochangeOpen);
 		      unset($slash);
               if ($_POST['edit']) {
-              $slash = stripslashes(str_replace("&lt;THT TITLE&gt;", "<THT TITLE>", $_POST['edit'])); # Yay, strip it
-              $slash = str_replace("&lt;JAVASCRIPT&gt;", "<JAVASCRIPT>", $slash); #jav
-              $slash = str_replace("&lt;CSS&gt;", "<CSS>", $slash); #css
-              $slash = str_replace("&lt;ICONDIR&gt;", "<ICONDIR>", $slash); #icondir
-              $slash = str_replace("&lt;IMG&gt;", "<IMG>", $slash);
-              $slash = str_replace("&lt;MENU&gt;", "<MENU>", $slash);
-              $slash = str_replace("&#37;INFO%", "%INFO%", $slash);
-              #Alrighty, what to do nexty?
-              $filetochange = LINK."../themes/".$db->config('theme')."/header.tpl";
-              $filetochangeOpen = fopen($filetochange,"r+");
-              fputs($filetochangeOpen,$slash);
-              fclose($filetochangeOpen) or die ("Error Closing File!");
-              $contheader = str_replace("<THT TITLE>", "&lt;THT TITLE&gt;", file_get_contents($filetochange));
-              $contheader = str_replace("<JAVASCRIPT>", "&lt;JAVASCRIPT&gt;", $contheader);
-              $contheader = str_replace("<CSS>", "&lt;CSS&gt;", $contheader);
-              $contheader = str_replace("<IMG>", "&lt;IMG&gt;", $contheader);
-              $contheader = str_replace("<ICONDIR>", "&lt;ICONDIR&gt;", $contheader); #Alrighty, what to do next(y)?
-              $contheader = str_replace("%INFO%", "&#37;INFO%", $contheader);
-              $contheader = str_replace("<MENU>", "&lt;MENU&gt;", $contheader);
-              $css['CSSCONTENT'] = $contheader;
-              $css['EDITED'] = "Edited Template Successfully";
-              $css['BUTTON'] = $this->checkWritable($filetochange);
-              echo $style->replaceVar('tpl/headedit.tpl', $css);
-		      }
-              else{
-              $filetochange = LINK."../themes/".$db->config('theme')."/header.tpl";
-              $contheader = str_replace("<THT TITLE>", "&lt;THT TITLE&gt;", file_get_contents($filetochange));
-              $contheader = str_replace("<JAVASCRIPT>", "&lt;JAVASCRIPT&gt;", $contheader);
-              $contheader = str_replace("<CSS>", "&lt;CSS&gt;", $contheader);
-              $contheader = str_replace("<IMG>", "&lt;IMG&gt;", $contheader);
-              $contheader = str_replace("%INFO%", "&#37;INFO%", $contheader);
-              $contheader = str_replace("<MENU>", "&lt;MENU&gt;", $contheader);
-              $contheader = str_replace("<ICONDIR>", "&lt;ICONDIR&gt;", $contheader); #Alrighty, what to do next(y)?
-              $css['CSSCONTENT'] = $contheader;
-              $css['EDITED'] = "Editing your header template!";
-              $css['BUTTON'] = $this->checkWritable($filetochange);
-              if(!is_writable($filetochange)) {
-                $css['READONLY'] = ' readonly="readonly"';
-
-              }
-              else {
-                $css['READONLY'] = '';
-              }
-              echo $style->replaceVar('tpl/headedit.tpl', $css);
-		      }
+	              $slash = stripslashes(str_replace("&lt;THT TITLE&gt;", "<THT TITLE>", $_POST['edit'])); # Yay, strip it
+	              $slash = str_replace("&lt;JAVASCRIPT&gt;", "<JAVASCRIPT>", $slash); #jav
+	              $slash = str_replace("&lt;CSS&gt;", "<CSS>", $slash); #css
+	              $slash = str_replace("&lt;ICONDIR&gt;", "<ICONDIR>", $slash); #icondir
+	              $slash = str_replace("&lt;IMG&gt;", "<IMG>", $slash);
+	              $slash = str_replace("&lt;MENU&gt;", "<MENU>", $slash);
+	              $slash = str_replace("&#37;INFO%", "%INFO%", $slash);
+	              #Alrighty, what to do nexty?
+	              $filetochange = LINK."../themes/".$db->config('theme')."/header.tpl";
+	              $filetochangeOpen = fopen($filetochange,"r+");
+	              fputs($filetochangeOpen,$slash);
+	              fclose($filetochangeOpen) or die ("Error Closing File!");
+	              $contheader = str_replace("<THT TITLE>", "&lt;THT TITLE&gt;", file_get_contents($filetochange));
+	              $contheader = str_replace("<JAVASCRIPT>", "&lt;JAVASCRIPT&gt;", $contheader);
+	              $contheader = str_replace("<CSS>", "&lt;CSS&gt;", $contheader);
+	              $contheader = str_replace("<IMG>", "&lt;IMG&gt;", $contheader);
+	              $contheader = str_replace("<ICONDIR>", "&lt;ICONDIR&gt;", $contheader); #Alrighty, what to do next(y)?
+	              $contheader = str_replace("%INFO%", "&#37;INFO%", $contheader);
+	              $contheader = str_replace("<MENU>", "&lt;MENU&gt;", $contheader);
+	              $css['CSSCONTENT'] = $contheader;
+	              $css['EDITED'] = "Edited Template Successfully";
+	              $css['BUTTON'] = $this->checkWritable($filetochange);
+	              echo $style->replaceVar('tpl/headedit.tpl', $css);
+		      } else {
+	              $filetochange = LINK."../themes/".$db->config('theme')."/header.tpl";
+	              $contheader = str_replace("<THT TITLE>", "&lt;THT TITLE&gt;", file_get_contents($filetochange));
+	              $contheader = str_replace("<JAVASCRIPT>", "&lt;JAVASCRIPT&gt;", $contheader);
+	              $contheader = str_replace("<CSS>", "&lt;CSS&gt;", $contheader);
+	              $contheader = str_replace("<IMG>", "&lt;IMG&gt;", $contheader);
+	              $contheader = str_replace("%INFO%", "&#37;INFO%", $contheader);
+	              $contheader = str_replace("<MENU>", "&lt;MENU&gt;", $contheader);
+	              $contheader = str_replace("<ICONDIR>", "&lt;ICONDIR&gt;", $contheader); #Alrighty, what to do next(y)?
+	              $css['CSSCONTENT'] = $contheader;
+	              $css['EDITED'] = "Editing your header template!";
+	              $css['BUTTON'] = $this->checkWritable($filetochange);
+	              
+	            if(!is_writable($filetochange)) {
+					$css['READONLY'] = ' readonly="readonly"';
+	
+				} else {
+		                $css['READONLY'] = '';
+		        }
+            echo $style->replaceVar('tpl/headedit.tpl', $css);
+		    }
 		   break;
 		   
 		   case "footer":
@@ -190,4 +180,3 @@ class page {
 		}
 	}
 }
-?>

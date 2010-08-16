@@ -49,7 +49,7 @@ define("CVER", "1.2.2");
 define("NVER", "1.2.3");
 
 define("LINK", "../includes/"); # Set link
-include(LINK."compiler.php"); # Get compiler
+include LINK."compiler.php"; # Get compiler
 
 function writeconfig($host, $user, $pass, $db, $pre, $true) {
 	global $style;
@@ -72,7 +72,6 @@ function writeconfig($host, $user, $pass, $db, $pre, $true) {
 
 define("THEME", 'bnpanel'); # Set the theme
 define("URL", "../"); # Set url to blank
-
 define("NAME", "THT");
 define("PAGE", "Install");
 define("SUB", "Choose Method");
@@ -82,20 +81,18 @@ $array['ANYTHING'] = "";
 $link = LINK."conf.inc.php";
 $disable = false;
 if(INSTALL == 1) {
-	include(LINK."conf.inc.php");
+	include LINK."conf.inc.php";
 	if(!writeconfig($sql['host'], $sql['user'], $sql['pass'], $sql['db'], $sql['pre'], "false")) {
 		$array['ANYTHING'] = "Your $link isn't writeable or does not exist! Please CHMOD it to 666 and make sure it exists!!";
 		$disable = true;
-	}
-	else {
+	} else {
 		$array['ANYTHING'] = "Since you've already ran the install your config has been re-written to not installed. If you are upgrading, this is fine!";
 	}
 }
 if(!file_exists($link)) {
 	$array["ANYTHING"] = "Your $link file doesn't exist! Please create it!";
 	$disable = true;
-}
-elseif(!is_writable($link)) {
+} elseif(!is_writable($link)) {
 	$array['ANYTHING'] = "Your $link isn't writeable! Please CHMOD it to 666!";
 	$disable = true;
 }
@@ -109,7 +106,4 @@ $array['SITE_EMAIL'] 	= 'example@example.com';
 
 echo $style->replaceVar("tpl/install/install.tpl", $array);
 echo $style->get("footer.tpl");
-
-include(LINK."output.php"); #Output it
-
-?>
+require LINK."output.php"; #Output it
