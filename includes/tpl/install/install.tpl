@@ -33,32 +33,32 @@ function change() {
 				document.getElementById("button3").disabled = true;
 				document.getElementById("button3").value = "Working...";
 				$.get("<AJAX>function=sqlcheck&host="+document.getElementById("hostname").value+"&user="+document.getElementById("username").value+"&pass="+document.getElementById("password").value+"&db="+document.getElementById("database").value+"&pre="+document.getElementById("prefix").value, function(mydata) {
-				document.getElementById("button3").disabled = false;
-				document.getElementById("button3").value = "Next Step";
-				//This if statement isn't really a big deal, but it adds some polish.
-				if(parseInt(mydata) != 2) {
-					document.getElementById("sqlerror").innerHTML = mydata;
-				}
-
-				switch(parseInt(mydata)) {
-						case 0:
-							document.getElementById("sqlerror").innerHTML = wrong+"Your SQL Details are incorrect!";
-							break;
-						case 1:
-							document.getElementById("sqlerror").innerHTML = wrong+"Your SQL Database is incorrect!";
-							break;
-						case 2:
-							gogo();
-							document.getElementById("step3").innerHTML = working;
-							installstuff();
-							break;
-						case 3:
-							document.getElementById("sqlerror").innerHTML = wrong+"Your Config isn't writeable!";
-							break;
-						case 4:
-							document.getElementById("sqlerror").innerHTML = wrong+"BNPanel is already installed!";
-							break;
+					document.getElementById("button3").disabled = false;
+					document.getElementById("button3").value = "Next Step";
+					//This if statement isn't really a big deal, but it adds some polish.
+					if(parseInt(mydata) != 2) {
+						document.getElementById("sqlerror").innerHTML = mydata;
 					}
+	
+					switch(parseInt(mydata)) {
+							case 0:
+								document.getElementById("sqlerror").innerHTML = wrong+"Your SQL Details are incorrect!";
+								break;
+							case 1:
+								document.getElementById("sqlerror").innerHTML = wrong+"Your SQL Database is incorrect!";
+								break;
+							case 2:
+								gogo();
+								document.getElementById("step3").innerHTML = working;
+								installstuff();
+								break;
+							case 3:
+								document.getElementById("sqlerror").innerHTML = wrong+"Your Config isn't writeable!";
+								break;
+							case 4:
+								document.getElementById("sqlerror").innerHTML = wrong+"BNPanel is already installed!";
+								break;
+						}
 				});
 			break;
 			
@@ -109,7 +109,7 @@ function next() {
 	$("#step"+step).slideDown(500, function() {
 		document.getElementById(step).style.fontWeight = "bold";
 		//document.getElementById("title").innerHTML = text[step];
-		document.title = "THT :: Install - "+ text[step];
+		document.title = "BNPanel :: Install - "+ text[step];
 	});
 }
 function installstuff() {
@@ -128,6 +128,7 @@ $(window).load(function () {
 	next();
 });
 </script>
+<ERRORS>
 <form id="install" name="install" method="post" action="">
 
 <table width="100%" border="0" cellspacing="3" cellpadding="0">
@@ -158,14 +159,11 @@ $(window).load(function () {
                   <tr>
                     <td width="20%">Choose Method:</td>
                     <td width="1%"><label>
-                      <select name="method" id="method">
-                        <option value="install" selected="selected">Install</option>
-                        <option value="upgrade">Upgrade</option>
-                      </select>
+                   		%INSTALL_OPTIONS%
                     </label>
                     </td>
                     <td valign="middle" align="left">
-                    <a class="tooltip" title="Choose if you want to upgrade or install the script.<br /><b>Install:</b> This is for people who haven't installed the script prior to this. Or using different mySQL details.<br /><b>Upgrade:</b> This for people who have installed THT and are upgrading to a new version."><img src="<ICONDIR>information.png"></a>
+                    <a class="tooltip" title="Choose if you want to upgrade or install the script.<br /><b>Install:</b> This is for people who haven't installed the script prior to this. Or using different mySQL details.<br /><b>Upgrade:</b> This for people who have installed BNPanel and are upgrading to a new version."><img src="<ICONDIR>information.png"></a>
                     </td>
                   </tr>
                   <tr>
