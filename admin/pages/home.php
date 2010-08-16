@@ -86,7 +86,7 @@ class page {
 		$stats_box = $style->replaceVar('tpl/dashboard/stats.tpl', $stats);
 		
 		$content = '<strong>Welcome to your Admin Dashboard!</strong><br />Welcome to the dashboard of your Admin Control Panel. In this area you can do the tasks that you need to complete such as manage servers, create packages, manage users.<br />
-		Here, you can also change the look and feel of your BNPanel Installation. If you require any help, be sure to ask at the <a href="http://beeznest.com" title="BNPanel Community is the official stop for BNPanel Support, Modules, Developer Center and more! Visit our growing community now!" class="tooltip">BNPanel Community</a><br /><br />'.$stats_box.'<br />'.$install_check.$conf_check.'</div></div>';
+		Here, you can also change the look and feel of your BNPanel Installation. If you require any help, be sure to ask at the <a href="http://beeznest.com" title="BNPanel Community is the official stop for BNPanel Support, Modules, Developer Center and more! Visit our growing community now!" class="tooltip">BNPanel Community</a><br />'.$stats_box.'<br />'.$install_check.$conf_check.'</div></div>';
 		$content .='<a href="'.$db->config('url').'includes/cron.php" target="_blank">Run cron here</a>';
 		echo $content;
 		if($_POST) {

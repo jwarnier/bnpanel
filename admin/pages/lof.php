@@ -11,8 +11,8 @@ class page {
 	public function __construct() {
 		$this->navtitle = "Look and Feel Sub Menu";
 		$this->navlist[] = array("Theme Chooser", "layout.png", "tchoose");
-		$this->navlist[] = array("Theme Uploader", "layout_add.png", "tupload");
-                $this->navlist[] = array("jQuery UI Theme", "palette.png", "ui-theme");
+	//	$this->navlist[] = array("Theme Uploader", "layout_add.png", "tupload"); Disabling for security reasons
+        $this->navlist[] = array("jQuery UI Theme", "palette.png", "ui-theme");
 		$this->navlist[] = array("CSS Editor", "css.png", "cssedit");
 		$this->navlist[] = array("TPL Editor", "xhtml.png", "tpledit");
 		$this->navlist[] = array("NavBar Editor", "link_edit.png", "navedit");
@@ -20,7 +20,7 @@ class page {
 	
 	public function description() {
 		return "<strong>Look and Feel Administration</strong><br />
-		Welcome to the Look and Feel Administration Area. This is where you really make your THT installation your very own. You can change and edit your theme, upload a new one, and even customize your navbar.<br />
+		Welcome to the Look and Feel Administration Area. This is where you really make your BNPanel installation your very own. You can change and edit your theme, upload a new one, and even customize your navbar.<br />
 		To get started, choose a link from the sidebar's SubMenu.<br />";			
 	}
 	
@@ -70,7 +70,9 @@ class page {
 				break;
 			case "tupload": # Theme Uploader
 				echo "Here you can upload a theme of your choice to the installer. Please be sure that the theme is in .zip format.";
-				include LINK."upload.php"; 
+				echo '<div class="warning">This feature is disable for security reasons</div>';				
+				//include LINK."upload.php";
+				//echo '<ERRORS>'; 
 				break;
 			case "cssedit": #CSS Editor - Thanks Jimmie & Kevin!
 			  	$url = $db->config('url')."themes/".$db->config('theme')."/images/";
@@ -121,7 +123,7 @@ class page {
 		      unset($filetochangeOpen);
 		      unset($slash);
                       $filetochange = LINK."../themes/".$db->config('theme')."/header.tpl";
-                      $contheader = str_replace("<THT TITLE>", "&lt;THT TITLE&gt;", file_get_contents($filetochange));
+                      $contheader = str_replace("<THT TITLE>", "&lt;BNP TITLE&gt;", file_get_contents($filetochange));
                       $contheader = str_replace("<JAVASCRIPT>", "&lt;JAVASCRIPT&gt;", $contheader);
                       $contheader = str_replace("<CSS>", "&lt;CSS&gt;", $contheader);
                       $contheader = str_replace("<IMG>", "&lt;IMG&gt;", $contheader);
