@@ -173,6 +173,7 @@ class db {
 	}
 	
 	public function config($name) { # Returns a value of a config variable	
+		$name = $this->strip($name);
 		$query = $this->query("SELECT * FROM `<PRE>config` WHERE `name` = '{$name}'");		
 		if($this->num_rows($query) > 0) {
 			$value = $this->fetch_array($query);
@@ -182,6 +183,7 @@ class db {
 	}
 	
 	public function resources($name) { # Returns a value of a resource variable
+		$name = $this->strip($name);
 		$query = $this->query("SELECT * FROM `<PRE>resources` WHERE `resource_name` = '{$name}'");
 		if($this->num_rows($query) == 0) {
 			$error['Error'] = "Couldn't Retrieve resource value!";
@@ -230,11 +232,13 @@ class db {
 	}
 	
 	public function updateConfig($name, $value) { # Updates a config value
+		$name = $this->strip($name);
 		$sql = "UPDATE `<PRE>config` SET `value` = '{$value}' WHERE `name` = '{$name}'";		
 		$query = $this->query($sql);
 	}
 	
 	public function updateResource($name, $value) { # Updates a config value
+		$name = $this->strip($name);
 		$query = $this->query("UPDATE `<PRE>resources` SET `resource_value` = '{$value}' WHERE `resource_name` = '{$name}'");
 	}
 	
