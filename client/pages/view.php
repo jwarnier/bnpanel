@@ -10,7 +10,7 @@ exit;
 class page {
 	
 	public function content() { # Displays the page 
-		global $style, $db, $main, $server, $invoice;
+		global $style, $db, $main, $server, $invoice, $user;
 		$user_id = $main->getCurrentUserId();
 		$data = $db->client($user_id);
 		$query2 = $db->query("SELECT * FROM `<PRE>orders` WHERE `userid` = '{$db->strip($data['id'])}'");
@@ -35,7 +35,7 @@ class page {
 		if($_POST) {
 				if(md5(md5($main->postvar['currentpass']) . md5($data['salt'])) == $data['password']) {
 					if($main->postvar['newpass'] == $main->postvar['cpass']) {
-						$cmd = $main->changeClientPassword($data3['id'], $main->postvar['cpass']);
+						$cmd = $user->changeClientPassword($data3['id'], $main->postvar['cpass']);
 						if($cmd === true) {
 							$main->errors("Details updated!");
 						}
