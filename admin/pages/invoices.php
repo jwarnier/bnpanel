@@ -107,12 +107,17 @@ class page {
 				$per_page = $db->config('rows_per_page');
 				$count_sql = "SELECT count(*)  as count FROM ".$invoice->getTableName()." WHERE status <> '".INVOICE_STATUS_DELETED."'";
 				$result_max = $db->query($count_sql);		
-				$count = $db->fetch_array($result_max);
-				
+				$count = $db->fetch_array($result_max);			
 				$count = $count['count'];
-				$quantity = ceil($count / $per_page);							
-				$return_array['COUNT'] = $quantity;
-				echo $style->replaceVar("tpl/invoices/admin-page.tpl", $return_array);				
+				if (!empty($count)) {
+					$quantity = ceil($count / $per_page);							
+					$return_array['COUNT'] = $quantity;
+					echo $style->replaceVar("tpl/invoices/admin-page.tpl", $return_array);
+				} else {
+					$main->errors('No invoices available, you should create an Order first');
+					echo '<ERRORS>';
+				}
+								
 			break;			
 		}
 	}
