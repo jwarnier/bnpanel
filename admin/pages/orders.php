@@ -415,10 +415,16 @@ class page {
 				$count_sql = "SELECT count(*)  as count FROM ".$order->getTableName()." WHERE status <> '".ORDER_STATUS_DELETED."'";
 				$result_max = $db->query($count_sql);		
 				$count = $db->fetch_array($result_max);
-				$count = $count['count'];					
-				$quantity = ceil($count / $per_page);
-				$return_array['COUNT'] = $quantity;				
-				echo $style->replaceVar("tpl/orders/admin-page.tpl", $return_array);				
+				$count = $count['count'];
+				
+				if (!empty($count)) {	
+					$quantity = ceil($count / $per_page);
+					$return_array['COUNT'] = $quantity;				
+					echo $style->replaceVar("tpl/orders/admin-page.tpl", $return_array);
+				} else {
+					$main->errors('No orders available');
+				}
+				echo '<ERRORS>';
 			break;			
 		}
 	}

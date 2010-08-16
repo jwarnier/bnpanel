@@ -480,7 +480,7 @@ class AJAX {
 			$type = $main->getvar['type'];
 			$id = $main->getvar['server'];
 			require_once LINK.'servers/panel.php';
-			require_once LINK ."servers/". $type .".php";
+			require_once LINK."servers/". $type .".php";
 			$server = new $type;
 			if($server->hash) {
 				echo 0;	
