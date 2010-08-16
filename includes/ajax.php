@@ -505,23 +505,19 @@ class AJAX {
 			$con = @mysql_connect($host, $user, $pass);
 			if(!$con) {
 				echo 0;	
-			}
-			else {
+			} else {
 				$seldb = mysql_select_db($db, $con);
 				if(!$seldb) {
 					echo 1;	
-				}
-				else {
+				} else {
 					if($this->writeconfig($host, $user, $pass, $db, $pre, "false")) {
 						echo 2;	
-					}
-					else {
+					} else {
 						echo 3;	
 					}
 				}
 			}
-		}
-		else {
+		} else {
 			echo 4;	
 		}
 	}
@@ -538,8 +534,7 @@ class AJAX {
 		if(is_writable($link)) {
 			file_put_contents($link, $tpl);
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -891,6 +886,7 @@ class AJAX {
         }
 
         function notice() {
+        	/*
             global $style;
             if(isset($_REQUEST['status']) and isset ($_REQUEST['message'])) {
                 if($_REQUEST['status'] == "good") {
@@ -901,13 +897,12 @@ class AJAX {
                 }
                 echo $style->notice($status, $_REQUEST['message']);
             }
-            return true;
+            return true;*/
         }
 
        function upload() {
            global $main;
-           if($_SESSION['logged']) {
-               
+           if($_SESSION['logged']) {               
            }
        }
 

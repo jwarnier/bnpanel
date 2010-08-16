@@ -516,7 +516,7 @@ class p2h {
 		$fuser = $main->getvar['type_fuser'];
 		$fpass = $main->getvar['type_fpass'];
 		$signup = $this->getSignup($main->getvar['package']);
-		file_put_contents("log.log", $forum . "HELLO", FILE_APPEND);
+		//file_put_contents("log.log", $forum . "HELLO", FILE_APPEND); //disabled for security reasons
 
 		switch($forum) {
 			case "ipb":

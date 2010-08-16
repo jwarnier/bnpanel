@@ -53,8 +53,7 @@ class page {
 			$main->done();
 			}
 		}
-		switch($main->getvar['sub']) {
-				
+		switch($main->getvar['sub']) {				
 			case "tchoose": #theme chooser
 				$folder = LINK ."../themes/";
 				if ($handle = opendir($folder)) { # Open the folder
@@ -105,50 +104,53 @@ class page {
 		      	//echo $style->replaceVar('tpl/tpledit.tpl');
 				break;
 			case "navedit"; # Navbar Editor - Not Yet Finished
-                                    echo $style->replaceVar("tpl/navedit/top.tpl");
-                                    $query = $db->query("SELECT * FROM `<pre>navbar` ORDER BY `order` ASC");
-                                    while($data = $db->fetch_array($query)) {
-                                            $array2['ID'] = $data['id'];
-                                            $array2['NAME'] = $data['visual'];
-                                            $array2['ICON'] = $data['icon'];
-                                            $array2['LINK'] = $data['link'];
-                                            $array['LINKS'] .= $style->replaceVar("tpl/navedit/linkbox.tpl", $array2);
-                                    }
-                                    echo $style->replaceVar("tpl/navedit/links.tpl", $array);
-                                    echo $style->replaceVar("tpl/navedit/bottom.tpl", array('NOTICE' => $style->notice(true,
-                                                "Changes have been made! Please <a href=\"javascript:window.location.reload();\">refresh</a> to see them in action!")));
+                echo $style->replaceVar("tpl/navedit/top.tpl");
+                $query = $db->query("SELECT * FROM `<pre>navbar` ORDER BY `order` ASC");
+                while($data = $db->fetch_array($query)) {
+                        $array2['ID'] = $data['id'];
+                        $array2['NAME'] = $data['visual'];
+                        $array2['ICON'] = $data['icon'];
+                        $array2['LINK'] = $data['link'];
+                        $array['LINKS'] .= $style->replaceVar("tpl/navedit/linkbox.tpl", $array2);
+                }
+                echo $style->replaceVar("tpl/navedit/links.tpl", $array);
+                echo $style->replaceVar("tpl/navedit/bottom.tpl", array('NOTICE' => $style->notice(true,
+                            "Changes have been made! Please <a href=\"javascript:window.location.reload();\">refresh</a> to see them in action!")));
 				break;
 
-                      case "editheader":
-		      # anyway. Something is crashing
+			case "editheader":
+			echo '<div class="warning">This feature is disable for security reasons</div>';
+		      /*# anyway. Something is crashing
 		      unset($css);
 		      unset($conheader);
 		      unset($filetochange);
 		      unset($filetochangeOpen);
 		      unset($slash);
-                      $filetochange = LINK."../themes/".$db->config('theme')."/header.tpl";
-                      $contheader = str_replace("<THT TITLE>", "&lt;BNP TITLE&gt;", file_get_contents($filetochange));
-                      $contheader = str_replace("<JAVASCRIPT>", "&lt;JAVASCRIPT&gt;", $contheader);
-                      $contheader = str_replace("<CSS>", "&lt;CSS&gt;", $contheader);
-                      $contheader = str_replace("<IMG>", "&lt;IMG&gt;", $contheader);
-                      $contheader = str_replace("%INFO%", "&#37;INFO%", $contheader);
-                      $contheader = str_replace("<MENU>", "&lt;MENU&gt;", $contheader);
-                      $contheader = str_replace("<ICONDIR>", "&lt;ICONDIR&gt;", $contheader); #Alrighty, what to do next(y)?
-                      $css['CSSCONTENT'] = $contheader;
-                      if(!$this->checkWritable($filetochange)) {
-                        $css['READONLY'] = ' readonly="readonly"';
-                        $css['DISABLED'] = ' disabled="disabled"';
-                        $css['NOTICE'] = $style->notice(false, "In order to make changes to this file, please CHMOD it to 666.");
-                      }
-                      else {
-                        $css['READONLY'] = '';
-                        $css['DISABLED'] = '';
-                        $css['NOTICE'] = '';
-                      }
-                      echo $style->replaceVar('tpl/headedit.tpl', $css);
+              $filetochange = LINK."../themes/".$db->config('theme')."/header.tpl";
+              $contheader = str_replace("<THT TITLE>", "&lt;BNP TITLE&gt;", file_get_contents($filetochange));
+              $contheader = str_replace("<JAVASCRIPT>", "&lt;JAVASCRIPT&gt;", $contheader);
+              $contheader = str_replace("<CSS>", "&lt;CSS&gt;", $contheader);
+              $contheader = str_replace("<IMG>", "&lt;IMG&gt;", $contheader);
+              $contheader = str_replace("%INFO%", "&#37;INFO%", $contheader);
+              $contheader = str_replace("<MENU>", "&lt;MENU&gt;", $contheader);
+              $contheader = str_replace("<ICONDIR>", "&lt;ICONDIR&gt;", $contheader); #Alrighty, what to do next(y)?
+              $css['CSSCONTENT'] = $contheader;
+              if(!$this->checkWritable($filetochange)) {
+                $css['READONLY'] = ' readonly="readonly"';
+                $css['DISABLED'] = ' disabled="disabled"';
+                $css['NOTICE'] = $style->notice(false, "In order to make changes to this file, please CHMOD it to 666.");
+              }
+              else {
+                $css['READONLY'] = '';
+                $css['DISABLED'] = '';
+                $css['NOTICE'] = '';
+              }
+              echo $style->replaceVar('tpl/headedit.tpl', $css);*/
 		   break;
 
-                   case "editfooter":
+			case "editfooter":
+			echo '<div class="warning">This feature is disable for security reasons</div>';
+			/*
               $filetochange = LINK."../themes/".$db->config('theme')."/footer.tpl";
               $contheader = str_replace("<PAGEGEN>", "&lt;PAGEGEN&gt;", file_get_contents($filetochange));
               $contheader = str_replace("<COPYRIGHT>", "&lt;COPYRIGHT&gt;", $contheader); #Alrighty, what to do next(y)?
@@ -165,11 +167,10 @@ class page {
                 $css['DISABLED'] = '';
                 $css['NOTICE'] = '';
               }
-              echo $style->replaceVar('tpl/footedit.tpl', $css);
+              echo $style->replaceVar('tpl/footedit.tpl', $css);*/
 		   break;
-
-                   case "ui-theme":
-                       				$folder = LINK ."./css/";
+			case "ui-theme":
+				$folder = LINK ."./css/";
 				if ($handle = opendir($folder)) { # Open the folder
 					while (false !== ($file = readdir($handle))) { # Read the files
 						if($file != "." && $file != ".." && $file != ".svn") { # Check aren't these names or a svn folder
@@ -179,13 +180,9 @@ class page {
 				}
 				closedir($handle); #Close the folder
 				$array['THEME'] = $main->dropDown("ui-theme", $values, $db->config("ui-theme"));
-                                $array['NOTICE'] = $style->notice(true, "jQuery UI Theme Changed!");
-                       echo $style->replaceVar('tpl/ui-theme/chooser.tpl', $array);
-                       break;
-
-			}
-		
-		}
-	
+				$array['NOTICE'] = $style->notice(true, "jQuery UI Theme Changed!");
+                echo $style->replaceVar('tpl/ui-theme/chooser.tpl', $array);
+                break;
+			}		
+		}	
 	}
-?>
