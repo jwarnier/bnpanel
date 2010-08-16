@@ -9,63 +9,42 @@ define("PAGE", "Client Area");
 
 //Main ACP Function - Creates the ACP basically
 function client() {
-	global $main;
-	global $db;
-	global $style;
-	global $type;
-	global $email;
+	global $main, $user,$db, $style, $type,$email;
 	ob_start(); # Stop the output buffer
 		
 	if(!$main->getvar['page']) { 
-		$main->getvar['page'] = "home";
+		$main->getvar['page'] = 'home';
 	}
-	$query = $db->query("SELECT * FROM `<PRE>clientnav` WHERE `link` = '{$main->getvar['page']}'");
-	$page = $db->fetch_array($query);
-	$header = $page['visual'];
-	$link = "pages/". $main->getvar['page'] .".php";
+	$client_navigation = $user->getClientNavigation();
+	$client_item = $client_navigation[$main->getvar['page']];
+	$link = 'pages/home.php';	
+	if (isset($client_item) && !empty($client_item)) {		
+		$header = $client_item['visual'];		
+		$link = "pages/". $client_item['link'] .".php";
+	}	
 	if(!file_exists($link)) {
 		$html = "Seems like the .php is non existant. Is it deleted?";	
 	} else {
 		//If deleting something
 		if(preg_match("/[\.*]/", $main->getvar['page']) == 0) {
-			include($link);
-			$content = new page;
+			require $link;
+			$content = new page();
 			// Main Side Bar HTML
-			$nav = "Sidebar";
-			if(!$db->config("delacc")) {
-				$sub = $db->query("SELECT * FROM `<PRE>clientnav` WHERE `link` != 'delete'");
-			}
-			else {
-				$sub = $db->query("SELECT * FROM `<PRE>clientnav`");
-			}
-			while($row = $db->fetch_array($sub)) {
+			$nav = "Sidebar";			
+			
+			foreach($client_navigation as $row) {	
+				if ($row['link'] == 'delete' && !$db->config('delacc')) {
+					continue;
+				}								
 				$array2['IMGURL'] = $row['icon'];
 				$array2['LINK'] = "?page=".$row['link'];
 				$array2['VISUAL'] = $row['visual'];
-				$array['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);
+				$array['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);			
 			}
+			
 			# Types Navbar
 			$user_id = $main->getCurrentUserId();
-			$sql = "SELECT * FROM `<PRE>orders` WHERE `userid` = '{$user_id}'";
-			$navquery = $db->query($sql);
-			$navdata = $db->fetch_array($navquery);
-			
-			$class = $type->createType($type->determineType($navdata['pid']));
-			if($class->clientNav) {
-				foreach($class->clientNav as $key2 => $value)  {
-					$array2['IMGURL'] = $value[2];
-					$array2['LINK'] = "?page=type&type=".$type->determineType($navdata['pid'])."&sub=".$value[1];
-					$array2['VISUAL'] = $value[0];
-					$array['LINKS'] .= $style->replaceVar("tpl/sidebarlink.tpl", $array2);	
-					if($main->getvar['page'] == "type" && $main->getvar['type'] == $type->determineType($navdata['pid']) && $main->getvar['sub'] == $value[1]) {
-						define("SUB", $value[3]);
-						$header = $value[3];
-						$main->getvar['myheader'] = $value[3];
-					}
-				}
-			}
-			$type->classes[$type->determineType($navdata['pid'])] = $class;
-			
+						
 			$array2['IMGURL'] = "logout.png";
 			$array2['LINK'] = "?page=logout";
 			$array2['VISUAL'] = "Logout";
@@ -73,6 +52,7 @@ function client() {
 			$sidebar = $style->replaceVar("tpl/sidebar.tpl", $array);
 			
 			//Page Sidebar
+			
 			if($content->navtitle) {
 				$subnav = $content->navtitle;
 				$sub = $db->query("SELECT * FROM `<PRE>clientnav`");
@@ -84,12 +64,14 @@ function client() {
 				}
 				$subsidebar = $style->replaceVar("tpl/sidebar.tpl", $array3);
 			}
+			
 			if($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {
 				foreach($main->postvar as $key => $value) {
 					$array['HIDDEN'] .= '<input name="'.$key.'" type="hidden" value="'.$value.'" />';
 				}
 				$array['HIDDEN'] .= " ";
 				$html = $style->replaceVar("tpl/warning.tpl", $array);	
+				
 			} elseif($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
 				if($main->postvar['yes']) {
 					foreach($main->getvar as $key => $value) {
@@ -107,8 +89,7 @@ function client() {
 				elseif($main->postvar['no']) {
 					$main->done();	
 				}
-			}
-			else {
+			} else {
 				if(isset($main->getvar['sub'])) {
 					ob_start();
 					$content->content();
@@ -120,18 +101,15 @@ function client() {
 					ob_start();
 					$content->content();
 					$html = ob_get_contents(); # Retrieve the HTML
-					ob_clean(); # Flush the HTML		
-									
-				}
-				else {
+					ob_clean(); # Flush the HTML									
+				} else {
 					ob_start();
 					$content->content();
 					$html = ob_get_contents(); # Retrieve the HTML
 					ob_clean(); # Flush the HTML	
 				}
 			}
-		}
-		else {
+		} else {
 			$html = "You trying to hack me? You've been warned. An email has been sent.. May I say, Owned?";
 			$email->staff("Possible Hacking Attempt", "A user has been logged trying to hack your copy of THT, their IP is: ". $_SERVER['REMOTE_ADDR']);
 		}
@@ -167,85 +145,74 @@ function client() {
 	return $data; # Return the HTML
 }
 
-if(!$_SESSION['clogged']) {
-	if($main->getvar['page'] == "forgotpass") {
+global $user;
+if(!$_SESSION['clogged']) {	
+	if($main->getvar['page'] == 'forgotpass') {		
 		define("SUB", "Reset Password");
 		define("INFO", SUB);
-		echo $style->get("header.tpl");
-		
-		if($_POST) {
-			foreach($main->postvar as $key => $value) {
-				if($value == "" && !$n) {
-					$main->errors("Please fill in all the fields!");
-					$n++;
-				}
-			}
-			if(!$n) {
-				$user = $main->postvar['user'];
-				$email2 = $main->postvar['email'];
-				$query = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$user}' AND `email` = '{$email2}'");
-				if($db->num_rows($query) == 0) {
+		echo $style->get("header.tpl");		
+		if($_POST) {	
+			if (!empty($main->postvar['user']) && !empty($main->postvar['email']) ) {			
+				$username 		= $main->postvar['user'];
+				$useremail		= $main->postvar['email'];
+				$user_info 		= $user->getUserByUserName($username);
+				if (!empty($user_info)) {
+					if ($user_info['email'] == $useremail) {				
+						$password = rand(0,99999) . $main->generatePassword(). rand(0,99999);
+						$user->changeClientPassword($user_info['id'], $password);
+						$main->errors("Password reset!");
+						$array['PASS'] = $password;
+						$emaildata = $db->emailTemplate('reset');
+						$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $array);
+					} else {
+						$main->errors("That account doesn't exist!");
+					}
+				} else {
 					$main->errors("That account doesn't exist!");
-				}
-				else {
-					$client = $db->fetch_array($query);
-					$password = rand(0,99999) . 'P@$$w0rD' . rand(0,99999);
-					$cmd = $main->changeClientPassword($client['id'], $password);
-					$main->errors("Password reset!");
-					$array['PASS'] = $password;
-					$emaildata = $db->emailTemplate("reset");
-					$email->send($email2, $emaildata['subject'], $emaildata['content'], $array);
 				}
 			}
 		}
-		echo '<div align="center">'.$main->table("Client Area - Reset Password", $style->replaceVar("tpl/creset.tpl", $array), "300px").'</div>';
-		
+		echo '<div align="center">'.$main->table("Client Area - Reset Password", $style->replaceVar("tpl/creset.tpl", $array), "300px").'</div>';		
 		echo $style->get("footer.tpl");
 	} else {
 		define("SUB", "Login");
 		define("INFO", " ");
-		if($_POST) { # If user submitts form
+		
+		if($_POST) {
 			if ($main->checkToken()) {
 				if($main->clientLogin($main->postvar['user'], $main->postvar['pass'])) {
 					$main->redirect("?page=home");	
 				}
 			}		
-		}
-		
+		}		
 		echo $style->get("header.tpl");
 		$array[] = "";
 		if(!$db->config("cenabled")) {
 			define("SUB", "Disabled");
 			define("INFO", SUB);
 			echo '<div align="center">'.$main->table("Client Area - Disabled", $db->config("cmessage"), "300px").'</div>';
-		}
-		else {
+		} else {
 			echo '<div align="center">'.$main->table("Client Area - Login", $style->replaceVar("tpl/clogin.tpl", $array), "300px").'</div>';
 		}
 		echo $style->get("footer.tpl");
 	}
-}
-elseif($_SESSION['clogged']) {
+} elseif($_SESSION['clogged']) {
 	if(!$main->getvar['page']) {
 		$main->getvar['page'] = "home";
-	}
-	elseif($main->getvar['page'] == "logout") {
-		session_destroy();
+	} elseif($main->getvar['page'] == 'logout') {		
+		$main->logout();
 		$main->redirect("?page=home");
 	}
 	if(!$db->config("cenabled")) {
 		define("SUB", "Disabled");
 		define("INFO", SUB);
 		$content = '<div align="center">'.$main->table("Client Area - Disabled", $db->config("cmessage"), "300px").'</div>';
-	}
-	else {
+	} else {
 		$content = client();
 	}
 	echo $style->get("header.tpl");
 	echo $content;
 	echo $style->get("footer.tpl");
 }
-
 //End the sctipt
-include(LINK ."output.php");
-?>
+require LINK .'output.php';

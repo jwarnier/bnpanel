@@ -7,7 +7,7 @@ if(THT != 1){die();}
 class page {
 	
 	public function content() { # Displays the page 
-		global $style, $db, $main;
+		global $style, $db, $main,$user;
 		$data = $db->client($main->getCurrentUserId());
 		$array['USER']		= $data['user'];
 		$array['EMAIL'] 	= $data['email'];
@@ -105,7 +105,7 @@ class page {
 					$data = $db->client($data['id']);
 					if(md5(md5($main->postvar['currentpass']) . md5($data['salt'])) == $data['password']) {
 						if($main->postvar['newpass'] === $main->postvar['cpass']) {
-						$cmd = $main->changeClientPassword($data['id'], $main->postvar['newpass']);
+						$cmd = $user->changeClientPassword($data['id'], $main->postvar['newpass']);
 						if($cmd === true) {
 							$main->errors("Details updated!");
 						}

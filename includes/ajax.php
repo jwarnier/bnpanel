@@ -35,47 +35,30 @@ class AJAX {
 		}
 	}
 	
+	/**
+	 * Checks the user
+	 */
 	public function usercheck() {
-		global $main, $db;
-		
-		//If it's over 8 characters then complain.
-		if(strlen($main->getvar['user']) > 8) {
-			echo 0;
-			return;
-		}
-		//If it's less than 4 characters then complain.
-		if(strlen($main->getvar['user']) < 4) {
-			echo 0;
-			return;
-		}
-		else {
-			//If the first character is a number, then complain.
-			if(is_numeric(substr($main->getvar['user'], 0, 1))) {
-				echo 0;
-				return;
-			}
-		}
-		// Alphanumeric only plz.
-		if(!preg_match("/^([0-9a-zA-Z])+$/",$main->getvar['user'])) {
+		global $main, $db, $user;
+		if (!$user->validateUserName($main->getvar['user'])) {
 			echo 0;
 			return;
 		}
 		if(!$main->getvar['user']) {
 			$_SESSION['check']['user'] = false;
 		   echo 0;
-		}
-		else {
-			$query = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$main->getvar['user']}'");
-			if($db->num_rows($query) == 0) {
+		} else {
+			$user_info = $user->getUserByUserName($main->getvar['user']);
+			if ($user_info == false) {
 				$_SESSION['check']['user'] = true;
 				echo 1;	
-			}
-			else {
+			} else {
 				$_SESSION['check']['user'] = false;
 				echo 0;	
 			}
 		}
 	}
+	
 	public function passcheck() {
 		global $main;
 		if($main->getvar['pass'] == ":") {
@@ -96,14 +79,15 @@ class AJAX {
 		}
 	}
 	public function emailcheck() {
-		global $main, $db;
+		global $main, $db, $user;
 		if(!$main->getvar['email']) {
 		   $_SESSION['check']['email'] = false;		   
 		   echo 0;
 		   return;
 		}
-		$query = $db->query("SELECT id FROM `<PRE>users` WHERE `email` = '{$main->getvar['email']}'");
-		if($db->num_rows($query) != 0) {			
+		$user_info = $user->getUserByEmail($main->getvar['email']);
+		
+		if(!empty($user_info)) {			
 		   $_SESSION['check']['email'] = false;
 		   echo 0;
 		   return;
@@ -135,8 +119,7 @@ class AJAX {
 		if(!preg_match("/^([a-zA-Z\.\'\ \-])+$/",$main->getvar['lastname'])) {
 			$_SESSION['check']['lastname'] = false;
 			echo 0;
-		}
-		else {
+		} else {
 			$_SESSION['check']['lastname'] = true;
 			echo 1;
 		}
@@ -147,8 +130,7 @@ class AJAX {
 		if(!preg_match("/^([0-9a-zA-Z\.\ \-])+$/",$main->getvar['address'])) {
 			$_SESSION['check']['address'] = false;
 			echo 0;
-		}
-		else {
+		} else {
 			$_SESSION['check']['address'] = true;
 			echo 1;
 		}
@@ -171,8 +153,7 @@ class AJAX {
 		if (!preg_match("/^([a-zA-Z\.\ -])+$/",$main->getvar['state'])) {
 			$_SESSION['check']['state'] = false;
 			echo 0;
-		}
-		else {
+		} else {
 			$_SESSION['check']['state'] = true;
 			echo 1;
 		}
@@ -183,8 +164,7 @@ class AJAX {
 		if(strlen($main->getvar['zip']) > 7) {
 			echo 0;
 			return;
-		}
-		else {
+		} else {
 			if (!preg_match("/^([0-9a-zA-Z\ \-])+$/",$main->getvar['zip'])) {
 				$_SESSION['check']['zip'] = false;
 				echo 0;
@@ -201,13 +181,11 @@ class AJAX {
 		if(strlen($main->getvar['phone']) > 15) {
 			echo 0;
 			return;
-		}
-		else {
+		} else {
 			if (!preg_match("/^([0-9\-])+$/",$main->getvar['phone'])) {
 				$_SESSION['check']['phone'] = false;
 				echo 0;
-			}
-			else {
+			} else {
 				$_SESSION['check']['phone'] = true;
 				echo 1;
 				}
@@ -238,8 +216,7 @@ class AJAX {
 		global $main;
 		if(!$main->getvar['domain']) {
 		   echo 0;
-		}
-		else {
+		} else {
 			$data = explode(".", $main->getvar['domain']);
 			if(!$data[0] || !$data[1]) {
 				echo 0;	
@@ -257,8 +234,7 @@ class AJAX {
 	
 	public function orderForm() {
 		global $type, $main;
-		$ptype = $type->determineType($main->getvar['package']);
-		
+		$ptype = $type->determineType($main->getvar['package']);		
 		echo $type->orderForm($ptype);
 	}
 	
@@ -299,8 +275,7 @@ class AJAX {
 				$array['Error'] = "Template not found!";
 				$array['Template ID'] = $main->getvar['id'];
 				$main->error($array);
-			}
-			else {
+			} else {
 				$data = $db->fetch_array($query);
 				echo $data['subject']."{}[]{}".$data['description']."{}[]{}".$data['content'];
 			}

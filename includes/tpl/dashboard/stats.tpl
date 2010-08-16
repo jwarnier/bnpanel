@@ -33,7 +33,7 @@
                 <a href="?page=lof">Look & Feel</a><br />
                 <a href="?page=type&type=p2h&sub=forums">P2H Forums</a><br />
                 <a href="?page=type&type=paid&sub=paid">Configure Paid</a><br />
-                <a href="?page=kb">Knowledgebase</a><br />
+                <a href="?page=kb">Knowledge Base</a><br />
                 <a href="?page=import">Import Clients</a>
             </div>
         </div>

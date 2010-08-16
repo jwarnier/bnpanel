@@ -30,10 +30,8 @@ class page {
 	}
 	
 	public function content() { # Displays the page 
-		global $main, $style, $db, $order,$package, $invoice;
-		global $server;
-		global $email;
-		global $user;
+		global $main, $style, $db, $order,$package, $invoice, $server, $email,$user;
+		
 		switch($main->getvar['sub']) {
 			case 'search':
 				if($main->getvar['do'] ) {					
@@ -138,7 +136,7 @@ class page {
 							$array['BOX'] = "";
 							$array['CONTENT'] = $style->replaceVar("tpl/clientpwd.tpl");
 						} else {						
-							$command = $main->changeClientPassword($main->getvar['do'], $main->postvar['passwd']);
+							$command = $user->changeClientPassword($main->getvar['do'], $main->postvar['passwd']);
 							if($command === true) {
 								$main->errors('Password changed!');
 							} else {

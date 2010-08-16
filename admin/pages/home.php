@@ -42,8 +42,11 @@ class page {
 		}
 	}
     
-	public function content() { # Displays the page 
-		global $db,$main, $style, $page;		
+	public function content() { 
+		global $db,$main, $style, $page;
+	
+		
+				
 		//$current_version = rtrim($this->curl_get_content('http://thehostingtool.com/updates/version.txt')); #Clears the end whitespace. ARGHHH
 		$current_version = '1.2.3';
 		
@@ -105,6 +108,17 @@ class page {
 		$content_notepad = $style->replaceVar('tpl/notepad.tpl', $array);
 		echo '<br />'; //br it, br it
 		echo $main->table('Admin Notepad', $content_notepad, 'auto', 'auto');
+		
+		$output = array();
+		exec('hg heads', $output);
+		if (isset($output)) {
+			echo '<h3>';
+			echo $output['0'];
+			echo '<br />';
+			echo $output['3'];
+			echo '</h3>';	
+		}	
+		
 		/*
 		
 		require_once(LINK.'rss/rss_fetch.inc');

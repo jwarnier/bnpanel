@@ -57,7 +57,7 @@ class staff extends model {
 	 */
 	public function userNameExists($username) {
 		global $db;
-		$query = $db->query("SELECT id FROM ".$this->getTableName()." WHERE `user` = '{$username}'");
+		$query = $db->query("SELECT id FROM ".$this->getTableName()." WHERE user = '{$username}'");
 		if($db->num_rows($query) > 0) {
 			return true;
 		} else {	
@@ -87,7 +87,7 @@ class staff extends model {
 	 */
 	public function getStaffUserById($user_id) {
 		global $db, $main;
-		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `id` = '{$db->strip($user_id)}'");
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE id = '{$db->strip($user_id)}'");
 		$data = array();
 		if($db->num_rows($query) > 0) {
 			$data = $db->fetch_array($query,'ASSOC');			
@@ -102,12 +102,12 @@ class staff extends model {
 	 */
 	public function getStaffUserByUserName($username) {
 		global $db, $main;
-		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `user` = '{$db->strip($username)}'");
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE user = '{$db->strip($username)}'");
 		$data = array();
 		if($db->num_rows($query) > 0) {
 			$data = $db->fetch_array($query,'ASSOC');			
 		}
-		return $data;		
+		return $data;
 	}
 	
 	
@@ -143,6 +143,41 @@ class staff extends model {
 			}			
 		}
 		return $user_list;		
+	}
+	
+	public function getStaffById($staff_id) {
+		global $db, $main;
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE id = '{$db->strip($staff_id)}'");
+		$data = array();
+		if($db->num_rows($query) > 0) {
+			$data = $db->fetch_array($query,'ASSOC');			
+		}
+		return $data;		
+	}
+	
+	
+	/**
+	 * Only changes the system password not the Control Panel password
+	 * 
+	 * A more or less centralized function for changing a client's
+	 * password. This updates both the cPanel/WHM and THT password.
+	 * Will return true ONLY on success. Any other returned value should
+	 * be treated as a failure. If the return value happens to be a
+	 * string, it is an error message.
+	 * @todo this function should be moved to the class_user.php file
+	 * 
+	 */
+	public function changeStaffPassword($staff_id, $newpass) {
+		global $db, $user;
+		//Making sure the $clientid is a reference to a valid id.
+		$user_info	=	$user->getStaffById($staff_id);
+		
+		if (is_array($user_info) && !empty($user_info)) {
+			$this->edit($staff_id, array('password'=>$newpass));			
+		} else {
+			return "That client does not exist.";
+		}		
+		return true;
 	}
 	
 

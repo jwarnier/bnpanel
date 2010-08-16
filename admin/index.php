@@ -21,28 +21,29 @@ function acp() {
 	if(!$main->getvar['page']) { 
 		$main->getvar['page'] = 'home';
 	}
-	$query = $db->query("SELECT id, visual FROM `<PRE>acpnav` WHERE `link` = '{$main->getvar['page']}'");
-	$page = $db->fetch_array($query,'ASSOC');
+	$admin_navigation = $user->getAdminNavigation();
+	$admin_nave_item = $admin_navigation[$main->getvar['page']];
 	
-	$header = $page['visual'];
-	$link = "pages/". $main->getvar['page'] .".php";	
+	$link ='pages/home.php';
+	if (isset($admin_nave_item) && !empty($admin_nave_item)) {
+		$header = $admin_nave_item['visual'];
+		$link = 'pages/'. $admin_nave_item['page'].'.php';
+	}
 	
 	if(!file_exists($link)) {	
 		$html = "<strong>Fatal Error:</strong> Seems like the .php is non existant. Is it deleted?";	
-	} elseif(!$main->checkPerms($page['id']) && $db->num_rows($query) != 0) {		
+	} elseif(!$main->checkPerms($admin_nave_item['id'])) {		
 		$html = "You don't have access to this page.";	
-	} else {
-		
+	} else {		
 		//If deleting something
 		//&& $main->linkAdminMenuExists($main->getvar['page']) == true
 		if(preg_match("/[\.*]/", $main->getvar['page']) == 0  ) {			
-			include($link);
+			require $link;
 			$content = new page();
 			// Main Side Bar HTML
 			$nav = "Sidebar Menu";		
-			$sub = $db->query("SELECT * FROM `<PRE>acpnav`");
-			
-			while($row = $db->fetch_array($sub)) {
+						
+			foreach ($admin_navigation as $row) {
 				if($main->checkPerms($row['id'])) {
 					$array2['IMGURL'] = $row['icon'];
 					$array2['LINK'] = "?page=".$row['link'];
@@ -196,28 +197,23 @@ if(!$_SESSION['logged']) {
 		echo $style->get("header.tpl");
 		
 		if($_POST) {
-			foreach($main->postvar as $key => $value) {
-				if($value == "" && !$n) {
-					$main->errors("Please fill in all the fields!");
-					$n++;
-				}
-			}
-			if(!$n) {
-				$user = $main->postvar['user'];
-				$email2 = $main->postvar['email'];
-				$query = $db->query("SELECT * FROM `<PRE>staff` WHERE `user` = '{$user}' AND `email` = '{$email2}'");
-				if($db->num_rows($query) == 0) {
-					$main->errors("That account doesn't exist!");
-				}
-				else {
-					$curstaff = $db->fetch_array($query);
+			if (!empty($main->postvar['user']) && !empty($main->postvar['email']) ) {
+				$username 		= $main->postvar['user'];
+				$useremail		= $main->postvar['email'];			
+				$staff_info 	= $staff->getStaffUserByUserName($username);
+				
+				if (!empty($staff_info)) {										
 					$password = rand(0,999999);
-					$newpass = md5(md5($password) . md5($curstaff['salt']));
-					$db->query("UPDATE `<PRE>staff` SET `password` = '{$newpass}' WHERE `id` = '{$curstaff['id']}'");
+					$newpass = md5(md5($password) . md5($user_info['salt']));
+					$params['password'] = $newpass;
+					$staff->edit($staff_info['id'], $params);
+					
 					$main->errors("Password reset!");
 					$array['PASS'] = $password;
 					$emaildata = $db->emailTemplate("areset");
 					$email->send($email2, $emaildata['subject'], $emaildata['content'], $array);
+				} else {
+					$main->errors("That account doesn't exist!");
 				}
 			}
 		}

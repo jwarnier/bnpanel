@@ -92,7 +92,7 @@ class user extends model {
 	 */
 	public function userNameExists($username) {
 		global $db;
-		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `user` = '{$username}'");
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE user = '{$username}'");
 		if($db->num_rows($query) > 0) {
 			return true;
 		} else {	
@@ -130,12 +130,20 @@ class user extends model {
 	 */
 	public function getUserById($user_id) {
 		global $db, $main;
-		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `id` = '{$db->strip($user_id)}'");
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE id = '{$db->strip($user_id)}'");
 		$data = array();
 		if($db->num_rows($query) > 0) {
 			$data = $db->fetch_array($query,'ASSOC');			
 		}
 		return $data;		
+	}
+	
+	public function validateUserName($username) {
+		//Min 8 - Max 15
+		if (preg_match('/^[a-z\d_]{8,20}$/i', $username)) {
+			return true;
+		}		
+		return false;
 	}
 	
 	/**
@@ -145,13 +153,31 @@ class user extends model {
 	 */
 	public function getUserByUserName($username) {
 		global $db, $main;
-		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE `user` = '{$db->strip($username)}'");
-		$data = array();
-		if($db->num_rows($query) > 0) {
-			$data = $db->fetch_array($query,'ASSOC');			
+		if (!empty($username)) {
+			$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE user = '{$db->strip($username)}'");
+			$data = array();
+			if($db->num_rows($query) > 0) {
+				$data = $db->fetch_array($query,'ASSOC');
+				return $data;				
+			}				
 		}
-		return $data;		
+		return false;
 	}
+	
+	
+	public function getUserByEmail($email) {
+		global $db, $main;
+		if (!empty($username)) {
+			$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE email = '{$db->strip($email)}'");
+			$data = array();
+			if($db->num_rows($query) > 0) {
+				$data = $db->fetch_array($query,'ASSOC');
+				return $data;				
+			}				
+		}
+		return false;
+	}
+	
 	
 	
 	/**
@@ -187,6 +213,76 @@ class user extends model {
 			$main->addLog("updateUserStatus function called: $user_id");
 			$this->update($params, false);
 		}		
+	}
+	
+	public function getClientNavigation() {
+		global $db;
+		$sql = 'SELECT * FROM <PRE>clientnav'; 
+		$result = $db->query($sql);
+		$client_nav = array();
+		while ($row = $db->fetch_array($result, 'ASSOC')) {
+			$client_nav[$row['link']] = $row;
+		}		
+		return $client_nav;
+	}
+	
+	public function getAdminNavigation() {
+		global $db;
+		$sql = 'SELECT * FROM <PRE>acpnav'; 
+		$result = $db->query($sql);
+		$client_nav = array();
+		while ($row = $db->fetch_array($result, 'ASSOC')) {
+			$client_nav[$row['link']] = $row;
+		}		
+		return $client_nav;
+	}
+	
+	/**
+	 * Only changes the system password not the Control Panel password
+	 * 
+	 * A more or less centralized function for changing a client's
+	 * password. This updates both the cPanel/WHM and THT password.
+	 * Will return true ONLY on success. Any other returned value should
+	 * be treated as a failure. If the return value happens to be a
+	 * string, it is an error message.
+	 * @todo this function should be moved to the class_user.php file
+	 * 
+	 */
+	public function changeClientPassword($clientid, $newpass) {
+		global $db, $user;
+		//Making sure the $clientid is a reference to a valid id.
+		$user_info	=	$user->getUserById($clientid);
+		
+		if (is_array($user_info) && !empty($user_info)) {
+			$user->edit($clientid, array('password'=>$newpass));
+			/*
+			mt_srand((int)microtime(true));
+			$salt = md5(mt_rand());
+			$password = md5(md5($newpass) . md5($salt));
+			$db->query("UPDATE `<PRE>users` SET `password` = '{$password}' WHERE `id` = '{$db->strip($clientid)}'");
+			$db->query("UPDATE `<PRE>users` SET `salt` = '{$salt}' WHERE `id` = '{$db->strip($clientid)}'");*/
+			
+		} else {
+			return "That client does not exist.";
+		}
+		
+		/*
+		 * We're going to set the password in cPanel/WHM first. That way
+		 * if the password is rejected for some reason, THT will not 
+		 * desync.
+		 */
+		 
+		/*$command = $server->changePwd($clientid, $newpass);
+		if($command !== true) {
+			return $command;
+		}*/
+		
+		/*
+		 * Let's change THT's copy of the password. Might as well make a
+		 * new salt while we're at it.
+		 */
+		//Let's wrap it all up.
+		return true;
 	}
 	
 }
