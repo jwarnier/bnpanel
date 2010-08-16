@@ -34,6 +34,12 @@ $(window).load(function () {
       <input name="name" type="text" id="name" /><a title="The Server Name, shown in the AdminCP." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>
+  
+  <tr>
+    <td valign="top">Type:</td>
+    <td><select name="type" id="type" onchange="serverchange(this.value)">%TYPE%</select> <a title="The Server Type. This is the Control Panel that your server is running.<br /><i>eg: cPanel/WHM</i>" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+  </tr>
+  
   <tr>
     <td width="20%">Host:</td>
     <td>
@@ -48,10 +54,7 @@ $(window).load(function () {
     <td valign="top" width="20%"><span id="passtext"></span></td>
     <td><span id="passbox"></span></td>
   </tr>
-  <tr>
-    <td valign="top">Type:</td>
-    <td><select name="type" id="type" onchange="serverchange(this.value)">%TYPE%</select> <a title="The Server Type. This is the Control Panel that your server is running.<br /><i>eg: cPanel/WHM</i>" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-  </tr>
+  
   <tr>
     <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Add Server" /></td>
   </tr>
