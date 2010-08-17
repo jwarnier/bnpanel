@@ -14,7 +14,7 @@
 <p class="submit">
 	<input type="submit" name="clogin" id="clogin" value="Login" tabindex="3" />
 </p>
-<p>
+</form>
+<p id="navi">
 	<a href="<URL>client/?page=forgotpass">Lost your password?</a>
 </p>
-</form>

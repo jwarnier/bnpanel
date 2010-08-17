@@ -74,7 +74,9 @@
   
    <tr>
     <td >Total:</td>
-    <td valign="top" ><h3>%TOTAL%</h3></td>
+    <td valign="top" >
+    	<p class="price">%TOTAL%</p>
+    </td>
   </tr>
     
 </table>
