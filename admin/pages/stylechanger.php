@@ -41,6 +41,7 @@ class page {
 		      	$tpl = $_POST['tpl'];
 		      	$url = $db->config('url')."admin/";
 		      	header("Location: $url?page=stylechanger&sub=$tpl");
+		      	exit;
 			  } else {	
 			  	echo "Sorry, a few required vars are missing. You can't access this page individually!";
 			  }

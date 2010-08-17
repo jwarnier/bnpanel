@@ -118,20 +118,20 @@ class paypal_class {
       $this->fields["$field"] = $value;
    }
 
-   function submit_paypal_post() {
- 
-      //MODDED BY JONNY
-	  
-	  foreach($this->fields as $name => $value) {
-		  if(isset($n)) {
-			  $split = "&";
-		  }
-		  $post .= $split.$name."=".$value;
-		  $n++;
-	  }
-	  
-	  header("Location: ".$this->paypal_url."?".$post);
-    
+   function submit_paypal_post() { 
+		//MODDED BY JONNY	  
+		$post='';
+      	if (is_array($this->fields)) {
+		  	foreach($this->fields as $name => $value) {
+			  if(isset($n)) {
+				  $split = "&";
+			  }
+			  $post .= $split.$name."=".$value;
+			  $n++;
+			}
+      	}
+		header("Location: ".$this->paypal_url."?".$post);
+		exit;          
    }
    
    function validate_ipn() {

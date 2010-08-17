@@ -157,6 +157,7 @@ if(FOLDER != "install" && FOLDER != "includes" && INSTALL != 1) { # Are we insta
 	//Lets just redirect to the installer, shall we?	
 	$installURL = LINK . "../install";
 	header("Location: $installURL");
+	exit;
 }
 
 //Resets the error.
