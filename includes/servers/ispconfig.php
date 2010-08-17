@@ -30,7 +30,9 @@ class ispconfig extends Panel {
 	*/
 	public function load() {	
 		global $main;	
-		$data = $this->serverDetails($this->getServerId());			
+		
+		$data = $this->serverDetails($this->getServerId());	
+				
 	//	$host_parts = parse_url($data['host']);
 		//$data['host']	= $host_parts['scheme'].$host_parts['host'].$host_parts['path'];
 		
@@ -801,6 +803,15 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			}							
 		}		
 		return false;	
+	}
+	
+	public function getServerStatus() {
+		$server_params['server_id'] 	= $this->getServerId();
+		$server_params['section'] 		= 'web';
+		
+		//Getting server info
+		$server_info = $this->remote('server_get',$server_params);
+		return $server_info;
 	}
 }
 
