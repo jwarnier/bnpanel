@@ -101,7 +101,7 @@ class page {
 				$db->query("UPDATE `<PRE>users` SET `zip` = '{$main->postvar['zip']}' WHERE `id` = '{$data['id']}'");
 				$db->query("UPDATE `<PRE>users` SET `city` = '{$main->postvar['city']}' WHERE `id` = '{$data['id']}'");
 				
-				if($main->postvar['change']) {
+				if($main->postvar['change'] && $main->checkToken()) {
 					$data = $db->client($data['id']);
 					if(md5(md5($main->postvar['currentpass']) . md5($data['salt'])) == $data['password']) {
 						if($main->postvar['newpass'] === $main->postvar['cpass']) {

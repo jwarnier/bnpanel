@@ -151,7 +151,7 @@ if(!$_SESSION['clogged']) {
 		define("SUB", "Reset Password");
 		define("INFO", SUB);
 		echo $style->get("header.tpl");		
-		if($_POST) {	
+		if($_POST && $main->checkToken()) {	
 			if (!empty($main->postvar['user']) && !empty($main->postvar['email']) ) {			
 				$username 		= $main->postvar['user'];
 				$useremail		= $main->postvar['email'];

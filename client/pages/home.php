@@ -77,4 +77,3 @@ class page {
 		echo $style->replaceVar("tpl/user/clienthome.tpl", $array);
 	}
 }
-?>

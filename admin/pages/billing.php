@@ -31,7 +31,7 @@ class page {
 		global $main, $style, $db, $billing;
 		switch($main->getvar['sub']) {
 			default:
-				if($_POST) {
+				if($_POST && $main->checkToken()) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n && $key != "admin") {
 							$main->errors("Please fill in all the fields!");
@@ -73,7 +73,7 @@ class page {
 					if($db->num_rows($query) == 0) {
 						echo "That billing cycle doesn't exist!";	
 					} else {
-						if($_POST) {
+						if($_POST && $main->checkToken()) {
 							foreach($main->postvar as $key => $value) {
 								if($value == "" && !$n && $key != "admin") {
 									$main->errors("Please fill in all the fields!");
@@ -127,7 +127,7 @@ class page {
 				}
 				break;				
 			case 'delete':
-				if($main->getvar['do']) {
+				if($main->getvar['do'] && $main->checkToken()) {
 					$billing->setPrimaryKey($main->getvar['do']);
 					$billing->delete();
 					$main->errors("Billing cycle #{$main->getvar['do']} has been deleted!");		

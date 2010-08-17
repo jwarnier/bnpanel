@@ -90,7 +90,7 @@ class page {
 				if(!$db->num_rows($query)) {
 					echo "That ticket doesn't exist!";	
 				} else {
-					if($_POST) {
+					if($_POST && $main->checkToken()) {
 						foreach($main->postvar as $key => $value) {
 							if($value == "" && !$n && $key != "admin") {
 								$main->errors("Please fill in all the fields!");

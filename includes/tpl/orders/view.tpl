@@ -2,7 +2,7 @@
 	<a href="?page=orders&sub=edit&do=%ID%"> <img src="<URL>themes/icons/pencil.png"> Edit</a> 
 </div>
 <h2>Order #%ID%</h2>
-
+<ERRORS>
 <table width="100%" border="0" cellspacing="2" cellpadding="0"> 
      <tr>
     <td valign="top">User</td>

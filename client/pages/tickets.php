@@ -26,7 +26,7 @@ class page {
 		$user_id = $main->getCurrentUserId();
 		switch($main->getvar['sub']) {
 			default:
-				if($_POST) {
+				if($_POST && $main->checkToken()) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n && $key != "admin") {
 							$main->errors("Please fill in all the fields!");
@@ -48,7 +48,7 @@ class page {
 				break;
 			
 			case "view":
-				if(!$main->getvar['do']) {
+				if(!$main->getvar['do'] && $main->checkToken()) {
 					$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `userid` = '{$user_id}' AND `reply` = '0'");
 					if(!$db->num_rows($query)) {
 						echo "You currently have no tickets!";	
@@ -68,7 +68,7 @@ class page {
 						echo "That ticket doesn't exist!";	
 					}
 					else {
-						if($_POST) {
+						if($_POST && $main->checkToken()) {
 							foreach($main->postvar as $key => $value) {
 								if($value == "" && !$n && $key != "admin") {
 									$main->errors("Please fill in all the fields!");
@@ -124,4 +124,3 @@ class page {
 		}
 	}
 }
-?>

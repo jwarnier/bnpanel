@@ -1,12 +1,10 @@
 <form id="sure" name="sure" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
-    <td colspan="2">
-    
+    <td colspan="2">    
     <div class="warning">
     	Are you sure you want to delete this item?
-    </div>
-    
+    </div>    
     </td>
   </tr>
   <tr>

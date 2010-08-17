@@ -43,7 +43,7 @@ class page {
 		global $main, $style, $db, $server;
 		switch($main->getvar['sub']) {
 			default:
-				if($_POST) {
+				if($_POST && $main->checkToken()) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n) {
 							$main->errors("Please fill in all the fields!");
@@ -71,7 +71,7 @@ class page {
 						echo "That server doesn't exist!";	
 					}
 					else {
-						if($_POST) {
+						if($_POST && $main->checkToken()) {
 							foreach($main->postvar as $key => $value) {
 								if($value == "" && !$n) {
 									$main->errors("Please fill in all the fields!");
@@ -120,7 +120,7 @@ class page {
 				}
 				break;			
 			case 'delete':
-				if($main->getvar['do']) {
+				if($main->getvar['do'] && $main->checkToken()) {
 					$server->delete($main->getvar['do']);
 					$main->errors("Server Account Deleted!");		
 				}

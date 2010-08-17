@@ -100,14 +100,16 @@ function acp() {
 			}
 			
 			if($main->getvar['sub'] && $main->getvar['page'] != "type") {
-				foreach($content->navlist as $key => $value) {
-					if($value[2] == $main->getvar['sub']) {
-						if(!$value[0]) {
-							define("SUB", $main->getvar['page']);	
-							$header = $main->getvar['page'];
-						} else {
-							define("SUB", $value[0]);
-							$header = $value[0];
+				if(is_array($content->navlist)) {
+					foreach($content->navlist as $key => $value) {
+						if($value[2] == $main->getvar['sub']) {
+							if(!$value[0]) {
+								define("SUB", $main->getvar['page']);	
+								$header = $main->getvar['page'];
+							} else {
+								define("SUB", $value[0]);
+								$header = $value[0];
+							}
 						}
 					}
 				}
@@ -198,7 +200,7 @@ if(!$_SESSION['logged']) {
 		define("INFO", SUB);
 		echo $style->get("header.tpl");
 		
-		if($_POST) {
+		if($_POST && $main->checkToken()) {
 			if (!empty($main->postvar['user']) && !empty($main->postvar['email']) ) {
 				$username 		= $main->postvar['user'];
 				$useremail		= $main->postvar['email'];			

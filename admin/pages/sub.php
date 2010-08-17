@@ -55,22 +55,21 @@ class page {
 					if($db->num_rows($query) == 0) {
 						echo "That subdomain doesn't exist!";	
 					} else {
-						if($_POST) {
-							if($main->checkToken()) {		
-								foreach($main->postvar as $key => $value) {
-									if($value == "" && !$n) {
-										$main->errors("Please fill in all the fields!");
-										$n++;
-									}
-								}
-								if(!$n) {
-									$db->query("UPDATE `<PRE>subdomains` SET `subdomain` = '{$main->postvar['subdomain']}', 
-																		  `server` = '{$main->postvar['server']}'
-																		   WHERE `id` = '{$main->getvar['do']}'");
-									$main->errors("Subdomain edited!");
-									$main->done();
+						if($_POST && $main->checkToken()) {					
+							foreach($main->postvar as $key => $value) {
+								if($value == "" && !$n) {
+									$main->errors("Please fill in all the fields!");
+									$n++;
 								}
 							}
+							if(!$n) {
+								$db->query("UPDATE `<PRE>subdomains` SET `subdomain` = '{$main->postvar['subdomain']}', 
+																	  `server` = '{$main->postvar['server']}'
+																	   WHERE `id` = '{$main->getvar['do']}'");
+								$main->errors("Subdomain edited!");
+								$main->redirect('?page=sub&sub=edit&msg=1');
+							}
+
 						}
 						$data = $db->fetch_array($query);
 						$array['SUBDOMAIN'] = $data['subdomain'];
@@ -81,8 +80,7 @@ class page {
 						$array['SERVER'] = $array['THEME'] = $main->dropDown("server", $values, $data['server']);
 						echo $style->replaceVar("tpl/subdomain/editsubdomain.tpl", $array);
 					}
-				}
-				else {
+				} else {
 					$query = $db->query("SELECT * FROM `<PRE>subdomains`");
 					if($db->num_rows($query) == 0) {
 						echo "There are no subdomains to edit!";	

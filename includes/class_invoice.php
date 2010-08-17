@@ -18,7 +18,7 @@ class invoice extends model {
 	 */
 	public function create($params, $clean_token = true) {
 		global $main, $db, $email;
-		$invoice_id = $this->save($params, $clean_token);
+		$invoice_id = $this->save($params);
 		if (!empty($invoice_id) && is_numeric($invoice_id )) {
 			
 			$client 		= $db->client($params['uid']);		
@@ -795,7 +795,7 @@ class invoice extends model {
 				break;
 			}				
 			$params['status'] = $status;
-			$this->update($params, false);
+			$this->update($params);
 		}		
 	}
 }

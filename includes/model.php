@@ -33,22 +33,15 @@ class model {
 	 * @param	bool	clean a token
 	 * @return	mixed	inserted id or false if error 
 	 */
-	public function save($attributes, $clean_token = true) {
-		global $main, $db;
-		//echo $this->getTableName();
-		//var_dump($clean_token);
-	//	var_dump($main->checkToken($clean_token));
-		
-		//if ($main->checkToken($clean_token)) {		
-			$new_attributes = $this->filterParams($attributes, $this->getColumns());
-			$sql = 'INSERT INTO '.$this->getTableName().' '.
-					'('.join(', ',array_keys($new_attributes)).') '.
-					'VALUES ('.join(',',array_values($new_attributes)).')';
-			//echo $sql; '<br />';
-			$db->query($sql);
-			return $db->insert_id();
-		//}		
-	    //return false;
+	public function save($attributes) {
+		global $db;				
+		$new_attributes = $this->filterParams($attributes, $this->getColumns());
+		$sql = 'INSERT INTO '.$this->getTableName().' '.
+				'('.join(', ',array_keys($new_attributes)).') '.
+				'VALUES ('.join(',',array_values($new_attributes)).')';
+		//echo $sql; '<br />';
+		$db->query($sql);
+		return $db->insert_id();
 	}
 	
 	/**
@@ -56,29 +49,26 @@ class model {
 	 * @param	array	list of attributes to update
 	 * @param	bool	clean a token
 	 */
-	public function update($attributes, $clean_token = true) {
-		global $main, $db;
-		if ($main->checkToken($clean_token)) {		
-			//Remove the primary key id
-			unset($attributes['id']);		
-			$sql = 'UPDATE '.$this->getTableName().' '.
-	        		'SET '.join(', ', $this->getAvailableAttributesQuoted($attributes)) .' '.
-	        		"WHERE id ='".$this->getPrimaryKey()."'";
-	       	$db->query($sql); 
-		}
+	public function update($attributes) {
+		global $db;
+		//Remove the primary key id
+		unset($attributes['id']);		
+		$sql = 'UPDATE '.$this->getTableName().' '.
+        		'SET '.join(', ', $this->getAvailableAttributesQuoted($attributes)) .' '.
+        		"WHERE id ='".$this->getPrimaryKey()."'";
+       	$db->query($sql);
+       	return true;
 	}
 	
 	/**
 	 * Builds a delete query to shoot the DB
 	 * @param	bool	clean a token
 	 */
-	public function delete($clean_token = true) {
-		global $main, $db;
-		if ($main->checkToken($clean_token)) {	
-			$sql = 'DELETE FROM '.$this->getTableName().' '.        		
+	public function delete() {
+		global $db;		
+		$sql = 'DELETE FROM '.$this->getTableName().' '.        		
 	        		"WHERE id ='".$this->getPrimaryKey()."'";
-	       	$db->query($sql);
-		}
+	    $db->query($sql);		
 	}
 
 	

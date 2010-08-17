@@ -20,7 +20,7 @@ class order extends model {
 	 */
 	public function create($params, $clean_token = true) {		
 		global $main, $db, $email, $user;
-		$order_id = $this->save($params, $clean_token);
+		$order_id = $this->save($params);
 		if (!empty($order_id) && is_numeric($order_id )) {
 			$main->addLog("Order created: $order_id");
 		
@@ -54,21 +54,20 @@ class order extends model {
 	 * @param	date	expiration date
 	 */
 	 
-	public function addAddons($order_id, $addon_list, $clean_token = false) {
+	public function addAddons($order_id, $addon_list) {
 		global $db, $main;
-		if ($main->checkToken($clean_token)) {
-			//Insert into user_pack_addons
-			if (is_array($addon_list) && count($addon_list) > 0) {
-				foreach ($addon_list as $addon_id) {
-					if (!empty($addon_id) && is_numeric($addon_id)) {
-						$addon_id = intval($addon_id);
-						$order_id = intval($order_id);					
-						$sql_insert = "INSERT INTO order_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
-						$db->query(	$sql_insert);					
-					}
+		//Insert into user_pack_addons
+		if (is_array($addon_list) && count($addon_list) > 0) {
+			foreach ($addon_list as $addon_id) {
+				if (!empty($addon_id) && is_numeric($addon_id)) {
+					$addon_id = intval($addon_id);
+					$order_id = intval($order_id);					
+					$sql_insert = "INSERT INTO order_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
+					$db->query(	$sql_insert);					
 				}
 			}
 		}
+		
 	}
 	
 	/**
@@ -129,8 +128,9 @@ class order extends model {
 						$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
 				break;
 				case ORDER_STATUS_DELETED:				
-				case ORDER_STATUS_WAITING_USER_VALIDATION:
+				case ORDER_STATUS_WAITING_USER_VALIDATION:				
 					//We just suspend the order not delete it
+					
 					$result = $server->suspend($order_id);
 				break;
 				case ORDER_STATUS_FAILED:
@@ -142,7 +142,7 @@ class order extends model {
 			
 			$params['status'] = $status;
 			if ($result) {
-				$this->update($params, false);
+				$this->update($params);
 				$main->addLog("updateOrderStatus function called: $order_id changed to $status");
 				return true;
 			}			
@@ -156,7 +156,7 @@ class order extends model {
 	 */
 	public function delete($id) { # Deletes invoice upon invoice id
 		global $main, $invoice;
-		$result = $this->updateOrderStatus($id, ORDER_STATUS_DELETED);
+		$result = $this->updateOrderStatus($id, ORDER_STATUS_DELETED);		
 		if($result ) {		
 			$main->addLog("Order id $id deleted ");
 			
@@ -173,7 +173,7 @@ class order extends model {
 	/**
 	 * Edits an order
 	 */
-	public function edit($order_id, $params, $clean_token = true) {
+	public function edit($order_id, $params) {
 		global $main;		
 		$this->setPrimaryKey($order_id);
 		//Here we will change the status of the package in the Server
@@ -183,7 +183,7 @@ class order extends model {
 			unset($params['status']); //do not update twice 			
 		}
 		if ($result) {		
-			$this->update($params, $clean_token);
+			$this->update($params);
 			$main->addLog("Order id $order_id updated");
 			return true;
 		}
@@ -471,8 +471,8 @@ class order extends model {
 				foreach($package_list as $package_item) {
 					$package_list[$package_item['id']] = $package_item['name'].' - '.$currency->toCurrency($package_with_amount[$package_item['id']]['amount']);									
 				}				
-				//$array['PACKAGES'] = $main->createSelect('package_id', $package_list, $package_id, array('onchange'=>'loadAddons(this);'));
-				$array['PACKAGES'] 		 = $package_list[$package_id];				
+				$array['PACKAGES'] = $main->createSelect('package_id', $package_list, $package_id, array('onchange'=>'loadAddons(this);'));
+				//$array['PACKAGES'] 		 = $package_list[$package_id];				
 			}		
 			
 			//Billing cycle

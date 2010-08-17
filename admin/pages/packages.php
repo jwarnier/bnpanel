@@ -36,7 +36,7 @@ class page {
 		switch($main->getvar['sub']) {
 			default:
 				$n = 0;
-				if($_POST) {				 
+				if($_POST && $main->checkToken()) {
 					$exist_billing_cycle = false;
 					//var_dump($main->postvar );
 					foreach($main->postvar as $key => $value) {
@@ -95,7 +95,7 @@ class page {
 								}
 							}						
 						}
-						$main->errors("Package has been added!");						
+						$main->errors("Package has been added!");					
 					}
 				}
 				
@@ -105,8 +105,7 @@ class page {
 						
 					//Addon feature added
 					$array['ADDON'] = $addon->generateAddonCheckboxes();
-					//finish 				
-									
+					//finish 		
 					echo $style->replaceVar("tpl/packages/addpackage.tpl", $array);
 				} else {
 					$main->errors('There are no servers, you need to add a Server first <a href="?page=servers&sub=add">here</a>');
@@ -191,11 +190,10 @@ class page {
 										}
 									}						
 								}								
-								//-----Finish billing cycles
-								
+								//-----Finish billing cycles							
 								
 								$main->errors("Package has been edited!");
-								$main->done();
+								$main->redirect('?page=packages&sub=edit&msg=1');
 							}
 						}
 												

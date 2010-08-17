@@ -27,7 +27,7 @@ class page {
 		
 		switch($main->getvar['sub']) {
 			default:
-				if($_POST) {					
+				if($_POST && $main->checkToken()) {					
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n) {
 							$main->errors("Please fill in all the fields!");
@@ -82,7 +82,7 @@ class page {
 					if (empty($staff_info)) {
 						echo "That account doesn't exist!";
 					} else {
-						if($_POST) {
+						if($_POST && $main->checkToken()) {
 							foreach($main->postvar as $key => $value) {
 								if($value == "" && !$n) {
 									$main->errors("Please fill in all the fields!");
@@ -150,7 +150,7 @@ class page {
 			
 			case 'delete':				
 				$user_id = $main->getCurrentStaffId();
-				if(!empty($main->getvar['do']) && $user_id != $main->getvar['do']) {
+				if(!empty($main->getvar['do']) && $user_id != $main->getvar['do'] && $main->checkToken()) {
 					$staff->delete($main->getvar['do'], true);						
 					$main->errors("Staff Account Deleted!");
 				}

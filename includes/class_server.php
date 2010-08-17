@@ -369,7 +369,7 @@ class server extends Model {
 			$main->getvar['status'] 	= USER_STATUS_ACTIVE; 
 			
 			//Creates a new user
-			$user_id 					= $user->create($main->getvar, false);
+			$user_id 					= $user->create($main->getvar);
 			
 			//If user is created
 			if (!empty($user_id) && is_numeric($user_id)){
@@ -425,10 +425,10 @@ class server extends Model {
 			
 			//Create an order
 			if (!empty($params['userid']) && !empty($params['pid'])) {
-				$order_id = $order->create($params, false);
+				$order_id = $order->create($params);
 				
 				//Add addons to the new order						
-				$order->addAddons($order_id, $main->getvar['addon_ids'], false);				
+				$order->addAddons($order_id, $main->getvar['addon_ids']);				
 			}
 			
 			$array['USER']		= $system_username;				
@@ -495,7 +495,7 @@ class server extends Model {
 			$invoice_params['status'] 	= INVOICE_STATUS_WAITING_PAYMENT;
 			$invoice_params['order_id'] = $order_id;
 			
-			$invoice_id = $invoice->create($invoice_params, false);
+			$invoice_id = $invoice->create($invoice_params);
 			if ($invoice_id) {							
 				//This variable will be read in the Ajax::ispaid function
 				$_SESSION['last_invoice_id'] = $invoice_id;
@@ -637,31 +637,20 @@ class server extends Model {
 	 */
 	 
 	public function suspend($order_id, $reason = false) { # Suspends a user account from the package ID
-		global $db, $main, $type, $email, $order,$user;
-		$order_info = $order->getOrderInfo($order_id);
-		
+		global $db, $main, $type, $email, $order,$user, $package;
+		$order_info = $order->getOrderInfo($order_id);		
 		if (is_array($order_info) && !empty($order_info)) {
 			$user_info = $user->getUserById($order_info['userid']);
-			$server_id = $type->determineServer($order_info['pid']);
-									
-			$serverphp = $this->createServer($order_info['pid']);
-			$donestuff = $serverphp->suspend($order_id, $server_id, $reason);
-			
-			if($donestuff == true) {				
-				//$order->updateOrderStatus($order_id, ORDER_STATUS_CANCELLED);
-				//$db->query("UPDATE `<PRE>users` SET `status` = '2' WHERE `id` = '{$db->strip($data['userid'])}'");
-				/*
-				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-													  '{$db->strip($data['userid'])}',
-													  '{$data2['user']}',
-													  '{$date}',
-													  'Suspended ($reason)')");*/
-			//	$emaildata = $db->emailTemplate('suspendacc');
-				//$email->send($user_info['email'], $emaildata['subject'], $emaildata['content']);
-				return true;
-			} else {				
-				return false;	
-			}			
+			$package_info = $package->getPackage($order_info['pid']);
+			$donestuff = false;
+			if (!empty($package_info)) {
+				$server_id = $package_info['server'];				
+				$serverphp = $this->createServer($order_info['pid']);
+				if ($serverphp != false) {
+					$donestuff = $serverphp->suspend($order_id, $server_id, $reason);
+				}	
+			}		
+			return 	$donestuff;	
 		} else {
 			$array['Error'] = "That order doesn't exist or cannot be suspended!";
 			$array['User PID'] = $order_id;

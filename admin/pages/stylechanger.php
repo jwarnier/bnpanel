@@ -91,7 +91,7 @@ class page {
 		      unset($filetochange);
 		      unset($filetochangeOpen);
 		      unset($slash);
-              if ($_POST['edit']) {
+              if ($_POST['edit'] && $main->checkToken()) {
 	              $slash = stripslashes(str_replace("&lt;THT TITLE&gt;", "<THT TITLE>", $_POST['edit'])); # Yay, strip it
 	              $slash = str_replace("&lt;JAVASCRIPT&gt;", "<JAVASCRIPT>", $slash); #jav
 	              $slash = str_replace("&lt;CSS&gt;", "<CSS>", $slash); #css
@@ -139,7 +139,7 @@ class page {
 		   break;
 		   
 		   case "footer":
-              if ($_POST['edit']) {
+              if ($_POST['edit'] && $main->checkToken()) {
               if(preg_match("/&lt;COPYRIGHT&gt;/", $_POST['edit'])){
               $slash = stripslashes(str_replace("&lt;PAGEGEN&gt;", "<PAGEGEN>", $_POST['edit'])); # Yay, strip it
               $slash = str_replace("&lt;COPYRIGHT&gt;", "<COPYRIGHT>", $slash); #jav
