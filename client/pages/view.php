@@ -55,4 +55,3 @@ class page {
 		echo $style->replaceVar("tpl/user/cview.tpl", $array);
 	}
 }
-?>

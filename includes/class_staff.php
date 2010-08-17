@@ -24,7 +24,7 @@ class staff extends model {
 			if ($this->userNameExists($params['user']) == false) {			
 				$params['salt']			= md5(rand(0,9999999));					
 				$params['password'] 	= md5(md5($params['password']).md5($params['salt']));					
-				$user_id = $this->save($params, $clean_token);	    
+				$user_id = $this->save($params);	    
 				$main->addLog("Staff created: $user_id");    	
 	      		return $user_id;
 			} else {

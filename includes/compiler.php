@@ -122,33 +122,48 @@ closedir($handle); #Close the folder
 //Not generate if it comes from AJAX
 
 
-if (!$is_ajax_load) {
-	$token =  $main->generateToken();		
-} else {
-	$token =  $_GET['_get_token'];
-}
+
 
 if(INSTALL == 1) {
 	define("THEME", $db->config("theme")); # Set the default theme
 	define("URL", 	$db->config("url")); # Sets the URL THT is located at
 	define("NAME", 	$db->config("name")); # Sets the name of the website
+}
+
+$load_post = false;
+
+if($_POST) {
 	//Converts all POSTS into variable - DB Friendly.
-	if($_POST) {
-		foreach($_POST as $key => $value) {
-			$main->postvar[$key] = $db->strip($value);
-		}
-		$main->postvar['_post_token'] =	$token;
+	foreach($_POST as $key => $value) {
+		$main->postvar[$key] = $db->strip($value);
 	}
+	$main->postvar['_post_token'] =	$main->getToken();
+	var_dump('postvar->'.$main->postvar['_post_token']);
+	$load_post = true;			
 }
-//Converts all GET into variable - DB Friendly.
-foreach($_GET as $key => $value) {
-	if(INSTALL == 1) {
-		$main->getvar[$key] = $db->strip($value);
+
+if ($_GET) {
+	//Converts all GET into variable - DB Friendly.
+	foreach($_GET as $key => $value) {	
+		$main->getvar[$key] = $db->strip($value);	
+	}
+	$main->getvar['_get_token'] = $main->getToken();	
+}
+
+if (!$is_ajax_load) {	
+	if (!$load_post) {
+		$token =  $main->generateToken();
+		//var_dump('load_post->'.$token);
+	}		
+} else {
+	if ($main->isValidMd5($_GET['_get_token'])) {
+		$token =  $_GET['_get_token'];
 	} else {
-		$main->getvar[$key] = $value;	
+		$token = md5('');
 	}
-	$main->getvar['_get_token'] = $token;
 }
+
+
 
 $path = dirname($main->removeXSS($_SERVER['PHP_SELF']));
 $position = strrpos($path,'/') + 1;
@@ -162,7 +177,9 @@ if(FOLDER != "install" && FOLDER != "includes" && INSTALL != 1) { # Are we insta
 
 //Resets the error.
 $_SESSION['ecount'] = 0;
-$_SESSION['errors'] = 0;
+if (!isset($_GET['msg'])) {
+	$_SESSION['errors'] = null;
+}
 
 //If payment..
 if(FOLDER == "client" && $main->getvar['page'] == "invoices" && $main->getvar['iid'] && $_SESSION['clogged'] == 1) {

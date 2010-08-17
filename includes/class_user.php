@@ -28,7 +28,7 @@ class user extends model {
 					$params['signup']		= time();
 					$params['password'] 	= md5(md5($params['password']).md5($params['salt']));
 					$params['ip'] 			= $main->removeXSS($_SERVER['REMOTE_ADDR']);
-					$user_id = $this->save($params, $clean_token);	    
+					$user_id = $this->save($params);	    
 					$main->addLog("User created: $user_id");    	
 		      		return $user_id;
 				} else {
@@ -210,7 +210,7 @@ class user extends model {
 		if (in_array($status, $user_status_list)) {		
 			$params['status'] = $status;
 			$main->addLog("updateUserStatus function called: $user_id");
-			$this->update($params, false);
+			$this->update($params);
 		}		
 	}
 	

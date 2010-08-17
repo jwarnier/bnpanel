@@ -2,9 +2,9 @@
 <script type="text/javascript">
 
 tinyMCE.init({
-mode : "textareas",
-skin : "o2k7",
-theme : "simple"
+	mode : "textareas",
+	skin : "o2k7",
+	theme : "simple"
 });
 
 $(function() {
@@ -42,13 +42,15 @@ function loadPackages(obj) {
 }
 
 function loadAddons(obj) {
-	var id=obj.options[obj.selectedIndex].value;
-	var billing_obj = document.getElementById("billing_cycle_id");
-	var billing_id=billing_obj.options[billing_obj.selectedIndex].value;
+	if (obj !=  null) {
+		var id=obj.options[obj.selectedIndex].value;
+		var billing_obj = document.getElementById("billing_cycle_id");
+		var billing_id=billing_obj.options[billing_obj.selectedIndex].value;
 	
-	$.get("<AJAX>function=loadaddons&package_id="+id+"&billing_id="+billing_id+"&order_id="+document.getElementById("order_id").value, function(data) {
-		document.getElementById("showaddons").innerHTML = data;
-	});
+		$.get("<AJAX>function=loadaddons&package_id="+id+"&billing_id="+billing_id+"&order_id="+document.getElementById("order_id").value, function(data) {
+			document.getElementById("showaddons").innerHTML = data;
+		});
+	}
 }
 </script>
 
@@ -57,6 +59,8 @@ function loadAddons(obj) {
 
 <ERRORS>
 <form id="addpackage" name="addpackage" method="post" action="">
+<input name="order_id" type="hidden" id="order_id" value="%ID%" />
+
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
      <tr>
     <td width="20%">User</td>

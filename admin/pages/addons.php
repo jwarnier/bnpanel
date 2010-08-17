@@ -33,7 +33,7 @@ class page {
 		
 		switch($main->getvar['sub']) {
 			default:
-				if($_POST) {
+				if($_POST && $main->checkToken()) {
 					$n = null;
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle") {
@@ -56,9 +56,7 @@ class page {
 							$main->postvar['status'] = ADDON_STATUS_ACTIVE;
 						} else {
 							$main->postvar['status'] = ADDON_STATUS_INACTIVE;
-						}				
-						
-
+						}
   
 					  	//Chamilo install
 						if ($main->postvar['mandatory'] == 'on') {
@@ -66,8 +64,7 @@ class page {
 						} else {
 							$main->postvar['mandatory'] = 0;
 						}
-						
-  		
+						  		
 						//Chamilo install
 						if ($main->postvar['install_package'] == 'on') {
 							$main->postvar['install_package'] = 1;
@@ -109,7 +106,7 @@ class page {
 					if($db->num_rows($query) == 0) {
 						echo "That Addon doesn't exist!";	
 					} else {
-						if($_POST) {					
+						if($_POST && $main->checkToken()) {				
 							foreach($main->postvar as $key => $value) {
 								//if($value == "" && !$n && $key != "admin") {
 								if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle") {
@@ -222,7 +219,7 @@ class page {
 				break;
 				
 			case 'delete':
-				if($main->getvar['do']) {
+				if($main->getvar['do'] && $main->checkToken()) {
 					$addon->delete($main->getvar['do']);
 					$main->errors("The addon has been Deleted!");		
 				}

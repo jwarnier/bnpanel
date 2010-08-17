@@ -25,7 +25,7 @@ class page {
 		switch($main->getvar['sub']) {
 		
 			case 'templates': #email templates
-				if($_POST) {
+				if($_POST && $main->checkToken()) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n) {
 							$main->errors("Please fill in all the fields!");

@@ -96,4 +96,3 @@ if (!empty($error_messages)) {
 	$data = preg_replace("/<ERRORS>/si", '<div class="info">'.$error_messages.'</div>', $data);
 }
 $data = preg_replace("/%INFO%/si", INFO, $data);
-?>

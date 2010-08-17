@@ -15,9 +15,6 @@ class page {
 	public function __construct() {
 		$this->navtitle = "Invoice Sub Menu";
 		$this->navlist[] = array("View all Invoices", "package_go.png", "all");
-		//$this->navlist[] = array("Add Invoice", "package_add.png", "add");
-		//$this->navlist[] = array("Edit Invoice", "package_go.png", "edit");		
-		//$this->navlist[] = array("Delete Invoice", "package_delete.png", "delete");		
 	}
 	
 	public function description() {
@@ -39,7 +36,7 @@ class page {
 					if($db->num_rows($query) == 0) {
 						echo "That invoice doesn't exist!";	
 					} else {						
-						if($_POST) {
+						if($_POST && $main->checkToken()) {
 							foreach($main->postvar as $key => $value) {
 								//if($value == "" && !$n && $key != "admin") {
 								
@@ -74,10 +71,7 @@ class page {
 								
 								$invoice->edit($main->getvar['do'], $main->postvar);
 								$main->errors('Invoice has been edited!');
-								
-								if ($main->postvar['status'] == INVOICE_STATUS_DELETED) {
-									$main->redirect('?page=invoices&sub=all');	
-								}								
+								$main->redirect('?page=invoices&sub=view&msg=1&do='.$main->getvar['do']);
 							}
 						}						
 					}					
@@ -100,7 +94,7 @@ class page {
 				}
 				if (isset($main->getvar['confirm']) && $main->getvar['confirm'] == 1) {
 					$main->errors("The invoice #".$main->getvar['do']." has been  deleted!");
-					$main->redirect("?page=invoices&sub=all");	
+					$main->redirect('?page=invoices&sub=all&msg=1');	
 				}
 			default :			
 			case 'all':					
@@ -116,8 +110,7 @@ class page {
 				} else {
 					$main->errors('No invoices available, you should create an Order first');
 					echo '<ERRORS>';
-				}
-								
+				}								
 			break;			
 		}
 	}

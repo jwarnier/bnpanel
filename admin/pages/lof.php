@@ -35,10 +35,8 @@ class page {
 	
 	
 	public function content() { # Displays the page
-		global $main;
-		global $style;
-		global $db;
-		if($_POST) {
+		global $main, $style, $db;
+		if($_POST && $main->checkToken()) {
 			foreach($main->postvar as $key => $value) {
 				if($value == "" && !$n) {
 					$main->errors("Please fill in all the fields!");

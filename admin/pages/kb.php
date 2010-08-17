@@ -26,7 +26,7 @@ class page {
 	global $db;
 		switch($main->getvar['sub']) {
 			case "cat":
-				if($_POST['add']) {
+				if($_POST['add'] && $main->checkToken(false)) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n && $key != "admin") {
 							$main->errors("Please fill in all the fields!");
@@ -38,7 +38,7 @@ class page {
 						$main->errors("Category Added!");
 					}
 				}
-				if($_POST['edit']) {
+				if($_POST['edit'] && $main->checkToken(false)) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n && $key != "admin") {
 							$main->errors("Please fill in all the fields!");
@@ -81,7 +81,7 @@ class page {
 					echo "You need to add a category before an article!";
 					return;
 				}
-				if($_POST['add']) {
+				if($_POST['add'] && $main->checkToken(false)) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n && $key != "admin") {
 							$main->errors("Please fill in all the fields!");
@@ -93,7 +93,7 @@ class page {
 						$main->errors("Article Added!");
 					}
 				}
-				if($_POST['edit']) {
+				if($_POST['edit'] && $main->checkToken(false)) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n && $key != "admin") {
 							$main->errors("Please fill in all the fields!");

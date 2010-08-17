@@ -93,7 +93,7 @@ class page {
 			break;			
 			case 'edit':
 				if($main->getvar['do']) {
-					if ($_POST) {
+					if ($_POST && $main->checkToken()) {
 						$user->edit($main->getvar['do'], $main->postvar);
 						if ($main->postvar['status'] == USER_STATUS_DELETED) {
 							$main->redirect('?page=users&sub=search');
@@ -115,7 +115,7 @@ class page {
 			
 			case 'email':
 				if($main->getvar['do']) {
-					if($_POST) {
+					if($_POST && $main->checkToken()) {
 						global $email;
 						$user_info = $user->getUserById($main->getvar['do']);
 						$email->send($user_info['email'] ,$main->postvar['subject'], $main->postvar['content']);
@@ -130,7 +130,7 @@ class page {
 			
 			case 'passwd':
 				if($main->getvar['do']) {							
-					if($_POST) {
+					if($_POST && $main->checkToken()) {
 						if(empty($main->postvar['passwd'])) {
 							$main->errors('A password was not provided.');
 							$array['BOX'] = "";
@@ -187,7 +187,7 @@ class page {
 			
 			case 'add':
 				$array = $user->setDefaults();				
-				if ($_POST) {					
+				if ($_POST && $main->checkToken()) {					
 					$user_id = $user->create($main->postvar);					
 					if (!empty($user_id) && is_numeric($user_id)) {
 						$main->errors("Account added!");
