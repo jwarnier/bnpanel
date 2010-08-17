@@ -1,34 +1,35 @@
-		<style type="text/css">
-		.column { width: 320px; }
-		.portlet { margin: 0 1em 1em 0; }
-		.portlet-header { margin: 0.3em; padding-bottom: 4px; padding-left: 0.2em; }
-		.portlet-header .ui-icon { float: right; }
-		.portlet-content { padding: 0.4em; }
-		.portlet-icons { float: right; }
-		.ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; height: 50px !important; }
-		.ui-sortable-placeholder * { visibility: hidden; }
-		.center { margin-left: auto; margin-right: auto; }
-		.right { float: right; }
-                .hidden { display: none; }
-		</style>
-		<script type="text/javascript">
-		//<![CDATA[
-		$(document).ready(function(){
-			$(".column").sortable({
-				connectWith: '.column'
-			});
+<style type="text/css">
+	.column { width: 320px; }
+	.portlet { margin: 0 1em 1em 0; }
+	.portlet-header { margin: 0.3em; padding-bottom: 4px; padding-left: 0.2em; }
+	.portlet-header .ui-icon { float: right; }
+	.portlet-content { padding: 0.4em; }
+	.portlet-icons { float: right; }
+	.ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; height: 50px !important; }
+	.ui-sortable-placeholder * { visibility: hidden; }
+	.center { margin-left: auto; margin-right: auto; }
+	.right { float: right; }
+	.hidden { display: none; }
+</style>
 
-			$(".portlet").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
-				.find(".portlet-header")
-					.addClass("ui-widget-header ui-corner-all")
-					.prepend('<span class="ui-icon ui-icon-plusthick"></span>')
-					.end()
-				.find(".portlet-content");
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function(){
+	$(".column").sortable({
+		connectWith: '.column'
+	});
 
-			$(".portlet-header .ui-icon").click(function() {
-				$(this).toggleClass("ui-icon-minusthick");
-				$(this).parents(".portlet:first").find(".portlet-content").toggle();
-			});
+	$(".portlet").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
+		.find(".portlet-header")
+			.addClass("ui-widget-header ui-corner-all")
+			.prepend('<span class="ui-icon ui-icon-plusthick"></span>')
+			.end()
+		.find(".portlet-content");
+
+	$(".portlet-header .ui-icon").click(function() {
+		$(this).toggleClass("ui-icon-minusthick");
+		$(this).parents(".portlet:first").find(".portlet-content").toggle();
+	});
 
                         $(".inputClass").change(function() {
                             var id = this.id.toString().split("-")[1];
@@ -93,7 +94,7 @@
                                     else {
                                         submit = submit + "-" + array2[i];
                                     }
-                                }
+                                }                                
                                 $.post(url, { action: "order", order: submit }, function(data) {
                                     $("#buttonSpace").slideDown(500);
                                     $("#noticeChanges").slideDown(500);
@@ -101,14 +102,14 @@
                             });
                         });
 
-			//$(".column").disableSelection();
+	//$(".column").disableSelection();
 
                         //Uncomment the following line if you want the portlets
                         //to start closed instead of open.
                         //$(".portlet-header .ui-icon").click();
-		});
-		//]]>
-		</script>
+});
+//]]>
+</script>
 
 <a href="javascript:void(0)" id="newNavLink"><strong><img src="<ICONDIR>add.png" /> Add NavBar link.</strong></a>
 
