@@ -97,8 +97,13 @@ class page {
 						
 						global $server;						
 						$server_php = $server->loadServer($data['id']);
+						$server_status = $server_php->getServerStatus();
+		
 						//Testing connection						
 						$array['SERVER_STATUS'] = $server_php->testConnection();
+						if (empty($server_status)) {
+							$array['SERVER_STATUS'] = 'The current Server id does not match with the server id of ISPConfig3';
+						}		
 						echo $style->replaceVar("tpl/servers/viewserver.tpl", $array);
 					}
 				} else {
