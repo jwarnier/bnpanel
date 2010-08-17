@@ -908,47 +908,45 @@ class AJAX {
 
    function navbar() {
        global $main, $db;
-       if($_SESSION['logged']) {
-           //Cause I'm fairly lazy
-           $P = $_POST;
-           if(isset($P['action']) or $_GET['action']) {
+       if($_SESSION['logged']) {         
+           if(isset($main->postvar['action']) || $main->getvar['action']) {
                //Even lazier?
-               $action = $_REQUEST['action'];
-               $id = $main->postvar['id'];
-               $name = $main->postvar['name'];
-               $icon = $main->postvar['icon'];
-               $link = $main->postvar['link'];
+               $action  = $_REQUEST['action'];
+               $id 		= intval($main->postvar['id']);
+               $name 	= $db->strip($main->postvar['name']);
+               $icon 	= $db->strip($main->postvar['icon']);
+               $link 	= $db->strip($main->postvar['link']);
+               
                switch($action) {
                    case "add":
-                       if(isset($P['name']) and
-                           isset($P['icon']) and isset($P['link'])
-                       ) {
-                            $db->query("INSERT INTO `<pre>navbar` (visual, icon, link) VALUES('{$name}', '{$icon}','{$link}')");
+                       if(isset($name) and isset($icon) and isset($link)) {                       		
+							$db->query("INSERT INTO `<pre>navbar` (visual, icon, link) VALUES('{$link}', '{$icon}','{$link}')");
                        }
                        break;
                    case "edit":
-                       if(isset($P['id']) and isset($P['name']) and
-                           isset($P['icon']) and isset($P['link'])
-                       ) {
+                       if(isset($id) and isset($name) and isset($icon) and isset($link)) {
                             $db->query("UPDATE `<pre>navbar` SET
-                            `visual` = '{$name}',
-                            `icon` = '{$icon}',
-                            `link` = '{$link}'
+                            visual = '{$name}',
+                            icon = '{$icon}',
+                            link = '{$link}'
                             WHERE `id` = '{$id}'");
                        }
                        break;
                    case "delete":
                        if(isset($_GET['id'])) {
-                           $db->query("DELETE FROM `<PRE>navbar` WHERE `id` = '{$main->getvar['id']}'");
+                       		$id = intval($main->getvar['id']);
+                           $db->query("DELETE FROM `<PRE>navbar` WHERE id = '$id'");
                        }
                        break;
                    case "order":
-                       if(isset($P['order'])) {
-                           $ids = explode("-", $main->postvar['order']);
+                       if(isset($main->postvar['order'])) {
+                           $list = explode("-", $main->postvar['order']);
                            $i = 0;
-                           foreach($ids as $id) {
-                               $db->query("UPDATE `<PRE>navbar` SET `order` = {$i} WHERE `id` = {$id}");
-                               $i++;
+                           foreach($list as $id) {                           		
+                           	  $id = intval($id);
+                           	  $sql = "UPDATE `<PRE>navbar` SET `order` = '{$i}' WHERE id = {$id}";                           	  
+                              $db->query($sql);
+                              $i++;
                            }
                        }
                        break;
@@ -960,20 +958,21 @@ class AJAX {
    function acpPackages() {
        global $main, $db, $type;
        if($_SESSION['logged']) {
-            $P = $_POST;
+           $P = $_POST;
            $G = $_GET;
            $R = $_REQUEST;
            $action = $R['action'];
-           $id = $main->postvar['id'];
-           $name = $main->postvar['name'];
-           $backend = $main->postvar['backend'];
-           $description = $main->postvar['description'];
-           $type2 = $main->postvar['type'];
-           $val = $main->postvar['val'];
-           $reseller = $main->postvar['reseller'];
-           $order = $main->postvar['order'];
-           $additional = $main->postvar['additional'];
-           $server = $main->postvar['server'];
+           
+           $id = intval($main->postvar['id']);
+           $name = $db->strip($main->postvar['name']);
+           $backend = $db->strip($main->postvar['backend']);
+           $description = $db->strip($main->postvar['description']);
+           $type2 = $db->strip($main->postvar['type']);
+           $val = $db->strip($main->postvar['val']);
+           $reseller = $db->strip($main->postvar['reseller']);
+           $order = $db->strip($main->postvar['order']);
+           $additional = $db->strip($main->postvar['additional']);
+           $server = $db->strip($main->postvar['server']);
 
            if(isset($P['action']) or $G['action']) {
                switch($action) {
@@ -1052,7 +1051,8 @@ class AJAX {
 
                    case "delete":
                        if(isset($G['id'])) {
-                           $db->query("DELETE FROM `<PRE>packages` WHERE `id` = '{$main->getvar['id']}'");
+                       	$id= intval($main->getvar['id']);
+                           $db->query("DELETE FROM `<PRE>packages` WHERE `id` = '$id'");
                        }
                        break;
 
@@ -1062,6 +1062,7 @@ class AJAX {
                             $ids = explode("-", $order);
                             $i = 0;
                             foreach($ids as $id) {
+                            	$id = intval($id);
                                 $db->query("UPDATE `<PRE>packages` SET `order` = '{$i}' WHERE `id` = '{$id}'");
                                 $i++;
                             }
