@@ -143,7 +143,7 @@ INSERT INTO `%PRE%config` (`name`, `value`) VALUES
 ('smtp_password', 'password'),
 ('show_version_id', '1'),
 ('show_acp_menu', '1'),
-('show_page_gentime', '1'),
+('show_page_gentime', '0'),
 ('alerts', '<p>&nbsp;</p>\r\n<p><em></em></p>'),
 ('p2hcheck', ''),
 ('show_footer', '0'),

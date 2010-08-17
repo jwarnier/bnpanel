@@ -33,10 +33,11 @@ class page {
 	   return $version[0];
 	} 
 	
-	public function server_status(){
+	public function server_status() {
+		global $main;
 		$diskfreespace = disk_free_space('/') / 1073741824;
 		$disktotalspace = disk_total_space('/') / 1073741824;
-		$server = $_SERVER['HTTP_HOST'];
+		$server = $main->removeXSS($_SERVER['HTTP_HOST']);
 		global $style;
 		$array['OS'] = PHP_OS;
 		$array['SOFTWARE'] = getenv('SERVER_SOFTWARE');
