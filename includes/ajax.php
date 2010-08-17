@@ -1250,13 +1250,13 @@ class AJAX {
 		}
 		
 		$total_to_show  = $currency->toCurrency($total);	
-		$html .="<tr>
+		$html .='<tr>
 		            <td></td>
 		            <td></td>
-		            <td><b><h3>Total</h3></b></td>
-		            <td align=\"right\"><h3>{$total_to_show}</h3></td>
+		            <td><b><p class="price" >Total</p></b></td>
+		            <td align="right"><p class="price">'.$total_to_show.'</p></td>
 		            <td></td>
-		        </tr>";
+		        </tr>';
 		$html .='</table>';
 		$html .='</fieldset>';	  	        
 		echo $html;
