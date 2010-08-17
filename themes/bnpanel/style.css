@@ -173,8 +173,7 @@ h1 {
 	text-decoration:underline;
 }
 .subborder {
-	margin:3px;
-	border:#E9E9E9 1px solid;
+	margin:3px;	
 	padding:1px;
 	background-color:#FFF;
 }
@@ -296,7 +295,7 @@ label.error {
     padding:15px 10px 15px 50px;
     background-repeat: no-repeat;
     background-position: 10px center;
-    font-size:120%;
+    font-size:80%;
     
 }
 .info {
@@ -357,11 +356,8 @@ h2, h3 {
 	padding-left:5px;
 }
 
-
-
 .leftmenu a {	
-	text-decoration:underline;
-	
+	text-decoration:underline;	
 }
 
 .submenu {
@@ -390,4 +386,50 @@ fieldset {
 
 ul {
 	padding-left:20px;
+}
+
+
+
+
+form {
+	-moz-border-radius:11px 11px 11px 11px;
+	-moz-box-shadow:0 4px 18px #C8C8C8;	
+	-webkit-box-shadow: #C8C8C8 0px 4px 18px;	
+	background:none repeat scroll 0 0 #FFFFFF;
+	border:1px solid #E5E5E5;
+	font-weight:normal;
+	margin-left:8px;
+	padding:16px 16px 40px;
+}
+
+
+#pass, #user, #email_login {
+	background:none repeat scroll 0 0 #FBFBFB;
+	border:1px solid #E5E5E5;
+	font-size:24px;
+	margin-bottom:16px;
+	margin-right:6px;
+	margin-top:2px;
+	padding:3px;
+	width:97%;
+}
+
+label {
+	color:#777777;
+	font-size:13px;
+	float:left;
+}
+
+
+form .submit, .alignright {
+	float:right;
+}
+
+#login form p {
+	margin-bottom:0;
+}
+
+#navi {
+	margin:0 0 0 8px;
+	padding:16px;
 }

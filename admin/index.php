@@ -219,7 +219,7 @@ if(!$_SESSION['logged']) {
 				}
 			}
 		}
-		echo '<div align="center">'.$main->table("Admin Area - Reset Password", $style->replaceVar("tpl/areset.tpl", $array), "300px").'</div>';		
+		echo '<div align="center">'.$main->table("Admin Area - Reset Password", $style->replaceVar("tpl/login/areset.tpl", $array), "300px").'</div>';		
 		echo $style->get("footer.tpl");
 	} else { 
 		define("SUB", "Login");
@@ -235,7 +235,7 @@ if(!$_SESSION['logged']) {
 		}	
 		echo $style->get("header.tpl");
 		$array[] = "";
-		echo '<div align="center">'.$main->table("Admin Area - Login", $style->replaceVar("tpl/alogin.tpl", $array), "300px").'</div>';
+		echo '<div align="center">'.$main->table("Admin Area - Login", $style->replaceVar("tpl/login/alogin.tpl", $array), "300px").'</div>';
 		echo $style->get("footer.tpl");
 	}
 } elseif($_SESSION['logged']) {
