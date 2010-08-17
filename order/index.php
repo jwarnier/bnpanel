@@ -8,7 +8,7 @@ include LINK ."compiler.php";
 //THT Variables
 define("PAGE", "Order Form");
 define("SUB", "Account Creation");
-define("INFO", "IP Logged: ". $_SERVER['REMOTE_ADDR']);
+define("INFO", "IP Logged: ". $main->removeXSS($_SERVER['REMOTE_ADDR']));
 
 #If logout
 if($main->getvar['do'] == "logout") {

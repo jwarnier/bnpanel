@@ -31,6 +31,7 @@ if($prepend . $compare[1] !== $_SERVER["PHP_SELF"]) {
  * bad site URLs, as the automatically generated ones should be correct.
 */
 function generateSiteUrl() {
+	global $main;
 	$url = "";
 	if(!empty($_SERVER["HTTPS"])) {
 		$url .= "https://";
@@ -39,7 +40,7 @@ function generateSiteUrl() {
 		$url .= "http://";
 	}
 	$exploded = explode($_SERVER["DOCUMENT_ROOT"], realpath("../"));
-	$url .= $_SERVER["HTTP_HOST"] . $exploded[1] . "/";
+	$url .= $main->removeXSS($_SERVER["HTTP_HOST"]). $exploded[1] . "/";
 	return $url;
 }
 

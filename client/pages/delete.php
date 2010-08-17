@@ -9,8 +9,7 @@ class page {
 		global $style, $db, $main;
 		if(!$db->config("delacc")) {
 			die('Disabled.');
-		}
-		else {
+		} else {
 			$_SESSION['cdelete'] = true;
 			$array['USER'] = $main->getCurrentUserId();
 			echo $style->replaceVar("tpl/user/cdelete.tpl", $array);

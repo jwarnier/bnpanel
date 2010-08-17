@@ -164,7 +164,7 @@ function acp() {
 			}
 		} else {
 			$html = "You trying to hack me? You've been warned. An email has been sent.. May I say, Owned?";
-			$email->staff("Possible Hacking Attempt", "A user has been logged trying to hack your copy of BNPanel, their IP is: ". $_SERVER['REMOTE_ADDR']);
+			$email->staff("Possible Hacking Attempt", "A user has been logged trying to hack your copy of BNPanel, their IP is: ". $main->removeXSS($_SERVER['REMOTE_ADDR']));
 		}
 	}
 	

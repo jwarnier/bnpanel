@@ -20,15 +20,14 @@ class user extends model {
 	 */
 	public function create($params, $clean_token = true) {
 		global $db, $main;		 
-		//Password is the same, email and username is not empty
-		
+		//Password is the same, email and username is not empty		
 		if ($params['password'] == $params['confirmp']) {
 			if (!empty($params['user']) &&  !empty($params['email'])) {
 				if ($this->userNameExists($params['user']) == false) {			
 					$params['salt']			= md5(rand(0,9999999)); 
 					$params['signup']		= time();
 					$params['password'] 	= md5(md5($params['password']).md5($params['salt']));
-					$params['ip'] 			= $_SERVER['REMOTE_ADDR'];
+					$params['ip'] 			= $main->removeXSS($_SERVER['REMOTE_ADDR']);
 					$user_id = $this->save($params, $clean_token);	    
 					$main->addLog("User created: $user_id");    	
 		      		return $user_id;

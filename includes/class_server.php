@@ -365,8 +365,7 @@ class server extends Model {
 			$system_password			= $main->getvar['password'];
 			$system_email				= $main->getvar['email'];
 			
-			$main->getvar['signup'] 	= $date;
-			$main->getvar['ip'] 		= $_SERVER['REMOTE_ADDR'];
+			$main->getvar['signup'] 	= $date;			
 			$main->getvar['status'] 	= USER_STATUS_ACTIVE; 
 			
 			//Creates a new user

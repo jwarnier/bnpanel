@@ -150,7 +150,7 @@ foreach($_GET as $key => $value) {
 	$main->getvar['_get_token'] = $token;
 }
 
-$path = dirname($_SERVER['PHP_SELF']);
+$path = dirname($main->removeXSS($_SERVER['PHP_SELF']));
 $position = strrpos($path,'/') + 1;
 define("FOLDER", substr($path,$position)); # Add current folder name to global
 if(FOLDER != "install" && FOLDER != "includes" && INSTALL != 1) { # Are we installing?	

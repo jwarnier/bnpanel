@@ -4,10 +4,10 @@
 //Check if called by script
 if(THT != 1){die();}
 
-if(INSTALL == 1) {
+if (INSTALL == 1) {
 	//Define global, as we are going to pull up things from db
-	global $db, $starttime, $style; 
-	if($db->config("show_page_gentime") == 1) {
+	global $db, $starttime, $style, $main; 
+	if ($db->config("show_page_gentime") == 1) {
 		$mtime = explode(' ', microtime());
 		$totaltime = $mtime[0] + $mtime[1] - $starttime;
 		$gentime = substr($totaltime, 0, 5);
@@ -27,15 +27,14 @@ if(INSTALL == 1) {
 			}
 			global $style;
 			$array2['OS'] = PHP_OS;
-			$array2['SOFTWARE'] = $_SERVER["SERVER_SOFTWARE"];
+			$array2['SOFTWARE'] = $main->removeXSS($_SERVER["SERVER_SOFTWARE"]);
 			$array2['PHP_VERSION'] = phpversion();
 			$array2['MYSQL_VERSION'] = $version[0];
-			$array2["SERVER"] = $_SERVER["HTTP_HOST"];
+			$array2["SERVER"] = $main->removeXSS($_SERVER["HTTP_HOST"]);
 			$array['TITLE'] = $style->replaceVar('tpl/aserverstatus.tpl',$array2);
 			$pagegen .= $style->replaceVar('tpl/footerdebug.tpl',$array);
 		}
-	}
-	else{
+	} else{
 		$pagegen = '';
 	}
 	 

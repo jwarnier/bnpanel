@@ -30,9 +30,7 @@ class page {
 	}
 	
 	public function content() { # Displays the page 
-		global $main;
-		global $style;
-		global $db;
+		global $main, $style, $db;
 		if($_POST) {
 			foreach($main->postvar as $key => $value) {
 				if($value == "" && !$n) {
@@ -53,7 +51,7 @@ class page {
 				$array['NAME'] 			= $db->config('name');
 				$array['URL'] 			= $db->config('url');
 				$array['ROWS_PER_PAGE'] = $db->config('rows_per_page');
-				$array['RECURL'] 		= $_SERVER['HTTP_HOST'];
+				$array['RECURL'] 		= $main->removeXSS($_SERVER['HTTP_HOST']);
 				
 				//$array['SITE_EMAIL'] 	= $db->config('site_email');
 				
