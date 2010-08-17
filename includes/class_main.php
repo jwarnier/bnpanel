@@ -26,7 +26,7 @@ if(THT != 1){die();}class main {
 	}	
 	public function redirect($url, $headers = 0, $long = 0) { # Redirects user, default headers
 		if(!$headers) {
-			header("Location: ". $url);	# Redirect with headers
+			header("Location: ". $url);	# Redirect with headers			exit;
 		} else {
 			echo '<meta http-equiv="REFRESH" content="'.$long.';url='.$url.'">'; # HTML Headers
 		}

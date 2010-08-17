@@ -25,3 +25,4 @@ if (!$churl) {
 } else {
    header("Location: $live");             
 }
+exit;
