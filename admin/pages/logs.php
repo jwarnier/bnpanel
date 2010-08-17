@@ -11,13 +11,25 @@ class page {
 		
 		echo "<form id=\"filter\" name=\"filter\" method=\"post\" action=\"\">";
 		
-		echo "<select size=\"1\" name=\"show\"><option value=\"all\">ALL</option><option value=\"Registered\">Registered</option><option value=\"Package created\">Package created</option>";		
-		echo "<option value=\"Approved\">Approved</option><option value=\"Declined\">Declined</option><option value=\"Suspended\">Suspended</option>";
-		echo "<option value=\"Unsuspended\">Unsuspended</option><option value=\"Cancelled\">Cancelled</option><option value=\"Terminated\">Terminated</option>";
-		echo "<option value=\"cPanel password\">Control Panel password change</option><option value=\"Login\">Client Logins (Success/Fail)</option>";
-		echo "<option value=\"Login successful\">Client Logins (Success)</option><option value=\"Login failed\">Client Logins (Fail)</option>";
-		echo "<option value=\"STAFF\">Staff Logins (Success/Fail)</option><option value=\"STAFF LOGIN SUCCESSFUL\">Staff Logins (Success)</option>";
+		echo '<select size="1" name="show">';
+		
+		echo "<option value=\"all\">ALL</option>";
+		echo "<option value=\"Registered\">Registered</option>";
+		echo "<option value=\"Package created\">Package created</option>";		
+		echo "<option value=\"Approved\">Approved</option>";
+		echo "<option value=\"Declined\">Declined</option>";
+		echo "<option value=\"Suspended\">Suspended</option>";
+		echo "<option value=\"Unsuspended\">Unsuspended</option>";
+		echo "<option value=\"Cancelled\">Cancelled</option>";
+		echo "<option value=\"Terminated\">Terminated</option>";
+		echo "<option value=\"cPanel password\">Control Panel password change</option>";
+		echo "<option value=\"Login\">Client Logins (Success/Fail)</option>";
+		echo "<option value=\"Login successful\">Client Logins (Success)</option>";
+		echo "<option value=\"Login failed\">Client Logins (Fail)</option>";
+		echo "<option value=\"STAFF\">Staff Logins (Success/Fail)</option>";
+		echo "<option value=\"STAFF LOGIN SUCCESSFUL\">Staff Logins (Success)</option>";
 		echo "<option value=\"STAFF LOGIN FAILED\">Staff Logins (Fail)</option></select>";
+		
 		echo "<input type=\"submit\" name=\"filter\" id=\"filter\" value=\"Filter Log\" />";
 		
 		echo "</form>";
@@ -30,16 +42,24 @@ class page {
 		
 		$l = intval($main->getvar['l']);		
 		$p = intval($main->getvar['p']);		
-
-		if (!$main->postvar['show'] && !$main->getvar['show']) {
+		$show_values = array('all','Approved','Unsuspended','Registered', 'Package created','Approved', 'Declined',
+				'Suspended', 'Cancelled', 'Terminated','cPanel password', 'Login','Login successful', 'Login failed','STAFF', 'STAFF LOGIN SUCCESSFUL','STAFF LOGIN FAILED');
+		
+		if (!in_array($main->postvar['show'], $show_values)) {
 			$show = "all";
 		}
+		
 		if (!$main->postvar['show']) {
-			$show = $main->getvar['show'];
+			if (in_array($main->getvar['show'], $show_values)) {
+				$show = $main->getvar['show'];
+			} else {
+				$show = "all";	
+			}
 		} else {
 			$show = $main->postvar['show'];
 			$p = 0;
 		}
+		
 		if (!($l)) {
 			$l = 50;
 		}
