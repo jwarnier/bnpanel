@@ -61,8 +61,7 @@ class page {
 							echo $style->replaceVar("tpl/support/ticketviewbox.tpl", $array);
 						}
 					}
-				}
-				else {
+				} else {
 					$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `id` = '{$main->getvar['do']}' OR `ticketid` = '{$main->getvar['do']}' ORDER BY `time` ASC");
 					if(!$db->num_rows($query)) {
 						echo "That ticket doesn't exist!";	
