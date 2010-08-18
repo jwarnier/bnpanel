@@ -4,7 +4,8 @@
 	tinyMCE.init({
 	mode : "textareas",
 	skin : "o2k7",
-	theme : "simple"
+	theme: "simple",
+	width: "550px",
 	});
 </script>
 <form id="settings" name="settings" method="post" action="">

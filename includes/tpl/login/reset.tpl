@@ -3,7 +3,7 @@
 <p>
 	<label>Username</label>	
     <br />
-	<input type="text" name="user" id="user" tabindex="1" size="20" />
+	<input type="text" name="user" id="user_login" tabindex="1" size="20" />
 </p>
 <p>
 	<label>Email</label>	
