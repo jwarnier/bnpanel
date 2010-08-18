@@ -63,6 +63,9 @@ if(CRON != 1) {
 	session_start();
 }
 
+$includePath = dirname(__FILE__);
+define('LINK', $includePath.'/');
+
 #Stop the output
 ob_start();
 
@@ -77,8 +80,8 @@ $version = explode(".", phpversion());
 
 //Grab DB First
 require LINK."/class_db.php"; # Get the file
-if(file_exists(LINK."/conf.inc.php")) {
-	include LINK."/conf.inc.php"; # Get the config
+if (file_exists(LINK."/conf.inc.php")) {
+	require LINK."/conf.inc.php"; # Get the config
 	define("NOCONFIG", false);
 } else {
 	define("NOCONFIG", true);
@@ -99,7 +102,7 @@ if (isset($main) && !empty($main)) {
 	global $main;		
 } else {
 	//$main->redirect('install');
-	echo 'Something is wrong';
+	//echo 'Something is wrong';
 }
 
 if ($handle = opendir($folder)) { # Open the folder
@@ -109,20 +112,17 @@ if ($handle = opendir($folder)) { # Open the folder
 			if($base[1] == "php") { # Is it a php?
 				$base2 = explode("_", $base[0]);
 				if($base2[0] == "class" && $base2[1] != "db" && $base2[1] != "main") {
-					require $folder."/".$file; # Get the file					
-					${$base2[1]} = new $base2[1]; # Create the class
-					global ${$base2[1]}; # Globalise it
+					if (file_exists(LINK."/".$file)) {
+						require $folder."/".$file; # Get the file					
+						${$base2[1]} = new $base2[1]; # Create the class
+						global ${$base2[1]}; # Globalise it
+					}
 				}
 			}
 		}
 	}
 }
 closedir($handle); #Close the folder
-
-//Not generate if it comes from AJAX
-
-
-
 
 if(INSTALL == 1) {
 	define("THEME", $db->config("theme")); # Set the default theme
@@ -131,6 +131,7 @@ if(INSTALL == 1) {
 }
 
 $load_post = false;
+
 if($_POST) {	
 	$load_post = true;			
 }
@@ -163,12 +164,6 @@ foreach($_GET as $key => $value) {
 }
 $main->getvar['_get_token'] = $main->getToken();	
 //var_dump('getvar->'.$main->getvar['_get_token']);
-
-if ($_GET) {	
-	$load_get = true;	
-}
-
-
 
 
 $path = dirname($main->removeXSS($_SERVER['PHP_SELF']));

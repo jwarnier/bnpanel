@@ -6,9 +6,7 @@ $mtime = explode(" ",$mtime);
 $mtime = $mtime[1] + $mtime[0];
 $starttime = $mtime;
 
-define("LINK", "../includes/");
-define("CRON", 0);
-require_once LINK ."compiler.php";
+require_once '../includes/compiler.php';
 
 //THT Variables
 define("PAGE", "Admin Area");

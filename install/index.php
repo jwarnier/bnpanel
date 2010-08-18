@@ -48,8 +48,7 @@ function generateSiteUrl() {
 define("CVER", "1.2.2");
 define("NVER", "1.2.3");
 
-define("LINK", "../includes/"); # Set link
-include LINK."compiler.php"; # Get compiler
+include '../includes/compiler.php'; # Get compiler
 
 define("THEME", 'bnpanel'); # Set the theme
 define("URL", "../"); # Set url to blank
@@ -61,11 +60,8 @@ $array['VERSION'] = NVER;
 $array['ANYTHING'] = "";
 $link = LINK."conf.inc.php";
 $disable = false;
-
 echo $style->get("header.tpl");
-
-$values=array('install'=>'Install');  
-
+$values=array('install'=>'Install');
 if(INSTALL == 1) {
 	$main->errors('The system has already been installed. If you want to re-install you should delete the conf.inc.php file. If you want to update just continue this procedure.');
 	$values=array('upgrade'=>'Upgrade');

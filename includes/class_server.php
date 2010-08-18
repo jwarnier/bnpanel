@@ -14,13 +14,13 @@ class server extends Model {
 	public 	$availableServerList = array();
 	
 	public function __construct() {
-		$this->availableServerList = $this->getAvailablePanelsFromDir();			
-		/*if (isset($_SESSION['available_server_list']) && is_array($_SESSION['available_server_list'])) {
+		//$this->availableServerList = $this->getAvailablePanelsFromDir();			
+		if (isset($_SESSION['available_server_list']) && is_array($_SESSION['available_server_list'])) {
 			$this->availableServerList  = $_SESSION['available_server_list'];
 		} else {
 			$this->availableServerList = $this->getAvailablePanelsFromDir();	
 			$_SESSION['available_server_list'] = $this->availableServerList;
-		}	*/
+		}
 	}
 	
 	/**
@@ -41,8 +41,7 @@ class server extends Model {
 	
 	public function getAvailablePanels() {
 		return $this->availableServerList;
-	}
-	
+	}	
 	
 	/**
 	 * Adds a server in the Database
@@ -52,7 +51,7 @@ class server extends Model {
 		global $main;		
 		$server_id = $this->save($params);
 		if (!empty($server_id) && is_numeric($server_id )) {
-			$main->addLog("Server created: $server_id");	
+			$main->addLog("server:create #$server_id");	
 		}
 		return $server_id;
 	}
@@ -65,7 +64,7 @@ class server extends Model {
 		global $main;
 		$this->setPrimaryKey($server_id);		
 		$this->update($params);
-		$main->addLog("Server $server_id updated");
+		$main->addLog("server:edit #$server_id updated");
 	}
 	
 	/**
@@ -75,7 +74,7 @@ class server extends Model {
 		global $main;
 		$this->setPrimaryKey($server_id);	
 		parent::delete();
-		$main->addLog("Server id $id deleted ");
+		$main->addLog("server:delete id #$id deleted ");
 		return true;
 	}
 	
@@ -86,7 +85,7 @@ class server extends Model {
 	 */
 	public function loadServer($server_id) {
 		global $main;
-		$main->addlog("server::loadServer called server_id: $server_id");
+		$main->addlog("server::loadServer server_id #$server_id");
 		$server_info = $this->getServerById($server_id); # Determine server				
 		$server_type = $server_info['type'];
 				
@@ -119,8 +118,7 @@ class server extends Model {
 		//Abstract class Panel added
 		require_once LINK."servers/panel.php";
 		$link = LINK."servers/".$server_type.".php";
-		if(!file_exists($link)) {
-			
+		if(!file_exists($link)) {			
 			$array['Error'] = "The server .php doesn't exist!";
 			$array['Server ID'] = $server_type;
 			$array['Path'] = $link;
