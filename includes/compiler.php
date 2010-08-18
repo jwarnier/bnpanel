@@ -150,7 +150,7 @@ if (!$is_ajax_load) {
 	if ($main->isValidMd5($_GET['_get_token'])) {
 		$token =  $_GET['_get_token'];
 	} else {
-		$token = md5(rand());
+		$token = md5(uniqid(rand(),TRUE));
 	}
 }
 
@@ -167,6 +167,7 @@ $main->postvar['_post_token'] =	$main->getToken();
 foreach($_GET as $key => $value) {	
 	$main->getvar[$key] = $db->strip($value);	
 }
+
 $main->getvar['_get_token'] = $main->getToken();	
 //var_dump('getvar->'.$main->getvar['_get_token']);
 
