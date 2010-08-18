@@ -15,7 +15,8 @@ function check() {
   <tr>
     <td width="20%">Username:</td>
     <td>
-      <input type="text" name="username" id="username" value="%USER%" readonly="readonly" />
+      <!-- <input type="text" name="username" id="username" value="%USER%" readonly="readonly" /> -->
+      %USER%
       <a title="The username you registered with." class="tooltip"><img src="<ICONDIR>information.png" /></a>
     </td>
   </tr>
@@ -29,14 +30,16 @@ function check() {
     <tr>
     <td width="20%">First Name:</td>
     <td>
-      <input type="text" name="firstname" id="firstname" value="%FIRSTNAME%" readonly="readonly" />
+    %FIRSTNAME%
+      <!-- <input type="text" name="firstname" id="firstname" value="%FIRSTNAME%" readonly="readonly" />  -->
       <a title="Your first name." class="tooltip"><img src="<ICONDIR>information.png" /></a>
     </td>
   </tr>
     <tr>
     <td width="20%">Last Name:</td>
     <td>
-      <input type="text" name="lastname" id="lastname" value="%LASTNAME%" readonly="readonly"/>
+    %LASTNAME%
+      <!-- <input type="text" name="lastname" id="lastname" value="%LASTNAME%" readonly="readonly"/> -->
       <a title="Your last name." class="tooltip"><img src="<ICONDIR>information.png" /></a>
     </td>
   </tr>
