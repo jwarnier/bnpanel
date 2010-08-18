@@ -22,6 +22,7 @@ class page {
 	}
 	public function content() { # Displays the page 
 		global $main, $style, $db, $server;
+		$subdomain_list = $main->getSubDomains();
 		
 		switch($main->getvar['sub']) {
 			default:
@@ -32,10 +33,14 @@ class page {
 								$main->errors("Please fill in all the fields!");
 								$n++;
 							}
-						}
-						if(!$n) {
-							$db->query("INSERT INTO `<PRE>subdomains` (subdomain, server) VALUES('{$main->postvar['subdomain']}', '{$main->postvar['server']}')");
-							$main->errors("Subdomain has been added!");
+						}						
+						if (!in_array($main->postvar['subdomain'],$subdomain_list)) {
+							if(!$n) {
+								$db->query("INSERT INTO `<PRE>subdomains` (subdomain, server) VALUES('{$main->postvar['subdomain']}', '{$main->postvar['server']}')");
+								$main->errors("Subdomain has been added!");
+							}
+						} else {
+							$main->errors("Subdomain already exist");
 						}
 					}					
 				}
@@ -55,19 +60,23 @@ class page {
 					if($db->num_rows($query) == 0) {
 						echo "That subdomain doesn't exist!";	
 					} else {
-						if($_POST && $main->checkToken()) {					
+						if($_POST && $main->checkToken()) {			
 							foreach($main->postvar as $key => $value) {
 								if($value == "" && !$n) {
 									$main->errors("Please fill in all the fields!");
 									$n++;
 								}
 							}
-							if(!$n) {
-								$db->query("UPDATE `<PRE>subdomains` SET `subdomain` = '{$main->postvar['subdomain']}', 
-																	  `server` = '{$main->postvar['server']}'
-																	   WHERE `id` = '{$main->getvar['do']}'");
-								$main->errors("Subdomain edited!");
-								$main->redirect('?page=sub&sub=edit&msg=1');
+							if (!in_array($main->postvar['subdomain'],$subdomain_list)) {
+								if(!$n) {
+									$db->query("UPDATE `<PRE>subdomains` SET subdomain = '{$main->postvar['subdomain']}', 
+																	  server = '{$main->postvar['server']}'
+																	   WHERE id = '{$main->getvar['do']}'");
+									$main->errors("Subdomain edited!");
+									$main->redirect('?page=sub&sub=edit&msg=1');
+								}
+							} else {
+								$main->errors("Subdomain already exist");
 							}
 
 						}

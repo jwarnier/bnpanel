@@ -82,7 +82,7 @@ class page {
 								$main->postvar['accesshash'] = $main->postvar['hash']; 
 								$server->edit($main->getvar['do'], $main->postvar);
 								$main->errors("Server edited.");
-								$main->done();
+								$main->redirect('?page=servers&sub=view&msg=1');
 							}
 						}
 						$data = $db->fetch_array($query);
@@ -102,7 +102,7 @@ class page {
 						//Testing connection						
 						$array['SERVER_STATUS'] = $server_php->testConnection();
 						if (empty($server_status)) {
-							$array['SERVER_STATUS'] = 'The current Server id does not match with the server id of ISPConfig3';
+							$array['SERVER_STATUS'] .= $server_status;
 						}		
 						echo $style->replaceVar("tpl/servers/viewserver.tpl", $array);
 					}

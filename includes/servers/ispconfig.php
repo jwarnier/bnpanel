@@ -830,17 +830,19 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		
 		//Getting server info
 		$server_info = $this->remote('server_get',$server_params);
-		return $server_info;
+		if (!empty($server_info)) {
+			$result = 'Server status ok';
+		} else {
+			$result = 'Server status failed. Probably is due the server id';
+		}
+		return $result;
 	}
 }
 
 /**
  * 
 To insert in the ISPConfig 
-
 CREATE table install_package( package_id int NOT NULL AUTO_INCREMENT,name varchar(255),	package_path varchar(255),version varchar(255) ,PRIMARY KEY (package_id));
 INSERT into install_package (package_id, name, package_path, version) values ('1', 'chamilo', '/var/www/chamilo-1.8.7.1-stable', '1.8.7.1');		
 CREATE table install_package_web_domain ( id int NOT NULL AUTO_INCREMENT, domain_id int,package_id int, database_id int, status int,  PRIMARY KEY (id));
-
- * 
  */
