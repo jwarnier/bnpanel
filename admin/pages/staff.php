@@ -27,7 +27,7 @@ class page {
 		
 		switch($main->getvar['sub']) {
 			default:
-				if($_POST && $main->checkToken()) {					
+				if($_POST && $main->checkToken()) {		
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n) {
 							$main->errors("Please fill in all the fields!");
@@ -65,7 +65,8 @@ class page {
 							$main->errors('Account added!');	
 						}
 					}
-				}				
+				}	
+				$main->generateToken();			
 							
 				$array['PAGES'] = '<table width="100%" border="0" cellspacing="0" cellpadding="1">';
 				
