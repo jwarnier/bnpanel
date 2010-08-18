@@ -54,8 +54,7 @@ function client() {
 			//Page Sidebar
 			
 			if($content->navtitle) {
-				$subnav = $content->navtitle;
-				$sub = $db->query("SELECT * FROM `<PRE>clientnav`");
+				$subnav = $content->navtitle;				
 				foreach($content->navlist as $key => $value) {
 					$array2['IMGURL'] = $value[1];
 					$array2['LINK'] = "?page=".$main->getvar['page']."&sub=".$value[2];
@@ -152,8 +151,8 @@ if(!$_SESSION['clogged']) {
 		define("SUB", "Reset Password");
 		define("INFO", SUB);
 		echo $style->get("header.tpl");		
-		if($_POST && $main->checkToken()) {	
-			if (!empty($main->postvar['user']) && !empty($main->postvar['email']) ) {			
+		if($_POST && $main->checkToken()) {
+			if (!empty($main->postvar['user']) && !empty($main->postvar['email']) ) {		
 				$username 		= $main->postvar['user'];
 				$useremail		= $main->postvar['email'];
 				$user_info 		= $user->getUserByUserName($username);
@@ -173,6 +172,9 @@ if(!$_SESSION['clogged']) {
 				}
 			}
 		}
+		$main->generateToken();
+		
+				
 		echo '<div align="center">'.$main->table("Client Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';		
 		echo $style->get("footer.tpl");
 	} else {
@@ -182,9 +184,11 @@ if(!$_SESSION['clogged']) {
 			if ($main->checkToken()) {
 				if($main->clientLogin($main->postvar['user'], $main->postvar['pass'])) {
 					$main->redirect("?page=home");	
+				} else {
+					$main->generateToken();
 				}
 			}		
-		}		
+		}	
 		echo $style->get("header.tpl");
 		$array[] = "";
 		if(!$db->config("cenabled")) {
