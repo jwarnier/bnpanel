@@ -4,18 +4,18 @@
   <tr>
     <td width="20%">Username:</td>
     <td>
-      <input type="text" name="user" id="user" />
+      <input type="text" name="user" id="user"  size="30"/>
       <a title="The Staff member's username" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>
   <tr>
     <td>Email:</td>
-    <td><input type="text" name="email" id="email" />
+    <td><input type="text" name="email" id="email"  size="30"/>
     <a title="The staff member's email" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
   </tr>
   <tr>
     <td>Full Name:</td>
-    <td><input type="text" name="name" id="name" />
+    <td><input type="text" name="name" id="name"  size="30"/>
     <a title="The staff member's full name." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
   </tr>
   <tr>

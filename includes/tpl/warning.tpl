@@ -2,9 +2,9 @@
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td colspan="2">    
-    <div class="warning">
-    	Are you sure you want to delete this item?
-    </div>    
+	    <div class="warning">
+	    	Are you sure you want to delete this item?
+	    </div>    
     </td>
   </tr>
   <tr>
