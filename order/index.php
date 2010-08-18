@@ -1,9 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-//Compile THT
-define("LINK", "../includes/");
-include LINK ."compiler.php";
+include '../includes/compiler.php';
 
 //THT Variables
 define("PAGE", "Order Form");
