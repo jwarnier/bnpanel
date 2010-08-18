@@ -79,7 +79,6 @@ class page {
 									
 						foreach($billing_list as $billing_item) {
 							$variable_name = 'billing_cycle_'.$billing_item['id'];
-							//var_dump($variable_name);
 							if (isset($main->postvar[$variable_name])) {									
 								$addon->createPackageAddons($billing_item['id'], $product_id, $main->postvar[$variable_name],BILLING_TYPE_ADDON);					
 							}													
@@ -153,7 +152,7 @@ class page {
 								//-----Adding billing cycles 
 								
 								//Deleting all billing_products relationship							
-								$query = $db->query("DELETE FROM `<PRE>billing_products` WHERE product_id = {$main->getvar['do']} AND type='".BILLING_TYPE_ADDON."' ");
+								$db->query("DELETE FROM `<PRE>billing_products` WHERE product_id = {$main->getvar['do']} AND type='".BILLING_TYPE_ADDON."' ");
 								   								
 								$billing_list = $billing->getAllBillingCycles();
 								
@@ -171,8 +170,8 @@ class page {
 								}						
 							
 								//-----Finish billing cycles						
-								$main->errors("Package has been edited!");
-								$main->done();
+								$main->errors("Package #{$main->getvar['do']} has been edited!");
+								$main->redirect('?page=addons&sub=edit&msg=1');
 							}
 						}
 						

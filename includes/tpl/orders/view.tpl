@@ -1,5 +1,6 @@
 <div class="contextual">
-	<a href="?page=orders&sub=edit&do=%ID%"> <img src="<URL>themes/icons/pencil.png"> Edit</a> 
+	<a href="?page=orders&sub=edit&do=%ID%"> <img src="<URL>themes/icons/pencil.png"> Edit</a>
+	<a href="?page=orders&sub=change_pass&do=%ID%"> <img src="<URL>themes/icons/key.png">Change CP Password</a> 
 </div>
 <h2>Order #%ID%</h2>
 <ERRORS>

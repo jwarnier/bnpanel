@@ -21,9 +21,7 @@ class page {
 	}
 	
 	public function content() { # Displays the page 
-	global $main;
-	global $style;
-	global $db;
+		global $main, $style, $db;
 		switch($main->getvar['sub']) {
 			case "cat":
 				if($_POST['add'] && $main->checkToken(false)) {
@@ -50,7 +48,7 @@ class page {
 						$main->errors("Category Edited!");
 					}
 				}
-				if($main->getvar['del']) {
+				if($main->getvar['del'] && $main->checkToken(false)) {
 					$db->query("DELETE FROM `<PRE>cats` WHERE `id` = '{$main->getvar['del']}'");
 					$main->errors("Category Deleted!");
 					$main->done();
@@ -105,7 +103,7 @@ class page {
 						$main->errors("Article Edited!");
 					}
 				}
-				if($main->getvar['del']) {
+				if($main->getvar['del'] && $main->checkToken(false)) {
 					$db->query("DELETE FROM `<PRE>articles` WHERE `id` = '{$main->getvar['del']}'");
 					$main->errors("Article Deleted!");
 					$main->done();
@@ -135,6 +133,6 @@ class page {
 				echo $style->replaceVar("tpl/support/acp.tpl", $array);
 				break;
 		}
+		$main->clearToken();
 	}
 }
-?>

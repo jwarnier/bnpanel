@@ -215,14 +215,15 @@ class page {
 			
 			case 'change_pass':			
 				if(isset($main->getvar['do'])) {
-					if($_POST && $main->checkToken()) {						
-						if ($main->postvar['password'] == $main->postvar['confirm']) {							
-							if ($server->changeOrderPassword($main->getvar['do'], $main->postvar['password'])) {
+					if($_POST && $main->checkToken()) {					
+						if ($main->postvar['password'] == $main->postvar['confirm']) {													
+							if ($server->changePwd($main->getvar['do'], $main->postvar['password'])) {
 								$main->errors("Password has been changed");
 							} else {
 								$main->errors("There was an error. Please try again.");
 							}
 						}
+						$main->redirect('?page=orders&sub=view&msg=1&do='.$main->getvar['do']);			
 					}
 					$return_array = $order->getOrder($main->getvar['do'], false, false);					
 					echo $style->replaceVar("tpl/orders/change-password.tpl", $return_array);

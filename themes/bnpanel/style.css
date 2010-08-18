@@ -136,7 +136,7 @@ h1 {
 	padding:2px;
 	color:#333;
 	font-family:'Trebuchet MS','Lucida Grande',Verdana,Arial,Sans-Serif;
-	font-size:90%	
+	font-size:90%;
 }
 .gap {
 	clear:both;
@@ -229,10 +229,11 @@ input, option {
 .table {
 	border:1px solid #CCC;
 	background-color:#FFF;
-	padding:2px;	
+	padding:2px 2px 0px 2px;
+	margin-bottom:5px;	
 }
 
- .noupg{
+ .noupg {
     border: 1px solid #9AFF9A;
     background: #9AFF9A;
     color: #003300;
