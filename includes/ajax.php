@@ -1408,12 +1408,18 @@ class AJAX {
 }
 
 if(isset($_GET['function']) && !empty($_GET['function'])) {
-	$ajax = new AJAX();
-	if (method_exists($ajax, $_GET['function'])) {
-		//Protecting AJAX calls now we need a token set in variables.php
-		if ($main->checkToken(false)) {
-			$ajax->{$_GET['function']}();
-			include LINK."output.php";
+	//If this is an AJAX request?
+	if ($main->isXmlHttpRequest()) {
+		$ajax = new AJAX();
+		if (method_exists($ajax, $_GET['function'])) {
+			//Protecting AJAX calls now we need a token set in variables.php
+			if ($main->checkToken(false)) {
+				$ajax->{$_GET['function']}();
+				include LINK."output.php";
+			}
 		}
+	} else {
+		//Redirect to the homepage  
+		$main->redirect();
 	}
 }
