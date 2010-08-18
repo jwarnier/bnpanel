@@ -2,9 +2,11 @@
 <script type="text/javascript" src="<URL>includes/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
 	tinyMCE.init({
-	mode : "textareas",
-	skin : "o2k7",
-	theme : "simple"
+		mode : "textareas",
+		skin : "o2k7",
+		theme : "simple",
+		width: "550px",
+		
 	});
 </script>
 <form id="settings" name="settings" method="post" action="">

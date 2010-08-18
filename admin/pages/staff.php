@@ -63,10 +63,10 @@ class page {
 							$main->postvar['password'] 	= $main->postvar['pass'];
 							$staff->create($main->postvar);	
 							$main->errors('Account added!');	
+							$main->redirect('?page=staff&sub=edit&msg=1');
 						}
 					}
-				}	
-				$main->generateToken();			
+				}					
 							
 				$array['PAGES'] = '<table width="100%" border="0" cellspacing="0" cellpadding="1">';
 				
@@ -112,7 +112,7 @@ class page {
 									$main->postvar['perms'] = $string;
 									$staff->edit($main->getvar['do'], $main->postvar);									
 									$main->errors("Staff account edited!");
-									//$main->done();
+									$main->redirect('?page=staff&sub=edit&msg=1');
 								}
 							}
 						}

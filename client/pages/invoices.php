@@ -27,9 +27,9 @@ class page {
 					require_once "../includes/paypal/paypal.class.php";
 					$paypal = new paypal_class();
 					//This is a very important step, this thing checks if the payment was sucessfull or not
-					if($paypal->validate_ipn()) {
-						
-						$invoice_id = intval($_GET['invoiceID']);
+					$invoice_id = intval($_GET['invoiceID']);
+					
+					if($paypal->validate_ipn()) {						
 						$invoice->set_paid($invoice_id);
 						$main->errors("Your invoice has been paid!");
 						$user_id = $main->getCurrentUserId();
@@ -59,23 +59,23 @@ class page {
 						$transaction_id = $main->postvar['txn_id'];
 						$params['transaction_id'] = $transaction_id;						
 						$invoice->edit($invoice_id, $params);										
-						$message = 'Your invoice is paid!<br />';
+						$message = "Your Invoice #$invoice_id is paid!<br />";
 						
 						if ($result) {
-							$message .= 'You order has been also proceed';	
+							$message .= "You Order #$order_id has been also proceed";	
 						} else {
 							$message .= 'There was a problem while dealing with you order please contact the administrator.';
-						}
-						
+						}						
 						$main->errors($message);										
 					} else {						
-						$main->errors("Your invoice hasn't been paid!");						
-					}
-					echo '<ERRORS>';
+						$main->errors("Your invoice #$invoice_id hasn't been paid!");						
+					}		
+					$main->redirect('?page=invoices&msg=1');
 				}
-			break;				
+			break;
 			case 'view':				
 				if(isset($main->getvar['do'])) {
+					
 					$return_array = $invoice->getInvoice($main->getvar['do'], true);
 					echo $style->replaceVar('tpl/invoices/viewinvoice.tpl', $return_array);					
 				}
