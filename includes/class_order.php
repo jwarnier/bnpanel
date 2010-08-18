@@ -57,13 +57,13 @@ class order extends model {
 	public function addAddons($order_id, $addon_list) {
 		global $db, $main;
 		//Insert into user_pack_addons
+		$order_id = intval($order_id);		
 		if (is_array($addon_list) && count($addon_list) > 0) {
 			foreach ($addon_list as $addon_id) {
 				if (!empty($addon_id) && is_numeric($addon_id)) {
-					$addon_id = intval($addon_id);
-					$order_id = intval($order_id);					
+					$addon_id = intval($addon_id);								
 					$sql_insert = "INSERT INTO order_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
-					$db->query(	$sql_insert);					
+					$db->query($sql_insert);					
 				}
 			}
 		}

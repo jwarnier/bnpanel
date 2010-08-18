@@ -959,7 +959,9 @@ class AJAX {
            }
        }
    }
-
+	/**
+	 * @todo this function might be deprecated
+	 */
    function acpPackages() {
        global $main, $db, $type;
        return; //disabled not used yet 

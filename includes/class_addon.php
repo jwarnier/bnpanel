@@ -195,7 +195,8 @@ class addon extends model {
 	public function updateAddonOrders($list_of_addons_ids, $order_id) {
 		global $db;
 		$addon_fee = array();		
-		$result = $db->query("DELETE FROM `<PRE>order_addons` WHERE order_id = ".intval($order_id));
+		$order_id = intval($order_id);
+		$result = $db->query("DELETE FROM `<PRE>order_addons` WHERE order_id = ".$order_id);
 		
 		if (is_array($list_of_addons_ids) && count($list_of_addons_ids) > 0 ) {
 			foreach ($list_of_addons_ids as $addon_id) {

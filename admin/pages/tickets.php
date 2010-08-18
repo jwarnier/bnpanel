@@ -28,8 +28,7 @@ class page {
 			$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `reply` = '0' AND `status` ORDER BY `time` DESC");
 			if(!$db->num_rows($query)) {
 				echo "You currently have no new tickets!";
-			}
-			else {
+			} else {
 				echo "<div style=\"display: none;\" id=\"nun-tickets\">You currently have no new tickets!</div>";
 				$num_rows = $db->num_rows($query);
 				echo $style->replaceVar("tpl/support/acpticketjs.tpl", array('NUM_TICKETS' => $num_rows));

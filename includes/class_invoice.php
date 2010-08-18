@@ -26,7 +26,7 @@ class invoice extends model {
 			$array['USER'] 	= $client['user'];
 			$array['DUE'] 	= strftime("%D", $params['due']);
 			$email->send($client['email'], $emailtemp['subject'], $emailtemp['content'], $array);
-			$order_id 		= $params['order_id'];			
+			$order_id 		= intval($params['order_id']);			
 			if (!empty($order_id)) {
 				$insert_sql = "INSERT INTO `<PRE>order_invoices` (order_id, invoice_id) VALUES('{$order_id}', '{$invoice_id}')";				
 				$db->query($insert_sql);		
@@ -62,7 +62,6 @@ class invoice extends model {
 		$user_id 		= $main->getCurrentUserId();		
 		$order_id 		= $this->getOrderByInvoiceId($invoice_id);
 		$order_info		= $order->getOrderInfo($order_id);
-
 		
 		if($user_id == $invoice_info['uid']) {
 			
@@ -78,9 +77,7 @@ class invoice extends model {
 			$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
 			$paypal->add_field('notify_url',  		urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
 			
-			$order_info['domain'] 	= $order_info['final_domain'];			
-			
-			$paypal->add_field('item_name', 		$db->config('name').' - '.$order_info['domain'].' Invoice id: '.$invoice_id);
+			$paypal->add_field('item_name', 		$db->config('name').' - '.$order_info['real_domain'].' Invoice id: '.$invoice_id);
 			//$paypal->add_field('item_number', 		$invoice_id);
 			$paypal->add_field('invoice', 			$invoice_id);
 			$paypal->add_field('no_note', 			0);			
@@ -91,6 +88,7 @@ class invoice extends model {
 
 			$paypal->add_field('amount', 			$invoice_info['total_amount']);
 			$paypal->add_field('currency_code', 	$db->config('currency'));
+			
 			$main->addLog("invoice::pay Invoice #$invoice_id Order #$order_id Total amount: {$invoice_info['total_amount']}");
 			$paypal->submit_paypal_post(); // submit the fields to paypal
 		} else {

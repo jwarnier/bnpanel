@@ -20,7 +20,7 @@ class server extends Model {
 		} else {
 			$this->availableServerList = $this->getAvailablePanelsFromDir();	
 			$_SESSION['available_server_list'] = $this->availableServerList;
-		}	*/	
+		}	*/
 	}
 	
 	/**
@@ -508,6 +508,7 @@ class server extends Model {
 	 *  Not recomended to use
 	 */	 
 	public function terminate($order_id, $reason = false) { # Deletes a user account from the package ID
+		return false; // not implemented yet
 		global $db, $main, $type, $email, $order, $user;
 		$order_info = $order->getOrderInfo($order_id);
 		if (is_array($order_info) && !empty($order_info)) {
@@ -553,36 +554,27 @@ class server extends Model {
 	 * 
 	 */	 
 	public function cancel($order_id, $reason = false) { # Deletes a user account from the package ID
-		global $db, $main, $type, $email, $user, $order;
+		global $db, $main, $package, $email, $user, $order;
 		$order_info = $order->getOrderInfo($order_id);
 		if (is_array($order_info) && !empty($order_info)) {
 			$user_info = $user->getUserById($order_info['userid']);
-			$server = $type->determineServer($order_info['pid']);
-			if(!is_object($this->servers[$server])) {
-				$this->servers[$server] = $this->createServer($order_info['pid']); # Create server class
+			
+			$package_info = $package->getPackage($order_info['pid']);
+			if (!empty($package_info)) {
+				$server_id = $package_info['server'];
+				$serverphp= $this->createServer($order_info['pid']); # Create server class
+			
+				//Suspending the website of that user
+				if($serverphp->suspend($order_id, $server_id) == true) {					
+					$emaildata 			= $db->emailTemplate('orders_cancelled');
+					$array['DOMAIN'] 	= $order_info['domain'];
+					$array['REASON'] 	= 'Web Hosting Cancelled';
+					$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $array);
+					$order->updateOrderStatus($order_id, ORDER_STATUS_CANCELLED);		
+					return true;
+				}				
 			}
-			//Suspending the website of that user
-			if($this->servers[$server]->suspend($order_id, $server) == true) {
-				
-				$emaildata 			= $db->emailTemplate('orders_cancelled');
-				$array['DOMAIN'] 	= $order_info['domain'];
-				$array['REASON'] 	= 'Web Hosting Cancelled';
-				$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $array);
-				$order->updateOrderStatus($order_id, ORDER_STATUS_CANCELLED);
-				
-				//$user->updateUserStatus($user_info['id'], USER_STATUS_SUSPENDED);
-				//$db->query("UPDATE `<PRE>user_packs` SET `status` = '9' WHERE `id` = '{$data['id']}'");
-				//$db->query("UPDATE `<PRE>users` SET `status` = '9' WHERE `id` = '{$db->strip($data['userid'])}'");
-				/*
-				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-													  '{$db->strip($data['userid'])}',
-													  '{$data2['user']}',
-													  '{$date}',
-													  'Cancelled  ($reason)')");*/
-				return true;
-			} else {
-				return false;	
-			}
+			return false;
 		} else {
 			$array['Error'] = "That order doesn't exist or cannot be cancelled! Are you trying to cancel an already cancelled account?";
 			$array['User PID'] = $order_id;
@@ -594,6 +586,7 @@ class server extends Model {
 	 * @todo Packages should be suspend not the users 
 	 */
 	public function decline($id) { # Deletes a user account from the package ID
+		return false; // not implemented yet
 		global $db, $main, $type, $email;
 		$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `id` = '{$db->strip($id)}' AND `status` != '9'");
 		if($db->num_rows($query) == 0) {
@@ -614,13 +607,14 @@ class server extends Model {
 				$emaildata = $db->emailTemplate('orders_cancelled');
 				$array['REASON'] = "Account Declined.";
 				$email->send($data2['email'], $emaildata['subject'], $emaildata['content'], $array);
+				/*
 				$db->query("UPDATE `<PRE>user_packs` SET `status` = '9' WHERE `id` = '{$data['id']}'");
 				$db->query("UPDATE `<PRE>users` SET `status` = '9' WHERE `id` = '{$db->strip($data['userid'])}'");
 				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
 													  '{$db->strip($data['userid'])}',
 													  '{$data2['user']}',
 													  '{$date}',
-													  'Declined  (Package ID $id)')");
+													  'Declined  (Package ID $id)')");*/
 				return true;
 			}
 			else {
@@ -648,7 +642,7 @@ class server extends Model {
 				if ($serverphp != false) {
 					$donestuff = $serverphp->suspend($order_id, $server_id, $reason);
 				}	
-			}		
+			}	
 			return 	$donestuff;	
 		} else {
 			$array['Error'] = "That order doesn't exist or cannot be suspended!";
@@ -663,79 +657,27 @@ class server extends Model {
 	 * @param	int		order id 
 	 */
 	public function unsuspend($order_id) { # Unsuspends a user account from the package ID
-		global $db, $main, $type, $email, $order, $user;
+		global $db, $main, $package, $email, $order, $user;
 		
 		$order_info = $order->getOrderInfo($order_id);
 		if (is_array($order_info) && !empty($order_info)) {
 			$user_info = $user->getUserById($order_info['userid']);			
-			$server_id = $type->determineServer($order_info['pid']);
-			
-			if(!is_object($this->servers[$server_id])) {
-				$this->servers[$server_id] = $this->createServer($order_info['pid']); # Create server class
-			}			
-			if($this->servers[$server_id]->unsuspend($order_id, $server_id) == true) {			
-				//	$date = time();
-				
-				
-				//$db->query("UPDATE `<PRE>users` SET `status` = '1' WHERE `id` = '{$db->strip($data['userid'])}'");
-				/*$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-													  '{$db->strip($data['userid'])}',
-													  '{$data2['user']}',
-													  '{$date}',
-													  'Unsuspended.')");*/
-				//$emaildata = $db->emailTemplate('unsusacc');
-				//$email->send($user_info['email'], $emaildata['subject'], $emaildata['content']); 
-				return true;
-			} else {
-				return false;	
-			}		
+			$package_info = $package->getPackage($order_info['pid']);
+			if (!empty($package_info)) {
+				$server_id = $package_info['server'];	
+				$serverphp = $this->createServer($order_info['pid']); # Create server class
+				if ($serverphp != false) {
+					if($serverphp->unsuspend($order_id, $server_id) == true) {
+						return true;
+					}
+				}		
+			}
+			return false;
 		} else {
-			$array['Error'] = "That package doesn't exist or cannot be unsuspended!";
+			$array['Error'] = "That order doesn't exist or cannot be unsuspended!";
 			$array['User PID'] = $order_id;
 			$main->error($array);
 			return;
-		}
-	}
-	
-	/**
-	 * Changes user/client password
-	 * @param	int		user id
-	 * @param	string	new password
-	 * @todo	this function should be deprecated
-	 */
-	public function changePwd($user_id, $newpwd) { # Changes user's password.
-		global $db, $main, $type, $email;
-		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}'");
-		if($db->num_rows($query) == 0) {
-			$array['Error'] = "That package doesn't exist!";
-			$array['User PID'] = $id;
-			$main->error($array);
-			return;
-		} else {
-			$data = $db->fetch_array($query);
-			$query2 = $db->query("SELECT * FROM `<PRE>users` WHERE `id` = '{$db->strip($data['userid'])}'");
-			$data2 = $db->fetch_array($query2);
-			$server = $type->determineServer($data['pid']);
-			global $serverphp;
-			if(!is_object($this->servers[$server]) && !$serverphp) {
-				$this->servers[$server] = $this->createServer($data['pid']); # Create server class
-				$donestuff = $this->servers[$server]->changePwd($data2['user'], $newpwd, $server);
-			}
-			else {
-				$donestuff = $serverphp->changePwd($data2['user'], $newpwd, $server);
-			}
-			if($donestuff == true) {
-				$date = time();
-				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
-													  '{$db->strip($data['userid'])}',
-													  '{$data2['user']}',
-													  '{$date}',
-													  'Control Panel password updated.')");
-				return true;
-			}
-			else {
-				return false;	
-			}
 		}
 	}
 	
@@ -744,19 +686,19 @@ class server extends Model {
 	 * @param	int		order id
 	 * @param	string	new password
 	 */
-	public function changeOrderPassword($order_id, $new_password) {
-		global $order, $package;
+	public function changePwd($order_id, $new_password) { # Changes user's password.
+		global $main, $order, $package;
 		$order_info = $order->getOrderInfo($order_id);
 		$package_info = $package->getPackage($order_info['pid']);
 		$server_id = $package_info['server'];	
-		$serverphp = $this->createServer($order_info['pid']); # Create server class
-		
+		$serverphp = $this->createServer($order_info['pid']); # Create server class		
 		if($serverphp->changePwd($order_info['username'], $new_password, $server_id) == true) {
+			$main->addlog("server::changePwd Control Panel password updated $order_id");
 			$order->edit($order_id, array('password'=>$new_password));
 			return true;
 		}
-		return false;
-	}
+		return false;	
+	}	
 	
 	/**
 	 * Approves a user account
@@ -764,6 +706,7 @@ class server extends Model {
 	 ***/
 	
 	public function approve($id) { # Approves a user's account (Admin Validation).
+		return false; // not implemented yet
 		global $db, $main, $type, $email;
 		$query = $db->query("SELECT * FROM `<PRE>user_packs` WHERE `id` = '{$db->strip($id)}' AND (`status` = '2' OR `status` = '3' OR `status` = '4')");
 		$uquery = $db->query("SELECT * FROM `<PRE>users` WHERE `id` = '{$query['userid']}' AND (`status` = '1')");
@@ -784,11 +727,11 @@ class server extends Model {
 			if($this->servers[$server]->unsuspend($data2['user'], $server) == true) {
 				$date = time();
 				$db->query("UPDATE `<PRE>user_packs` SET `status` = '1' WHERE `id` = '{$data['id']}'");
-				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
+				/*$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
 													  '{$db->strip($data['userid'])}',
 													  '{$data2['user']}',
 													  '{$date}',
-													  'Approved (Package ID $id)')");
+													  'Approved (Package ID $id)')");*/
 				return true;
 			}
 			else {
@@ -802,6 +745,7 @@ class server extends Model {
 	 * @todo Not to be use right now
 	 */
 	public function confirm($username, $confirm) {
+		return false; // not implemented yet
 		global $db, $main, $type, $email;
 		
 		$query = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$username}'");
@@ -818,11 +762,11 @@ class server extends Model {
 					//$date = time();
 					//$db->query("UPDATE `<PRE>users` SET `status` = '".USER_STATUS_ACTIVE."' WHERE `user` = '{$username}'");
 					$user->updateUserStatus($data['id'], USER_STATUS_ACTIVE);					
-					$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
+					/*$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
 														  '{$db->strip($data['userid'])}',
 														  '{$data['user']}',
 														  '{$date}',
-														  'Account/E-mail Confirmed.')");
+														  'Account/E-mail Confirmed.')");*/
 					return true;
 				break;
 				case USER_STATUS_ACTIVE:				
@@ -850,7 +794,8 @@ class server extends Model {
 	
 	public function getServerById($server_id) {
 		global $db, $main;	
-		$sql = "SELECT *  FROM `<PRE>servers` WHERE `id` = '{$db->strip($server_id)}'";
+		$server_id = intval($server_id);
+		$sql = "SELECT *  FROM `<PRE>servers` WHERE id = '$server_id'";
 		$query = $db->query($sql);
 		$data = array();
 		if($db->num_rows($query) > 0) {			

@@ -58,18 +58,6 @@ class page {
 					}	
 						
 					if(!$n) {
-						
-						/*
-						foreach($main->postvar as $key => $value) {
-							if($key != "name") {
-								if($n) {
-									$additional .= ",";	
-								}
-								$additional .= $key."=".$value;
-								$n++;
-							}
-						}*/
-						//var_dump($main->postvar);
 						$db->query("INSERT INTO `<PRE>packages` (name, backend, description, type, server, admin, is_hidden, is_disabled, additional, reseller) VALUES('{$main->postvar['name']}', '{$main->postvar['backend']}', '{$main->postvar['description']}', '{$main->postvar['type']}', '{$main->postvar['server']}', '{$main->postvar['admin']}', '{$main->postvar['hidden']}', '{$main->postvar['disabled']}', '{$additional}', '{$main->postvar['reseller']}')");
 						$product_id = mysql_insert_id();
 						
