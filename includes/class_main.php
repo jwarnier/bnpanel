@@ -149,7 +149,7 @@ if(THT != 1){die();}class main {
 	}		/**	 * Checks the credentails of the client and logs in, returns true or false	 * 	 */
 	public function clientLogin($username, $pass) {
 		global $db, $main, $user;			
-		if(isset($user) && isset($pass)) {			$user_info	= $user->getUserByUserName($username);						if (is_array($user_info) && !empty($user_info)) {				if ($user_info['status'] == USER_STATUS_ACTIVE) {										if(md5(md5($pass).md5($user_info['salt'])) == $user_info['password']) {												$_SESSION['clogged'] 	= 1;											$data['password'] 		= null;						$data['salt'] 			= null;						//Save all user in this session						$_SESSION['cuser'] 		= $user_info;						$this->addLog("Login successful $username");																							return true;					} else { 						$main->errors('Incorrect password!');					}				} else {					$main->errors('Your account is not active');				}			} else {				$main->errors('User does not exist');			}		}				$this->addLog("Login failed ($ip) - $username");			return false;			}
+		if(isset($user) && isset($pass)) {			$user_info	= $user->getUserByUserName($username);						if (is_array($user_info) && !empty($user_info)) {				if ($user_info['status'] == USER_STATUS_ACTIVE) {										if(md5(md5($pass).md5($user_info['salt'])) == $user_info['password']) {													//Regenerate the session id						session_regenerate_id();																	$_SESSION['clogged'] 	= 1;											$data['password'] 		= null;						$data['salt'] 			= null;						//Save all user in this session						$_SESSION['cuser'] 		= $user_info;						$this->addLog("Login successful $username");																							return true;					} else { 						$main->errors('Incorrect password!');					}				} else {					$main->errors('Your account is not active');				}			} else {				$main->errors('User does not exist');			}		}				$this->addLog("Login failed ($ip) - $username");			return false;			}
 	public function staffLogin($user, $pass) { # Checks the credentials of a staff member and returns true or false
 		global $db, $main;			$date = time();
 		if(!empty($user) && !empty($pass)) {			$user = $db->strip($user);
@@ -158,7 +158,7 @@ if(THT != 1){die();}class main {
 				return false;
 			} else {
 				$data = $db->fetch_array($query, 'ASSOC');
-				if(md5(md5($main->postvar['pass']) . md5($data['salt'])) == $data['password']) {
+				if(md5(md5($main->postvar['pass']) . md5($data['salt'])) == $data['password']) {					//Regenerate the session id					session_regenerate_id();						
 					$_SESSION['logged'] = 1;					$data['password'] 	= null;					$data['salt'] 		= null;					$_SESSION['user'] 	= $data;										$main->addLog("STAFF LOGIN SUCCESSFUL $user");					
 					return true;
 				} else {										$main->addLog("STAFF LOGIN FAILED $user");
