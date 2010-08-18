@@ -694,22 +694,24 @@ class AJAX {
 					$n++;	
 				}
 			}
-			if(!$n) {				
-				$db->updateConfig('url', 		$main->getvar['url']);
-				$db->updateConfig('name', 		$main->getvar['site_name']);
-				$db->updateConfig('emailfrom', 	$main->getvar['site_email']);
-				
-				$salt = md5(rand(0,99999));
-				$password = md5(md5($main->getvar['pass']).md5($salt));
-				$db->query("INSERT INTO `<PRE>staff` (user, email, password, salt, name) VALUES(
-						  '{$main->getvar['user']}',
-						  '{$main->getvar['email']}',
-						  '{$password}',
-						  '{$salt}',
-						  '{$main->getvar['name']}')");
-				echo 1;
-			} else {
-				echo 0;	
+			if ($main->checkToken(false)) {
+				if(!$n) {				
+					$db->updateConfig('url', 		$main->getvar['url']);
+					$db->updateConfig('name', 		$main->getvar['site_name']);
+					$db->updateConfig('emailfrom', 	$main->getvar['site_email']);
+					
+					$salt = md5(rand(0,99999));
+					$password = md5(md5($main->getvar['pass']).md5($salt));
+					$db->query("INSERT INTO `<PRE>staff` (user, email, password, salt, name) VALUES(
+							  '{$main->getvar['user']}',
+							  '{$main->getvar['email']}',
+							  '{$password}',
+							  '{$salt}',
+							  '{$main->getvar['name']}')");
+					echo 1;
+				} else {
+					echo 0;	
+				}
 			}
 		}
 	}
@@ -911,47 +913,48 @@ class AJAX {
    function navbar() {
        global $main, $db;
        if($_SESSION['logged']) {         
-           if(isset($main->postvar['action']) || $main->getvar['action']) {
+           if(isset($main->postvar['action']) || isset($main->getvar['action'])) {
                //Even lazier?
                $action  = $_REQUEST['action'];
                $id 		= intval($main->postvar['id']);
-               $name 	= $db->strip($main->postvar['name']);
-               $icon 	= $db->strip($main->postvar['icon']);
-               $link 	= $db->strip($main->postvar['link']);
-               
-               switch($action) {
-                   case "add":
-                       if(isset($name) and isset($icon) and isset($link)) {                       		
-							$db->query("INSERT INTO `<pre>navbar` (visual, icon, link) VALUES('{$link}', '{$icon}','{$link}')");
-                       }
-                       break;
-                   case "edit":
-                       if(isset($id) and isset($name) and isset($icon) and isset($link)) {
-                            $db->query("UPDATE `<pre>navbar` SET
-                            visual = '{$name}',
-                            icon = '{$icon}',
-                            link = '{$link}'
-                            WHERE `id` = '{$id}'");
-                       }
-                       break;
-                   case "delete":
-                       if(isset($_GET['id'])) {
-                       		$id = intval($main->getvar['id']);
-                           $db->query("DELETE FROM `<PRE>navbar` WHERE id = '$id'");
-                       }
-                       break;
-                   case "order":
-                       if(isset($main->postvar['order'])) {
-                           $list = explode("-", $main->postvar['order']);
-                           $i = 0;
-                           foreach($list as $id) {                           		
-                           	  $id = intval($id);
-                           	  $sql = "UPDATE `<PRE>navbar` SET `order` = '{$i}' WHERE id = {$id}";                           	  
-                              $db->query($sql);
-                              $i++;
-                           }
-                       }
-                       break;
+               $name 	= $main->postvar['name'];
+               $icon 	= $main->postvar['icon'];
+               $link 	= $main->postvar['link'];
+               if ($main->checkToken(false)) {
+	               switch($action) {
+	                   case "add":
+	                       if(isset($name) and isset($icon) and isset($link)) {                       		
+								$db->query("INSERT INTO `<pre>navbar` (visual, icon, link) VALUES('{$link}', '{$icon}','{$link}')");
+	                       }
+	                       break;
+	                   case "edit":
+	                       if(isset($id) and isset($name) and isset($icon) and isset($link)) {
+	                            $db->query("UPDATE `<pre>navbar` SET
+	                            visual = '{$name}',
+	                            icon = '{$icon}',
+	                            link = '{$link}'
+	                            WHERE `id` = '{$id}'");
+	                       }
+	                       break;
+	                   case "delete":
+	                       if(isset($_GET['id'])) {
+	                       		$id = intval($main->getvar['id']);
+	                           $db->query("DELETE FROM `<PRE>navbar` WHERE id = '$id'");
+	                       }
+	                       break;
+	                   case "order":
+	                       if(isset($main->postvar['order'])) {
+	                           $list = explode("-", $main->postvar['order']);
+	                           $i = 0;
+	                           foreach($list as $id) {                           		
+	                           	  $id = intval($id);
+	                           	  $sql = "UPDATE `<PRE>navbar` SET `order` = '{$i}' WHERE id = {$id}";                           	  
+	                              $db->query($sql);
+	                              $i++;
+	                           }
+	                       }
+	                       break;
+	               }
                }
            }
        }
@@ -959,6 +962,7 @@ class AJAX {
 
    function acpPackages() {
        global $main, $db, $type;
+       return; //disabled not used yet 
        if($_SESSION['logged']) {
            $P = $_POST;
            $G = $_GET;
