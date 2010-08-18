@@ -433,11 +433,13 @@ class AJAX {
 		global $main, $db, $type;
 		$package_id = $main->getvar['pack'];
 		if (!empty($package_id)) {
-			$server_id = $type->determineServer($package_id);	
-			$values = $main->getSubDomainByServer($server_id);
+			$server_id = $type->determineServer($package_id);			
+			$values = $main->getSubDomainByServer($server_id);			
 			if (!empty($values)) {
 				echo $main->createSelect('csub2', $values);
-			}		
+			} else {
+				echo 0;
+			}
 		}
 	}
 	
