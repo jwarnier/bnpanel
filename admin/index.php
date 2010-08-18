@@ -135,8 +135,7 @@ function acp() {
 				foreach($main->postvar as $key => $value) {
 					$array['HIDDEN'] .= '<input name="'.$key.'" type="hidden" value="'.$value.'" />';
 				}								
-				$array['HIDDEN'] .= " ";
-				var_dump($array['HIDDEN']);
+				$array['HIDDEN'] .= " ";				
 				$html = $style->replaceVar("tpl/warning.tpl", $array);
 				
 			} elseif($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
