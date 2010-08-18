@@ -91,7 +91,7 @@ class page {
 				$array['TLDONLY'] = $main->dropDown("tldonly", $values, $db->config("tldonly"));
 				$array['GENERAL'] = $main->dropDown("general", $values, $db->config("general"));
 				$array['MESSAGE'] = $db->config("message");
-				echo $style->replaceVar("tpl/signupsettings.tpl", $array);
+				echo $style->replaceVar("tpl/settings/signupsettings.tpl", $array);
 
 				break;
 				
@@ -110,7 +110,7 @@ class page {
 		        $values[] = array("Disabled", "0");
 		        $array['SENABLED'] = $main->dropDown("senabled", $values, $db->config("senabled"));
 		        $array['SMESSAGE'] = $db->config("smessage");
-		        echo $style->replaceVar("tpl/supportsettings.tpl", $array);
+		        echo $style->replaceVar("tpl/settings/supportsettings.tpl", $array);
 		        break;
 		        
 			case "email":

@@ -2,7 +2,7 @@
 /* For licensing terms, see /license.txt */
 
 //Check if called by script
-if(THT != 1){
+if (THT != 1) {
 	die();
 }
 
@@ -22,7 +22,7 @@ class order extends model {
 		global $main, $db, $email, $user;
 		$order_id = $this->save($params);
 		if (!empty($order_id) && is_numeric($order_id )) {
-			$main->addLog("Order created: $order_id");
+			$main->addLog("order::create : $order_id");
 		
 			$emailtemp 				= $db->emailTemplate('orders_new');
 			$order_info 			= $this->getOrder($order_id, true);
@@ -154,15 +154,15 @@ class order extends model {
 				break;
 			}
 			
-			$main->addLog("updateOrderStatus function called: $order_id changed to $status");
+			$main->addLog("order::updateOrderStatus function called: $order_id changed to $status");
 			
 			$params['status'] = $status;
 			if ($result) {
 				$this->update($params);
-				$main->addLog("updateOrderStatus function called succed");
+				$main->addLog("order::updateOrderStatus function called succed");
 				return true;
 			}	
-			$main->addLog("updateOrderStatus function called error");		
+			$main->addLog("order::updateOrderStatus function called error");		
 		}
 		return false;	
 	}	
@@ -204,7 +204,7 @@ class order extends model {
 			$main->addLog("Order id $order_id updated");
 			return true;
 		}
-		$main->addLog("Trying to update the Order id $order_id ");
+		$main->addLog("order::edit Trying to update the Order id $order_id ");
 		return false;
 	}
 	
