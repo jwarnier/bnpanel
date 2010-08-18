@@ -131,37 +131,43 @@ if(INSTALL == 1) {
 }
 
 $load_post = false;
-
-if($_POST) {
-	//Converts all POSTS into variable - DB Friendly.
-	foreach($_POST as $key => $value) {
-		$main->postvar[$key] = $db->strip($value);
-	}
-	$main->postvar['_post_token'] =	$main->getToken();
-	var_dump('postvar->'.$main->postvar['_post_token']);
+if($_POST) {	
 	$load_post = true;			
-}
-
-if ($_GET) {
-	//Converts all GET into variable - DB Friendly.
-	foreach($_GET as $key => $value) {	
-		$main->getvar[$key] = $db->strip($value);	
-	}
-	$main->getvar['_get_token'] = $main->getToken();	
 }
 
 if (!$is_ajax_load) {	
 	if (!$load_post) {
 		$token =  $main->generateToken();
 		//var_dump('load_post->'.$token);
-	}		
+	}
 } else {
 	if ($main->isValidMd5($_GET['_get_token'])) {
 		$token =  $_GET['_get_token'];
 	} else {
-		$token = md5('');
+		$token = md5(rand());
 	}
 }
+
+
+//Converts all POSTS into variable - DB Friendly.
+foreach($_POST as $key => $value) {
+	$main->postvar[$key] = $db->strip($value);
+}
+$main->postvar['_post_token'] =	$main->getToken();
+//var_dump('postvar->'.$main->postvar['_post_token']);
+
+
+//Converts all GET into variable - DB Friendly.
+foreach($_GET as $key => $value) {	
+	$main->getvar[$key] = $db->strip($value);	
+}
+$main->getvar['_get_token'] = $main->getToken();	
+//var_dump('getvar->'.$main->getvar['_get_token']);
+
+if ($_GET) {	
+	$load_get = true;	
+}
+
 
 
 

@@ -50,7 +50,7 @@ class ispconfig extends Panel {
 				return $client;
 			}
 		} catch (SoapFault $e) {
-			$main->addLog("Soap error. Trying to load URL: $soap_location URI: $soap_uri ".$e->getMessage());
+			$main->addLog("ispconfig::load Soap error. Trying to load URL: $soap_location URI: $soap_uri ".$e->getMessage());
 			if ($this->debug) 			
 				//die('SOAP Error: '.$e->getMessage());
 			return false;
@@ -66,7 +66,7 @@ class ispconfig extends Panel {
 	*/
 	private function remote($action, $params = array()) {
 		global $main;		
-		$main->addLog('Remote action called:' . $action);
+		$main->addLog('ispconfig::remote action called:' . $action);
 		$soap_client = $this->load();	
 			
 		$result = array();
@@ -223,7 +223,7 @@ class ispconfig extends Panel {
 				if ($this->debug) { echo 'Result: '; var_dump($soap_result); echo '------------------>><br />';}
 				return $soap_result;	
 			} catch (SoapFault $e) {				
-				$main->addLog("Soap error: ".$e->getMessage());
+				$main->addLog("ispconfig::remote Soap error: ".$e->getMessage());
 				$result['error']=1;
 				$result['text'] = $e->getMessage();
 				return $result;
@@ -719,7 +719,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					$install_params['status'] 		= 2;// 0 not install / 1 installed 2 pending 3 error
 					$install_params['database_id'] 	= $database_id;  
 					$result = $this->remote('install_chamilo', $install_params);
-					$main->addLog("Install chamilo called: domain_id: $domain_id database_id: $database_id");
+					$main->addLog("ispconfig::install_chamilo domain_id: $domain_id database_id: $database_id");
 					return true;
 				} else {
 					if ($database_id['error']) {
@@ -816,7 +816,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					}
 				} 				
 				if 	(!empty($my_domain) && is_array($my_domain)) {
-					$main->addlog("Domain exists: {$my_domain['domain']} {$my_domain['domain_id']}");
+					$main->addlog("ispconfig::getSiteStatus Domain exists: {$my_domain['domain']} {$my_domain['domain_id']}");
 					return $my_domain;
 				}			
 			}							
@@ -844,4 +844,3 @@ CREATE table install_package_web_domain ( id int NOT NULL AUTO_INCREMENT, domain
 
  * 
  */
-

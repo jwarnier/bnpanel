@@ -101,7 +101,7 @@ class page {
 			case 'edit':
 				if(isset($main->getvar['do'])) {
 															
-					$query = $db->query("SELECT * FROM `<PRE>addons` WHERE `id` = '{$main->getvar['do']}'");
+					$query = $db->query("SELECT * FROM `<PRE>addons` WHERE id = '{$main->getvar['do']}'");
 					
 					if($db->num_rows($query) == 0) {
 						echo "That Addon doesn't exist!";	

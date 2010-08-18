@@ -63,7 +63,7 @@ class page {
 				}
 				closedir($handle); #Close the folder
 				$array['THEME'] = $main->dropDown("theme", $values, $db->config("theme"));
-				echo $style->replaceVar("tpl/themesettings.tpl", $array);
+				echo $style->replaceVar("tpl/settings/themesettings.tpl", $array);
 				break;
 			case "tupload": # Theme Uploader
 				echo "Here you can upload a theme of your choice to the installer. Please be sure that the theme is in .zip format.";

@@ -364,7 +364,7 @@ h2, h3 {
 	font-size:80%;
 	height:25px;
 	list-style-type:none;
-	margin:11px 0 0;
+	margin:1px 0 0;
 	padding-left:0;	
 }
 
@@ -394,7 +394,9 @@ ul {
 form {
 	-moz-border-radius:11px 11px 11px 11px;
 	-moz-box-shadow:0 4px 18px #C8C8C8;	
-	-webkit-box-shadow: #C8C8C8 0px 4px 18px;	
+	-webkit-box-shadow: #C8C8C8 0px 4px 18px;
+	-webkit-border-radius:11px 11px 11px 11px;	
+	
 	background:none repeat scroll 0 0 #FFFFFF;
 	border:1px solid #E5E5E5;
 	font-weight:normal;
@@ -402,8 +404,20 @@ form {
 	padding:16px 16px 40px;
 }
 
+.box {
+	-moz-border-radius:11px 11px 11px 11px;
+	-moz-box-shadow:0 4px 18px #C8C8C8;	
+	-webkit-box-shadow: #C8C8C8 0px 4px 18px;
+	-webkit-border-radius:11px 11px 11px 11px;	
+	
+	background:none repeat scroll 0 0 #FFFFFF;
+	border:1px solid #E5E5E5;
+	font-weight:normal;
+	margin-left:8px;
+	padding:16px 16px 40px;
+}
 
-#pass, #user, #email_login {
+#pass_login, #user_login, #email_login {
 	background:none repeat scroll 0 0 #FBFBFB;
 	border:1px solid #E5E5E5;
 	font-size:24px;
@@ -438,4 +452,44 @@ form .submit, .alignright {
 .price {
 	font-size: 120%;
 	font-weight: bold;	
+}
+
+
+textarea, input[type="text"], input[type="password"], input[type="file"], input[type="button"], input[type="submit"], input[type="reset"], select {
+	background-color:#FFFFFF;
+	border-color:#DFDFDF;
+}
+
+textarea, input[type="text"], input[type="password"], input[type="file"], input[type="button"], input[type="submit"], input[type="reset"], select {
+	-moz-border-radius:4px 4px 4px 4px;
+	border-style:solid;
+	border-width:1px;
+}
+
+textarea, input, select {
+	margin:1px;
+	padding:3px;
+}
+input, select {
+	line-height:15px;
+}
+
+input[type="submit"], input[type="button"] {
+	/* background: repeat-x scroll left top #21759B; */
+	background: repeat-x scroll left top #21759B;
+	
+	border-color:#298CBA;
+	color:#FFFFFF;
+	font-weight:bold;
+	text-shadow:0 -1px 0 rgba(0, 0, 0, 0.3);    
+	
+	-moz-border-radius:11px 11px 11px 11px;
+	-moz-box-sizing:content-box;
+	border-style:solid;
+	border-width:1px;
+	cursor:pointer;
+	font-size:11px !important;
+	line-height:13px;
+	padding:3px 8px;
+	text-decoration:none;   
 }

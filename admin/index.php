@@ -22,41 +22,54 @@ function acp() {
 		$main->getvar['page'] = 'home';
 	}
 	$admin_navigation = $user->getAdminNavigation();
-	$admin_nave_item = $admin_navigation[$main->getvar['page']];
+	$admin_nave_item = false;
+	
+	if (isset($admin_navigation[$main->getvar['page']]) && !empty($admin_navigation[$main->getvar['page']])) {
+		$admin_nave_item = $admin_navigation[$main->getvar['page']];
+	}	
 	
 	$link ='pages/home.php';
 	if (isset($admin_nave_item) && !empty($admin_nave_item)) {		
 		$header = $admin_nave_item['visual'];
 		$link = 'pages/'. $admin_nave_item['link'].'.php';
 	}
+	
+	// Left menu
+	$nav = "Sidebar Menu";
+	$array['LINKS'] = '';
+	foreach ($admin_navigation as $row) {
+		if ($main->checkPerms($row['link'])) {
+			$array_item['IMGURL'] = $row['icon'];
+			$array_item['LINK'] = "?page=".$row['link'];
+			$array_item['VISUAL'] = $row['visual'];
+			$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array_item);
+		}
+	}
+	$array_item['IMGURL'] = "logout.png";
+	$array_item['LINK'] = "?page=logout";
+	$array_item['VISUAL'] = "Logout";
+	$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array_item);
+	
+		
+	$sidebar = $style->replaceVar("tpl/menu/leftmenu_main.tpl", $array);
+	
+
+	$user_permission = true;
 	if(!file_exists($link)) {	
 		$html = "<strong>Fatal Error:</strong> Seems like the .php is non existant. Is it deleted?";	
-	} elseif(!$main->checkPerms($admin_nave_item['link'])) {		
-		$html = "You don't have access to this page.";	
-	} else {		
+	} elseif(!$main->checkPerms($admin_nave_item['link'])) {
+		$user_permission = false;		
+		$html = "You don't have access to the {$admin_nave_item['visual']} page";	
+	} else {	
 		//If deleting something
 		//&& $main->linkAdminMenuExists($main->getvar['page']) == true
 		if(preg_match("/[\.*]/", $main->getvar['page']) == 0  ) {			
 			require $link;
 			$content = new page();
-			// Main Side Bar HTML
-			$nav = "Sidebar Menu";		
-						
-			foreach ($admin_navigation as $row) {
-				if($main->checkPerms($row['link'])) {
-					$array2['IMGURL'] = $row['icon'];
-					$array2['LINK'] = "?page=".$row['link'];
-					$array2['VISUAL'] = $row['visual'];
-					$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array2);
-				}
-			}
-			
-			# Types Navbar
+		
+			# Types Navbar // not to develop this type yet
 			/*
-			 * When Working on the navbar, to make a spacer use this:
-			 * $array['LINKS'] .= $style->replaceVar("tpl/spacer.tpl");
-			 */
-			$type->createAll();
+			$type->createAll();			
 			foreach($type->classes as $key => $value) {
 				if($type->classes[$key]->acpNav) {
 					foreach($type->classes[$key]->acpNav as $key2 => $value)  {
@@ -72,23 +85,24 @@ function acp() {
 					}
 				}
 			}
+			
 			$array2['IMGURL'] = "logout.png";
 			$array2['LINK'] = "?page=logout";
 			$array2['VISUAL'] = "Logout";
 			$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array2);
-			$sidebar = $style->replaceVar("tpl/menu/leftmenu_main.tpl", $array);
+			*/
 			
 			//Page Sidebar
 			
-			$sidebar_link_link = "tpl/menu/leftmenu_link.tpl";
-			$sidebar_link =  "tpl/menu/leftmenu_main.tpl";	
+			$sidebar_link_link 	= "tpl/menu/leftmenu_link.tpl";
+			$sidebar_link 		=  "tpl/menu/leftmenu_main.tpl";	
 				
 			if (isset($main->getvar['sub'])) {
 				$sidebar_link_link = "tpl/menu/submenu_link.tpl";
 				$sidebar_link =  "tpl/menu/submenu_main.tpl";							
 			}
 			
-			if($content->navtitle) {
+			if ($content->navtitle) {
 				$subnav = $content->navtitle;				
 				foreach($content->navlist as $key => $value) {
 					$array2['IMGURL'] = $value[1];
@@ -122,6 +136,7 @@ function acp() {
 					$array['HIDDEN'] .= '<input name="'.$key.'" type="hidden" value="'.$value.'" />';
 				}								
 				$array['HIDDEN'] .= " ";
+				var_dump($array['HIDDEN']);
 				$html = $style->replaceVar("tpl/warning.tpl", $array);
 				
 			} elseif($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
@@ -172,8 +187,8 @@ function acp() {
 	
 	$staffuser = $db->staff( $main->getCurrentStaffId());
 	define("SUB", $header);
-	define("INFO", '<b>Welcome back, '. strip_tags($staffuser['name']) .'</b><br />'. SUB);
-	
+	define("INFO", '<b>Welcome back, '. strip_tags($staffuser['name']) .'</b><br />'. SUB);	
+
 	echo '<div id="left">';	
 		echo $main->table($nav, $sidebar);
 	echo '</div>';	
@@ -182,8 +197,7 @@ function acp() {
 			if($content->navtitle) {				
 				echo $main->table($subnav, $subsidebar);
 			}
-		}
-		
+		}			
 	echo $main->table($header, $html);
 	echo '</div>';
 	
@@ -195,7 +209,7 @@ function acp() {
 
 //If user is NOT log in 
 if(!$_SESSION['logged']) {
-	if($main->getvar['page'] == "forgotpass") {
+	if ($main->getvar['page'] == "forgotpass") {
 		define("SUB", "Reset Password");
 		define("INFO", SUB);
 		echo $style->get("header.tpl");

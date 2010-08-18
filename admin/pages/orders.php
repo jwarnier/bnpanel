@@ -60,8 +60,7 @@ class page {
 				$oValidator = new Validator($asOption);				
 			
 				if ($_POST && $main->checkToken()) {					
-					$result = $oValidator->validate($_POST);
-					var_dump('dsdsd');					
+					$result = $oValidator->validate($_POST);								
 					if (empty($result)) {				
 						
 						//Creating an order		

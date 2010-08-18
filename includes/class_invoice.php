@@ -31,7 +31,7 @@ class invoice extends model {
 				$insert_sql = "INSERT INTO `<PRE>order_invoices` (order_id, invoice_id) VALUES('{$order_id}', '{$invoice_id}')";				
 				$db->query($insert_sql);		
 			}			
-			$main->addLog("Invoice created: $invoice_id");
+			$main->addLog("invoice::create $invoice_id");
 			return	$invoice_id;
 		}
 		return false;		
@@ -40,14 +40,14 @@ class invoice extends model {
 	public function delete($id) { # Deletes invoice upon invoice id
 		global $main;	
 		$this->updateInvoiceStatus($id, INVOICE_STATUS_DELETED);
-		$main->addLog("Invoice id $id deleted ");		
+		$main->addLog("invoice::delete id #$id ");		
 	}
 	
 	public function edit($id, $params) { # Edit an invoice. Fields created can only be edited?
 		global $main;
 		$this->setPrimaryKey($id);
 		$this->update($params);
-		$main->addLog("Invoice updated $id deleted");	
+		$main->addLog("invoice::edit #$id updated");	
 	}
 	
 	/**
@@ -91,7 +91,7 @@ class invoice extends model {
 
 			$paypal->add_field('amount', 			$invoice_info['total_amount']);
 			$paypal->add_field('currency_code', 	$db->config('currency'));
-			$main->addLog("Invoice pay function called for: Invoice id: $invoice_id Order id: $order_id Total amount: {$invoice_info['total_amount']}");
+			$main->addLog("invoice::pay Invoice #$invoice_id Order #$order_id Total amount: {$invoice_info['total_amount']}");
 			$paypal->submit_paypal_post(); // submit the fields to paypal
 		} else {
 			echo "You don't seem to be the person who owns that invoice!";	
@@ -650,8 +650,6 @@ class invoice extends model {
 	}
 	
 	public function calculateDaysToSendNotification($number_months, $my_due_date, $debug) {
-		
-		
 		$before_list_of_days = array();
 		/*
 		switch ($number_months) {
@@ -793,7 +791,8 @@ class invoice extends model {
 				case INVOICE_STATUS_DELETED:
 				default:
 				break;
-			}				
+			}
+			$main->addlog("invoice::updateInvoiceStatus $invoice_id");
 			$params['status'] = $status;
 			$this->update($params);
 		}		
