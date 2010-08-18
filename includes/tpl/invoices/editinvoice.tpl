@@ -27,9 +27,8 @@
 	
 
 </script>
-<h2>Invoice #%ID%</h2>
-
 <ERRORS>
+<h2>Invoice #%ID%</h2>
 <form id="addpackage" name="addpackage" method="post" action="">
 <input name="package_id" type="hidden" id="package_id" value="%PACKAGE_ID%" />
 <table width="100%" border="0" cellspacing="2" cellpadding="0"> 

@@ -1,10 +1,10 @@
 <div class="contextual">
 	<a href="?page=invoices&sub=edit&do=%ID%"> <img src="<URL>themes/icons/pencil.png"> Edit</a> 
 </div>
-<h2>Invoice #%ID%</h2>
+
 <ERRORS>
-<form id="addpackage" name="addpackage" method="post" action="">
-<table width="100%" border="0" cellspacing="2" cellpadding="0">
+<h2>Invoice #%ID%</h2>
+<table class="box" border="0" cellspacing="2" cellpadding="0">
 
   <tr>
     <td width="20%">Order id:</td>
@@ -80,6 +80,3 @@
   </tr>
     
 </table>
-
-
-</form>
