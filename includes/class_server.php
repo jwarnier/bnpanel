@@ -123,6 +123,7 @@ class server extends Model {
 			$array['Server ID'] = $server_type;
 			$array['Path'] = $link;
 			$main->error($array);
+			$main->addlog("server::loadServer function error. The server  $server_type doesn't exist!");				
 			return false;	
 		} else {
 			require_once $link; # Get the server
