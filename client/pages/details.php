@@ -6,9 +6,11 @@ if(THT != 1){die();}
 
 class page {
 	
-	public function content() { # Displays the page 
-		global $style, $db, $main,$user;
-		$data = $db->client($main->getCurrentUserId());
+	public function content() {
+		global $style, $db, $main, $user;
+	
+		$data = $user->getUserById($main->getCurrentUserId());
+		
 		$array['USER']		= $data['user'];
 		$array['EMAIL'] 	= $data['email'];
 		$array['DOMAIN'] 	= $data['domain'];
@@ -22,107 +24,104 @@ class page {
 		$array['PHONE'] 	= $data['phone'];
 		$array['DISP'] 		= "<div>";
 		
-			if($_POST) {
-				if(!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i',$main->postvar['email'])) {
-					$main->errors("Your email is the wrong format!");
-					echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
-				}
-				$query = $db->query("SELECT * FROM `<PRE>users` WHERE `email` = '{$main->postvar['email']}' AND `id` != '{$data['id']}'");
-				if($db->num_rows($query) != 0) {
-					$main->errors("That e-mail address is already in use!");
-					echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
-				}
-				if(!$main->postvar['state']) {
-					$main->errors("Please enter a valid state!");
-					echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
-				}
-				if (!preg_match("/^([a-zA-Z\.\ -])+$/",$main->postvar['state'])) {
-					$main->errors("Please enter a valid state!");
-					echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
-				}
-				if(!$main->postvar['address']) {
-					$main->errors("Please enter a valid address!");
-					echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
-				}
-				if(!preg_match("/^([0-9a-zA-Z\.\ \-])+$/",$main->postvar['address'])) {
-					$main->errors("Please enter a valid address!");
-					echo $style->replaceVar("tpl/user/user/cedit.tpl", $array);
-					return;
-				}
-				if(!$main->postvar['phone']) {
-					$main->errors("Please enter a valid phone number!");
-					echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
-				}
-				if (!preg_match("/^([0-9\-])+$/",$main->postvar['phone'])) {
-					$main->errors("Please enter a valid phone number!");
-					echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
-				}
-				if(strlen($main->postvar['phone']) > 15) {
-					$main->errors("Phone number is to long!");
-					echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
-				}
-				if(!$main->postvar['zip']) {
-					$main->errors("Please enter a valid zip/postal code!");
-					echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
-				}
-				if(strlen($main->postvar['zip']) > 7) {
-					$main->errors("Zip/postal code is to long!");
-					echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
-				}
-				if (!preg_match("/^([0-9a-zA-Z\ \-])+$/",$main->postvar['zip'])) {
-					$main->errors("Please enter a valid zip/postal code!");
-					echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
-				}
-				if(!$main->postvar['city']) {
-					$main->errors("Please enter a valid city!");
-					echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
-				}
-				if (!preg_match("/^([a-zA-Z ])+$/",$main->postvar['city'])) {
-					$main->errors("Please enter a valid city!");
-					echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
-				}
-				$db->query("UPDATE `<PRE>users` SET `email` = '{$main->postvar['email']}' WHERE `id` = '{$data['id']}'");
-				$db->query("UPDATE `<PRE>users` SET `state` = '{$main->postvar['state']}' WHERE `id` = '{$data['id']}'");
-				$db->query("UPDATE `<PRE>users` SET `address` = '{$main->postvar['address']}' WHERE `id` = '{$data['id']}'");	
-				$db->query("UPDATE `<PRE>users` SET `phone` = '{$main->postvar['phone']}' WHERE `id` = '{$data['id']}'");
-				$db->query("UPDATE `<PRE>users` SET `zip` = '{$main->postvar['zip']}' WHERE `id` = '{$data['id']}'");
-				$db->query("UPDATE `<PRE>users` SET `city` = '{$main->postvar['city']}' WHERE `id` = '{$data['id']}'");
+		if($_POST && $main->checkToken(true)) {
+			if(!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i',$main->postvar['email'])) {
+				$main->errors("Your email is the wrong format!");				
+				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+				return;
+			}
+			$query = $db->query("SELECT * FROM `<PRE>users` WHERE `email` = '{$main->postvar['email']}' AND `id` != '{$data['id']}'");
+			if($db->num_rows($query) != 0) {
+				$main->errors("That e-mail address is already in use!");
+				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+				return;
+			}
+			if(!$main->postvar['state']) {
+				$main->errors("Please enter a valid state!");
+				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+				return;
+			}
+			if (!preg_match("/^([a-zA-Z\.\ -])+$/",$main->postvar['state'])) {
+				$main->errors("Please enter a valid state!");
+				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+				return;
+			}
+			if(!$main->postvar['address']) {
+				$main->errors("Please enter a valid address!");
+				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+				return;
+			}
+			if(!preg_match("/^([0-9a-zA-Z\.\ \-])+$/",$main->postvar['address'])) {
+				$main->errors("Please enter a valid address!");
+				echo $style->replaceVar("tpl/user/user/cedit.tpl", $array);
+				return;
+			}
+			if(!$main->postvar['phone']) {
+				$main->errors("Please enter a valid phone number!");
+				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+				return;
+			}
+			if (!preg_match("/^([0-9\-])+$/",$main->postvar['phone'])) {
+				$main->errors("Please enter a valid phone number!");
+				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+				return;
+			}
+			if(strlen($main->postvar['phone']) > 15) {
+				$main->errors("Phone number is to long!");
+				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+				return;
+			}
+			if(!$main->postvar['zip']) {
+				$main->errors("Please enter a valid zip/postal code!");
+				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+				return;
+			}
+			if(strlen($main->postvar['zip']) > 7) {
+				$main->errors("Zip/postal code is to long!");
+				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+				return;
+			}
+			if (!preg_match("/^([0-9a-zA-Z\ \-])+$/",$main->postvar['zip'])) {
+				$main->errors("Please enter a valid zip/postal code!");
+				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+				return;
+			}
+			if(!$main->postvar['city']) {
+				$main->errors("Please enter a valid city!");
+				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+				return;
+			}
+			if (!preg_match("/^([a-zA-Z ])+$/",$main->postvar['city'])) {
+				$main->errors("Please enter a valid city!");
+				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+				return;
+			}
+			
+			$user->edit($data['id'], $main->postvar);
 				
-				if($main->postvar['change'] && $main->checkToken()) {
-					$data = $db->client($data['id']);
-					if(md5(md5($main->postvar['currentpass']) . md5($data['salt'])) == $data['password']) {
-						if($main->postvar['newpass'] === $main->postvar['cpass']) {
-						$cmd = $user->changeClientPassword($data['id'], $main->postvar['newpass']);
-						if($cmd === true) {
-							$main->errors("Details updated!");
-						}
-						else {
-							$main->errors((string)$cmd);
-						}
+			if ($main->postvar['change'] && $main->checkToken()) {
+				$data = $db->client($data['id']);
+				if(md5(md5($main->postvar['currentpass']) . md5($data['salt'])) == $data['password']) {
+					if($main->postvar['newpass'] === $main->postvar['cpass']) {
+					$cmd = $user->changeClientPassword($data['id'], $main->postvar['newpass']);
+					if($cmd === true) {
+						$main->errors("Details updated!");
 					} else {
-							$main->errors("Your passwords don't match!");		
-						}
-					} else {
-						$main->errors("Your current password is incorrect.");
+						$main->errors((string)$cmd);
 					}
 				} else {
-					$array['DISP'] = "<div style=\"display:none;\">";
-					$main->errors("Details updated!");					
+						$main->errors("Your passwords don't match!");		
+					}
+				} else {
+					$main->errors("Your current password is incorrect.");
 				}
+			} else {
+				$array['DISP'] = "<div style=\"display:none;\">";
+				$main->errors("Details updated!");					
 			}
-			echo $style->replaceVar("tpl/user/cedit.tpl", $array);
-	}
+			$main->redirect('?page=details&sub=view&msg=1');
+		}		
+		echo $style->replaceVar("tpl/user/cedit.tpl", $array);
+	}		
+	
 }

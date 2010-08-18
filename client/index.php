@@ -116,6 +116,7 @@ function client() {
 	}
 	
 	if($main->getvar['sub'] && $main->getvar['page'] != "type") {
+		if (is_array($content->navlist))
 		foreach($content->navlist as $key => $value) {
 			if($value[2] == $main->getvar['sub']) {
 				define("SUB", $value[0]);
