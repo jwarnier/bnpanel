@@ -96,7 +96,8 @@ class paypal_class {
       
       $this->last_error = '';
       
-      $this->ipn_log_file = '/tmp/ipn_log.txt';
+      //$this->ipn_log_file = '/tmp/ipn_log.txt';
+      $this->ipn_log_file = '';
       $this->ipn_log = true;
       $this->ipn_response = '';
       
@@ -217,10 +218,11 @@ class paypal_class {
       $text .= "\nIPN Response from Paypal Server:\n ".$this->ipn_response;
       
       // Write to log
-      $fp=fopen($this->ipn_log_file,'a');
-      fwrite($fp, $text . "\n\n"); 
-
-      fclose($fp);  // close file
+      if (file_exists($this->ipn_log_file)) {
+	      $fp=fopen($this->ipn_log_file,'a');
+	      fwrite($fp, $text . "\n\n"); 
+	      fclose($fp);  // close file
+      }
    }
 
    function dump_fields() {
