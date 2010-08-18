@@ -40,7 +40,7 @@ class page {
 												
 						//we check if the site was not already sent
 						$serverphp = $server->loadServer($package_info['server']);
-						$site_status = $serverphp->getStatus($order_id);
+						$site_status = $serverphp->getSiteStatus($order_id);
 						$result = true;
 						
 						if ($site_status == false) {

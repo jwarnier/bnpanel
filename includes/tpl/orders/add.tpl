@@ -81,10 +81,13 @@ function changeDomain() {
 					 if (data == '') {		
 						 domain_obj.selectedIndex = 0;				 
 						 data = 'No subdomains available for the moment';					 
+					 } else if(data== '0') {
+					 	//domain_obj.selectedIndex = 2;
+					 	 domain_obj.selectedIndex = 0;		 
+					 	$('#domain_input').html('No subdomains available for the server related a this package');
 					 } else {
-					 	//domain_obj.selectedIndex = 2;		 
-					 	$('#domain_input').html(text + data);
-					 }			 
+						$('#domain_input').html(text + data); 
+					 }
 				});
 			} else {
 				domain_obj.selectedIndex = 0;

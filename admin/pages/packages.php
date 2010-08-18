@@ -257,17 +257,20 @@ class page {
 						global $server;
 						//Loading the server			
 						$serverphp= $server->loadServer($package_info['server']);
-						
-						//Getting all client templates in ISPConfig
-						$package_list = $serverphp->getAllPackageBackEnd();
-						foreach($package_list as $package_item_panel) {
-							if ($package_item_panel['template_id'] == $package_info['backend']) {
-								$my_package_back_end = $package_item_panel;
-								break;
-							}							
-						}
-						$html_result = $serverphp->parseBackendInfo($my_package_back_end);
-						$array['BACKEND_INFO'] = $html_result;						
+						if ($serverphp != false) {							
+							//Getting all client templates in ISPConfig
+							$package_list = $serverphp->getAllPackageBackEnd();
+							foreach($package_list as $package_item_panel) {
+								if ($package_item_panel['template_id'] == $package_info['backend']) {
+									$my_package_back_end = $package_item_panel;
+									break;
+								}							
+							}
+							$html_result = $serverphp->parseBackendInfo($my_package_back_end);
+							$array['BACKEND_INFO'] = $html_result;
+						} else {
+							$array['BACKEND_INFO'] = 'Cannot load Package Info';
+						}						
 						echo $style->replaceVar("tpl/packages/editpackage.tpl", $array);
 					}
 				} else {

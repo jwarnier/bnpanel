@@ -85,23 +85,22 @@ class server extends Model {
 	 * @param	int		server id	
 	 */
 	public function loadServer($server_id) {
-		$server_info = $this->getServerById($server_id); # Determine server		
-		
+		global $main;
+		$main->addlog("server::loadServer called server_id: $server_id");
+		$server_info = $this->getServerById($server_id); # Determine server				
 		$server_type = $server_info['type'];
-		
+				
 		//Abstract class Panel added
 		require_once LINK."servers/panel.php";		
 		if (in_array($server_type, $this->getAvailablePanels())) {
 			$link = LINK."servers/".$server_type.".php"; 
 			if(!file_exists($link)) {
-				$array['Error'] = "The server  $server_type doesn't exist!";
-				$array['Server ID'] = $server_type;
-				$array['Path'] = $link;
-				$main->error($array);
+				$main->addlog("server::loadServer function error. The server  $server_type doesn't exist!");				
 				return false;	
 			} else {
 				require_once $link; # Get the server							
 				$serverphp = new $server_type($server_id);
+				$main->addlog("server::loadServer function. Loading $server_type ");
 				return $serverphp;
 			}
 		}

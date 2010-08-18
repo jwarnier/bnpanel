@@ -273,10 +273,10 @@ class ispconfig extends Panel {
 		$domain_username 	= $order_info['username'];
 		$domain_password 	= $order_info['password'];
 		$user_id 			= $order_info['userid'];
-		$domain 			= $order_info['domain'];
+		$domain 			= $order_info['real_domain'];
 		$sub_domain_id 		= $order_info['subdomain_id'];
 				
-		$main->addLog('ISPConfig3::signup Order id:'.$order_id.' Domain: '.$domain);		
+		$main->addLog('ispconfig::signup Order id:'.$order_id.' Domain: '.$domain);		
 		
 		$package_info 	= $package->getPackage($package_id);
 		
@@ -293,16 +293,13 @@ company_name 	contact_name 	street 	zip 	city 	state 	country 	telephone 	mobile
 default_mailserver 	limit_maildomain 	limit_mailbox 	limit_mailalias 	limit_mailaliasdomain 	limit_mailforward 	limit_mailcatchall 	limit_mailrouting 	limit_mailfilter 	limit_fetchmail 	limit_mailquota 	limit_spamfilter_wblist 	limit_spamfilter_user 	limit_spamfilter_policy 	default_webserver 	limit_web_ip 	limit_web_domain 	limit_web_quota 	web_php_options 	limit_web_subdomain 	limit_web_aliasdomain 	limit_ftp_user 	limit_shell_user 	ssh_chroot 	default_dnsserver 	limit_dns_zone 	limit_dns_record 	default_dbserver 	limit_database 	limit_cron 	limit_cron_type 	limit_cron_frequency 	limit_traffic_quota 	limit_client 	parent_client_id 	
 username 	password 	language 	usertheme 	template_master 	template_additional 	created_at
 					*/	
-		//User info
-		
-		//$domain_username = substr($main->getvar['fdom'], 0, 8);		 
 		
 		//User and password from the Control Panel / ISPConfig, etc
 		$params['username'] 		= $domain_username;
 		$params['password'] 		= $domain_password;
 		
-		$user_info					= $user->getUserById($user_id);
-			
+		// User information
+		$user_info					= $user->getUserById($user_id);			
 		$params['email'] 			= $user_info['email'];
 		$params['contact_name'] 	= $user_info['firstname'].' '.$user_info['lastname'];
 		$params['street'] 			= $user_info['address'];
@@ -311,24 +308,20 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		$params['zip'] 				= $user_info['zip'];
 		$params['country'] 			= $user_info['country'];
 		$params['telephone'] 		= $user_info['phone'];
-
+		
+		//Package information
 		$package_info 				= $package->getPackage($package_id);
 		$package_back_end_id 		= $package_info['backend'];
 
 		//This is very important we match the package backend with the client_template id in ISPConfig
 		$params['template_master'] 	= $package_back_end_id;
 
-		//Getting the server id it depends in the package that the user is selecting		
-		if (!empty($package_info['server_id'])) {
-			$server_id = $package_info['server_id'];
-		}
-
 		//harcoding values
 		$params['usertheme'] 		= 'default';	
 		$params['created_at']		= time();
 		$params['language'] 		= 'en'; //dafult
 
-		 //The main domain
+	/*	 //The main domain
 		$is_domain = true;
 		
 		$subdomain_list = $main->getSubDomainByServer($package_info['server']);
@@ -337,9 +330,9 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			$subdomain = $subdomain_list[$sub_domain_id];
 			$domain = $domain.'.'.$subdomain;
 			$is_domain = false;
-		}
+		}*/
 		
-		//defining domain
+		//Domain Info
 		$site_params['domain'] = $domain;
 
 		/*
@@ -351,16 +344,24 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		allow_override_error_empty ok 
 		php_open_basedir_error_empty ??
 		*/
+		
+		$user_panel_info		= $this->getUserStatus($order_id);
+		$site_info				= $this->getSiteStatus($order_id);
+			
 
 		//Adding the client
-		$new_client_id = $this->remote('client_add',$params);
-				
+		if ($user_panel_info == false) {
+			$new_client_id = $this->remote('client_add',$params);
+			if ($new_client_id['error']) {
+				$main->addlog('ispconfig::signup client_add error'.$new_client_id['text']);
+				return false;
+			}
+		} else {
+			$new_client_id = $user_panel_info['client_id'];			
+		}
+		
 		//If no error 
-		if($new_client_id['error']) {
-			//echo "<strong>".$new_client_id['text']."</strong><br />";
-			$main->addlog($new_client_id['text']);
-			return false;
-		} elseif(is_numeric($new_client_id)) {
+		if(is_numeric($new_client_id)) {
 			//If client is added we have the new client id	
 
 			//Preparing variables to send to server_get
@@ -373,10 +374,11 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			//Getting extra info of user
 			$client_info = $this->remote('client_get', array('client_id'=>$new_client_id));
 		
-			if(!$client_info['error']) {
+			if (!$client_info['error']) {
 				
 				$website_id = 1;
 				$group_id = $new_client_id + 1;
+				
 				//Setting parameters for the sites_web_domain_add function
 				$site_params['type'] 			= 'vhost';	// harcoded in ISPConfig vhost
 				$site_params['vhost_type'] 		= 'name';	// harcoded in ISPConfig vhost 
@@ -384,8 +386,9 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$site_params['sys_userid'] 		= 1;//1; force to the admin
 				$site_params['sys_groupid'] 	= 1; //ass added by the admin
 				
-				$site_params['system_user'] 	= 'web'.$website_id;
-				$site_params['system_group'] 	= 'client'.$client_info['client_id'];				
+				$site_params['system_user'] 	= 'web'.$website_id;					//This field will be overwritten by ISPconfig
+				$site_params['system_group'] 	= 'client'.$client_info['client_id'];	//This field will be overwritten by ISPconfig
+						
 				$site_params['client_group_id'] = $new_client_id + 1;	 //always will be this 	groupd id +1			
 				$site_params['server_id'] 		= $this->getServerId();
 	
@@ -474,7 +477,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					return true;					
 				}		
 			} else {
-				$main->addlog($client_info['error']);
+				$main->addlog('ispconfig::signup client_get error'.$client_info['text']);				
 			}					
 		}
 		return false;
@@ -773,11 +776,27 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		var_dump($soap_client ->get_class_methods());		
 	}
 	
-	public function getStatus($order_id) {
+	
+	public function getUserStatus($order_id) {
 		global $main, $order;
 		$order_info = $order->getOrderInfo($order_id);		
 		$params['username'] = $order_info['username'];
-		$main->addlog("Calling the getstatus for order id: $order_id");
+		$main->addlog("ispconfig::getUserStatus Order id: $order_id");
+		
+		//Getting user info
+		$user_info = $this->remote('client_get_by_username',$params);
+				
+		if (is_array($user_info) && !empty($user_info)) {			
+			return $user_info;				
+		}		
+		return false;	
+	}
+	
+	public function getSiteStatus($order_id) {
+		global $main, $order;
+		$order_info = $order->getOrderInfo($order_id);		
+		$params['username'] = $order_info['username'];		
+		$main->addlog("ispconfig::getSiteStatus Order id: $order_id");
 		
 		//Getting user info
 		$user_info = $this->remote('client_get_by_username',$params);

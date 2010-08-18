@@ -59,7 +59,7 @@ class page {
 				$array['json_encode'] = json_encode($asOption);				
 				$oValidator = new Validator($asOption);				
 			
-				if ($_POST && $main->checkToken()) {						
+				if ($_POST && $main->checkToken()) {					
 					$result = $oValidator->validate($_POST);
 					var_dump('dsdsd');					
 					if (empty($result)) {				
@@ -231,7 +231,7 @@ class page {
 			break;
 			case 'edit':
 				if(isset($main->getvar['do'])) {
-					$order_info = $order->getOrderInfo($main->getvar['do']);
+					$order_info = $order->getOrderInfo($main->getvar['do']);					
 					if (is_array($order_info) && !empty($order_info )) {
 						if($_POST && $main->checkToken()) {
 											
@@ -253,7 +253,7 @@ class page {
 								$main->errors("Order has been edited!");
 								$main->redirect('?page=orders&sub=view&do='.$main->getvar['do'].'&msg=1');
 							} else {
-								$main->errors("There was a problem while updating Order #".$main->getvar['do']);
+								$main->errors("Cannot update Order #".$main->getvar['do']." please check the connection with the Control Panel");
 								$main->redirect('?page=orders&sub=all&msg=1');
 							}						
 						}
@@ -272,27 +272,35 @@ class page {
 				if (!empty($package_info)) {		
 					$serverphp		= $server->loadServer($package_info['server']); # Create server class
 					if ($serverphp != false) {
-						$site_info 		= $serverphp->getStatus($main->getvar['do']);
+						$site_info 		= $serverphp->getSiteStatus($main->getvar['do']);
+						$user_status	= $serverphp->getUserStatus($main->getvar['do']);
 					}
-				}
+				}				
 				
 				if ($site_info != false) { 									
 					if($site_info['active'] == 'y') {	
 						$return_array['SITE_STATUS_CLASS'] = 'success';
-						$return_array['SITE_STATUS_INFO'] .= 'Status active';
+						$return_array['SITE_STATUS_INFO'] .= 'Status: Active <br />';
 					} else {
 						$return_array['SITE_STATUS_CLASS'] = 'warning';
-						$return_array['SITE_STATUS_INFO'] .= 'Status inactive';					
-					}					
-					$return_array['SITE_STATUS'] = '<strong>Site exists in Control Panel</strong>';					
-					$return_array['SITE_STATUS_INFO'] .= '<br />Registered Domain: '.$site_info['domain'].' <br /> Domain id: '.$site_info['domain_id'].' <br /> Document root: '.$site_info['document_root'];					
+						$return_array['SITE_STATUS_INFO'] .= 'Status: Inactive <br />';					
+					}
+					
+					$return_array['SITE_STATUS'] = '<strong>Site exists in Control Panel</strong><br />';					
+					$return_array['SITE_STATUS_INFO'] .= 'Registered Domain: '.$site_info['domain'].' <br /> Domain id: '.$site_info['domain_id'].' <br /> Document root: '.$site_info['document_root'];					
 					
 				} else {
 					$return_array['SITE_STATUS_CLASS'] = 'warning';
-					$return_array['SITE_STATUS'] = 'The current order is not registered in the Control Panel Server. <br />To send this order to the Control Panel just change the status to Active';
+					$return_array['SITE_STATUS'] = '<strong>Site doesn\'t exist in Control Panel</strong><br />';		
+					$return_array['SITE_STATUS'] .= 'The current order is not registered in the Control Panel Server. <br />To send this order to the Control Panel just change the status to Active';
 					$return_array['SITE_STATUS_INFO'] = '';
-				}				
+				}	
 				
+				if ($user_status != false) {					
+					$return_array['SITE_STATUS_INFO'] .= '<br /><br /><b>Account Information</b><br /> User '.$order_info['username'].' registered in Control Panel #'.$user_status['client_id'];
+				} else {
+					$return_array['SITE_STATUS_INFO'] .= '<br /><br /><b>Account Information</b><br /> User '.$order_info['username'].' not registered in Control Panel';
+				}
 				$return_array['DOMAIN'] = $order_info['real_domain'];
 				
 				echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);			

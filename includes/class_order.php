@@ -73,7 +73,8 @@ class order extends model {
 	/**
 	 * Updates an order status. Also sends an email to the user order owner
 	 */
-	public function updateOrderStatus($order_id, $status) {
+	public function updateOrderStatus($order_id, $status) {	
+			
 		global $main, $server, $email, $user, $db, $package;		
 		$this->setPrimaryKey($order_id);
 		
@@ -81,21 +82,25 @@ class order extends model {
 		$user_info 	= $user->getUserById($order_info['userid']);		
 		$order_status = array_keys($main->getOrderStatusList());
 		
+		$package_info   = $package->getPackage($order_info['pid']);		
+		$serverphp		= $server->loadServer($package_info['server']); # Create server class		
+		$site_info = false;
+		if ($serverphp != false ) {				
+			$site_info 		= $serverphp->getSiteStatus($order_id);
+		}		
+					
 		if (in_array($status, $order_status)) {				
 			switch($status) {
-				case ORDER_STATUS_ACTIVE:
-					$package_info   = $package->getPackage($order_info['pid']);
-					$serverphp		= $server->loadServer($package_info['server']); # Create server class				
-					$site_info 		= $serverphp->getStatus($order_id);
-										
+				case ORDER_STATUS_ACTIVE:				
 					//Setting email
-					$send_email = false;
+					$send_email = false;					
 					if ($site_info != false) {
 						$result = $server->unsuspend($order_id);	
 						if($result) { $send_email = true; }																	
 					} else {
 						//Sent to ISPConfiG!!!!
 						$result = $this->sendOrderToControlPanel($order_id);						
+									
 						if (!$result) {
 							$result = true;
 							$status = ORDER_STATUS_FAILED;					
@@ -109,43 +114,55 @@ class order extends model {
 						$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);				
 					}				
 				break;
-				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:
-					$emailtemp 	= $db->emailTemplate('orders_waiting_admin');
-					$array['ORDER_ID'] 	= $order_id;					
-					$array['USER'] 		= $order_info['username'];
-					$array['PASS'] 		= $order_info['password'];
-					$array['EMAIL'] 	= $user_info['email'];					
-					$array['DOMAIN'] 	= $order_info['domain'];		
-					$result = $server->suspend($order_id);
-					if ($result)
-						$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:	
+					$result = true;
+					if ($site_info != false) { 				
+						$emailtemp 	= $db->emailTemplate('orders_waiting_admin');
+						$array['ORDER_ID'] 	= $order_id;					
+						$array['USER'] 		= $order_info['username'];
+						$array['PASS'] 		= $order_info['password'];
+						$array['EMAIL'] 	= $user_info['email'];					
+						$array['DOMAIN'] 	= $order_info['domain'];		
+						$result = $server->suspend($order_id);
+						if ($result)
+							$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+					}
+				
 				break;
 				case ORDER_STATUS_CANCELLED:
-					$emailtemp 	= $db->emailTemplate('orders_cancelled');
-					$array['ORDER_ID'] = $order_id;
-					$result = $server->suspend($order_id);
-					if ($result)
-						$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+					$result = true;
+					if ($site_info != false) { 
+						$emailtemp 	= $db->emailTemplate('orders_cancelled');
+						$array['ORDER_ID'] = $order_id;
+						$result = $server->suspend($order_id);
+						if ($result)
+							$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+					}
 				break;
 				case ORDER_STATUS_DELETED:				
-				case ORDER_STATUS_WAITING_USER_VALIDATION:				
-					//We just suspend the order not delete it
-					
-					$result = $server->suspend($order_id);
+				case ORDER_STATUS_WAITING_USER_VALIDATION:		
+					$result = true;
+					if ($site_info != false) { 		
+						//We just suspend the order not delete it					
+						$result = $server->suspend($order_id);
+					}
 				break;
 				case ORDER_STATUS_FAILED:
 					$result = true;
 				break;
 				default:
 				break;
-			}			
+			}
+			
+			$main->addLog("updateOrderStatus function called: $order_id changed to $status");
 			
 			$params['status'] = $status;
 			if ($result) {
 				$this->update($params);
-				$main->addLog("updateOrderStatus function called: $order_id changed to $status");
+				$main->addLog("updateOrderStatus function called succed");
 				return true;
-			}			
+			}	
+			$main->addLog("updateOrderStatus function called error");		
 		}
 		return false;	
 	}	
@@ -198,12 +215,14 @@ class order extends model {
 	 */
 	 
 	public function sendOrderToControlPanel($order_id) {
-		global $package, $server, $addon;		
+		global $main, $package, $server, $addon;
+		$main->addlog('Executing sendOrderToControlPanel to order: '.$order_id);
 		$order_info		= $this->getOrderInfo($order_id);
 		$package_info 	= $package->getPackage($order_info['pid']);
-		$serverphp 		= $server->loadServer($package_info['server']); # Create server class	
+		$serverphp 		= $server->loadServer($package_info['server']); # Create server class
+		
 		if ($serverphp != false ) {
-			$result 	= $serverphp->signup($order_id);
+			$result 	= $serverphp->signup($order_id);				
 			if ($result) {
 				$all_addons_info = $addon->getAllAddons();	
 				$addon_list = $order_info['addons'];
