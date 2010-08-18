@@ -245,7 +245,8 @@ if(!$_SESSION['logged']) {
 				if($main->staffLogin($main->postvar['user'], $main->postvar['pass'])) {
 					$main->redirect("?page=home");	
 				} else {
-					$main->errors("Incorrect username or password!");
+					$main->errors("Incorrect username or password!");					
+					$main->generateToken();
 				}
 			}
 		}	
