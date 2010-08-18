@@ -59,8 +59,8 @@ $starttime = explode(' ', microtime());
 $starttime = $starttime[1] + $starttime[0];
 
 #Start us up
-if(CRON != 1) {
-	session_start();
+if (CRON != 1) {
+	session_start();	
 }
 
 $includePath = dirname(__FILE__);
@@ -96,13 +96,18 @@ if($sql['install']) {
 $folder = LINK;
 require_once LINK.'/model.php'; # Get the file
 require LINK.'/class_main.php'; # Get the file
-					
+				
 $main = new main(); # Create the class
 if (isset($main) && !empty($main)) {
 	global $main;		
 } else {
 	//$main->redirect('install');
 	//echo 'Something is wrong';
+}
+
+//Improve security to avoid double agents with the same session, avoiding session hijacking
+if ($main->checkUserAgent() == false) {
+	$main->logout();
 }
 
 if ($handle = opendir($folder)) { # Open the folder
