@@ -45,7 +45,8 @@ class ispconfig extends Panel {
 		try {
 			//* Login to the remote server
 			if($session_id = $client->login($data['user'],$data['accesshash'])) {
-				if ($this->debug) {echo 'Logged into remote server sucessfully. The SessionID is '.$session_id.'<br />';}				
+				if ($this->debug) {echo 'Logged into remote server sucessfully. The SessionID is '.$session_id.'<br />';}
+				$main->addLog("ispconfig::load Session id $session_id");				
 				$this->session_id = $session_id;	
 				return $client;
 			}

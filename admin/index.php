@@ -13,12 +13,13 @@ define("PAGE", "Admin Area");
 
 //Main ACP Function - Creates the ACP basically
 function acp() {
-	global $main, $db, $style,$type, $email, $user;
+	global $main, $db, $style, $type, $email, $user;
 	ob_start(); # Stop the output buffer
 	
 	if(!$main->getvar['page']) { 
 		$main->getvar['page'] = 'home';
 	}
+	
 	$admin_navigation = $main->getAdminNavigation();
 	$admin_nave_item = false;
 	
@@ -26,7 +27,9 @@ function acp() {
 		$admin_nave_item = $admin_navigation[$main->getvar['page']];
 	}	
 	
-	$link ='pages/home.php';
+	$link 	= 'pages/home.php';
+	$header = 'Home';
+	
 	if (isset($admin_nave_item) && !empty($admin_nave_item)) {		
 		$header = $admin_nave_item['visual'];
 		$link = 'pages/'. $admin_nave_item['link'].'.php';
@@ -43,6 +46,7 @@ function acp() {
 			$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array_item);
 		}
 	}
+	//Adding the logout link
 	$array_item['IMGURL'] = "logout.png";
 	$array_item['LINK'] = "?page=logout";
 	$array_item['VISUAL'] = "Logout";
@@ -102,20 +106,20 @@ function acp() {
 				$subnav = $content->navtitle;				
 				foreach($content->navlist as $key => $value) {
 					$array2['IMGURL'] = $value[1];
-					$array2['LINK'] = "?page=".$main->getvar['page']."&sub=".$value[2];
+					$array2['LINK'] = "?page=".$admin_nave_item['link']."&sub=".$value[2];
 					$array2['VISUAL'] = $value[0];
 					$array3['LINKS'] .= $style->replaceVar($sidebar_link_link, $array2);
 				}
 				$subsidebar = $style->replaceVar($sidebar_link, $array3);
 			}
 			
-			if($main->getvar['sub'] && $main->getvar['page'] != "type") {
+			if($main->getvar['sub'] && $admin_nave_item['link'] != "type") {
 				if(is_array($content->navlist)) {
 					foreach($content->navlist as $key => $value) {
 						if($value[2] == $main->getvar['sub']) {
 							if(!$value[0]) {
-								define("SUB", $main->getvar['page']);	
-								$header = $main->getvar['page'];
+								define("SUB", $admin_nave_item['link']);	
+								$header = $admin_nave_item['link'];
 							} else {
 								define("SUB", $value[0]);
 								$header = $value[0];
@@ -126,14 +130,12 @@ function acp() {
 			}
 		
 			
-			if($main->getvar['sub'] == 'delete' && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {
-				
+			if($main->getvar['sub'] == 'delete' && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {				
 				foreach($main->postvar as $key => $value) {
 					$array['HIDDEN'] .= '<input name="'.$key.'" type="hidden" value="'.$value.'" />';
 				}								
 				$array['HIDDEN'] .= " ";				
-				$html = $style->replaceVar("tpl/warning.tpl", $array);
-				
+				$html = $style->replaceVar("tpl/warning.tpl", $array);				
 			} elseif($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
 				if($main->postvar['yes']) {	
 					foreach($main->getvar as $key => $value) {
@@ -180,7 +182,7 @@ function acp() {
 		}
 	}
 	
-	$staffuser = $db->staff( $main->getCurrentStaffId());
+	$staffuser = $db->staff($main->getCurrentStaffId());
 	define("SUB", $header);
 	define("INFO", '<b>Welcome back, '. strip_tags($staffuser['name']) .'</b><br />'. SUB);	
 

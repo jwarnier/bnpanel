@@ -8,7 +8,7 @@ abstract class Panel {
 	/** Hash or password*/ 
 	public	$hash;
 	/**Show debug or net*/
-	public	$debug = false;
+	public	$debug = true;
 	/**The server id*/
 	private $server_id;
 	

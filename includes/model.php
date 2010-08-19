@@ -677,7 +677,7 @@ class model {
 		unset($attributes['id']);		
 		$sql =  "UPDATE ".$this->getTableName()." ".
         		"SET ".join(', ', $this->getAvailableAttributesQuoted($attributes)) ." ".
-        		"WHERE id ='".$this->getPrimaryKey()."'";
+        		"WHERE id ='".$this->getId()."'";
        	$db->query($sql);
        	return true;
 	}
@@ -689,7 +689,7 @@ class model {
 	public function delete() {
 		global $db;		
 		$sql = "DELETE FROM ".$this->getTableName()." ".        		
-	           "WHERE id ='".$this->getPrimaryKey()."'";
+	           "WHERE id ='".$this->getId()."'";
 	    $db->query($sql);		
 	}
 
@@ -705,8 +705,7 @@ class model {
 	/**
     * Every Active Record class must use "id" as their primary ID. This getter overwrites the native id method, which isn't being used in this context.
     */
-    public function getId()
-    {
+    public function getId() {
         $pk=$this->getPrimaryKey();
         if(empty($pk)) {
             debug_print_backtrace();

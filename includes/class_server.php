@@ -27,7 +27,7 @@ class server extends Model {
 	 * Reads the includes/servers folder
 	 */
 	private function getAvailablePanelsFromDir() {
-		$server_path = LINK.'servers';
+		/*$server_path = LINK.'servers';
 		$my_list = array();
 		if (is_dir($server_path) && $handle_type = opendir($server_path)) {
 			while (FALSE !== ($file = readdir($handle_type))) {  		
@@ -35,7 +35,8 @@ class server extends Model {
 	    			$my_list[] = basename($file,'.php');	    			
 	    		}
 			}
-		}		
+		}*/
+		$my_list = array('da','ispconfig','test','whm');
 		return 	$my_list;
 	}
 	
@@ -153,8 +154,7 @@ class server extends Model {
 			echo 'Token Error';
 			return;
 		}
-		$user_id = '';
-		
+		$user_id = '';		
 		$final_domain = '';
 		$subdomain_id = 0;
 		
@@ -372,10 +372,10 @@ class server extends Model {
 			//If user is created
 			if (!empty($user_id) && is_numeric($user_id)){
 				$user_already_registered = true;
-				$main->addLog('User registered user id :'.$user_id);										
+				$main->addLog('server::signup User id #'.$user_id.' registered');										
 				$login = $main->clientLogin($system_username, $system_password);
 			} else {
-				$main->addLog("Error while trying to create an user $system_username $system_email ");		
+				$main->addLog("server::signup Error while trying to create an user $system_username $system_email ");		
 				return "Can't create an user";
 			}																		  
 		} 
@@ -387,21 +387,9 @@ class server extends Model {
 			$params['userid'] 			= $user_id;
 			$params['domain'] 			= $final_domain;
 			$params['pid'] 				= $package_id;
-			$params['signup'] 			= $date;
-			
-			//Change the order status it depends on the package
-			/*
-			if ($package_info['admin'] == 1) {
-				$params['status'] 		= ORDER_STATUS_WAITING_ADMIN_VALIDATION;
-			} else {
-				$params['status'] 		= ORDER_STATUS_ACTIVE;
-			}*/
-			
-			$params['status'] 		= ORDER_STATUS_WAITING_USER_VALIDATION;
-			
-			//Always set the server to waiting admin validation
-			//$params['status'] 			= ORDER_STATUS_WAITING_ADMIN_VALIDATION;
-						
+			$params['signup'] 			= $date;						
+			$params['status'] 			= ORDER_STATUS_WAITING_USER_VALIDATION;
+									
 			$params['additional']		= '';//@todo this field is not used
 			$params['billing_cycle_id'] = $billing_cycle_id;
 			
@@ -413,13 +401,15 @@ class server extends Model {
 
 			//Getting mandatory addons and adding if somebody 
 			$mandatory_addons = $addon->getMandatoryAddonsByPackage($package_id);
-			foreach($mandatory_addons as $key=>$addon_item) {
-				if (in_array($key, $main->getvar['addon_ids'])) {
-					continue;
-				} else {
-					array_push($main->getvar['addon_ids'], $key);
-				}				
-			}
+			if(is_array($mandatory_addons) && !empty($mandatory_addons)) {
+				foreach($mandatory_addons as $key=>$addon_item) {
+					if (in_array($key, $main->getvar['addon_ids'])) {
+						continue;
+					} else {
+						array_push($main->getvar['addon_ids'], $key);
+					}				
+				}
+			}	
 			
 			//Create an order
 			if (!empty($params['userid']) && !empty($params['pid'])) {
@@ -494,7 +484,7 @@ class server extends Model {
 			$invoice_params['order_id'] = $order_id;
 			
 			$invoice_id = $invoice->create($invoice_params);
-			if ($invoice_id) {							
+			if (is_numeric($invoice_id)) {							
 				//This variable will be read in the Ajax::ispaid function
 				$_SESSION['last_invoice_id'] = $invoice_id;
 			}												
@@ -639,15 +629,17 @@ class server extends Model {
 				$server_id = $package_info['server'];				
 				$serverphp = $this->createServer($order_info['pid']);
 				if ($serverphp != false) {
-					$donestuff = $serverphp->suspend($order_id, $server_id, $reason);
+					$done = $serverphp->suspend($order_id, $server_id, $reason);
+					if ($done) {
+						$main->addlog("server::suspend Order #$order_id");
+						return true;
+					}
 				}	
 			}	
-			return 	$donestuff;	
+			$main->addlog("server::suspend Error with Order #$order_id");
+			return false;	
 		} else {
-			$array['Error'] = "That order doesn't exist or cannot be suspended!";
-			$array['User PID'] = $order_id;
-			$main->error($array);
-			return false;			
+			$main->addlog("server::suspend Order not found #$order_id");	
 		}
 	}
 	
@@ -667,15 +659,14 @@ class server extends Model {
 				$serverphp = $this->createServer($order_info['pid']); # Create server class
 				if ($serverphp != false) {
 					if($serverphp->unsuspend($order_id, $server_id) == true) {
+						$main->addlog("server::unsuspend Order #$order_id");
 						return true;
 					}
 				}		
 			}
 			return false;
 		} else {
-			$array['Error'] = "That order doesn't exist or cannot be unsuspended!";
-			$array['User PID'] = $order_id;
-			$main->error($array);
+			$main->addlog("server::suspend Order not found #$order_id");			
 			return;
 		}
 	}

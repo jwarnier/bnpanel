@@ -243,7 +243,6 @@ class page {
 								$new_addon_list = array();																
 								foreach($addon_list as $addon_id=>$value) {																								
 									$variable_name = 'addon_'.$addon_id;
-									//var_dump($variable_name);
 									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
 										$new_addon_list[] = $addon_id;				
 									}															
@@ -342,7 +341,6 @@ class page {
 							$new_addon_list = array();																						
 							foreach($addong_list as $addon_id=>$value) {																								
 								$variable_name = 'addon_'.$addon_id;
-								//var_dump($variable_name);
 								if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
 									$new_addon_list[] = $addon_id;				
 								}															

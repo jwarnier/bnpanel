@@ -8,6 +8,7 @@ $is_ajax_load = true;
 require_once 'compiler.php';
 
 class AJAX {
+	
 	public function orderIsUser() {
 		if(!$_SESSION['clogged']) {
 			echo "0";
@@ -15,25 +16,13 @@ class AJAX {
 			echo "1";
 		}
 	}
+	
 	public function acpPadd() {
 		global $type;
 		global $main;
 		echo $type->acpPadd($main->getvar['type']);
 	}
-	
-	public function pdescription() {
-		global $main;
-		global $db;
-		if(!$main->getvar['id']) {
-		   echo "Select a package to see the description!";
-		}
-		else {
-			$query = $db->query("SELECT * FROM `<PRE>packages` WHERE `id` = '{$main->getvar['id']}'");
-			$data = $db->fetch_array($query);
-			echo $data['description'];
-		}
-	}
-	
+		
 	/**
 	 * Checks the user
 	 */
@@ -64,8 +53,7 @@ class AJAX {
 			$_SESSION['check']['pass'] = false;
 		   echo 0;
 		   return;
-		}
-		else {
+		} else {
 			$pass = explode(":", $main->getvar['pass']);
 			if($pass[0] == $pass[1]) {
 				$_SESSION['check']['pass'] = true;
@@ -77,6 +65,7 @@ class AJAX {
 			}
 		}
 	}
+	
 	public function emailcheck() {
 		global $main, $db, $user;
 		if(!$main->getvar['email']) {
@@ -193,11 +182,10 @@ class AJAX {
 	//Basic captcha check... thanks http://frikk.tk!
 	public function humancheck() {
 		global $main;
-		if($main->getvar['human'] != $_SESSION["pass"]) {
+		if($main->getvar['human'] != $_SESSION['pass']) {
 			$_SESSION['check']['human'] = false;
 			echo 0;			
-		}		
-		else {
+		} else {
 			$_SESSION['check']['human'] = true;
 			echo 1;			
 		}
@@ -219,8 +207,7 @@ class AJAX {
 			$data = explode(".", $main->getvar['domain']);
 			if(!$data[0] || !$data[1]) {
 				echo 0;	
-			}
-			else {
+			} else {
 				echo 1;	
 			}
 		}
@@ -268,13 +255,10 @@ class AJAX {
 	
 	public function template() {
 		global $main, $db, $style;
-		if($_SESSION['logged']) {
-			$query = $db->query("SELECT * FROM `<PRE>templates` WHERE `id` = '{$main->getvar['id']}'");
-			if($db->num_rows($query) == 0) {
-				$array['Error'] = "Template not found!";
-				$array['Template ID'] = $main->getvar['id'];
-				$main->error($array);
-			} else {
+		if ($main->getCurrentStaffId()) {
+			$main->getvar['id'] = intval($main->getvar['id']);
+			$query = $db->query("SELECT * FROM `<PRE>templates` WHERE id = '{$main->getvar['id']}'");
+			if($db->num_rows($query) > 0) {				
 				$data = $db->fetch_array($query);
 				echo $data['subject']."{}[]{}".$data['description']."{}[]{}".$data['content'];
 			}
@@ -283,14 +267,10 @@ class AJAX {
 	
 	public function cat() {
 		global $main, $db, $style;
-		if($_SESSION['logged']) {
-			$query = $db->query("SELECT * FROM `<PRE>cats` WHERE `id` = '{$main->getvar['id']}'");
-			if($db->num_rows($query) == 0) {
-				$array['Error'] = "Category not found!";
-				$array['Category ID'] = $main->getvar['id'];
-				$main->error($array);
-			}
-			else {
+		if ($main->getCurrentStaffId()) {
+			$main->getvar['id'] = intval($main->getvar['id']);
+			$query = $db->query("SELECT * FROM `<PRE>cats` WHERE id = '{$main->getvar['id']}'");
+			if($db->num_rows($query) > 0) {			
 				$data = $db->fetch_array($query);
 				echo $data['name']."{}[]{}".$data['description'];
 			}
@@ -298,14 +278,10 @@ class AJAX {
 	}
 	public function art() {
 		global $main, $db, $style;
-		if($_SESSION['logged']) {
+		if ($main->getCurrentStaffId()) {
+			$main->getvar['id'] = intval($main->getvar['id']);
 			$query = $db->query("SELECT * FROM `<PRE>articles` WHERE `id` = '{$main->getvar['id']}'");
-			if($db->num_rows($query) == 0) {
-				$array['Error'] = "Article not found!";
-				$array['Article ID'] = $main->getvar['id'];
-				$main->error($array);
-			}
-			else {
+			if($db->num_rows($query) > 0) {				
 				$data = $db->fetch_array($query);
 				echo $data['name']."{}[]{}".$data['content']."{}[]{}".$data['catid'];
 			}
@@ -314,18 +290,16 @@ class AJAX {
 	
 	public function search() {
 		global $main, $db, $style;
-		if($_SESSION['logged']) {
-			//echo '<script type="text/javascript" src="'.URL.'includes/javascript/jquerytooltip.js">';
-			$type = $main->getvar['type'];
-		
+		if ($main->getCurrentStaffId()) {
+			$type = $main->getvar['type'];		
 			$value = $main->getvar['value'];
 			if($main->getvar['num']) {
-				$show = $main->getvar['num'];
+				$show = intval($main->getvar['num']);
 			} else {
 				$show = 10;	
 			}
 			if($main->getvar['page'] != 1) {
-				$lower = $main->getvar['page'] * $show;
+				$lower = intval($main->getvar['page']) * $show;
 				$lower = $lower - $show;
 				$upper = $lower + $show;
 			} else {
@@ -354,59 +328,8 @@ class AJAX {
 						$array['ID']	= $data['id'];
 						$array['USER'] 	= $data['user'];
 						$array['URL'] 	= URL;
-						$user_status = $main->getUserStatusList();
-						$array['STATUS'] = $user_status[$data['status']];
-						/*
-						//$array['DOMAIN'] = $client['domain'];
-						switch($data['status']) {
-							case USER_STATUS_ACTIVE:
-								$array['TEXT'] = "Unsuspend";
-								$array['FUNC'] = "unsus";
-								$array['IMG'] = "accept.png";
-							break;							
-							case USER_STATUS_SUSPENDED:
-								$array['TEXT'] = "Unsuspend";
-								$array['FUNC'] = "unsus";
-								$array['IMG'] = "accept.png";
-							break;							
-							case USER_STATUS_WAITING_ADMIN_VALIDATION:
-								$array['TEXT'] = "Unsuspend";
-								$array['FUNC'] = "unsus";
-								$array['IMG'] = "accept.png";
-							break;							
-							case USER_STATUS_DELETED:
-								$array['TEXT'] = "Unsuspend";
-								$array['FUNC'] = "unsus";
-								$array['IMG'] = "accept.png";
-							break;
-						}
-						
-						/*
-						if($data['status'] == "2") {
-							$array['TEXT'] = "Unsuspend";
-							$array['FUNC'] = "unsus";
-							$array['IMG'] = "accept.png";
-						}
-						elseif($data['status'] == "1") {
-							$array['TEXT'] = "Suspend";
-							$array['FUNC'] = "sus";	
-							$array['IMG'] = "exclamation.png";
-						}
-						elseif($data['status'] == "3") {
-							//Fixes caption added by J.Montoya
-							$array['TEXT'] = "Validate";
-							$array['FUNC'] = "none";	
-							$array['IMG'] = "user_suit.png";
-						}
-						elseif($data['status'] == "4") {
-							$array['TEXT'] = "Awaiting Payment";
-							$array['FUNC'] = "none";	
-							$array['IMG'] = "money.png";
-						} else {
-							$array['TEXT'] = "Other Status";
-							$array['FUNC'] = "none";	
-							$array['IMG'] = "help.png";	
-						}*/
+						$user_status 	= $main->getUserStatusList();
+						$array['STATUS']= $user_status[$data['status']];						
 						echo $style->replaceVar("tpl/user/clientsearchbox.tpl", $array);	
 						$n++;
 					}
@@ -416,8 +339,8 @@ class AJAX {
 				$query = $db->query("SELECT * FROM `<PRE>users` u  WHERE u.{$type} LIKE '%{$value}%' ORDER BY u.{$type} ASC");
 				$num = $db->num_rows($query);
 				$pages = ceil($num/$show);
-				echo "Page..";
-				for($i; $i != $pages + 1; $i += 1) {
+				echo "Page ";
+				for($i=0; $i != $pages + 1; $i += 1) {
 					echo ' <a href="Javascript: page(\''.$i.'\')">'.$i.'</a>';
 				}
 				echo '</div>';
@@ -442,36 +365,33 @@ class AJAX {
 		}
 	}
 	
-	public function phpinfo() {
-		if($_SESSION['logged']) {
-			phpinfo();
-		}
-	}
-	
 	public function status() {
-		global $db;
-		global $main;
-		$id = $main->getvar['id'];
-		$status = $main->getvar['status'];
-		$query = $db->query("UPDATE `<PRE>tickets` SET `status` = '{$status}' WHERE `id` = '{$id}'");
-		if($query) {
-			echo "<img src=". URL ."themes/icons/accept.png>";
-		}
-		else {
-			echo "<img src=". URL ."themes/icons/cross.png>";
+		global $db, $main;
+		if ($main->getCurrentStaffId()) {
+			$id = intval($main->getvar['id']);
+			$status = $main->getvar['status'];
+			$query = $db->query("UPDATE `<PRE>tickets` SET status = '{$status}' WHERE id = '{$id}'");
+			if($query) {
+				echo "<img src=". URL ."themes/icons/accept.png>";
+			} else {
+				echo "<img src=". URL ."themes/icons/cross.png>";
+			}
 		}
 	}
 	
 	public function serverhash() {
 		global $main;
-		$type = $main->getvar['type'];
-		require_once LINK.'servers/panel.php';
-		require_once LINK ."servers/". $type .".php";
-		$server = new $type;
-		if($server->hash) {
-			echo 0;	
-		} else {
-			echo 1;	
+		if ($main->getCurrentStaffId()) {
+			$type = $main->getvar['type'];
+			require_once LINK.'servers/panel.php';
+			
+			require_once LINK ."servers/". $type .".php";
+			$server = new $type;
+			if($server->hash) {
+				echo 0;	
+			} else {
+				echo 1;	
+			}
 		}
 	}
 	
