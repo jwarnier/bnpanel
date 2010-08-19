@@ -128,7 +128,7 @@ class page {
 				break;				
 			case 'delete':
 				if($main->getvar['do'] && $main->checkToken()) {
-					$billing->setPrimaryKey($main->getvar['do']);
+					$billing->setId($main->getvar['do']);
 					$billing->delete();
 					$main->errors("Billing cycle #{$main->getvar['do']} has been deleted!");		
 				}

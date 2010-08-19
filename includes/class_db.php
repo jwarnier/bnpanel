@@ -136,6 +136,12 @@ class db {
 		return $option == 'ASSOC' ? mysql_fetch_array($result, MYSQL_ASSOC) : ($option == 'NUM' ? mysql_fetch_array($result, MYSQL_NUM) : mysql_fetch_array($result));		
 	}
 	
+	public function fetch_row($result) {
+		return mysql_fetch_row($result);
+	}
+	
+	
+	
 	public function strip($value) { # Gets a string and returns a value without SQL Injection
 		if(is_array($value)) {
 			$array = array();
@@ -300,4 +306,135 @@ class db {
 		}
 		return $array;
 	}	
+	
+	public function addLimitAndOffset(&$sql,$options) {
+        if (isset($options['limit']) && $limit = $options['limit']){
+            $sql .= " LIMIT $limit";
+            if (isset($options['offset']) && $offset = $options['offset']){
+                $sql .= " OFFSET $offset";
+            }
+        }
+        return $sql;
+    }
+    
+    
+    /* DATABASE STATEMENTS - CRUD */
+
+    public function execute($sql, $message = 'SQL') {
+        if (is_array($sql)) {
+            $sql_string = array_shift($sql);
+            $bindings = $sql;
+        } else $sql_string = $sql;
+
+        //$this->_log($message.': '.$sql_string);
+        //$result = isset($bindings) ? $this->connection->Execute($sql_string, $bindings) : $this->connection->Execute($sql_string);
+        $result = $this->query($sql_string);
+
+        if (!$result){
+            $error_message = '['.$this->connection->ErrorNo().'] '.$this->connection->ErrorMsg();
+           // $this->_log('SQL Error: '.$error_message);
+            if ($this->debug || AK_DEBUG) trigger_error("Tried '$sql_string'. Got: $error_message", E_USER_NOTICE);
+        }
+        return $result;
+    }
+
+    public function incrementsPrimaryKeyAutomatically()
+    {
+        return true;
+    }
+
+    public function getLastInsertedId($table,$pk)
+    {
+        return $this->connection->Insert_ID($table,$pk);
+    }
+
+    public function getAffectedRows()
+    {
+        return $this->connection->Affected_Rows();
+    }
+
+    public function insert($sql,$id=null,$pk=null,$table=null,$message = '')
+    {
+        $result = $this->execute($sql,$message);
+        if (!$result){
+            return false;
+        }
+        return is_null($id) ? $this->getLastInsertedId($table,$pk) : $id;
+    }
+
+    public function update($sql,$message = '')
+    {
+        $result = $this->execute($sql,$message);
+        return ($result) ? $this->getAffectedRows() : false;
+    }
+
+    public function delete($sql,$message = '')
+    {
+        $result = $this->execute($sql,$message);
+        return ($result) ? $this->getAffectedRows() : false;
+    }
+
+    /**
+    * Returns a single value, the first column from the first row, from a record
+    */
+    public function selectValue($sql)
+    {
+        $result = $this->selectOne($sql);
+        return !is_null($result) ? array_shift($result) : null;
+    }
+
+    /**
+     * Returns an array of the values of the first column in a select:
+     *   sqlSelectValues("SELECT id FROM companies LIMIT 3") => array(1,2,3)
+     */
+    public function selectValues($sql)
+    {
+        $values = array();
+        if($results = $this->select($sql)){
+            foreach ($results as $result){
+                $values[] = array_shift($result);
+            }
+        }
+        return $values;
+    }
+
+    /**
+     * Returns a record array of the first row with the column names as keys and column values
+     * as values.
+     */
+    public function selectOne($sql)
+    {
+        $result = $this->select($sql);
+        return  !is_null($result) ? array_shift($result) : null;
+    }
+
+    /**
+     * alias for select
+     */
+    public function selectAll($sql)
+    {
+        return $this->select($sql);
+    }
+
+    /**
+    * Returns an array of record hashes with the column names as keys and
+    * column values as values.
+    */
+    public function select($sql, $message = '')
+    {
+        $result = $this->execute($sql, $message);
+        if (!$result){
+            return array();
+        }
+
+        $records = array();
+        while ($record = $this->fetch_row($result)) {
+            $records[] = $record;
+        }
+        //$result->Close();
+        return $records;
+    }
+    
+    
+    
 }
