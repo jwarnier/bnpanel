@@ -17,7 +17,7 @@ class billing extends model {
 	}
 	
 	public function edit($id, $params) {		
-		$this->setPrimaryKey($id);		
+		$this->setId($id);		
 		$this->update($params);
 	}
 	public function delete() {

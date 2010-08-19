@@ -40,7 +40,7 @@ class staff extends model {
 	
 	public function edit($id, $params) {
 		global $order, $main;	
-		$this->setPrimaryKey($id);	
+		$this->setId($id);	
 		
 		if (isset($params['password']) && !empty($params['password']) )  {			
 			$params['salt']			= md5(rand(0,9999999));
@@ -72,7 +72,7 @@ class staff extends model {
 		global $main;
 		//you cant delete yourself 
 		if ($id != $main->getCurrentStaffId()) {
-			$this->setPrimaryKey($id);
+			$this->setId($id);
 			parent::delete();
 			$main->addLog("Staff User deleted: $id");	
 			return true;
@@ -185,7 +185,7 @@ class staff extends model {
 	/*
 	public function updateUserStatus($user_id, $status) {
 		global $main;		
-		$this->setPrimaryKey($user_id);
+		$this->setId($user_id);
 		$user_status_list = array_keys($main->getUserStatusList());		
 		if (in_array($status, $user_status_list)) {		
 			$params['status'] = $status;

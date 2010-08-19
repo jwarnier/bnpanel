@@ -9,7 +9,8 @@ if (THT != 1) {
 class order extends model {
 	
 	public $columns 	= array('id', 'userid','username', 'password','domain','pid', 'signup', 'status', 'additional', 'billing_cycle_id','subdomain_id');	
-	public $table_name 	= 'orders';	
+	public $table_name 	= 'orders';
+	public $_modelName 	= 'order';
 	
 	/** 
 	 * Creates an order
@@ -76,7 +77,7 @@ class order extends model {
 	public function updateOrderStatus($order_id, $status) {	
 			
 		global $main, $server, $email, $user, $db, $package;		
-		$this->setPrimaryKey($order_id);
+		$this->setId($order_id);
 		
 		$order_info = $this->getOrderInfo($order_id, true);
 		$user_info 	= $user->getUserById($order_info['userid']);		
@@ -192,7 +193,7 @@ class order extends model {
 	 */
 	public function edit($order_id, $params) {
 		global $main;		
-		$this->setPrimaryKey($order_id);
+		$this->setId($order_id);
 		//Here we will change the status of the package in the Server
 		$result = true;
 		if(isset($params['status']) && !empty($params['status'])) {			
@@ -578,5 +579,15 @@ class order extends model {
 			}
 		}
 		return false;
-	}	
+	}
+	
+		
+	function test() {		
+		/*
+		$my_order = $this->find(2,3);
+		foreach($my_order as $item) {
+		var_dump($item->id);	
+		}*/	
+	}
+		
 }

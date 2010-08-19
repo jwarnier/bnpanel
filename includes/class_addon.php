@@ -17,7 +17,7 @@ class addon extends model {
 	}	
 	
 	public function edit($id, $params) {		
-		$this->setPrimaryKey($id);
+		$this->setId($id);
 		$this->update($params);
 	}
 	
@@ -25,7 +25,7 @@ class addon extends model {
 	public function delete($id) {
 		global $db;
 		
-		$this->setPrimaryKey($id);
+		$this->setId($id);
 		parent::delete();		
 		//Deleting relation between addons and packages
 		$id = intval($id); 

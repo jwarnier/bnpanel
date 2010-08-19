@@ -45,7 +45,7 @@ class invoice extends model {
 	
 	public function edit($id, $params) { # Edit an invoice. Fields created can only be edited?
 		global $main;
-		$this->setPrimaryKey($id);
+		$this->setId($id);
 		$this->update($params);
 		$main->addLog("invoice::edit #$id updated");	
 	}
@@ -764,7 +764,7 @@ class invoice extends model {
 	 */
 	public function updateInvoiceStatus($invoice_id, $status) {
 		global $db, $main, $email, $user;		
-		$this->setPrimaryKey($invoice_id);
+		$this->setId($invoice_id);
 		$order_info = $this->getOrderByInvoiceId($invoice_id);
 		$user_info 	= $user->getUserById($order_info['userid']);
 		

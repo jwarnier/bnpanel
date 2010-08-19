@@ -62,7 +62,7 @@ class server extends Model {
 	 */
 	public function edit($server_id, $params) {
 		global $main;
-		$this->setPrimaryKey($server_id);		
+		$this->setId($server_id);		
 		$this->update($params);
 		$main->addLog("server:edit #$server_id updated");
 	}
@@ -72,7 +72,7 @@ class server extends Model {
 	 */
 	public function delete($server_id) { # Deletes invoice upon invoice id
 		global $main;
-		$this->setPrimaryKey($server_id);	
+		$this->setId($server_id);	
 		parent::delete();
 		$main->addLog("server:delete id #$id deleted ");
 		return true;

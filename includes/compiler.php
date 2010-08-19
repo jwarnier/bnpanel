@@ -96,6 +96,7 @@ if($sql['install']) {
 $folder = LINK;
 require_once LINK.'/model.php'; # Get the file
 require LINK.'/class_main.php'; # Get the file
+
 			
 $main = new main(); # Create the class
 if (isset($main) && !empty($main)) {
@@ -129,6 +130,8 @@ if ($handle = opendir($folder)) { # Open the folder
 	}
 }
 closedir($handle); #Close the folder
+
+$order->test();
 
 if(INSTALL == 1) {
 	define("THEME", $db->config("theme")); # Set the default theme
