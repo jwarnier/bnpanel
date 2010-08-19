@@ -57,7 +57,7 @@ function client() {
 				$subnav = $content->navtitle;				
 				foreach($content->navlist as $key => $value) {
 					$array2['IMGURL'] = $value[1];
-					$array2['LINK'] = "?page=".$main->getvar['page']."&sub=".$value[2];
+					$array2['LINK'] = "?page=".$client_item['link']."&sub=".$value[2];
 					$array2['VISUAL'] = $value[0];
 					$array3['LINKS'] .= $style->replaceVar("tpl/menu/submenu_link.tpl", $array2);
 				}
@@ -172,8 +172,7 @@ if(!$_SESSION['clogged']) {
 				}
 			}
 		}
-		$main->generateToken();
-		
+		$main->generateToken();		
 				
 		echo '<div align="center">'.$main->table("Client Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';		
 		echo $style->get("footer.tpl");

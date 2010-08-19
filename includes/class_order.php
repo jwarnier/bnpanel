@@ -88,15 +88,14 @@ class order extends model {
 		$site_info = false;
 		if ($serverphp != false ) {				
 			$site_info 		= $serverphp->getSiteStatus($order_id);
-		}		
-					
+		}
 		if (in_array($status, $order_status)) {				
 			switch($status) {
 				case ORDER_STATUS_ACTIVE:				
 					//Setting email
 					$send_email = false;					
 					if ($site_info != false) {
-						$result = $server->unsuspend($order_id);	
+						$result = $server->unsuspend($order_id);
 						if($result) { $send_email = true; }																	
 					} else {
 						//Sent to ISPConfiG!!!!
@@ -160,7 +159,7 @@ class order extends model {
 			$params['status'] = $status;
 			if ($result) {
 				$this->update($params);
-				$main->addLog("order::updateOrderStatus function called succed");
+				$main->addLog("order::updateOrderStatus function called succeed");
 				return true;
 			}	
 			$main->addLog("order::updateOrderStatus function called error");		
@@ -196,7 +195,8 @@ class order extends model {
 		$this->setId($order_id);
 		//Here we will change the status of the package in the Server
 		$result = true;
-		if(isset($params['status']) && !empty($params['status'])) {			
+		if(isset($params['status']) && !empty($params['status'])) {		
+			echo '7777777777777777777';	
 			$result = $this->updateOrderStatus($order_id, $params['status']);
 			unset($params['status']); //do not update twice 			
 		}
@@ -231,6 +231,7 @@ class order extends model {
 					foreach($addon_list as $addon_item) {					
 						if ($all_addons_info[$addon_item]['install_package']) {						
 							$serverphp->installChamilo($order_id);
+							$main->addlog('order::sendOrderToControlPanel Order #'.$order_id.' Install chamilo');
 							break;// Install Chamilo just once	
 						}
 					}						

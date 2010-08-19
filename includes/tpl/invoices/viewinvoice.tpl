@@ -8,7 +8,7 @@
 
   <tr>
     <td width="20%">Order id:</td>
-    <td>%ORDER_ID%</td>
+    <td><a href="?page=orders&sub=view&do=%ORDER_ID%">%ORDER_ID%</a></td>
   </tr>  
      <tr>
     <td valign="top">User</td>
