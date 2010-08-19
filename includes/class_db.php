@@ -172,13 +172,32 @@ class db {
 
 	}
 	
+	/**
+	 * Gest the current system configuration
+	 */
+	function getSystemConfigList() {		
+		if (!isset($_SESSION['config'])) {				
+			$query = $this->query("SELECT * FROM `<PRE>config`");				
+			if ($this->num_rows($query) > 0) {
+				$list = $this->store_result($query);
+				$new_list =  array();
+				foreach($list as $item ) {
+					$new_list[$item['name']] = $item['value'];
+				}				
+				$_SESSION['config'] = $new_list;
+			}				
+		} else {			
+			return $_SESSION['config'];
+		}
+	}
+	
+	
 	public function config($name) { # Returns a value of a config variable	
-		$name = $this->strip($name);
-		$query = $this->query("SELECT * FROM `<PRE>config` WHERE `name` = '{$name}'");		
-		if($this->num_rows($query) > 0) {
-			$value = $this->fetch_array($query);
-			return $value['value'];
-		} 
+		global $main;
+		$config_list = $this->getSystemConfigList();			
+		if (isset($config_list[$name]) && !empty($config_list[$name])) {
+			return $config_list[$name];			
+		}
 		return false;
 	}
 	
@@ -277,7 +296,7 @@ class db {
 	public static function store_result($result, $option = 'ASSOC') {
 		$array = array();
 		if ($result !== false) { // For isolation from database engine's behaviour.
-			while ($row = self::fetch_array($result, $option)) {
+			while ($row = self::fetch_array($result, $option)) {				
 				$array[] = $row;
 			}
 		}

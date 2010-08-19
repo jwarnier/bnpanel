@@ -1,7 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-include '../includes/compiler.php';
+require '../includes/compiler.php';
 
 //THT Variables
 define("PAGE", "Order Form");
@@ -10,7 +10,7 @@ define("INFO", "IP Logged: ". $main->removeXSS($_SERVER['REMOTE_ADDR']));
 
 #If logout
 if($main->getvar['do'] == "logout") {
-	session_destroy();
+	$main->logout();
 	$main->redirect("../order/");
 }
 
@@ -140,4 +140,4 @@ if($db->num_rows($packages2) == 0) {
 echo '</div>'; #End it
 echo $style->get("footer.tpl"); #Output Footer
 //Output
-include(LINK ."output.php");
+require LINK ."output.php";

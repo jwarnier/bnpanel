@@ -8,14 +8,15 @@ define("PAGE", "Client Area");
 
 //Main ACP Function - Creates the ACP basically
 function client() {
-	global $main, $user,$db, $style, $type,$email;
+	global $main, $db, $style, $type,$email;
 	ob_start(); # Stop the output buffer
 		
 	if(!$main->getvar['page']) { 
 		$main->getvar['page'] = 'home';
 	}
-	$client_navigation = $user->getClientNavigation();
+	$client_navigation = $main->getClientNavigation();
 	$client_item = $client_navigation[$main->getvar['page']];
+	$header = 'Home';
 	$link = 'pages/home.php';	
 	if (isset($client_item) && !empty($client_item)) {		
 		$header = $client_item['visual'];		

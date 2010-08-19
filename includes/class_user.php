@@ -214,27 +214,8 @@ class user extends model {
 		}		
 	}
 	
-	public function getClientNavigation() {
-		global $db;
-		$sql = 'SELECT * FROM <PRE>clientnav'; 
-		$result = $db->query($sql);
-		$client_nav = array();
-		while ($row = $db->fetch_array($result, 'ASSOC')) {
-			$client_nav[$row['link']] = $row;
-		}		
-		return $client_nav;
-	}
-	
-	public function getAdminNavigation() {
-		global $db;
-		$sql = 'SELECT * FROM <PRE>acpnav'; 
-		$result = $db->query($sql);
-		$client_nav = array();
-		while ($row = $db->fetch_array($result, 'ASSOC')) {
-			$client_nav[$row['link']] = $row;
-		}		
-		return $client_nav;
-	}
+
+
 	
 	/**
 	 * Only changes the system password not the Control Panel password

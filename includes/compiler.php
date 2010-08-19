@@ -96,7 +96,7 @@ if($sql['install']) {
 $folder = LINK;
 require_once LINK.'/model.php'; # Get the file
 require LINK.'/class_main.php'; # Get the file
-				
+			
 $main = new main(); # Create the class
 if (isset($main) && !empty($main)) {
 	global $main;		
@@ -110,6 +110,7 @@ if ($main->checkUserAgent() == false) {
 	$main->logout();
 }
 
+//@todo remove this and use autoload 
 if ($handle = opendir($folder)) { # Open the folder
 	while (false !== ($file = readdir($handle))) { # Read the files
 		if($file != "." && $file != "..") { # Check aren't these names
@@ -190,7 +191,7 @@ if (!isset($_GET['msg'])) {
 
 //If payment..
 if(FOLDER == "client" && $main->getvar['page'] == "invoices" && $main->getvar['iid'] && $_SESSION['clogged'] == 1) {
-	if ($main->checkToken()) {
+	if ($main->checkToken(false)) {
 		$invoice->pay($main->getvar['iid'], "client/index.php?page=invoices");
 	}
 	echo "You made it this far.. something went wrong.";

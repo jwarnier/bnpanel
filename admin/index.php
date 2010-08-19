@@ -19,7 +19,7 @@ function acp() {
 	if(!$main->getvar['page']) { 
 		$main->getvar['page'] = 'home';
 	}
-	$admin_navigation = $user->getAdminNavigation();
+	$admin_navigation = $main->getAdminNavigation();
 	$admin_nave_item = false;
 	
 	if (isset($admin_navigation[$main->getvar['page']]) && !empty($admin_navigation[$main->getvar['page']])) {
@@ -46,11 +46,9 @@ function acp() {
 	$array_item['IMGURL'] = "logout.png";
 	$array_item['LINK'] = "?page=logout";
 	$array_item['VISUAL'] = "Logout";
-	$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array_item);
-	
+	$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array_item);	
 		
-	$sidebar = $style->replaceVar("tpl/menu/leftmenu_main.tpl", $array);
-	
+	$sidebar = $style->replaceVar("tpl/menu/leftmenu_main.tpl", $array);	
 
 	$user_permission = true;
 	if(!file_exists($link)) {	
