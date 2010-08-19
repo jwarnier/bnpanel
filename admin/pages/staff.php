@@ -23,7 +23,7 @@ class page {
 	public function content() { # Displays the page 
 		global $main, $style, $db, $staff, $user;
 		
-		$admin_navigation = $user->getAdminNavigation();		
+		$admin_navigation = $main->getAdminNavigation();		
 		
 		switch($main->getvar['sub']) {
 			default:

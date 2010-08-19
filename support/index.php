@@ -1,46 +1,53 @@
 <?php
 /* For licensing terms, see /license.txt */
-include '../includes/compiler.php';
+require '../includes/compiler.php';
 
-//THT Variables
 define("PAGE", "Support Area");
 ob_start();
 
 if(!$main->getvar['page']) { 
-	$main->getvar['page'] = "kb";
+	$main->getvar['page'] = 'kb';
 }
-	$query = $db->query("SELECT * FROM `<PRE>supportnav` WHERE `link` = '{$main->getvar['page']}'");
-	$page = $db->fetch_array($query);
-	$header = $page['visual'];
-	$link = "pages/". $main->getvar['page'] .".php";
+
+$support_navigation = $main->getSupportNavigation();
+
+$support_item = false;
+if (isset($support_navigation[$main->getvar['page']]) && !empty($support_navigation[$main->getvar['page']])) {
+	$support_item = $support_navigation[$main->getvar['page']];
+}
+$header = 'Home';
+$link = 'pages/home.php';	
+
+if (isset($support_item) && !empty($support_item)) {		
+	$header = $client_item['visual'];		
+	$link = "pages/". $support_item['link'] .".php";
+	$header = $support_item['visual'];
+}	
+
 if($db->config("senabled") == 0) {
 	$html = $db->config("smessage");
 } else {
 	if(!file_exists($link)) {
 		$html = "Seems like the .php is non existant. Is it deleted?";	
-	}
-	else {
+	} else {
 		//If deleting something
 		if(preg_match("/[\.*]/", $main->getvar['page']) == 0) {
-			include($link);
-			$content = new page;
+			require $link;
+			$content = new page();
 			if(isset($main->getvar['sub'])) {
 				ob_start();
 				$content->content();
 				$html = ob_get_contents(); # Retrieve the HTML
 				ob_clean(); # Flush the HTML
-			}
-			elseif($content->navlist) {
+			} elseif($content->navlist) {
 				$html = $content->description();
-			}
-			else {
+			} else {
 				ob_start();
 				$content->content();
 				$html = ob_get_contents(); # Retrieve the HTML
 				ob_clean(); # Flush the HTML	
 			}
-		}
-		else {
+		} else {
 			$html = "You trying to hack me? You've been warned. An email has been sent.. May I say, Owned?";
 			$email->staff("Possible Hacking Attempt", "A user has been logged trying to hack your copy of THT, their IP is: ". $main->removeXSS($_SERVER['REMOTE_ADDR']));
 		}
@@ -59,4 +66,4 @@ echo $data;
 echo $style->get("footer.tpl");
 
 //Output
-include LINK ."output.php";
+require LINK ."output.php";
