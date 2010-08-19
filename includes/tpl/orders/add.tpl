@@ -126,7 +126,7 @@ function checkdomain() {
 
 </script>
 
-<ERRORS>
+
 
 <style type="text/css">
 .suggestionsBox {
@@ -154,7 +154,8 @@ function checkdomain() {
 }
 </style>
     
-
+<h2>New Order</h2>
+<ERRORS>
 <form id="addorder" name="addorder" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">    
     <tr>

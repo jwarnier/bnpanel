@@ -21,6 +21,7 @@ var loading = '<img src="<URL>themes/icons/ajax-loader.gif">';
 var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></div>';
 
 </script>
+<h2>New User</h2>
 <ERRORS>
 <form id="adduser" name="adduser" method="post" action="">
 <table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">

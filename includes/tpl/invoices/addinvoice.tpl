@@ -33,6 +33,7 @@
 		});
 	}
 </script>
+<h2>New Invoice</h2>
 <ERRORS>
 <form id="addinvoice" name="addinvoice" method="post" action="">
 <input name="billing_id" type="hidden" id="billing_id" value="%BILLING_ID%"/>

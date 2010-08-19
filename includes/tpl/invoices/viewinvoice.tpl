@@ -1,9 +1,8 @@
 <div class="contextual">
 	<a href="?page=invoices&sub=edit&do=%ID%"> <img src="<URL>themes/icons/pencil.png"> Edit</a> 
 </div>
-
-<ERRORS>
 <h2>Invoice #%ID%</h2>
+<ERRORS>
 <table class="box" border="0" cellspacing="2" cellpadding="0">
 
   <tr>

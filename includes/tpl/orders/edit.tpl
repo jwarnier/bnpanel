@@ -54,12 +54,8 @@ function loadAddons(obj) {
 	}
 }
 </script>
-
-
-
-
-<ERRORS>
 <h2>Order #%ID%</h2>
+<ERRORS>
 <form id="addpackage" name="addpackage" method="post" action="">
 
 <input name="order_id" type="hidden" id="order_id" value="%ID%" />
