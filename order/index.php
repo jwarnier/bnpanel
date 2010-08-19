@@ -19,13 +19,14 @@ $ip = $_SERVER['REMOTE_ADDR'];
 
 //Deleting check  
 unset($_SESSION['check']);
+
 //Deleting last invoices just in case
 unset($_SESSION['last_invoice_id']);	
 
 #Check stuff
-if($db->config("general") == 0) {
+if($db->config('general') == 0) {
 	$maincontent = $main->table("Signups Closed", $db->config("message"));
-} elseif(!$main->checkIP($ip) && !$db->config("multiple")) {
+} elseif(!$main->checkIP($ip) && !$db->config('multiple')) {
 	$maincontent = $main->table("IP Already Exists!", "Your IP already exists in the database!");
 } elseif($_SESSION['clogged'] && $db->config('multiple') != 1) {
 	$maincontent = $main->table("Unable to sign-up!", "One package per account!");
@@ -36,17 +37,19 @@ if($db->config("general") == 0) {
 global $billing;
 echo '<div id="ajaxwrapper">'; #Ajax wrapper, for steps
 
+$main->getvar['id'] = intval($main->getvar['id']);
+
 //Get all packages
 if(!$main->getvar['id']) {
-	$packages2 = $db->query("SELECT * FROM `<PRE>packages` WHERE `is_hidden` = 0 AND `is_disabled` = 0 ORDER BY `order` ASC"); 
+	$packages2 = $db->query("SELECT * FROM <PRE>packages WHERE is_hidden = 0 AND is_disabled = 0 ORDER BY `order` ASC"); 
 } else {
-	$packages2 = $db->query("SELECT * FROM `<PRE>packages` WHERE `is_disabled` = 0 AND `id` = '{$main->getvar['id']}'");
+	$packages2 = $db->query("SELECT * FROM <PRE>packages` WHERE is_disabled = 0 AND id = '{$main->getvar['id']}'");
 }
 
 if($db->num_rows($packages2) == 0) {
 	echo $main->table("No packages", "Sorry there are no available packages!");
 } else {
-	while($data = $db->fetch_array($packages2)) {
+	while($data = $db->fetch_array($packages2, 'ASSOC')) {
 		if(!$n) {
 			$array['PACKAGES'] .= "<tr>";	
 		}
@@ -54,7 +57,8 @@ if($db->num_rows($packages2) == 0) {
 		$array2['DESCRIPTION'] 	= $data['description'];
 		$array2['ID']			= $data['id'];
 		$array2['PACKAGE_TYPE']	= $data['type'];
-		$array['PACKAGES'] 	   .= $style->replaceVar("tpl/orderpackages.tpl", $array2);	
+		
+		$array['PACKAGES'] 	   .= $style->replaceVar("tpl/orderform/orderpackages.tpl", $array2);	
 		$n++;
 		if($n == 1) {
 			$array['PACKAGES'] .= '<td width="2%"></td>';	
@@ -128,14 +132,13 @@ if($db->num_rows($packages2) == 0) {
 		$array['NAME'] = $clientdata['user'];
 		$content = $style->replaceVar("tpl/user/cdetails.tpl", $array);
 	}
+	
 	if(!$maincontent) {
-		$maincontent = $style->replaceVar("tpl/orderform.tpl", $array);
+		$maincontent = $style->replaceVar("tpl/orderform/orderform.tpl", $array);
 	}
-
 	echo '<div>';
 	echo $maincontent;
 	echo '</div>';
-
 }
 echo '</div>'; #End it
 echo $style->get("footer.tpl"); #Output Footer

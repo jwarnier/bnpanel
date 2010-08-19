@@ -14,13 +14,14 @@ class server extends Model {
 	public 	$availableServerList = array();
 	
 	public function __construct() {
-		//$this->availableServerList = $this->getAvailablePanelsFromDir();			
+		$this->availableServerList = $this->getAvailablePanelsFromDir();
+		/*			
 		if (isset($_SESSION['available_server_list']) && is_array($_SESSION['available_server_list'])) {
 			$this->availableServerList  = $_SESSION['available_server_list'];
 		} else {
 			$this->availableServerList = $this->getAvailablePanelsFromDir();	
 			$_SESSION['available_server_list'] = $this->availableServerList;
-		}
+		}*/
 	}
 	
 	/**
@@ -118,18 +119,16 @@ class server extends Model {
 		$server_type = $type->determineServerType($server_id); # Determine server		
 		//Abstract class Panel added
 		require_once LINK."servers/panel.php";
-		$link = LINK."servers/".$server_type.".php";
-		if(!file_exists($link)) {			
-			$array['Error'] = "The server .php doesn't exist!";
-			$array['Server ID'] = $server_type;
-			$array['Path'] = $link;
-			$main->error($array);
-			$main->addlog("server::loadServer function error. The server  $server_type doesn't exist!");				
-			return false;	
-		} else {
-			require_once $link; # Get the server
-			$serverphp = new $server_type($server_id);
-			return $serverphp;
+		if (in_array($server_type, $this->getAvailablePanels())) {
+			$link = LINK."servers/".$server_type.".php";
+			if(!file_exists($link)) {
+				$main->addlog("server::loadServer function error. The server  $server_type doesn't exist!");				
+				return false;	
+			} else {
+				require_once $link; # Get the server
+				$serverphp = new $server_type($server_id);
+				return $serverphp;
+			}
 		}
 	}
 	

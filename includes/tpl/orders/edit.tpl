@@ -17,12 +17,13 @@ $(function() {
 	$("#show_preview").dialog({ autoOpen: false, width: '400px' });
 });
 
+/*
 function send(template, id) {		
 	$.get("<AJAX>function=sendtemplate&template="+template+"&order_id="+id,  function(data) {
 		$("#show_preview").html(data);				
 	});						
 	$("#show_preview").dialog('open');
-}
+}*/
 
 function changeAddons(obj) {	
 	var id=obj.options[obj.selectedIndex].value;
