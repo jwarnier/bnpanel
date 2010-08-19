@@ -38,47 +38,39 @@ if (INSTALL == 1) {
 		$pagegen = '';
 	}
 	 
-	/*
-	 * THT Version Function
-	 * By Jimmie Lin
-	 */
-	
-	 if($db->config("show_version_id") == 1){
+	if($db->config("show_version_id") == 1){
 	 	$version = $db->config("version");
 	} else{
 		$version = '';
 	}
-	/*
-	 * THT Navigation
-	 * By Jonny H - Original Idea: Jimmie
-	*/
-	if(FOLDER != "install") {
-		$navbar = $db->query("SELECT * FROM `<PRE>navbar` ORDER BY `order` ASC");
-		while($data2 = $db->fetch_array($navbar)) {
-			if(!$db->config("show_acp_menu") && $data2['name'] == "admin") {
-				//Do something?
-			}
-			else {
-				$array4['ID'] = "nav_". $data2['name'];
+
+	if (FOLDER != 'install') {
+		$array = array();
+		$navigation_list = $main->getMainNavigation();		
+		foreach($navigation_list as $nav_item) {
+			if(!$db->config("show_acp_menu") && $nav_item['name'] == 'admin') {
+				continue;
+			} else {
+				$array['ID'] = "nav_". $nav_item['name'];
 				if(PAGE == $data2['visual']) {
-					$array4['ACTIVE'] = ' class="active"';
+					$array['ACTIVE'] = ' class="active"';
 				}
 				else {
-					$array4['ACTIVE'] = '';
+					$array['ACTIVE'] = '';
 				}
-				$array4['LINK'] = $data2['link'];
-				$array4['ICON'] = $data2['icon'];
-				$array4['NAME'] = $data2['visual'];
-				$navbits .= $style->replaceVar("tpl/navbit.tpl", $array4);
+				$array['LINK'] = $nav_item['link'];
+				$array['ICON'] = $nav_item['icon'];
+				$array['NAME'] = $nav_item['visual'];
+				$navbits .= $style->replaceVar("tpl/navbit.tpl", $array);
 			}
 		}
 	}
+	
 	$array3['NAV'] = $navbits;
 	$navigation = $style->replaceVar("tpl/nav.tpl", $array3);
 }
 
 global $main;
-
 $data = preg_replace("/<THT TITLE>/si", NAME . " :: " . PAGE . " - " . SUB, $data);
 $data = preg_replace("/<NAME>/si", NAME, $data);
 $data = preg_replace("/<CSS>/si", $this->css(), $data);
