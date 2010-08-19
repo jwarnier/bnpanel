@@ -142,8 +142,7 @@ class db {
 			foreach($value as $k => $v) {
 				if(is_array($v)) {
 					$array[$k] = $this->strip($v);
-				}
-				else {
+				} else {
 					if(get_magic_quotes_gpc()) { # Check if Magic Quotes are on
 						  $v = stripslashes($v); 
 					}
@@ -192,8 +191,7 @@ class db {
 	}
 	
 	
-	public function config($name) { # Returns a value of a config variable	
-		global $main;
+	public function config($name) { # Returns a value of a config variable		
 		$config_list = $this->getSystemConfigList();			
 		if (isset($config_list[$name]) && !empty($config_list[$name])) {
 			return $config_list[$name];			
@@ -217,7 +215,7 @@ class db {
 	}
 	
 	public function staff($id) { # Returns values of a id
-		$id = $this->strip($id);
+		$id = intval($id);
 		$query = $this->query("SELECT * FROM `<PRE>staff` WHERE `id` = '{$id}'");
 		if($this->num_rows($query) == 0) {
 			$error['Error'] = "Couldn't retrieve staff data!";
@@ -232,7 +230,7 @@ class db {
 	}
 	
 	public function client($id) { # Returns values of a id
-		$id = $this->strip($id);
+		$id = intval($id);
 		$query = $this->query("SELECT * FROM `<PRE>users` WHERE `id` = '{$id}'");
 		if($this->num_rows($query) == 0) {
 			$error['Error'] = "Couldn't retrieve client data!";
@@ -301,6 +299,5 @@ class db {
 			}
 		}
 		return $array;
-	}
-	
+	}	
 }

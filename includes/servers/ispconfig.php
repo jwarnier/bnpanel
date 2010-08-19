@@ -660,6 +660,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	 */
 	public function installChamilo($order_id, $params = array()) {
 		global	$main, $order;
+		
+		$main->addLog("ispconfig::install_chamilo Order #$order_id");
 				
 		$order_info = $order->getOrderInfo($order_id);
 		//Getting user info 
@@ -723,7 +725,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					return true;
 				} else {
 					if ($database_id['error']) {
-						//echo $database_id['text'];
+						$main->addLog("ispconfig::install_chamilo error: {$database_id['text']}");
 						return false;	
 					}			
 				}
