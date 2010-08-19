@@ -22,6 +22,7 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db, $email, $ticket;
+		$main->getvar['do'] = intval($main->getvar['do']);
 		
 		if ($main->getvar['sub'] == 'all') {
 			
@@ -53,8 +54,7 @@ class page {
 					echo $style->replaceVar("tpl/support/acpticketviewbox.tpl", $array);
 				}				
 			}		
-		} else  {
-		
+		} else  {		
 			if(!$main->getvar['do']) {
 				$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `reply` = '0' AND `status` != '3' ORDER BY `time` DESC");
 				if(!$db->num_rows($query)) {

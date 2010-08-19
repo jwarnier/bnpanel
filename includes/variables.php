@@ -85,6 +85,7 @@ $data = preg_replace("/<PAGEGEN>/si", $pagegen, $data); #Page Generation Time
 $data = preg_replace("/<COPYRIGHT>/si", '<div id="footer">Powered by <a href="http://www.beeznest.com" target="_blank">BNPPanel</a> '. $version .'</div>', $data);
 $error_messages = $main->errors();
 if (!empty($error_messages)) {
-	$data = preg_replace("/<ERRORS>/si", '<div class="info">'.$error_messages.'</div>', $data);
+	$data = preg_replace("/<ERRORS>/si", '<div class="info">'.$error_messages.'</div><div style="clear:both"></div>', $data);
+	
 }
 $data = preg_replace("/%INFO%/si", INFO, $data);
