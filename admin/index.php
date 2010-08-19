@@ -267,7 +267,7 @@ if(!$_SESSION['logged']) {
 
 //End the sctipt
 require_once LINK ."output.php";
-/*
+
 //Memory usage
 echo ('MemoryUsage').': '.number_format((memory_get_usage()/1048576), 3, '.', '') .'Mb' ;
 echo '<br />';
@@ -278,5 +278,3 @@ $mtime = $mtime[1] + $mtime[0];
 $endtime = $mtime;
 $totaltime = ($endtime - $starttime);
 echo '<br />'.$totaltime = number_format(($totaltime), 4, '.', '');
-*/
-?>

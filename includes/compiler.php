@@ -96,7 +96,6 @@ if($sql['install']) {
 $folder = LINK;
 require_once LINK.'/model.php'; # Get the file
 require LINK.'/class_main.php'; # Get the file
-
 			
 $main = new main(); # Create the class
 if (isset($main) && !empty($main)) {
@@ -110,7 +109,7 @@ if (isset($main) && !empty($main)) {
 if ($main->checkUserAgent() == false) {
 	$main->logout();
 }
-
+/*
 //@todo remove this and use autoload 
 if ($handle = opendir($folder)) { # Open the folder
 	while (false !== ($file = readdir($handle))) { # Read the files
@@ -130,8 +129,18 @@ if ($handle = opendir($folder)) { # Open the folder
 	}
 }
 closedir($handle); #Close the folder
+*/
 
-$order->test();
+function __autoload($class_name) {
+	$class_name = strtolower($class_name);
+    require_once LINK.'class_'.$class_name . '.php';
+}
+
+$available_classes = array('addon', 'billing', 'currency', 'email', 'invoice', 'order', 'package', 'server', 'staff', 'style', 'ticket', 'type','user');
+foreach($available_classes as $class_item) {	
+	${$class_item} = new $class_item();
+	global ${$class_item};		
+}
 
 if(INSTALL == 1) {
 	define("THEME", $db->config("theme")); # Set the default theme
@@ -173,11 +182,10 @@ foreach($_GET as $key => $value) {
 }
 
 $main->getvar['_get_token'] = $main->getToken();	
-//var_dump('getvar->'.$main->getvar['_get_token']);
-
 
 $path = dirname($main->removeXSS($_SERVER['PHP_SELF']));
 $position = strrpos($path,'/') + 1;
+
 define("FOLDER", substr($path,$position)); # Add current folder name to global
 if(FOLDER != "install" && FOLDER != "includes" && INSTALL != 1) { # Are we installing?	
 	//Lets just redirect to the installer, shall we?	
@@ -193,11 +201,11 @@ if (!isset($_GET['msg'])) {
 }
 
 //If payment..
-if(FOLDER == "client" && $main->getvar['page'] == "invoices" && $main->getvar['iid'] && $_SESSION['clogged'] == 1) {
+if(FOLDER == "client" && $main->getvar['page'] == 'invoices' && $main->getvar['iid'] && $_SESSION['clogged'] == 1) {
 	if ($main->checkToken(false)) {
-		$invoice->pay($main->getvar['iid'], "client/index.php?page=invoices");
+		$invoice->pay($main->getvar['iid'], 'client/index.php?page=invoices');
 	}
-	echo "You made it this far.. something went wrong.";
+	echo 'You made it this far.. something went wrong.';
 }
 
 function checkForDependencies() {
