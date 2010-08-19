@@ -89,20 +89,20 @@ class style {
 		return $html;
 	}
 
-        public function notice($good, $message) {
-            if($good) {
-                //Cool! Everything's OK.
-                $color = "green";
-            }
-            else {
-                //Oh no! It's a bad message!
-                $color = "red";
-            }
-            $notice = '<strong><em style="color: '. $color .';">';
-            $notice .= $message;
-            $notice .= '</em></strong>';
-            return $notice;
+    public function notice($good, $message) {
+        if($good) {
+            //Cool! Everything's OK.
+            $color = "green";
         }
+        else {
+            //Oh no! It's a bad message!
+            $color = "red";
+        }
+        $notice = '<strong><em style="color: '. $color .';">';
+        $notice .= $message;
+        $notice .= '</em></strong>';
+        return $notice;
+    }
 
 	//Obsolete Functions...
 
