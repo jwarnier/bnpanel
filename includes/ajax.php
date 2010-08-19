@@ -4,7 +4,6 @@
  * This class respond the AJAX calls
  */
  
-define('LINK', './');
 $is_ajax_load = true;
 require_once 'compiler.php';
 

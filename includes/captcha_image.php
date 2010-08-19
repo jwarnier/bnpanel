@@ -49,4 +49,3 @@ function create_image() {
 	// *** Just in case... ***
 	imagedestroy($image);
 }
-?>

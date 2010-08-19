@@ -19,22 +19,18 @@ class style {
 		}
 	}
 
-	private function getFile($name, $prepare = 1, $override = 0) { # Returns the content of a file
-		global $db;
+	private function getFile($name, $prepare = 1, $override = 0) { # Returns the content of a file		
 		$link = LINK ."../themes/". THEME . "/" . $name;
 		if(!file_exists($link) || $override != 0) {
 			$link = LINK . $name;
 		}
 		if(!file_exists($link) && INSTALL) {
 			$error['Error'] = "File doesn't exist!";
-			$error['Path'] = $link;
-			global $main;
-			//$main->error($error);
+			$error['Path'] = $link;			
 		} else {
 			if($prepare) {
 				return $this->prepare(file_get_contents($link));
-			}
-			else {
+			} else {
 				return file_get_contents($link);
 			}
 		}
@@ -126,5 +122,3 @@ class style {
 		$query = $db->query("DELETE * FROM `<PRE>templates` WHERE `name` = '{$db->strip($template)}'");
 	}
 }
-//End Template
-?>

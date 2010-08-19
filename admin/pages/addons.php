@@ -175,7 +175,7 @@ class page {
 							}
 						}
 						
-						$data = $db->fetch_array($query);
+						$data = $db->fetch_array($query, 'ASSOC');
 						
 						$array['BACKEND'] 		= $data['backend'];
 						$array['DESCRIPTION']	= $data['description'];						
