@@ -413,7 +413,7 @@ class invoice extends model {
 				$array['BILLING_CYCLES'] = $billing_list[$billing_cycle_id]['name'].'<input type="hidden" id="billing_id" name="billing_id" value="'.$billing_cycle_id.'">';
 			}
 			
-			$query = $db->query("SELECT * FROM `<PRE>order_invoices` WHERE invoice_id = '{$invoice_id}'");
+			$query = $db->query("SELECT * FROM <PRE>order_invoices WHERE invoice_id = '{$invoice_id}'");
 			$order_item = $db->fetch_array($query);
 			
 			if (!empty($order_item['order_id'])) {
@@ -744,7 +744,7 @@ class invoice extends model {
 	public function getOrderByInvoiceId($invoice_id) {
 		global $db;
 		$invoice_id = intval($invoice_id);
-		$query = $db->query("SELECT order_id FROM `<PRE>order_invoices` WHERE invoice_id = '{$invoice_id}' LIMIT 1");
+		$query = $db->query("SELECT order_id FROM <PRE>order_invoices WHERE invoice_id = '{$invoice_id}' LIMIT 1");
 		$data = $db->fetch_array($query);
 		return $data['order_id'];
 	}

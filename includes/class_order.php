@@ -201,7 +201,7 @@ class order extends model {
 		}
 		if ($result) {		
 			$this->update($params);
-			$main->addLog("Order id $order_id updated");
+			$main->addLog("order::edit  Order #$order_id ");
 			return true;
 		}
 		$main->addLog("order::edit Trying to update the Order id $order_id ");
@@ -216,7 +216,7 @@ class order extends model {
 	 
 	public function sendOrderToControlPanel($order_id) {
 		global $main, $package, $server, $addon;
-		$main->addlog('Executing sendOrderToControlPanel to order: '.$order_id);
+		$main->addlog('order::sendOrderToControlPanel Order #'.$order_id);
 		$order_info		= $this->getOrderInfo($order_id);
 		$package_info 	= $package->getPackage($order_info['pid']);
 		$serverphp 		= $server->loadServer($package_info['server']); # Create server class
@@ -292,7 +292,7 @@ class order extends model {
 				$array['real_domain'] = $array['domain'];
 			}
 			
-			$sql = "SELECT addon_id FROM  `<PRE>order_addons` WHERE order_id = '{$id}'";
+			$sql = "SELECT addon_id FROM  <PRE>order_addons WHERE order_id = '{$id}'";
 			$result_addons = $db->query($sql);
 			$addon_list = array();
 			while ($addon = $db->fetch_array($result_addons)) {
@@ -316,15 +316,16 @@ class order extends model {
 		if (empty($page)) {
 			$page = 0;
 		} else {			
-			$per_page = $db->config('rows_per_page');
+			$per_page = intval($db->config('rows_per_page'));
+			$page = intval($page);
 			$start = ($page-1)*$per_page;	
 			$limit = " LIMIT $start, $per_page";
 		}		
+		$user_id = intval($user_id);
 		
 		if (empty($user_id)) {
 			$sql =  "SELECT * FROM ".$this->getTableName()." WHERE status <> '".ORDER_STATUS_DELETED."' ORDER BY id DESC  $limit ";	
-		} else {
-			$user_id = intval($user_id);
+		} else {			
 			$sql = "SELECT * FROM ".$this->getTableName()."  WHERE status <> '".ORDER_STATUS_DELETED."' AND userid = '".$user_id."' ORDER BY id DESC $limit ";
 		}	
 		
@@ -418,8 +419,7 @@ class order extends model {
 	 * Gets all orders 
 	 */
 	 public function getAllOrders() {
-		global $db;
-		
+		global $db;		
 		$result = $db->query("SELECT * FROM ".$this->getTableName()." ");
 		$invoice_list = array();
 		if($db->num_rows($result) >  0) {
@@ -523,7 +523,8 @@ class order extends model {
 	 */
 	public function getLastInvoiceByOrderId($order_id) {
 		global $db;
-		$query = $db->query("SELECT invoice_id FROM `<PRE>order_invoices` WHERE `order_id` = '{$order_id}' ORDER BY id DESC LIMIT 1");
+		$order_id = intval($order_id);
+		$query = $db->query("SELECT invoice_id FROM <PRE>order_invoices WHERE order_id = '{$order_id}' ORDER BY id DESC LIMIT 1");
 		$data = $db->fetch_array($query);
 		return $data['invoice_id'];
 	}
