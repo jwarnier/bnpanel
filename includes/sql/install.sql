@@ -6,10 +6,10 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%acpnav` (
-  `id` int NOT NULL auto_increment,
-  `visual` varchar(20) NOT NULL,
-  `icon` varchar(50) NOT NULL,
-  `link` varchar(20) NOT NULL,
+  id int NOT NULL auto_increment,
+  visual varchar(20) NOT NULL,
+  icon varchar(50) NOT NULL,
+  link varchar(20) NOT NULL,
   PRIMARY KEY  (id)
 );
 
@@ -477,22 +477,22 @@ CREATE TABLE IF NOT EXISTS `%PRE%users` (
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%orders` (
-  `id` int NOT NULL auto_increment,
-  `userid` varchar(5) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `domain` varchar(50) NOT NULL,
-  `pid` varchar(5) NOT NULL,
-  `signup` varchar(20) NOT NULL,
-  `status` varchar(1) NOT NULL,
-  `additional` text NOT NULL,
-  `billing_cycle_id` int NOT NULL,
-  `subdomain_id` int NOT NULL,
-  PRIMARY KEY  (`id`)
+  id int NOT NULL auto_increment,
+  userid varchar(5) NOT NULL,
+  username varchar(50) NOT NULL,
+  password varchar(255) NOT NULL,
+  domain varchar(50) NOT NULL,
+  pid varchar(5) NOT NULL,
+  signup varchar(20) NOT NULL,
+  status varchar(1) NOT NULL,
+  additional text NOT NULL,
+  billing_cycle_id int NOT NULL,
+  subdomain_id int NOT NULL,
+  PRIMARY KEY  (id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
--- Dumping data for table `%PRE%orders`
+-- Dumping data for table %PRE%orders
 --
 
 -- --------------------------------------------------------
@@ -502,12 +502,12 @@ CREATE TABLE IF NOT EXISTS `%PRE%orders` (
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%logs` (
-  `id` int NOT NULL auto_increment,
-  `uid` varchar(5) NOT NULL,
-  `loguser` varchar(50) NOT NULL,
-  `logtime` varchar(20) NOT NULL,
-  `message` text NOT NULL,
-  PRIMARY KEY  (`id`)
+  id int NOT NULL auto_increment,
+  uid varchar(5) NOT NULL,
+  loguser varchar(50) NOT NULL,
+  logtime varchar(20) NOT NULL,
+  message text NOT NULL,
+  PRIMARY KEY  (id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
@@ -517,16 +517,16 @@ CREATE TABLE IF NOT EXISTS `%PRE%logs` (
 -- Billing cycle structure
 
 CREATE TABLE `%PRE%billing_cycles` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `number_months` int NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `status` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `cycle_month` (`number_months`,`name`)
+  id int NOT NULL AUTO_INCREMENT,
+  number_months int NOT NULL,
+  name varchar(255) NOT NULL,
+  status int NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY cycle_month (number_months,name)
 );
 
 
-INSERT INTO `%PRE%billing_cycles` (`number_months`, `name`, `status`) VALUES
+INSERT INTO `%PRE%billing_cycles` (number_months, name, status) VALUES
 ('12', 'Annually', '1'),
 ('6', 'Semiannually', '1'),
 ('1', 'Monthly', '1');
@@ -535,47 +535,47 @@ INSERT INTO `%PRE%billing_cycles` (`number_months`, `name`, `status`) VALUES
 -- Relation of Addons || Packages with billing cycles
 
 CREATE TABLE  `%PRE%billing_products` (
-  `billing_id` int NOT NULL,
-  `product_id` int NOT NULL,
-  `amount` decimal(16,6) NOT NULL DEFAULT '0.000000',
+  billing_id int NOT NULL,
+  product_id int NOT NULL,
+  amount decimal(16,6) NOT NULL DEFAULT '0.000000',
   `type` varchar(255) NOT NULL
 );
 
 -- Table structure for addons
 
 CREATE TABLE  `%PRE%addons` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `setup_fee` decimal(16,6) NOT NULL DEFAULT '0.000000',
-  `description` varchar(255) NOT NULL,
-  `status` int NOT NULL,
-  `install_package` int NOT NULL,
-  `mandatory` int NOT NULL,  
-  PRIMARY KEY (`id`)
+  id int NOT NULL AUTO_INCREMENT,
+  name varchar(255) NOT NULL,
+  setup_fee decimal(16,6) NOT NULL DEFAULT '0.000000',
+  description varchar(255) NOT NULL,
+  status int NOT NULL,
+  install_package int NOT NULL,
+  mandatory int NOT NULL,  
+  PRIMARY KEY (id)
 );
 
 -- Relationship between package and addons
 
 CREATE TABLE  `%PRE%package_addons` (
-  `package_id` int NOT NULL DEFAULT '0',
-  `addon_id` int NOT NULL DEFAULT '0'
+  package_id int NOT NULL DEFAULT '0',
+  addon_id int NOT NULL DEFAULT '0'
 );
 
 -- Relationship between orders and addons
 
 CREATE TABLE `%PRE%order_addons` (
-  `order_id` int NOT NULL,
-  `addon_id` int NOT NULL,
-  `id` int NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`)
+  order_id int NOT NULL,
+  addon_id int NOT NULL,
+  id int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (id)
 );
 
 
 
 CREATE TABLE `%PRE%order_invoices` (
-  `id` INT  NOT NULL AUTO_INCREMENT,
-  `order_id` int  NOT NULL,
-  `invoice_id` int  NOT NULL,
-  PRIMARY KEY (`id`)
+  id INT  NOT NULL AUTO_INCREMENT,
+  order_id int  NOT NULL,
+  invoice_id int  NOT NULL,
+  PRIMARY KEY (id)
 );
 
