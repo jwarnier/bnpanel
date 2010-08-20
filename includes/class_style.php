@@ -10,7 +10,7 @@ class style {
 	# Start the functions #
 
 	private function error($name, $template, $func) { #Shows a SQL error from main class
-		if(INSTALL){
+		if (INSTALL) {
 			$error['Error'] = $name;
 			$error['Function'] = $func;
 			$error['Template'] = $template;
@@ -40,21 +40,20 @@ class style {
 		include LINK . "variables.php";
 		return $data;
 	}
-
+	/*
 	private function prepareCSS($data) { # Returns the CSS with all tags removed
 		include LINK . "css_variables.php";
 		return $data;
 	}
-
+*/
 	public function get($template) { # Fetch a template
 		return $this->getFile($template);
 	}
 
 	public function css() { # Fetches the CSS and prepares it
         global $db;
-		$css = '<style type="text/css">';
-		$css .= $this->prepareCSS($this->getFile("style.css", 0, 0));
-		$css .= '</style>' . "\n";
+		$link = $db->config('url')."themes/". THEME . "/style.css";
+		$css = '<link rel="stylesheet" type="text/css" href="'.$link.'"/>';				
 		if(FOLDER != "install" && FOLDER != "includes") {
 	        $css .= '<link rel="stylesheet" href="'.URL.'includes/css/'.$db->config('ui-theme').'/jquery-ui.css" type="text/css" />';
 		}

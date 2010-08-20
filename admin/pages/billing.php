@@ -16,9 +16,9 @@ class page {
 	public function __construct() {
 		$this->navtitle = "Billing Sub Menu";
 		
-		$this->navlist[] = array("Add Billing cycle", "package_add.png", "add");
-		$this->navlist[] = array("Edit Billing cycle", "package_go.png", "edit");
-		$this->navlist[] = array("Delete Billing cycle", "package_delete.png", "delete");
+		$this->navlist[] = array("View All Billing cycles", "package_add.png", "view");
+		$this->navlist[] = array("Add Billing cycle", "add.png", "add");				
+		
 	}
 	
 	public function description() {
@@ -29,7 +29,7 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db, $billing;
-		switch($main->getvar['sub']) {
+		switch($main->getvar['sub']) {			
 			default:
 				if($_POST && $main->checkToken()) {
 					foreach($main->postvar as $key => $value) {
@@ -56,6 +56,7 @@ class page {
 						}												
 						$billing->create($main->postvar);					
 						$main->errors("Biiling cycle has been added!");
+						$main->redirect('?page=billing&sub=edit&msg=1');
 					}
 				}
 				
@@ -65,8 +66,8 @@ class page {
 				$array['NUMBER_MONTHS'] = $main->dropDown("number_months", $values, '');				
 				$array['STATUS'] = $main->createCheckbox('', 'status');
 				echo $style->replaceVar("tpl/billing/addbillingcycle.tpl", $array);
-				break;
-				
+			break;
+			case 'view':
 			case 'edit':
 				if(isset($main->getvar['do'])) {
 					$query = $db->query("SELECT * FROM `<PRE>billing_cycles` WHERE `id` = '{$main->getvar['do']}'");
@@ -97,7 +98,7 @@ class page {
 								}
 								$billing->edit($main->getvar['do'],$main->postvar);								
 								$main->errors('Billing cycle has been edited!');
-								$main->done();
+								$main->redirect('?page=billing&sub=edit&msg=1');
 							}							
 						}
 						
@@ -120,7 +121,7 @@ class page {
 					} else {
 						echo "<ERRORS>";
 						while($data = $db->fetch_array($query)) {
-							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=billing&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>');
+							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=billing&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=billing&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');							
 							$n++;
 						}
 					}
@@ -130,20 +131,10 @@ class page {
 				if($main->getvar['do'] && $main->checkToken()) {
 					$billing->setId($main->getvar['do']);
 					$billing->delete();
-					$main->errors("Billing cycle #{$main->getvar['do']} has been deleted!");		
-				}
-				$query = $db->query("SELECT * FROM `<PRE>billing_cycles`");
-				if($db->num_rows($query) == 0) {
-					echo "There are no billing cycles to delete!";	
-				} else {
-					echo "<ERRORS>";
-					while($data = $db->fetch_array($query)) {
-						echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=billing&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
-						$n++;
-					}
-				}
+					$main->errors("Billing cycle #{$main->getvar['do']} has been deleted!");
+					$main->redirect('?page=billing&sub=edit&msg=1');	
+				}				
 			break;
 		}
 	}
 }
-?>

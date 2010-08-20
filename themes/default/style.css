@@ -13,7 +13,7 @@
  /* Main Styles: BODY, BODY A */
 /* <IMG> - This should be the url */
 body{
-	background:url(<IMG>bg.gif) repeat-x #F7F7F7;
+	background:url(images/bg.gif) repeat-x #F7F7F7;
 	background-color: #F7F7F7; /* This works? */
 	color:#333;
 	font-family:"Lucida Grande", "Segoe UI", "Arial", Helvetica, sans-serif;
@@ -21,7 +21,7 @@ body{
 	margin:0;
 }
 body a{
-   background-color: url(<IMG>bg.gif) repeat-x #f7f7f7;
+   background-color: url(images/bg.gif) repeat-x #f7f7f7;
    color: #333;
    font-family: "Segoe UI", "Lucida Grande", Verdana, Arial;
    font-size:11px;
@@ -43,7 +43,7 @@ body a{
 }
 /* Header Logo(strip) */
 #header_logo {
-	background: #fff url(<IMG>branding_bg.png) repeat-x top;
+	background: #fff url(images/branding_bg.png) repeat-x top;
 	height: 100px;
 	margin-top: 0 !important;
 	margin-left: 0 !important;
@@ -89,7 +89,7 @@ color: #000 !important;
 }
 /* The "boxes"s Main Title area */
 .cat {
-	background:url(<IMG>grad.gif) repeat-x top;
+	background:url(images/grad.gif) repeat-x top;
 	padding:5px;
 	margin:-1px;
 	color:#FFF;
@@ -157,7 +157,7 @@ img, img a {
 
  /****** HEADER AREA ******/
 #tht_navigation {
-	background: #ffffff url(<IMG>navigation_bg.gif) repeat-x;
+	background: #ffffff url(images/navigation_bg.gif) repeat-x;
 	height: 31px;
 	border-bottom: 5px solid #bb423e;
 	padding-left: 10px;

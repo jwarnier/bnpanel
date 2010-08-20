@@ -13,8 +13,8 @@ class page {
 	
 	public function __construct() {
 		$this->navtitle = "Order Sub Menu";
-		$this->navlist[] = array("View all orders", "package_go.png", "all");
-		$this->navlist[] = array("Add a new order", "add.png", "add");
+		$this->navlist[] = array("View All Orders", "package_go.png", "all");
+		$this->navlist[] = array("Add a New Order", "add.png", "add");
 	}
 	
 	public function description() {

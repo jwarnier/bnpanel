@@ -16,9 +16,9 @@ class page {
 							
 	public function __construct() {
 		$this->navtitle = "Addons Sub Menu";
-		$this->navlist[] = array("Add addons", "package_add.png", "add");
-		$this->navlist[] = array("Edit addons", "package_go.png", "edit");
-		$this->navlist[] = array("Delete addons", "package_delete.png", "delete");
+		
+		$this->navlist[] = array("View All Addons", "package_go.png", "view");
+		$this->navlist[] = array("Add addons", "add.png", "add");		
 	}
 	
 	public function description() {
@@ -27,31 +27,30 @@ class page {
 		To get started, choose a link from the sidebar's SubMenu.";	
 	}
 	
-	public function content() { 
+	public function content() {
+		require_once LINK.'validator.class.php';
+		 
 		# Displays the page 
 		global $main, $style, $db, $billing, $addon;
 		
 		switch($main->getvar['sub']) {
 			default:
-				if($_POST && $main->checkToken()) {
-					$n = null;
-					foreach($main->postvar as $key => $value) {
-						if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle") {
-							$main->errors("Please fill in all the fields!");
-							$n++;
-						}
-					}
-					if(!$n) {
-						foreach($main->postvar as $key => $value) {
-							if($key != "name") {
-								if($n) {
-									$additional .= ",";	
-								}
-								$additional .= $key."=".$value;
-								$n++;
-							}
-						}
-						
+			
+				$asOption = array(
+				    'rules' => array(
+				        'name' 		=> 'required'			        
+				     ),			    
+				    'messages' => array(				        			       
+				    )
+				);
+				
+				$array['json_encode'] = json_encode($asOption);							
+				$oValidator = new Validator($asOption);					
+				$result = $oValidator->validate($_POST);
+				
+				if($_POST && $main->checkToken()) {	
+									
+					if (empty($result)) {													
 						if ($main->postvar['status'] == 'on') {
 							$main->postvar['status'] = ADDON_STATUS_ACTIVE;
 						} else {
@@ -83,7 +82,9 @@ class page {
 								$addon->createPackageAddons($billing_item['id'], $product_id, $main->postvar[$variable_name],BILLING_TYPE_ADDON);					
 							}													
 						}
-						$main->errors("Addon has been added!");						
+						$main->errors('Addon has been added!');
+						$main->redirect('?page=addons&sub=edit&msg=1');
+												
 					}
 				}
 				
@@ -95,8 +96,8 @@ class page {
 	
 				//----- Finish billing cycle					
 				echo $style->replaceVar("tpl/addons/add.tpl", $array);
-				break;
-				
+			break;
+			case 'view':
 			case 'edit':
 				if(isset($main->getvar['do'])) {
 															
@@ -106,23 +107,8 @@ class page {
 						echo "That Addon doesn't exist!";	
 					} else {
 						if($_POST && $main->checkToken()) {				
-							foreach($main->postvar as $key => $value) {
-								//if($value == "" && !$n && $key != "admin") {
-								if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle") {
-									$main->errors("Please fill in all the fields!");
-									$n++;
-								}
-							}							
-							if(!$n) {
-								foreach($main->postvar as $key => $value) {
-									if($key != "name" && $key != "backend" && $key != "description" && $key != "type" && $key != "server" && $key != "admin") {
-										if($n) {
-											$additional .= ",";	
-										}
-										$additional .= $key."=".$value;
-										$n++;
-									}
-								}
+												
+							if(!$n) {								
 									
 								if ($main->postvar['status'] == 'on') {
 									$main->postvar['status'] = ADDON_STATUS_ACTIVE;
@@ -204,13 +190,13 @@ class page {
 						echo $style->replaceVar('tpl/addons/edit.tpl', $array);
 					}
 				} else {
-					$query = $db->query("SELECT * FROM `<PRE>addons`");
+					$query = $db->query("SELECT * FROM <PRE>addons");
 					if($db->num_rows($query) == 0) {
 						echo 'There are no addons to edit!';	
 					} else {
 						echo "<ERRORS>";
 						while($data = $db->fetch_array($query)) {
-							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=addons&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>');
+							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=addons&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=addons&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 							$n++;
 						}
 					}
@@ -220,18 +206,9 @@ class page {
 			case 'delete':
 				if($main->getvar['do'] && $main->checkToken()) {
 					$addon->delete($main->getvar['do']);
-					$main->errors("The addon has been Deleted!");		
-				}
-				$query = $db->query("SELECT * FROM `<PRE>addons`");
-				if($db->num_rows($query) == 0) {
-					echo "There are no addons to delete!";	
-				} else {
-					echo "<ERRORS>";
-					while($data = $db->fetch_array($query)) {
-						echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=addons&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
-						$n++;
-					}
-				}
+					$main->errors("The Addon has been deleted");
+					$main->redirect('?page=addons&sub=edit&msg=1');
+				}				
 			break;
 		}
 	}
