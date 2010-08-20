@@ -210,26 +210,51 @@ input, option {
 	margin-left:4px;
 	margin-right:5px;
 }
+
 /* The "boxes"s Main Title area */
+
+.table {
+		
+	-moz-box-sizing:content-box;
+	-moz-border-radius:11px 11px 11px 11px;
+	-webkit-border-radius:11px 11px 11px 11px;
+	border-radius: 11px 11px 11px 11px;
+		
+	border:1px solid #CCC;
+	background-color:#FFF;
+	padding:0px 0px 0px 0px;
+	margin-bottom:5px;	
+}
+
+
 .cat {
 	background:#026CB1 url(images/img_07.png) top left repeat-x;
 	padding:5px;
 	margin:-1px;
+	
 	color:#FFF;
 	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-	font-size:13px;
+
 	text-align:left;
 	border-bottom:1px solid #CCC;
+	
+	border-radius:11px 11px 0px 0px;
+	-moz-border-radius:11px 11px 0px 0px;
+	-o-border-radius:11px 11px 0px 0px;
+	-webkit-border-radius:11px 11px 0px 0px;
+	
+	
 }
+
+.cat_title {
+	font-size:13px;
+	font-weight:bold;
+	padding-left:8px;
+}
+
 .cat a{
 	vertical-align:middle;
 	background:0;
-}
-.table {
-	border:1px solid #CCC;
-	background-color:#FFF;
-	padding:2px 2px 0px 2px;
-	margin-bottom:5px;	
 }
 
  .noupg {
@@ -488,7 +513,7 @@ input[type="submit"], input[type="button"] {
 	
 	-moz-box-sizing:content-box;
 	-moz-border-radius:11px 11px 11px 11px;
-	-webkit-border-radius:11px 11px 11px 11px;	 
+	-webkit-border-radius:11px 11px 11px 11px;
 	border-radius: 11px 11px 11px 11px;
 		
 	border-style:solid;
