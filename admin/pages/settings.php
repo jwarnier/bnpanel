@@ -11,14 +11,14 @@ class page {
 							
 	public function __construct() {
 		$this->navtitle = "General Settings Sub Menu";
-		$this->navlist[] = array("General Configuration", "world.png", "paths");
-		$this->navlist[] = array("Email Configuration", "email.png", "email");
-		$this->navlist[] = array("Security Settings", "lock.png", "security");
-		$this->navlist[] = array("Signup Form", "user_red.png", "signup");
-		$this->navlist[] = array("Terms of Service", "application_edit.png", "tos");
-		$this->navlist[] = array("Client Area", "user_go.png", "client");
-		$this->navlist[] = array("Support Area", "help.png", "support");
-		$this->navlist[] = array("Paid Configuration", "coins.png", "paid_configuration");
+		$this->navlist[] = array("General Configuration", 	"world.png", "paths");
+		$this->navlist[] = array("Email Configuration", 	"email.png", "email");
+		$this->navlist[] = array("Security Settings", 		"lock.png", "security");
+		$this->navlist[] = array("Signup Form", 			"user_red.png", "signup");
+		$this->navlist[] = array("Terms of Service", 		"application_edit.png", "tos");
+		$this->navlist[] = array("Client Area", 			"user_go.png", "client");
+		$this->navlist[] = array("Support Area", 			"help.png", "support");
+		$this->navlist[] = array("Paid Configuration",		"coins.png", "paid_configuration");
 		
 	}
 	
@@ -31,6 +31,7 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db;
+		
 		if($_POST && $main->checkToken()) {
 			foreach($main->postvar as $key => $value) {
 				if($value == "" && !$n) {
@@ -38,12 +39,14 @@ class page {
 					$n++;
 				}
 			}
-			if(!$n) {
+			if(!$n) {				
 				foreach($main->postvar as $key => $value) {
 					$db->updateConfig($key, $value);
 				}
 				$main->errors("Settings Updated!");
-				$main->done();
+				$main->generateToken();
+				//Regenerate the config array
+				$db->getSystemConfigList(true);
 			}
 		}
 		switch($main->getvar['sub']) {
@@ -159,4 +162,3 @@ class page {
 		}
 	}
 }
-?>

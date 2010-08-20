@@ -13,10 +13,9 @@ class page {
 	public function __construct() {
 		global $main, $server;
 		$this->navtitle = "Servers Sub Menu";
-		$this->navlist[] = array("View Servers", "server_go.png", "view");
+		$this->navlist[] = array("View All Servers", "server_go.png", "view");
 		$this->navlist[] = array("Add Server", "server_add.png", "add");
-		$this->navlist[] = array("Delete Server", "server_delete.png", "delete");
-		
+				
 		//@todo this foreach for something lighter
 		$files = $main->folderFiles(LINK."servers/");
 		require_once LINK.'servers/panel.php';
@@ -55,6 +54,7 @@ class page {
 						//Creating a new server
 						$server->create($main->postvar);
 						$main->errors("Server has been added!");
+						$main->redirect('?page=servers&sub=view&msg=1');
 					}
 				}
 				//$array['TYPE'] = $this->array_type;
@@ -66,7 +66,7 @@ class page {
 			case 'view':
 				if(isset($main->getvar['do'])) {
 					//@todo replace this queries
-					$query = $db->query("SELECT * FROM `<PRE>servers` WHERE `id` = '{$main->getvar['do']}'");
+					$query = $db->query("SELECT * FROM <PRE>servers WHERE id = '{$main->getvar['do']}'");
 					if($db->num_rows($query) == 0) {
 						echo "That server doesn't exist!";	
 					}
@@ -81,7 +81,7 @@ class page {
 							if(!$n) {
 								$main->postvar['accesshash'] = $main->postvar['hash']; 
 								$server->edit($main->getvar['do'], $main->postvar);
-								$main->errors("Server edited.");
+								$main->errors("Server edited");
 								$main->redirect('?page=servers&sub=view&msg=1');
 							}
 						}
@@ -111,11 +111,10 @@ class page {
 					$query = $db->query("SELECT * FROM `<PRE>servers`");
 					if($db->num_rows($query) == 0) {
 						echo "There are no servers to view!";	
-					}
-					else {
+					} else {
 						echo "<ERRORS>";
 						while($data = $db->fetch_array($query)) {
-							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=servers&sub=view&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>');
+							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=servers&sub=view&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=servers&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 							if($n) {
 								echo "<br />";	
 							}
@@ -127,21 +126,8 @@ class page {
 			case 'delete':
 				if($main->getvar['do'] && $main->checkToken()) {
 					$server->delete($main->getvar['do']);
-					$main->errors("Server Account Deleted!");		
-				}
-				//@todo replace this queries
-				$query = $db->query("SELECT * FROM `<PRE>servers`");
-				if($db->num_rows($query) == 0) {
-					echo "There are no servers to delete!";	
-				} else {
-					echo "<ERRORS>";
-					while($data = $db->fetch_array($query)) {
-						echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=servers&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
-						if($n) {
-							echo "<br />";	
-						}
-						$n++;
-					}
+					$main->errors("Server Account Deleted!");
+					$main->redirect('?page=servers&sub=view&msg=1');		
 				}
 			break;
 		}
