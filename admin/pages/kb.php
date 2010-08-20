@@ -24,6 +24,7 @@ class page {
 		global $main, $style, $db;
 		switch($main->getvar['sub']) {
 			case "cat":
+			
 				if($_POST['add'] && $main->checkToken(false)) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n && $key != "admin") {
@@ -44,14 +45,13 @@ class page {
 						}
 					}
 					if(!$n) {
-						$db->query("UPDATE `<PRE>cats` SET `name` = '{$main->postvar['editname']}', `description` = '{$main->postvar['editdescription']}' WHERE `id` = '{$main->postvar['id']}'");
+						$db->query("UPDATE <PRE>cats SET name = '{$main->postvar['editname']}', `description` = '{$main->postvar['editdescription']}' WHERE id = '{$main->postvar['id']}'");
 						$main->errors("Category Edited!");
 					}
 				}
 				if($main->getvar['del'] && $main->checkToken(false)) {
-					$db->query("DELETE FROM `<PRE>cats` WHERE `id` = '{$main->getvar['del']}'");
-					$main->errors("Category Deleted!");
-					$main->done();
+					$db->query("DELETE FROM <PRE>cats WHERE id = {$main->getvar['del']}");
+					$main->errors("Category Deleted!");					
 				}
 				$array['AJAX'] = "cat";
 				$array['SUB'] = "Name";
@@ -104,9 +104,9 @@ class page {
 					}
 				}
 				if($main->getvar['del'] && $main->checkToken(false)) {
-					$db->query("DELETE FROM `<PRE>articles` WHERE `id` = '{$main->getvar['del']}'");
-					$main->errors("Article Deleted!");
-					$main->done();
+					$main->getvar['del'] = intval($main->getvar['del']);
+					$db->query("DELETE FROM `<PRE>articles` WHERE id = '{$main->getvar['del']}'");
+					$main->errors("Article Deleted!");					
 				}
 				$array['AJAX'] = "art";
 				$array['SUB'] = "Name";
@@ -132,7 +132,6 @@ class page {
 				}
 				echo $style->replaceVar("tpl/support/acp.tpl", $array);
 				break;
-		}
-		$main->clearToken();
+		}		
 	}
 }

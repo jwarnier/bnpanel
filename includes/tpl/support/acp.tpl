@@ -43,8 +43,8 @@ function editme(id) {
   	  </table>
 	</div>
 </div>
-<form action="" method="post" name="add%NAME%">
-    <div class="subborder" id="addbox" style="display:none;">
+<form action=""  id="addbox" style="display:none;" method="post" name="add%NAME%">
+    <div class="subborder">
         <div class="sub">
           <table width="100%" border="0" cellspacing="2" cellpadding="0">
             <tr>
@@ -66,8 +66,8 @@ function editme(id) {
         </div>
     </div>
 </form>
-<form action="" method="post" name="edit%NAME%">
-    <div class="subborder" id="editbox" style="display:none;">
+<form action="" id="editbox" style="display:none;" method="post" name="edit%NAME%">
+    <div class="subborder" >
         <div class="sub">
           <table width="100%" border="0" cellspacing="2" cellpadding="0">
             <tr>
