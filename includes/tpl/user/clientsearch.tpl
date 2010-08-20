@@ -60,8 +60,7 @@ $(window).load(function () {
         <td width="11%"><label>
           <select name="type" id="type">
             <option value="user">Username</option>
-            <option value="email">Email</option>
-            <option value="domain">Domain</option>
+            <option value="email">Email</option>            
             <option value="ip">IP</option>
             <option value="id">User ID</option>
           </select>
