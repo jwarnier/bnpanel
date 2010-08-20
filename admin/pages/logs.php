@@ -7,6 +7,7 @@ define("PAGE", "Logs");
 class page {	
 	public function content() { # Displays the page 
 		global $style, $db, $main;		
+		//@todo remove this with a better thing 
 		echo "<div class=\"subborder\">";
 		
 		echo "<form id=\"filter\" name=\"filter\" method=\"post\" action=\"\">";
@@ -34,14 +35,15 @@ class page {
 		
 		echo "</form>";
 				
-		echo "<table width=\"100%\" cellspacing=\"2\" cellpadding=\"2\" border=\"1\" style=\"border-collapse: collapse\" bordercolor=\"#000000\"><tr bgcolor=\"#EEEEEE\">";
-		echo "<td width=\"75\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">DATE</td>";
-		echo "<td width=\"60\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">TIME</td>";
-		echo "<td width=\"75\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">USERNAME</td>"; 
-		echo "<td align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">MESSAGE</td></tr>";
+		echo '<table width="100%" class="content_table" cellspacing="2" cellpadding="2"  ><tr bgcolor="#EEEEEE">';
+		echo "<th width=\"75\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Date</td>";
+		echo "<th width=\"60\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Time</td>";
+		echo "<th width=\"75\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Username</td>"; 
+		echo "<th align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Message</td></tr>";
 		
 		$l = intval($main->getvar['l']);		
-		$p = intval($main->getvar['p']);		
+		$p = intval($main->getvar['p']);	
+			
 		$show_values = array('all','Approved','Unsuspended','Registered', 'Package created','Approved', 'Declined',
 				'Suspended', 'Cancelled', 'Terminated','cPanel password', 'Login','Login successful', 'Login failed','STAFF', 'STAFF LOGIN SUCCESSFUL','STAFF LOGIN FAILED');
 		
@@ -104,7 +106,7 @@ class page {
 				$array['DATE'] = strftime("%m/%d/%Y", $data['logtime']);
 				$array['TIME'] = strftime("%T", $data['logtime']);
 				$array['MESSAGE'] = $data['message'];
-			echo $style->replaceVar("tpl/adminlogs.tpl", $array);
+			echo $style->replaceVar("tpl/settings/adminlogs.tpl", $array);
 			}
 		}
 		echo "</table></div>";

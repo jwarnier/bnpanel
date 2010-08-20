@@ -55,6 +55,7 @@ class page {
 					$array['CONTENT'] 	= $style->replaceVar("tpl/user/clientdetails.tpl", $array2);					
 					$array['URL'] 		= URL;
 					$array['ID'] 		= $client['id'];
+					$array['BOX'] 		= '';
 					echo $style->replaceVar("tpl/user/clientview.tpl", $array);
 					
 				} else {
@@ -98,6 +99,8 @@ class page {
 						if ($main->postvar['status'] == USER_STATUS_DELETED) {
 							$main->redirect('?page=users&sub=search');
 						}
+						$main->errors('Client edited');
+						$main->redirect('?page=users&sub=search&msg=1&do='.$main->getvar['do']);
 					}
 					
 					$array = $user->getUserById($main->getvar['do']);
@@ -154,9 +157,9 @@ class page {
 			default:		
 			break;
 			case 'search':
-				if($main->getvar['do'] ) {					
+				if($main->getvar['do'] ) {
 					echo $style->replaceVar("tpl/user/clientview.tpl", $array);
-				} else {
+				} else {					
 					$array['NAME'] = $db->config("name");
 					$array['URL'] = $db->config("url");
 					$values[] = array("Admin Area", "admin");

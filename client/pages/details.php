@@ -120,6 +120,7 @@ class page {
 				$main->errors("Details updated!");					
 			}
 			$main->redirect('?page=details&sub=view&msg=1');
+			$main->generateToken();
 		}		
 		echo $style->replaceVar("tpl/user/cedit.tpl", $array);
 	}		

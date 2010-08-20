@@ -419,7 +419,7 @@ fieldset {
 	padding:5px;
 }
 
-ul {
+ul, ol {
 	padding-left:20px;
 }
 
@@ -467,10 +467,9 @@ form {
 .content_table {		
 	border-collapse:collapse;
 	text-align:left;
-
 }
 .content_table th {
-	
+	text-align:center;
 	font-size:14px;
 	font-weight:normal;
 	padding:10px 8px;

@@ -1130,10 +1130,10 @@ class AJAX {
 			if ($package_billing_info_exist) {
 	   			echo $html;
 	   		} else {
-	   			echo 'No billing cycle for this package';
+	   			echo 'Please select a Billing cycle';
 	   		}
    		} else  {
-   			echo 'No billing cycle for this package';
+   			echo 'Please select a Billing cycle';
    		}
    }
    
