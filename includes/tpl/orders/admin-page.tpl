@@ -44,14 +44,14 @@ $(document).ready(function() {
 <p>From here you can see all orders in your BNPanel installation</p>
 <ERRORS>
 <div id="pagination_loading" ></div>
-<table   class="content_table"  width="100%" border="0" cellspacing="3" cellpadding="0">
+<table class="content_table"  width="100%" border="0" cellspacing="3" cellpadding="0">
 	<thead>
 		<tr> 
-	        <th width="45px"><div align="left"><b>&nbsp;No.</b></div></td>
+	        <th width="30px"><div align="left"><b>&nbsp;No.</b></div></td>
 	        <th width="200px"><strong>User</strong></td>        
 	        <th width="140px"><strong>Package</strong></td>        
 	        <th width="100px"><strong><a title="Domain name" class="tooltip"><img src="<ICONDIR>world.png" border="0" /></a> Domain</strong></td>
-	        <th width="80px"><strong>Creation date</strong></td>
+	        <th width="70px"><strong>Creation date</strong></td>
 	        <th><strong>Status</strong></td>
 	        <th width="80px"><strong>Actions</strong></td>                
 		</tr>
