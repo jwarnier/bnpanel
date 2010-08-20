@@ -71,6 +71,7 @@ if (INSTALL == 1) {
 }
 
 global $main;
+
 $data = preg_replace("/<THT TITLE>/si", NAME . " :: " . PAGE . " - " . SUB, $data);
 $data = preg_replace("/<NAME>/si", NAME, $data);
 $data = preg_replace("/<CSS>/si", $this->css(), $data);

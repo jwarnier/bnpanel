@@ -1367,7 +1367,7 @@ if(isset($_GET['function']) && !empty($_GET['function'])) {
 			//Protecting AJAX calls now we need a token set in variables.php
 			if ($main->checkToken(false)) {
 				$ajax->{$_GET['function']}();
-				include LINK."output.php";
+				//include LINK."output.php"; //This is not necessary
 			}
 		}
 	} else {

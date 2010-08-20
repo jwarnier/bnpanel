@@ -111,13 +111,15 @@ class user extends model {
 		
 		//@todo check this funcionality
 		$order_list = $order->getAllOrdersByUser($id);
-		foreach($order_list as $order_item) {
-			//Deleting orders
-			$order->updateOrderStatus($order_item['id'], ORDER_STATUS_DELETED);
-			$invoice_list = $invoice->getAllInvoicesByOrderId($order_item['id']);
-			foreach($invoice_list as $invoice_item) {
-				$invoice->updateInvoiceStatus($invoice_item['item'], INVOICE_STATUS_DELETED);				
-			}			
+		if (is_array($order_list)) {
+			foreach($order_list as $order_item) {
+				//Deleting orders
+				$order->updateOrderStatus($order_item['id'], ORDER_STATUS_DELETED);
+				$invoice_list = $invoice->getAllInvoicesByOrderId($order_item['id']);
+				foreach($invoice_list as $invoice_item) {
+					$invoice->updateInvoiceStatus($invoice_item['item'], INVOICE_STATUS_DELETED);				
+				}			
+			}
 		}		
 		return true;
 	}
@@ -129,7 +131,8 @@ class user extends model {
 	 */
 	public function getUserById($user_id) {
 		global $db, $main;
-		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE id = '{$db->strip($user_id)}'");
+		$user_id = intval($user_id);
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE id = $user_id");
 		$data = array();
 		if($db->num_rows($query) > 0) {
 			$data = $db->fetch_array($query,'ASSOC');			
@@ -186,17 +189,18 @@ class user extends model {
 		global $db;
 		$user_list = array();
 		if (!empty($query)) {
-			$sql = "SELECT * FROM ".$this->getTableName()." 
-						  WHERE user 		LIKE '%{$db->strip($query)}%' OR 
-								email 		LIKE '%{$db->strip($query)}%'  OR 
-								firstname 	LIKE '%{$db->strip($query)}%'  OR
-								lastname 	LIKE '%{$db->strip($query)}%'";
+			$query = $db->strip($query);
+			$sql = "  SELECT * FROM ".$this->getTableName()." 
+					  WHERE user 		LIKE '%$query%'  OR 
+							email 		LIKE '%$query%'  OR 
+							firstname 	LIKE '%$query%'  OR
+							lastname 	LIKE '%$query%'";
 			$result = $db->query($sql);
 			
 			if($db->num_rows($result) > 0) {
 				while($data = $db->fetch_array($result,'ASSOC')) {
 					$user_list[] = $data;
-				};		
+				}
 			}
 		}
 		return $user_list;		
@@ -263,6 +267,5 @@ class user extends model {
 		 */
 		//Let's wrap it all up.
 		return true;
-	}
-	
+	}	
 }

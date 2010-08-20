@@ -73,7 +73,12 @@ class style {
 	public function javascript() { # Returns the HTML code for the header that includes all the JS in the javascript folder
 		$folder = LINK ."javascript/";
 		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/jquery.js'></script>\n";
-		if ($handle = opendir($folder)) { # Open the folder
+		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/jquery-ui.js'></script>\n";
+		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/misc.js'></script>\n";
+		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/slide.js'></script>\n";
+		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/ajax.js'></script>\n";
+		
+		/*if ($handle = opendir($folder)) { # Open the folder
 			while (false !== ($file = readdir($handle))) { # Read the files
 				if($file != "." && $file != ".." && $file != "jquery.js" && $file != "simpletip.js") { # Check aren't these names
 					$base = explode(".", $file); # Explode the file name, for checking
@@ -82,9 +87,9 @@ class style {
 					}
 				}
 			}
-		}
+		}*/		
         $html .= "<script type=\"text/javascript\" src='".URL."includes/tinymce/jscripts/tiny_mce/tiny_mce.js'></script>";
-		closedir($handle); #Close the folder
+		//closedir($handle); #Close the folder
 		return $html;
 	}
 

@@ -1,4 +1,3 @@
-<script type="text/javascript" src="<URL>includes/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
 
 <script type="text/javascript">
