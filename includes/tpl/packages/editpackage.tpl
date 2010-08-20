@@ -7,7 +7,7 @@
 	});
 </script>
 <ERRORS>
-<form id="addpackage" name="addpackage" method="post" action="">
+<form class="content" id="addpackage" name="addpackage" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Name:</td>
@@ -32,8 +32,6 @@
     %TYPE% <a title="The type of package" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>
-  
-  
   <tr>
     <td valign="top">Server:</td>
     <td>

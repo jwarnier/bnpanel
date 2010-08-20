@@ -35,7 +35,7 @@
 </script>
 <h2>New Invoice</h2>
 <ERRORS>
-<form id="addinvoice" name="addinvoice" method="post" action="">
+<form class="content"  id="addinvoice" name="addinvoice" method="post" action="">
 <input name="billing_id" type="hidden" id="billing_id" value="%BILLING_ID%"/>
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>

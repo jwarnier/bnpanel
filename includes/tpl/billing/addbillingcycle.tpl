@@ -1,5 +1,5 @@
 <ERRORS>
-<form id="addbillincycle" name="addbillincycle" method="post" action="">
+<form class="content" id="addbillincycle" name="addbillincycle" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Name:</td>

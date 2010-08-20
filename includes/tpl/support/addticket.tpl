@@ -8,7 +8,7 @@
 	});
 </script>
 <ERRORS>
-<form id="addticket" name="addticket" method="post" action="">
+<form class="content" id="addticket" name="addticket" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Title:</td>

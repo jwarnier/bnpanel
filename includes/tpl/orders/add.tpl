@@ -156,7 +156,7 @@ function checkdomain() {
     
 <h2>New Order</h2>
 <ERRORS>
-<form id="addorder" name="addorder" method="post" action="">
+<form class="content"  id="addorder" name="addorder" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">    
     <tr>
     <td width="20%" valign="top">User</td>

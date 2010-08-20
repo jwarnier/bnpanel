@@ -1,5 +1,5 @@
 <ERRORS>
-<form id="pass" name="pass" method="post" action="">
+<form class="content" id="pass" name="pass" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Old Password:</td>

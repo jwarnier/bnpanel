@@ -1,5 +1,5 @@
 <ERRORS>
-<form id="form1" name="form1" method="post" action="">
+<form class="content" id="form1" name="form1" method="post" action="">
 <table width="100%" border="0" cellspacing="3" cellpadding="0">
   <tr>
     <td width="30%">Days Unpaid Until Suspension:</td>

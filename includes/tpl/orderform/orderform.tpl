@@ -326,8 +326,10 @@ function showAddons(obj) {
 															
 }
 </script>
+<div class="box">
+
 <form action="" method="post" name="order" id="order">
-<div>	
+	
 	<div id="1">
     	<input name="package" id="package" type="hidden" value="" /> 
 		%DOMAIN_CONFIGURATION%              
@@ -514,5 +516,5 @@ function showAddons(obj) {
         <td width="33%" align="center"><input type="button" name="next" id="next" value="Next Step" onclick="nextstep()" ondblclick="return false" /></td>
       </tr>
     </table>
-</div>
 </form>
+</div>

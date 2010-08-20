@@ -25,11 +25,11 @@ $(document).ready(function() {
 		display     			: 5,
 		border					: true,
 		border_color			: '#fff',
-		text_color  			: '#fff',
-		background_color    	: 'black',	
+		text_color  			: '#2A5685',
+		background_color    	: '#EEE',	
 		border_hover_color		: '#ccc',
 		text_hover_color  		: '#000',
-		background_hover_color	: '#fff', 
+		background_hover_color	: '#E5E3E3', 
 		images					: false,
 		mouse					: 'press',
 		onChange     			: function(page) {
@@ -44,23 +44,18 @@ $(document).ready(function() {
 <p>From here you can see all orders in your BNPanel installation</p>
 <ERRORS>
 <div id="pagination_loading" ></div>
-<table width="100%" border="0" cellspacing="3" cellpadding="0">
+<table   class="content_table"  width="100%" border="0" cellspacing="3" cellpadding="0">
 	<thead>
 		<tr> 
-	        <td width="45px"><div align="left"><b>&nbsp;No.</b></div></td>
-	        <td width="200px"><strong>User</strong></td>        
-	        <td width="140px"><strong>Package</strong></td>        
-	        <td width="100px"><strong><a title="Domain name" class="tooltip"><img src="<ICONDIR>world.png" border="0" /></a> Domain</strong></td>
-	        <td width="80px"><strong>Creation date</strong></td>
-	        <td><strong>Status</strong></td>
-	        <td width="80px"><strong>Actions</strong></td>                
+	        <th width="45px"><div align="left"><b>&nbsp;No.</b></div></td>
+	        <th width="200px"><strong>User</strong></td>        
+	        <th width="140px"><strong>Package</strong></td>        
+	        <th width="100px"><strong><a title="Domain name" class="tooltip"><img src="<ICONDIR>world.png" border="0" /></a> Domain</strong></td>
+	        <th width="80px"><strong>Creation date</strong></td>
+	        <th><strong>Status</strong></td>
+	        <th width="80px"><strong>Actions</strong></td>                
 		</tr>
 	</thead>
-	<tbody id="tbody"></tbody>
-	<tfoot>
-		<tr>
-			<td colspan="7"></td>
-		</tr>
-	</tfoot>
+	<tbody id="tbody"></tbody>	
 </table>
 <div id="pagination"></div> 

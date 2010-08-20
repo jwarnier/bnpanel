@@ -1,5 +1,5 @@
 <ERRORS>
-<form id="addsubdomain" name="addsubdomain" method="post" action="">
+<form class="content" id="addsubdomain" name="addsubdomain" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Domain:</td>

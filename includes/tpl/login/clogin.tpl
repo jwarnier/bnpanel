@@ -1,6 +1,6 @@
 <ERRORS>
 
-<form id="login" name="login" method="post" action="<URL>client/">
+<form class="login_wrapper" id="login" name="login" method="post" action="<URL>client/">
 <p>
 	<label>Username</label>	
     <br />
