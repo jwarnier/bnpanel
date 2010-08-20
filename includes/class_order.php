@@ -363,7 +363,7 @@ class order extends model {
 			}
 			
 			if (!empty($user_info)) {
-				$array['USERINFO']  = '<a href="index.php?page=users&sub=search&do='.$user_info['id'].'" >'.$user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')</a>';
+				$array['USERINFO']  = '<a href="index.php?page=users&sub=search&do='.$user_info['id'].'" title="'.$user_info['lastname'].', '.$user_info['firstname'].'" >'.$user_info['user'].'</a>';
 			} else {
 				$array['USERINFO']  = ' - ';
 			}

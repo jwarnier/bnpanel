@@ -338,7 +338,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%supportnav` (
 INSERT INTO `%PRE%supportnav` (`visual`, `icon`, `link`) VALUES
 ('Home', 'house.png', 'home'),
 ('Tickets', 'page_white_text.png', 'tickets'),
-('Knowledgebase', 'folder_explore.png', 'kb');
+('Knowledge Base', 'folder_explore.png', 'kb');
 
 -- --------------------------------------------------------
 
