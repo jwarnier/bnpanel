@@ -22,12 +22,34 @@ class page {
 	}
 	public function content() { # Displays the page 
 		global $main, $style, $db, $staff, $user;
+		require_once LINK.'validator.class.php';
+		
+		
 		
 		$admin_navigation = $main->getAdminNavigation();		
 		
 		switch($main->getvar['sub']) {
-			default:
-				if($_POST && $main->checkToken()) {		
+			default:	
+			
+				$asOption = array(
+				    'rules' => array(
+				        'user' 		=> 'required',				        
+				        'email' 	=> 'required',
+				        'conpass' 	=> 'required',
+				        'pass' 		=> 'required',
+				        'name' 		=> 'required',				        			            
+				     ),			    
+				    'messages' => array(
+				        //'domain' => array( 'required' => 'Domain is required'),			       
+				    )
+				);				
+				$array['json_encode'] = json_encode($asOption);
+				$oValidator = new Validator($asOption);	
+				
+				
+				$result = $oValidator->validate($_POST);
+				
+				if($_POST && $main->checkToken() && empty($result)) {		
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n) {
 							$main->errors("Please fill in all the fields!");
@@ -78,12 +100,28 @@ class page {
 			break;
 			
 			case 'edit':
-				if(isset($main->getvar['do'])) {
+				if(isset($main->getvar['do'])) {	
+					
+					$asOption = array(
+				    'rules' => array(
+				        'user' 		=> 'required',				        
+				        'email' 	=> 'required',
+				        'name' 		=> 'required',				        			            
+				     ),			    
+				    'messages' => array(
+				        //'domain' => array( 'required' => 'Domain is required'),			       
+					    )
+					);				
+					$array['json_encode'] = json_encode($asOption);
+					$oValidator = new Validator($asOption);									
+				
 					$staff_info	=	$staff->getStaffUserById($main->getvar['do']);					
 					if (empty($staff_info)) {
 						echo "That account doesn't exist!";
 					} else {
-						if($_POST && $main->checkToken()) {
+						$result = $oValidator->validate($_POST);
+						
+						if($_POST && $main->checkToken() && empty($result)) {
 							foreach($main->postvar as $key => $value) {
 								if($value == "" && !$n) {
 									$main->errors("Please fill in all the fields!");
@@ -98,6 +136,7 @@ class page {
 								
 								if(!$main->check_email($main->postvar['email'])) {
 									$main->errors("Your email is the wrong format!");
+									$main->redirect('?page=staff&sub=edit&do='.$main->getvar['do'].'&msg=1');									
 								} else {
 									foreach($main->postvar['perms'] as $key => $value) {
 										if($n) {

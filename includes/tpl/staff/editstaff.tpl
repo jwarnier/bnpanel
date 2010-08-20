@@ -1,3 +1,9 @@
+<script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$("#addstaff").validate(%json_encode%);		
+	});	
+</script>
 <ERRORS>
 <form class="content" id="addstaff" name="addstaff" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">

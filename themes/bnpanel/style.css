@@ -583,4 +583,10 @@ input[type="submit"], input[type="button"] {
 	text-decoration:none;   
 }
 
+fieldset {
+	 border:1px solid #ccc;
+}
 
+legend {
+	border-color:#D0D0D0; 
+}
