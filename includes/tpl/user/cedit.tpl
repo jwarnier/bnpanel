@@ -10,7 +10,7 @@ function check() {
 </script>
 <ERRORS>
 %DISP%
-<form id="edit" name="edit" method="post" action="">
+<form class="content" id="edit" name="edit" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Username:</td>

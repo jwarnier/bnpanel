@@ -11,9 +11,13 @@ p {
 	margin:0;
 	padding-top:2px;
 }
-a {	
-	color:#000;
-}
+
+/***** Links *****/
+a, a:link, a:visited { color: #2A5685; text-decoration: none; }
+a:hover, a:active { color: #c61a1a; text-decoration: underline;}
+a img{ border: 0; }
+
+
 img {
     border:0;
 }
@@ -59,7 +63,7 @@ h1 {
 	padding:0 5px;
 	height:39px;
 	display:block;
-	text-decoration:none;
+	
 	margin-right:10px;
 }
 #nav li img {
@@ -67,7 +71,7 @@ h1 {
 }
 #nav li a {
 	color:#fff;
-	text-decoration:none;
+	
 	height:42px;
 }
 
@@ -91,7 +95,7 @@ h1 {
 }
 
 #left {
-	width:15%;
+	width:16%;
 	float:left;
 }
 
@@ -171,7 +175,7 @@ h1 {
 }
 .sub a{
 	background:0;
-	text-decoration:underline;
+	
 }
 .subborder {
 	margin:3px;	
@@ -389,7 +393,7 @@ h2, h3 {
 }
 
 .leftmenu a {	
-	text-decoration:underline;	
+		
 }
 
 .submenu {
@@ -406,8 +410,7 @@ h2, h3 {
 	padding:0px 4px 0px 4px;
 }
 
-.submenu a:hover {
-		
+.submenu a:hover {		
 	text-decoration:underline;
 }
 
@@ -429,27 +432,74 @@ form {
 	-moz-box-shadow:0 4px 18px #C8C8C8;	
 	-webkit-box-shadow: #C8C8C8 0px 4px 18px;
 	-webkit-border-radius:11px 11px 11px 11px;	
-	*/
+
 	 background:none repeat scroll 0 0 #FFFFFF; 
-	/* border:1px solid #E5E5E5; */
+	// border:1px solid #E5E5E5; 
 	font-weight:normal;
 	margin-left:8px;
-	padding:16px 16px 40px;
+	padding:16px 16px 40px;	*/
 }
 
-.box {
-	/*
+.box {	
 	-moz-border-radius:11px 11px 11px 11px;
 	-moz-box-shadow:0 4px 18px #C8C8C8;	
 	-webkit-box-shadow: #C8C8C8 0px 4px 18px;
 	-webkit-border-radius:11px 11px 11px 11px;	
-	*/
+	
 	background:none repeat scroll 0 0 #FFFFFF;
 	border:1px solid #E5E5E5;
 	font-weight:normal;
 	margin-left:8px;
 	padding:16px 16px 40px;
 	width:95%;
+}
+
+
+.content {		
+	background:none repeat scroll 0 0 #FFFFFF;
+	//border:1px solid #E5E5E5;
+	font-weight:normal;
+	margin-left:8px;
+	padding:16px 16px 40px;
+	width:95%;
+}
+
+.content_table {		
+	border-collapse:collapse;
+	text-align:left;
+
+}
+.content_table th {
+	
+	font-size:14px;
+	font-weight:normal;
+	padding:10px 8px;
+	color:#2A5685;
+	background-color:#EEEEEE;
+	padding:4px;
+	white-space:nowrap;
+	
+}
+.content_table td {	
+	padding:8px;
+	border-bottom:1px solid #EFEFEF;	
+}
+
+.content_table td a {
+	
+}
+
+.content_table tbody tr:hover { background-color:#ffffdd; }
+
+
+.login_wrapper {
+	background:none repeat scroll 0 0 #FFFFFF;	
+	font-weight:normal;		
+	padding:16px 16px 40px;
+}
+
+.content td {
+	width:80px;
 }
 
 #pass_login, #user_login, #email_login {
@@ -532,3 +582,5 @@ input[type="submit"], input[type="button"] {
 	padding:3px 8px;
 	text-decoration:none;   
 }
+
+

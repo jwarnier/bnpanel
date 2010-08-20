@@ -23,7 +23,7 @@ var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></di
 </script>
 <h2>New User</h2>
 <ERRORS>
-<form id="adduser" name="adduser" method="post" action="">
+<form class="content" id="adduser" name="adduser" method="post" action="">
 <table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
                 <td>Username:</td>

@@ -25,11 +25,11 @@ $(document).ready(function() {
 		display     			: 5,
 		border					: true,
 		border_color			: '#fff',
-		text_color  			: '#fff',
-		background_color    	: 'black',	
+		text_color  			: '#2A5685',
+		background_color    	: '#EEE',	
 		border_hover_color		: '#ccc',
 		text_hover_color  		: '#000',
-		background_hover_color	: '#fff', 
+		background_hover_color	: '#E5E3E3', 
 		images					: false,
 		mouse					: 'press',
 		onChange     			: 	function(page) {
@@ -43,20 +43,20 @@ $(document).ready(function() {
 <p>From here you can see all invoices in your BNPanel installation.</p>
 <ERRORS>
 <div id="pagination_loading" ></div>
-<table width="100%" border="0" cellspacing="3" cellpadding="0">
+<table  class="content_table"   width="100%" border="0" cellspacing="3" cellpadding="0">
 	<thead>
 	<tr> 
-        <td width="45px"><div align="left"><b>&nbsp;No.</b></div></td>
-        <td><strong>User</strong></td>
-        <td><strong><a title="Domain name" class="tooltip"><img src="<ICONDIR>world.png" border="0" /></a> Domain</strong></td>
-        <td><strong><a title="The amount of money you owe." class="tooltip"><img src="<ICONDIR>money.png" border="0" /></a> Amount</strong></td>      	
+        <th width="45px"><div align="left"><b>&nbsp;No.</b></div></td>
+        <th><strong>User</strong></td>
+        <th><strong><a title="Domain name" class="tooltip"><img src="<ICONDIR>world.png" border="0" /></a> Domain</strong></td>
+        <th><strong><a title="The amount of money you owe." class="tooltip"><img src="<ICONDIR>money.png" border="0" /></a> Amount</strong></td>      	
         <!--  <td><b><a title="Package name" class="tooltip"><img src="<ICONDIR>package_green.png" border="0" /></a> Package</b></td>  --> 
          <!--  <td><a title="Billing cycle" class="tooltip"><img src="<ICONDIR>information.png" border="0" /></a> <strong>Billing cycle</strong></td>  -->
         <!-- <td><b>Addon List</b></td> -->
         <!--  -->
-        <td><strong>Status</strong></td>
-        <td><strong><a title="When it's due." class="tooltip"><img src="<ICONDIR>time.png" border="0" /></a> Due date</strong></td>
-        <td width="80px"><strong>Actions</strong></td>                
+        <th><strong>Status</strong></td>
+        <th><strong><a title="When it's due." class="tooltip"><img src="<ICONDIR>time.png" border="0" /></a> Due date</strong></td>
+        <th width="80px"><strong>Actions</strong></td>                
 	</tr>
 	</thead>
 	<tbody id="tbody"></tbody>	

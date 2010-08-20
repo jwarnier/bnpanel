@@ -26,7 +26,7 @@ $(window).load(function () {
 });
 </script>
 <ERRORS>
-<form id="addserver" name="addserver" method="post" action="">
+<form class="content" id="addserver" name="addserver" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Name:</td>
