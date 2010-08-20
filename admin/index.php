@@ -237,6 +237,7 @@ if(!$_SESSION['logged']) {
 	} else { 
 		define("SUB", "Login");
 		define("INFO", " ");
+		
 		if($_POST) { # If user submitts form
 			if ($main->checkToken()) {
 				if($main->staffLogin($main->postvar['user'], $main->postvar['pass'])) {
@@ -253,15 +254,16 @@ if(!$_SESSION['logged']) {
 		echo $style->get("footer.tpl");
 	}
 } elseif($_SESSION['logged']) {
+	
 	//Ok user is already in 
 	if(!$main->getvar['page']) {
 		$main->getvar['page'] = "home";
 	} elseif($main->getvar['page'] == "logout") {
 		$main->logout();		
 		$main->redirect("?page=home");
-	}
+	}	
 	$content = acp();
-	//exit;
+
 	echo $style->get("header.tpl");
 	echo $content;
 	echo $style->get("footer.tpl");
