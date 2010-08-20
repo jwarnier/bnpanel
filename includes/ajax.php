@@ -291,59 +291,63 @@ class AJAX {
 	public function search() {
 		global $main, $db, $style;
 		if ($main->getCurrentStaffId()) {
-			$type = $main->getvar['type'];		
-			$value = $main->getvar['value'];
-			if($main->getvar['num']) {
-				$show = intval($main->getvar['num']);
-			} else {
-				$show = 10;	
-			}
-			if($main->getvar['page'] != 1) {
-				$lower = intval($main->getvar['page']) * $show;
-				$lower = $lower - $show;
-				$upper = $lower + $show;
-			} else {
-				$lower = 0;
-				$upper = $show;
-			}
-			$sql = "SELECT * FROM `<PRE>users` u WHERE u.{$type} LIKE '%{$value}%' ORDER BY u.{$type} ASC LIMIT {$lower}, {$upper}";
-			$query = $db->query($sql);
-			$rownum = $db->num_rows($query);
-			echo '<table width="100%" border="0" cellpadding="0" cellspacing="2">
-		          <tbody><tr>
-		            <td width="250px">User</td>
-		            <td width="250px">Status</td>
-		            <td width="250px" rowspan="2" align="right">
-		            	Actions
-		            </td>
-		          </tr>		          
-		        </tbody></table>';
-					
-			if($db->num_rows($query) == 0) {
-				echo "No clients found!";	
-			} else {
-				while($data = $db->fetch_array($query)) {
-					if($n != $show) {
-						//$client = $db->client($data['userid']);
-						$array['ID']	= $data['id'];
-						$array['USER'] 	= $data['user'];
-						$array['URL'] 	= URL;
-						$user_status 	= $main->getUserStatusList();
-						$array['STATUS']= $user_status[$data['status']];						
-						echo $style->replaceVar("tpl/user/clientsearchbox.tpl", $array);	
-						$n++;
+			$type = $main->getvar['type'];	
+			
+			if(in_array($type, array('user','id','ip','email'))) {				
+				$value = $main->getvar['value'];
+				if($main->getvar['num']) {
+					$show = intval($main->getvar['num']);
+				} else {
+					$show = 10;	
+				}
+				if($main->getvar['page'] != 1) {
+					$lower = intval($main->getvar['page']) * $show;
+					$lower = $lower - $show;
+					$upper = $lower + $show;
+				} else {
+					$lower = 0;
+					$upper = $show;
+				}
+				$sql = "SELECT * FROM `<PRE>users` u WHERE u.{$type} LIKE '%{$value}%' ORDER BY u.{$type} ASC LIMIT {$lower}, {$upper}";
+				$query = $db->query($sql);
+				$rownum = $db->num_rows($query);
+				
+				echo '<table class="content_table" width="100%" border="0" cellpadding="0" cellspacing="2">
+			          <tbody><tr>
+			            <td width="250px">User</td>
+			            <td width="250px">Status</td>
+			            <td width="250px" rowspan="2" align="right">
+			            	Actions
+			            </td>
+			          </tr>		          
+			        </tbody></table>';
+						
+				if($db->num_rows($query) == 0) {
+					echo "No clients found!";	
+				} else {					
+					while($data = $db->fetch_array($query)) {
+						if($n != $show) {
+							//$client = $db->client($data['userid']);
+							$array['ID']	= $data['id'];
+							$array['USER'] 	= $data['user'];
+							$array['URL'] 	= URL;
+							$user_status 	= $main->getUserStatusList();
+							$array['STATUS']= $user_status[$data['status']];						
+							echo $style->replaceVar("tpl/user/clientsearchbox.tpl", $array);	
+							$n++;
+						}
 					}
+					echo '<div class="break"></div>';
+					echo '<div align="center">';
+					$query = $db->query("SELECT * FROM `<PRE>users` u  WHERE u.{$type} LIKE '%{$value}%' ORDER BY u.{$type} ASC");
+					$num = $db->num_rows($query);
+					$pages = ceil($num/$show);
+					echo "Page ";
+					for($i=1; $i != $pages + 1; $i += 1) {
+						echo ' <a href="Javascript: page(\''.$i.'\')">'.$i.'</a>';
+					}
+					echo '</div>';
 				}
-				echo '<div class="break"></div>';
-				echo '<div align="center">';
-				$query = $db->query("SELECT * FROM `<PRE>users` u  WHERE u.{$type} LIKE '%{$value}%' ORDER BY u.{$type} ASC");
-				$num = $db->num_rows($query);
-				$pages = ceil($num/$show);
-				echo "Page ";
-				for($i=0; $i != $pages + 1; $i += 1) {
-					echo ' <a href="Javascript: page(\''.$i.'\')">'.$i.'</a>';
-				}
-				echo '</div>';
 			}
 		}
 	}
