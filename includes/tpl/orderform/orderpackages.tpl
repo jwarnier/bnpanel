@@ -2,7 +2,7 @@
 	<br />
 	<div class="table">
     	<div class="cat">
-        %NAME%
+        <span class="cat_title">%NAME%</span>
         </div>
         <div class="text">
         <table width="100%" border="0" cellspacing="2" cellpadding="0">

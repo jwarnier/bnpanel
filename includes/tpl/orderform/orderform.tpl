@@ -337,7 +337,7 @@ function showAddons(obj) {
     </div>    
 	<!-- cambios por julio billing thing --> 
     <div class="table" id="2" style="display:none">
-        <div class="cat">Select a billing cycle</div>
+        <div class="cat"><span class="cat_title">Select a billing cycle</span></div>
         <div class="text">
         	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
@@ -359,7 +359,7 @@ function showAddons(obj) {
     </div>    
     <!-- cambios por julio  resumen --> 
     <div class="table" id="3" style="display:none">
-        <div class="cat">Summary</div>
+        <div class="cat"><span class="cat_title">Summary</span></div>
         <div class="text">
         	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
@@ -375,7 +375,7 @@ function showAddons(obj) {
         </div>
     </div>   
     <div class="table" id="4" style="display:none">
-        <div class="cat">Terms of Service</div>
+        <div class="cat"><span class="cat_title">Terms of Service</span></div>
         <div class="text">
         	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
@@ -395,7 +395,7 @@ function showAddons(obj) {
         </div>
     </div>    
 	<div class="table" id="5" style="display:none">
-        <div class="cat">Client Account</div>
+        <div class="cat"><span class="cat_title">Client Account</span></div>
         <div class="text">
         	<table class="data_table" border="0" cellspacing="2" cellpadding="0" align="center" style="width: 400px;">
               <tr>
@@ -478,7 +478,7 @@ function showAddons(obj) {
         </div>
     </div>
     <div class="table" id="6" style="display:none">
-        <div class="cat">Hosting Account</div>
+        <div class="cat"><span class="cat_title">Hosting Account</span></div>
         <div class="text">
         	<table width="100%" border="0" cellspacing="2" cellpadding="0">
               <tr id="dom">
@@ -501,7 +501,7 @@ function showAddons(obj) {
         </div>
     </div>
     <div class="table" id="7" style="display:none">
-        <div class="cat">Setting your account</div>
+        <div class="cat"><span class="cat_title">Setting your account</span></div>
         <div class="text" id="creation">
         	<div id="finished">
             </div>
