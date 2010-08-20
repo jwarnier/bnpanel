@@ -396,15 +396,15 @@ class AJAX {
 	}
 	
 	public function editserverhash() {
-		if($_SESSION['logged']) {
-			global $main, $db, $server;
+		global $main, $db, $server;
+		if ($main->getCurrentStaffId()) {			
 			$type 	= $main->getvar['type'];
-			$id 	= $main->getvar['server'];
+			$id 	= intval($main->getvar['server']);
 			require_once LINK.'servers/panel.php';
 			if (in_array($type, $server->getAvailablePanels())) {
 				require_once LINK."servers/". $type .".php";
-				$server = new $type;
-				if($server->hash) {
+				$serverphp = new $type();
+				if($serverphp->hash) {
 					echo 0;	
 				} else {
 					echo 1;	
