@@ -1,5 +1,5 @@
 body, body a {
-	background:url(<IMG>bg.gif);
+	background:url(images/bg.gif);
 	background-position: top center;
 	color:#00FF00;
 	font-family:"Arial", Helvetica, sans-serif;
@@ -20,7 +20,7 @@ body, body a {
 #logo {
 	width:327px;
 	height:64px;
-	background:url(<IMG>logo.png) no-repeat;
+	background:url(images/logo.png) no-repeat;
 	margin-bottom:30px;
 }
 #footer {
@@ -44,7 +44,7 @@ body, body a {
 	padding:2px;
 }
 .cat {
-	background:url(<IMG>grad.gif) repeat-x top;
+	background:url(images/grad.gif) repeat-x top;
 	padding:5px;
 	margin:-1px;
 	color:#00FF00;

@@ -4,7 +4,7 @@
 }
 body {
 	margin:0;
-	background:url(<IMG>background.png) repeat-x #eeeff1;
+	background:url(images/background.png) repeat-x #eeeff1;
 }
 p {
 	padding:0;
@@ -39,7 +39,7 @@ h1 {
 
 .logo {
 	width:100%;
-	background:url(<IMG>logo.png) center no-repeat;
+	background:url(images/logo.png) center no-repeat;
 	height:75px;	
 	padding:20px;
 }
@@ -107,28 +107,28 @@ h1 {
 	min-height:38px;
 }
 .boxtop {
-	background:url(<IMG>img_15.png) top repeat-x;
+	background:url(images/img_15.png) top repeat-x;
 }
 .boxbottom {
-	background:url(<IMG>img_24.png) bottom repeat-x;
+	background:url(images/img_24.png) bottom repeat-x;
 }
 .boxleft {
-	background:url(<IMG>img_22.png) left repeat-y;
+	background:url(images/img_22.png) left repeat-y;
 }
 .boxright {
-	background:url(<IMG>img_20.png) right repeat-y;
+	background:url(images/img_20.png) right repeat-y;
 }
 .boxtleft {
-	background:url(<IMG>img_12.png) top left no-repeat;
+	background:url(images/img_12.png) top left no-repeat;
 }
 .boxtright {
-	background:url(<IMG>img_16.png) top right no-repeat;
+	background:url(images/img_16.png) top right no-repeat;
 }
 .boxbleft {
-	background:url(<IMG>img_23.png) bottom left no-repeat;
+	background:url(images/img_23.png) bottom left no-repeat;
 }
 .boxbright {
-	background:url(<IMG>img_26.png) bottom right no-repeat;
+	background:url(images/img_26.png) bottom right no-repeat;
 }
 .text {
 	min-height:38px;
@@ -192,7 +192,7 @@ input[type="text"], input[type="email"], input[type="url"], input[type="password
 input, option {
 /*font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;*/
 	color:#333;
-	border:1px solid #C6D9E9;
+	/*border:1px solid #C6D9E9; */
 	margin-bottom:4px;
 	font-size:15px;
 	margin-right:5px;
@@ -212,7 +212,7 @@ input, option {
 }
 /* The "boxes"s Main Title area */
 .cat {
-	background:#026CB1 url(<IMG>img_07.png) top left repeat-x;
+	background:#026CB1 url(images/img_07.png) top left repeat-x;
 	padding:5px;
 	margin:-1px;
 	color:#FFF;

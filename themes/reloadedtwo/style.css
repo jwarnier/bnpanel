@@ -5,7 +5,7 @@
  */
 
 body{
-	background: url(<IMG>bg.gif) repeat;
+	background: url(images/bg.gif) repeat;
 	color:#333;
 	font-family:"Lucida Grande", "Segoe UI", "Arial", Helvetica, sans-serif;
 	font-size:11px;
@@ -13,7 +13,7 @@ body{
 }
     
 body a{
-   background-color: url(<IMG>bg.gif) repeat-x #f7f7f7;
+   background-color: url(images/bg.gif) repeat-x #f7f7f7;
    color: #333;
    font-family: "Segoe UI", "Lucida Grande", Verdana, Arial;
    font-size:11px;
@@ -45,7 +45,7 @@ body a{
   -webkit-border-radius:8px;
   }
 #header_logo {
-	background: url(<IMG>logo-bg.png);
+	background: url(images/logo-bg.png);
 	height: 75px;
 	margin-top: 0 !important;
 	margin-left: 0 !important;
@@ -85,7 +85,7 @@ color: #000 !important;
 	padding-right: 0;
 }
 .cat {
-	background:url(<IMG>head.png) repeat-x top;
+	background:url(images/head.png) repeat-x top;
 	padding:5px;
 	margin:-1px;
 	color:#FFF;
@@ -147,7 +147,7 @@ img, img a {
 
  
 #tht_navigation {
-	background: #ffffff url(<IMG>navigation_bg.gif) repeat-x;
+	background: #ffffff url(images/navigation_bg.gif) repeat-x;
 	height: 31px;
 	padding-left: 10px;
 	font-size: 0.95em;
@@ -285,6 +285,6 @@ img, img a {
  * No, really.
  */
  .catend{
-     background: url(<IMG>head.png) repeat-x;
+     background: url(images/head.png) repeat-x;
      height: 12px !important;
  }

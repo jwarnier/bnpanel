@@ -10,10 +10,11 @@ class page {
 	public $navlist = array();
 							
 	public function __construct() {
+		
 		$this->navtitle = "Subdomain Sub Menu";
-		$this->navlist[] = array("Add Subdomain", "add.png", "add");
-		$this->navlist[] = array("Edit Subdomain", "pencil.png", "edit");
-		$this->navlist[] = array("Delete Subdomain", "delete.png", "delete");
+		$this->navlist[] = array("View All Subdomains", "package_add.png", "view");
+		$this->navlist[] = array("Add Subdomain", "add.png", "add");				
+		
 	}
 	public function description() {
 		return "<strong>Managing Subdomains</strong><br />
@@ -38,9 +39,11 @@ class page {
 							if(!$n) {
 								$db->query("INSERT INTO `<PRE>subdomains` (subdomain, server) VALUES('{$main->postvar['subdomain']}', '{$main->postvar['server']}')");
 								$main->errors("Subdomain has been added!");
+								$main->redirect('?page=sub&sub=edit&msg=1');
 							}
 						} else {
 							$main->errors("Subdomain already exist");
+							$main->generateToken();							
 						}
 					}					
 				}
@@ -53,10 +56,11 @@ class page {
 					$main->errors('There are no servers, you need to add a Server first <a href="?page=servers&sub=add">here</a>');
 					echo '<ERRORS>';
 				}				
-			break;			
+			break;
+			case 'view':	
 			case 'edit':
 				if(isset($main->getvar['do'])) {
-					$query = $db->query("SELECT * FROM `<PRE>subdomains` WHERE `id` = '{$main->getvar['do']}'");
+					$query = $db->query("SELECT * FROM `<PRE>subdomains` WHERE id = '{$main->getvar['do']}'");
 					if($db->num_rows($query) == 0) {
 						echo "That subdomain doesn't exist!";	
 					} else {
@@ -67,17 +71,18 @@ class page {
 									$n++;
 								}
 							}
-							if (!in_array($main->postvar['subdomain'],$subdomain_list)) {
+							//if (!in_array($main->postvar['subdomain'], $subdomain_list)) {
 								if(!$n) {
 									$db->query("UPDATE `<PRE>subdomains` SET subdomain = '{$main->postvar['subdomain']}', 
 																	  server = '{$main->postvar['server']}'
 																	   WHERE id = '{$main->getvar['do']}'");
-									$main->errors("Subdomain edited!");
+									$main->errors("Subdomain has been edited");
 									$main->redirect('?page=sub&sub=edit&msg=1');
 								}
-							} else {
-								$main->errors("Subdomain already exist");
-							}
+							//} else {
+								//$main->errors("Subdomain already taken");
+								//$main->generateToken();
+							//}
 
 						}
 						$data = $db->fetch_array($query);
@@ -96,7 +101,7 @@ class page {
 					} else {
 						echo "<ERRORS>";
 						while($data = $db->fetch_array($query)) {
-							echo $main->sub("<strong>".$data['subdomain']."</strong>", '<a href="?page=sub&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>');
+							echo $main->sub("<strong>".$data['subdomain']."</strong>", '<a href="?page=sub&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=sub&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 						}
 					}
 				}
@@ -107,18 +112,9 @@ class page {
 					if($main->checkToken()) {	
 						$db->query("DELETE FROM `<PRE>subdomains` WHERE `id` = '{$main->getvar['do']}'");
 						$main->errors("Subdomain Deleted!");
+						$main->redirect('?page=sub&sub=edit&msg=1');
 					}		
-				}
-				$query = $db->query("SELECT * FROM `<PRE>subdomains`");
-				if($db->num_rows($query) == 0) {
-					echo "There are no subdomains to delete!";	
-				}
-				else {
-					echo "<ERRORS>";
-					while($data = $db->fetch_array($query)) {
-						echo $main->sub("<strong>".$data['subdomain']."</strong>", '<a href="?page=sub&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
-					}
-				}
+				}				
 			break;
 		}
 	}

@@ -19,9 +19,9 @@ class page {
 							
 	public function __construct() {
 		$this->navtitle = "Packages Sub Menu";
-		$this->navlist[] = array("Add Packages", "package_add.png", "add");
-		$this->navlist[] = array("Edit Packages", "package_go.png", "edit");
-		$this->navlist[] = array("Delete Packages", "package_delete.png", "delete");
+		$this->navlist[] = array("View all Packages", "package_add.png", "view");
+		$this->navlist[] = array("Add Packages", "add.png", "add");
+		
 	}
 	
 	public function description() {
@@ -32,26 +32,43 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db, $billing, $package,$addon, $server;
+		require_once LINK.'validator.class.php';
+		
 		
 		switch($main->getvar['sub']) {
 			default:
 				$n = 0;
-				if($_POST && $main->checkToken()) {
+				
+				$asOption = array(
+				    'rules' => array(
+				        'name' 				=> 'required',
+				        'backend' 			=> 'required',
+				        'type' 				=> 'required',
+				        'server' 			=> 'required'				        
+				     ),			    
+				    'messages' => array(				        			       
+				    )
+				);
+				$array['json_encode'] = json_encode($asOption);							
+				$oValidator = new Validator($asOption);	
+				
+				$result = $oValidator->validate($_POST);
+				
+				if (empty($result))				
+				if($_POST && $main->checkToken()) {					
+					
 					$exist_billing_cycle = false;
-					//var_dump($main->postvar );
 					foreach($main->postvar as $key => $value) {
-						//echo ($key.' - '.$value).' <br />';
-						if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle") {
+						/*if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle") {
 							$main->errors("Please fill in all the fields: ".$key);							
 							$n++;
-						}
+						}*/
 						if ($main->postvar['type'] == 'paid' && $exist_billing_cycle == false) {
 							if (substr($key,0,13) == "billing_cycle") {								
 								$exist_billing_cycle = true;
 							}	
 						}						
 					}
-					//var_dump($exist_billing_cycle, $n);
 					if ($main->postvar['type'] == 'paid' && $exist_billing_cycle == false) {
 						$main->errors("Please add a billing cycle first");			
 						$n++;	
@@ -83,7 +100,8 @@ class page {
 								}
 							}						
 						}
-						$main->errors("Package has been added!");					
+						$main->errors("Package has been added!");
+						$main->redirect('?page=packages&sub=edit&msg=1');						
 					}
 				}
 				
@@ -100,7 +118,7 @@ class page {
 					echo '<ERRORS>';
 				}
 				break;
-				
+			case 'view':
 			case 'edit':
 				if(isset($main->getvar['do'])) {
 					$package_info = $package->getPackage($main->getvar['do']);
@@ -265,11 +283,10 @@ class page {
 					$query = $db->query("SELECT * FROM `<PRE>packages`");
 					if($db->num_rows($query) == 0) {
 						echo "There are no packages to edit!";	
-					}
-					else {
+					} else {
 						echo "<ERRORS>";
 						while($data = $db->fetch_array($query)) {
-							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=packages&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>');
+							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=packages&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=packages&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 							$n++;
 						}
 					}
@@ -278,26 +295,16 @@ class page {
 				
 			case 'delete':
 				if($main->getvar['do']) {
-					if ($main->checkToken()) {					
+					if ($main->checkToken()) {
+						$main->getvar['do'] = intval($main->getvar['do']);
 						$db->query("DELETE FROM `<PRE>packages` 		WHERE id = '{$main->getvar['do']}'");
 						$db->query("DELETE FROM `<PRE>billing_products` WHERE product_id = '{$main->getvar['do']}' AND type = '".BILLING_TYPE_PACKAGE."'");
-						$db->query("DELETE FROM `<PRE>package_addons`	WHERE package_id = '{$main->getvar['do']}'");
-										
+						$db->query("DELETE FROM `<PRE>package_addons`	WHERE package_id = '{$main->getvar['do']}'");										
 						$main->errors("Package has been Deleted!");
+						$main->redirect('?page=packages&sub=edit&msg=1');	
 					}		
-				}
-				$query = $db->query("SELECT * FROM `<PRE>packages`");
-				if($db->num_rows($query) == 0) {
-					echo "There are no servers to delete!";	
-				} else {
-					echo "<ERRORS>";
-					while($data = $db->fetch_array($query)) {
-						echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=packages&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
-						$n++;
-					}
-				}
+				}				
 			break;
 		}
 	}
 }
-?>
