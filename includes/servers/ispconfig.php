@@ -770,6 +770,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$html .='</li>';			
 			}
 			$html .='</ul>';
+		} else {
+			$html = 'No data available';
 		}
 		return $html;		
 	}

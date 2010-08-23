@@ -189,16 +189,41 @@ class page {
 				break;
 			
 			case 'add':
-				$array = $user->setDefaults();				
-				if ($_POST && $main->checkToken()) {					
-					$user_id = $user->create($main->postvar);					
-					if (!empty($user_id) && is_numeric($user_id)) {
-						$main->errors("Account added!");
-												
+				require_once LINK.'validator.class.php';
+				$asOption = array(
+					    'rules' => array(
+					        'user' 			=> array('required'=>true,'validateUsername'=>'error'),			        
+					        'password' 		=> 'required',
+					        'confirmp' 		=> 'required',
+					        'email' 		=> 'required',
+					        'status' 		=> 'required'					        					            
+					     ),			    
+					    'messages' => array(			
+					    	'user'=>array('required'=>'This field is required', 'validateUsername'=>'Username already exists' )		        			       
+					    )
+					);				
+				$array = $user->setDefaults();	
+				$array['json_encode'] = json_encode($asOption);				
+				$oValidator = new Validator($asOption);		
+								
+				if ($_POST && $main->checkToken()) {		
+					$result = $oValidator->validate($_POST);					
+					if (empty($result)) {	
+						$user_id = $user->create($main->postvar);					
+						if (!empty($user_id) && is_numeric($user_id)) {
+							$main->errors("Account added!");
+							//$main->redirect('?page=users&sub=search&msg=1');
+						} else {
+							$main->errors("Account NOT added!", true);	
+							$array = $main->postvar;					
+							$main->redirect('?page=users&sub=add&msg=1');												
+						}
 					} else {
-						$main->errors("Account NOT added!");
-						$array = $main->postvar;						
-					}					
+						$main->errors("Account NOT added!", true);	
+						$array = $main->postvar;					
+						$main->redirect('?page=users&sub=add&msg=1');
+					}
+					$main->generateToken();		
 				}			
 				$array['status'] = $main->createSelect('status', $main->getUserStatusList(), '');				
 				echo $style->replaceVar("tpl/user/add.tpl", $array);				

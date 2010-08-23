@@ -37,9 +37,13 @@ class page {
 						}						
 						if (!in_array($main->postvar['subdomain'],$subdomain_list)) {
 							if(!$n) {
+								
+								$main->validDomain($main->postvar['subdomain']);
+								
+								
 								$db->query("INSERT INTO `<PRE>subdomains` (subdomain, server) VALUES('{$main->postvar['subdomain']}', '{$main->postvar['server']}')");
 								$main->errors("Subdomain has been added!");
-								$main->redirect('?page=sub&sub=edit&msg=1');
+								//$main->redirect('?page=sub&sub=edit&msg=1');
 							}
 						} else {
 							$main->errors("Subdomain already exist");
@@ -73,10 +77,15 @@ class page {
 							}
 							//if (!in_array($main->postvar['subdomain'], $subdomain_list)) {
 								if(!$n) {
-									$db->query("UPDATE `<PRE>subdomains` SET subdomain = '{$main->postvar['subdomain']}', 
+									if ($main->validDomain($main->postvar['subdomain'])) {
+									
+										$db->query("UPDATE `<PRE>subdomains` SET subdomain = '{$main->postvar['subdomain']}', 
 																	  server = '{$main->postvar['server']}'
 																	   WHERE id = '{$main->getvar['do']}'");
-									$main->errors("Subdomain has been edited");
+										$main->errors("Subdomain has been edited");
+									} else {
+										$main->errors("Enter a valid domain");
+									}									
 									$main->redirect('?page=sub&sub=edit&msg=1');
 								}
 							//} else {

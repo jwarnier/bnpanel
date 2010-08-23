@@ -488,6 +488,11 @@ form {
 	
 }
 
+.content td {
+	/* width:20%; */
+}
+
+
 .content_table tbody tr:hover { background-color:#ffffdd; }
 
 
@@ -497,9 +502,7 @@ form {
 	padding:16px 16px 40px;
 }
 
-.content td {
-	width:80px;
-}
+
 
 #pass_login, #user_login, #email_login {
 	background:none repeat scroll 0 0 #FBFBFB;

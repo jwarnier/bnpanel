@@ -9,10 +9,9 @@ class page {
 	public $navlist = array();
 							
 	public function __construct() {
-		$this->navtitle = "Staff Accounts Sub Menu";
+		$this->navtitle = "Staff Accounts Sub Menu";		
+		$this->navlist[] = array("View All Staff Account", "user_edit.png", "view");
 		$this->navlist[] = array("Add Staff Account", "user_add.png", "add");
-		$this->navlist[] = array("Edit Staff Account", "user_edit.png", "edit");
-		$this->navlist[] = array("Delete Staff Account", "user_delete.png", "delete");
 	}
 	
 	public function description() {
@@ -98,7 +97,7 @@ class page {
 				$array['PAGES'] .= "</table>";
 				echo $style->replaceVar("tpl/staff/addstaff.tpl", $array);
 			break;
-			
+			case 'view':
 			case 'edit':
 				if(isset($main->getvar['do'])) {	
 					
@@ -117,14 +116,14 @@ class page {
 				
 					$staff_info	=	$staff->getStaffUserById($main->getvar['do']);					
 					if (empty($staff_info)) {
-						echo "That account doesn't exist!";
+						echo "That account doesn't exist";
 					} else {
 						$result = $oValidator->validate($_POST);
 						
 						if($_POST && $main->checkToken() && empty($result)) {
 							foreach($main->postvar as $key => $value) {
 								if($value == "" && !$n) {
-									$main->errors("Please fill in all the fields!");
+									$main->errors("Please fill in all the fields");
 									$n++;
 								}
 								$broke = explode("_", $key);
@@ -150,7 +149,7 @@ class page {
 									
 									$main->postvar['perms'] = $string;
 									$staff->edit($main->getvar['do'], $main->postvar);									
-									$main->errors("Staff account edited!");
+									$main->errors("Staff account edited");
 									$main->redirect('?page=staff&sub=edit&msg=1');
 								}
 							}
@@ -183,27 +182,17 @@ class page {
 					$staff_list = $staff->gettAllStaff();
 					echo "<ERRORS>";
 					foreach($staff_list as $data) {
-						echo $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=edit&do='.$data['id'].'"><img title="Edit" src="'. URL .'themes/icons/pencil.png"></a>');											
+						echo $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=edit&do='.$data['id'].'"><img title="Edit" src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=staff&sub=delete&do='.$data['id'].'"><img title="Delete" src="'. URL .'themes/icons/delete.png"></a>');											
 					}
 				}
-				break;
-			
+				break;			
 			case 'delete':				
 				$user_id = $main->getCurrentStaffId();
 				if(!empty($main->getvar['do']) && $user_id != $main->getvar['do'] && $main->checkToken()) {
 					$staff->delete($main->getvar['do'], true);						
-					$main->errors("Staff Account Deleted!");
-				}
-				$staff_list = $staff->gettAllStaff();
-				echo "<ERRORS>";
-				foreach($staff_list as $data) {
-						//Do not delete my self
-					if ($data['id'] != $user_id) {
-						echo $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=delete&do='.$data['id'].'"><img title="Delete" src="'. URL .'themes/icons/delete.png"></a>');
-					} else {
-						echo $main->sub("<strong>".$data['user']."</strong>", '<img title="You can\'t delete yourself" src="'. URL .'themes/icons/delete_na.png">');
-					}					
-				}
+					$main->errors("Staff Account has been deleted");
+					$main->redirect('?page=staff&sub=view&msg=1');
+				}				
 			break;
 		}
 	}
