@@ -102,6 +102,14 @@
   </tr>
   -->  
 
+
+  	<tr>
+    <td valign="top">Creation date</td>
+    <td>  		
+  		%CREATED%
+    </td>
+  </tr>  
+  
   	<tr>
     <td valign="top">Due date</td>
     <td>  		

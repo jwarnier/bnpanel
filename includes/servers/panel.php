@@ -16,7 +16,7 @@ abstract class Panel {
 	public function __construct($server_id = null) {
 		if (empty($server_id)) {
 			$server_id = 0;
-		}		
+		}
 		$this->server_id = $server_id;		
 	}
 	

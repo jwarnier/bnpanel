@@ -118,14 +118,14 @@ class server extends Model {
 		$server_id 	 = $type->determineServer($package_id);
 		$server_type = $type->determineServerType($server_id); # Determine server		
 		//Abstract class Panel added
-		require_once LINK."servers/panel.php";
+		require_once LINK."servers/panel.php";		
 		if (in_array($server_type, $this->getAvailablePanels())) {
 			$link = LINK."servers/".$server_type.".php";
 			if(!file_exists($link)) {
 				$main->addlog("server::loadServer function error. The server  $server_type doesn't exist!");				
 				return false;	
 			} else {
-				require_once $link; # Get the server
+				require_once $link; # Get the server				
 				$serverphp = new $server_type($server_id);
 				return $serverphp;
 			}
@@ -623,12 +623,14 @@ class server extends Model {
 		if (is_array($order_info) && !empty($order_info)) {
 			$user_info = $user->getUserById($order_info['userid']);
 			$package_info = $package->getPackage($order_info['pid']);
+			
 			$donestuff = false;
 			if (!empty($package_info)) {
-				$server_id = $package_info['server'];				
+				$server_id = $package_info['server'];		
+				
 				$serverphp = $this->createServer($order_info['pid']);
-				if ($serverphp != false) {
-					$done = $serverphp->suspend($order_id, $server_id, $reason);
+				if ($serverphp != false) {					
+					$done = $serverphp->suspend($order_id, $server_id, $reason);					
 					if ($done) {
 						$main->addlog("server::suspend Order #$order_id");
 						return true;

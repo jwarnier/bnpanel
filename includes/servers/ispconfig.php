@@ -286,8 +286,7 @@ class ispconfig extends Panel {
 		$data 			 = $this->serverDetails($package_info['server']);	
 		
 		if ($this->debug) {echo '<pre>';}		
-		//$ip = gethostbyname($data['host']);
-
+	
 		/*ISPConfig client variables
 					client_id 	sys_userid 	sys_groupid 	sys_perm_user 	sys_perm_group 	sys_perm_other 	
 company_name 	contact_name 	street 	zip 	city 	state 	country 	telephone 	mobile 	fax 	email 	internet 	icq 	notes 	
@@ -500,7 +499,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		$params['username'] = $order_info['username'];
 
 		//Getting user info
-		$user_info = $this->remote('client_get_by_username',$params);
+		$user_info = $this->remote('client_get_by_username',$params);		
 		
 		if (is_array($user_info) && !empty($user_info)) {
 			
@@ -511,15 +510,13 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			$site_info = $this->remote('client_get_sites_by_user', $site_params);			
 					
 			$domain_id = 0;
-			if ($site_info !== false) {
-				
+			if ($site_info !== false) {				
 				foreach($site_info as $domain) {				
 					if ($order_info['real_domain'] == $domain['domain']) {
 						$domain_id = $domain['domain_id'];
 						break;
 					}
-				}
-				
+				}				
 				if ($domain_id != 0) {
 					$params_get_site['primary_id'] = $domain_id;
 					
@@ -567,8 +564,10 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					return true;
 				}					
 			}
+			return false;			
 		}
-		return false;
+		//This means that the order was not sent to the Control Panel so we cant enable locally
+		return true;
 	}
 	
 	/**
@@ -593,7 +592,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		$site_info = $this->remote('client_get_sites_by_user',$site_params);
 
 		$domain_id = 0;
-		if ($site_info !==false) {
+		if ($site_info !== false) {
 			
 			foreach($site_info as $domain) {
 				if ($order_info['real_domain'] == $domain['domain']) {
@@ -651,9 +650,10 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				}	
 				*/								
 				return true;				
-			}			
+			}
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	/**
