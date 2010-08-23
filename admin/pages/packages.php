@@ -276,11 +276,11 @@ class page {
 							}		
 							if (!empty($my_package_back_end)) {					
 								$html_result = $serverphp->parseBackendInfo($my_package_back_end);
-								$message = 'Package is related with the Control Panel';
+								$message = 'This Package is related with the Control Panel';
 								$array['BACKEND_MESSAGE_CLASS'] = 'info';
 								$array['BACKEND_INFO'] 			= $html_result;
 							} else {								
-								$message = 'Package is not related with the Control Panel. Check Your Backend field.';
+								$message = 'This Package is not related with the Control Panel. Check Your Backend field.';
 								$array['BACKEND_MESSAGE_CLASS'] = 'warning';						
 								$array['BACKEND_INFO'] = 'Cannot load Package Info';
 							}

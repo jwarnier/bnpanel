@@ -212,7 +212,7 @@ class page {
 						$user_id = $user->create($main->postvar);					
 						if (!empty($user_id) && is_numeric($user_id)) {
 							$main->errors("Account added!");
-							//$main->redirect('?page=users&sub=search&msg=1');
+							$main->redirect('?page=users&sub=search&msg=1');
 						} else {
 							$main->errors("Account NOT added!", true);	
 							$array = $main->postvar;					

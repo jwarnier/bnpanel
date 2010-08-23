@@ -31,7 +31,7 @@ function changeAddons(obj) {
 
 function loadPackages(obj) {
 	var id=obj.options[obj.selectedIndex].value;
-	$.get("<AJAX>function=loadPackages&billing_id="+id, function(data) {
+	$.get("<AJAX>function=loadPackages&action=add&billing_id="+id, function(data) {
 		document.getElementById("showpackages").innerHTML = data;
 	});
 	
@@ -45,7 +45,7 @@ function loadAddons(obj) {
 	var billing_obj = document.getElementById("billing_cycle_id");
 	var billing_id=billing_obj.options[billing_obj.selectedIndex].value;
 	
-	$.get("<AJAX>function=loadaddons&package_id="+id+"&billing_id="+billing_id, function(data) {
+	$.get("<AJAX>function=loadaddons&action=add&package_id="+id+"&billing_id="+billing_id, function(data) {
 		document.getElementById("showaddons").innerHTML = data;
 	});
 }

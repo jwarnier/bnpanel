@@ -32,21 +32,22 @@ function changeAddons(obj) {
 
 function loadPackages(obj) {
 	var id=obj.options[obj.selectedIndex].value;
-	$.get("<AJAX>function=loadPackages&billing_id="+id+"&order_id="+document.getElementById("order_id").value, function(data) {
+	$.get("<AJAX>function=loadPackages&action=edit&billing_id="+id+"&order_id="+document.getElementById("order_id").value, function(data) {
 		document.getElementById("showpackages").innerHTML = data;
-	});
-	
-	var packages = document.getElementById("package_id");
-	loadAddons(packages);
+	});	
+	//var packages = document.getElementById("package_id");
+	var packages_id = document.getElementById("package_id").value;	
+	loadAddons(packages_id);
 }
 
 function loadAddons(obj) {
 	if (obj !=  null) {
-		var id=obj.options[obj.selectedIndex].value;
+		//var id=obj.options[obj.selectedIndex].value;
+		var id=obj;
 		var billing_obj = document.getElementById("billing_cycle_id");
 		var billing_id=billing_obj.options[billing_obj.selectedIndex].value;
 	
-		$.get("<AJAX>function=loadaddons&package_id="+id+"&billing_id="+billing_id+"&order_id="+document.getElementById("order_id").value, function(data) {
+		$.get("<AJAX>function=loadaddons&action=edit&package_id="+id+"&billing_id="+billing_id+"&order_id="+document.getElementById("order_id").value, function(data) {
 			document.getElementById("showaddons").innerHTML = data;
 		});
 	}
@@ -57,6 +58,7 @@ function loadAddons(obj) {
 <form class="content" id="addpackage" name="addpackage" method="post" action="">
 
 <input name="order_id" type="hidden" id="order_id" value="%ID%" />
+<input name="package_id" type="hidden" id="package_id" value="%PACKAGE_ID%" />
 
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
      <tr>

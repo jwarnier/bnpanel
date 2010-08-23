@@ -492,8 +492,8 @@ class order extends model {
 				foreach($package_list as $package_item) {
 					$package_list[$package_item['id']] = $package_item['name'].' - '.$currency->toCurrency($package_with_amount[$package_item['id']]['amount']);									
 				}				
-				$array['PACKAGES'] = $main->createSelect('package_id', $package_list, $package_id, array('onchange'=>'loadAddons(this);'));
-				//$array['PACKAGES'] 		 = $package_list[$package_id];				
+				//$array['PACKAGES'] = $main->createSelect('package_id', $package_list, $package_id, array('onchange'=>'loadAddons(this);'));
+				$array['PACKAGES'] 		 = $package_list[$package_id];				
 			}		
 			
 			//Billing cycle
