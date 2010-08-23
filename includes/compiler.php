@@ -87,10 +87,13 @@ if (file_exists(LINK."/conf.inc.php")) {
 	define("NOCONFIG", true);
 }
 
-if($sql['install']) {
+if ($sql['install']) {
 	define("INSTALL", 1);
 	$db = new db(); # Create the class	
 	global $db; # Globalise it
+	$db->getSystemConfigList();
+	
+	
 }
 
 $folder = LINK;
@@ -109,28 +112,6 @@ if (isset($main) && !empty($main)) {
 if ($main->checkUserAgent() == false) {
 	$main->logout();
 }
-/*
-//@todo remove this and use autoload 
-if ($handle = opendir($folder)) { # Open the folder
-	while (false !== ($file = readdir($handle))) { # Read the files
-		if($file != "." && $file != "..") { # Check aren't these names
-			$base = explode(".", $file); # Explode the file name, for checking
-			if($base[1] == "php") { # Is it a php?
-				$base2 = explode("_", $base[0]);
-				if($base2[0] == "class" && $base2[1] != "db" && $base2[1] != "main") {
-					if (file_exists(LINK."/".$file)) {
-						require $folder."/".$file; # Get the file					
-						${$base2[1]} = new $base2[1]; # Create the class
-						global ${$base2[1]}; # Globalise it
-					}
-				}
-			}
-		}
-	}
-}
-closedir($handle); #Close the folder
-*/
-
 function __autoload($class_name) {
 	$class_name = strtolower($class_name);
     require_once LINK.'class_'.$class_name . '.php';
@@ -146,53 +127,56 @@ if(INSTALL == 1) {
 	define("THEME", $db->config("theme")); # Set the default theme
 	define("URL", 	$db->config("url")); # Sets the URL THT is located at
 	define("NAME", 	$db->config("name")); # Sets the name of the website
+	
+	$load_post = false;
+	
+	if($_POST) {	
+		$load_post = true;			
+	}
+	
+	if (!$is_ajax_load) {	
+		if (!$load_post) {
+			$token =  $main->generateToken();
+			//var_dump('load_post->'.$token);
+		}
+	} else {
+		if ($main->isValidMd5($_GET['_get_token'])) {
+			$token =  $_GET['_get_token'];
+		} else {
+			$token = md5(uniqid(rand(),TRUE));
+		}
+	}
+	//Converts all POSTS into variable - DB Friendly.
+	foreach($_POST as $key => $value) {
+		$main->postvar[$key] = $db->strip($value);
+	}
+	$main->postvar['_post_token'] =	$main->getToken();
+	//var_dump('postvar->'.$main->postvar['_post_token']);
+	
+	//Converts all GET into variable - DB Friendly.
+	foreach($_GET as $key => $value) {	
+		$main->getvar[$key] = $db->strip($value);	
+	}
+	$main->getvar['_get_token'] = $main->getToken();
+
 } else {
 	define("THEME", 'bnpanel'); # Set the default theme
 	define("NAME", 	'BNPanel'); # Sets the name of the website
 }
+	
 
-$load_post = false;
+$path		= dirname($main->removeXSS($_SERVER['PHP_SELF']));
+$position 	= strrpos($path,'/') + 1;
+$folder 	= substr($path, $position);	
+define("FOLDER", $folder); # Add current folder name to global
 
-if($_POST) {	
-	$load_post = true;			
-}
-
-if (!$is_ajax_load) {	
-	if (!$load_post) {
-		$token =  $main->generateToken();
-		//var_dump('load_post->'.$token);
-	}
-} else {
-	if ($main->isValidMd5($_GET['_get_token'])) {
-		$token =  $_GET['_get_token'];
-	} else {
-		$token = md5(uniqid(rand(),TRUE));
-	}
-}
-
-
-//Converts all POSTS into variable - DB Friendly.
-foreach($_POST as $key => $value) {
-	$main->postvar[$key] = $db->strip($value);
-}
-$main->postvar['_post_token'] =	$main->getToken();
-//var_dump('postvar->'.$main->postvar['_post_token']);
-
-
-//Converts all GET into variable - DB Friendly.
-foreach($_GET as $key => $value) {	
-	$main->getvar[$key] = $db->strip($value);	
-}
-
-$main->getvar['_get_token'] = $main->getToken();	
-
-$path = dirname($main->removeXSS($_SERVER['PHP_SELF']));
-$position = strrpos($path,'/') + 1;
-
-define("FOLDER", substr($path,$position)); # Add current folder name to global
 if(FOLDER != "install" && FOLDER != "includes" && INSTALL != 1) { # Are we installing?	
 	//Lets just redirect to the installer, shall we?	
-	$installURL = LINK . "../install";
+	if ($path == '/') {
+		$installURL = $path . "install";
+	} else {
+		 $installURL = $path . "/install";
+	}	
 	header("Location: $installURL");
 	exit;
 }
