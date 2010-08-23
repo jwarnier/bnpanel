@@ -12,8 +12,8 @@
                 <strong>Version:</strong> %VERSION% (%UPDATE%)<br />
                 <strong>Theme:</strong> %THEME%<br />
                 <strong>Client Area Enabled:</strong> %CENABLED%<br />
-                <strong>Show BNPanel Version in footer:</strong> %SVID%<br />
-                <strong>THT Support Area Enabled:</strong> %SENABLED%<br />
+                <strong>Show Version in footer:</strong> %SVID%<br />
+                <strong>Support Area Enabled:</strong> %SENABLED%<br />
                 <strong>Signups Enabled:</strong> %SIGNENABLE%<br />
                 <strong>Multiple Signups:</strong> %MULTI%<br />
                 <strong>Email Method:</strong> %EMETHOD%<br />
@@ -31,10 +31,10 @@
                 <a href="?page=packages">Manage Packages</a><br />
                 <a href="?page=tickets">Answer Tickets</a><br />
                 <a href="?page=lof">Look & Feel</a><br />
-                <a href="?page=type&type=p2h&sub=forums">P2H Forums</a><br />
+                <!-- <a href="?page=type&type=p2h&sub=forums">P2H Forums</a><br /> -->
                 <a href="?page=type&type=paid&sub=paid">Configure Paid</a><br />
                 <a href="?page=kb">Knowledge Base</a><br />
-                <a href="?page=import">Import Clients</a>
+                <!-- <a href="?page=import">Import Clients</a>  -->
             </div>
         </div>
         </td>

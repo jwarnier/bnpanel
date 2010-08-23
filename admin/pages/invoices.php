@@ -76,6 +76,7 @@ class page {
 						}						
 					}					
 					$return_array = $invoice->getInvoice($main->getvar['do']);
+					
 					$return_array['DUE'] = substr($return_array['DUE'], 0, 10);					
 					echo $style->replaceVar("tpl/invoices/editinvoice.tpl", $return_array);
 				}

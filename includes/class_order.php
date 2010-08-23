@@ -126,8 +126,7 @@ class order extends model {
 						$result = $server->suspend($order_id);
 						if ($result)
 							$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
-					}
-				
+					}			
 				break;
 				case ORDER_STATUS_CANCELLED:
 					$result = true;

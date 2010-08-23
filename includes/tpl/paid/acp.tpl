@@ -5,13 +5,13 @@
     <td width="30%">Days Unpaid Until Suspension:</td>
     <td width="13%"><input name="susdays" type="text" id="susdays" size="5" value="%SUSDAYS%" />
     </td>
-    <td width="57%"><a title="The amount of days that when a invoice has been left unpaid, it suspends the client." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+    <td width="57%"><a title="The amount of days that when a invoice has been left unpaid, it suspends the Order" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
   </tr>
-  <tr>
+ <!--  <tr>
     <td>Days Suspended Until Termination:</td>
     <td><input name="termdays" type="text" id="termdays" size="5" value="%TERDAYS%" />&nbsp;</td>
     <td><a title="How many days of suspension it takes to terminate." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-  </tr>
+  </tr>  -->
   <tr>
     <td>Currency:</td>
     <td>%CURRENCY%</td>
