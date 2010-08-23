@@ -1,3 +1,4 @@
+<h2>Change Password in Order #%ID%</h2>
 <ERRORS>
 <form class="content"  name="change_pass" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">

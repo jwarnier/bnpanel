@@ -552,7 +552,7 @@ class order extends model {
 			foreach($invoice_list as $invoice_item) {				
 				$my_invoice = $invoice->getInvoiceInfo($invoice_item['invoice_id']);
 				if (!empty($my_invoice)) {										
-					$html .= '<li><a href="?page=invoices&sub=view&do='.$my_invoice['id'].'">'.$my_invoice['id'].'</a> '.date('Y-m-d', $my_invoice['due']).' '.$invoice_status[$my_invoice['status']].' '.$currency->toCurrency($my_invoice['total_amount']).'</li>';
+					$html .= '<li><a href="?page=invoices&sub=view&do='.$my_invoice['id'].'" title="Invoice id" >#'.$my_invoice['id'].'</a> '.date('Y-m-d', $my_invoice['due']).' '.$invoice_status[$my_invoice['status']].' '.$currency->toCurrency($my_invoice['total_amount']).'</li>';
 				} else {
 					$html .= '<li>Problem found with Invoice id #'.$invoice_item['invoice_id'].'</li>';
 				}
