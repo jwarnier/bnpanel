@@ -1245,12 +1245,19 @@ class AJAX {
    		$package_id = $main->getvar['package_id'];
 		$billing_id	= $main->getvar['billing_id'];
 		$order_id	= $main->getvar['order_id'];
+		$action	= $main->getvar['action'];
+		
 		$addon_selected_list = array();
 		if (!empty($order_id)) {
 			$order_info = $order->getOrderInfo($order_id);
 			$addon_selected_list = $order_info['addons'];
-		}									
-		$result = $addon->showAllAddonsByBillingCycleAndPackage($billing_id, $package_id,array_flip($addon_selected_list));
+		}
+		if ($action == 'add') {
+			$generate_checbox = true;
+		} else {
+			$generate_checbox = false;
+		}				
+		$result = $addon->showAllAddonsByBillingCycleAndPackage($billing_id, $package_id, array_flip($addon_selected_list),$generate_checbox);
 		echo $result['html'];			
    }
    
@@ -1272,7 +1279,9 @@ class AJAX {
    function loadpackages() {
    		global $main, $db, $addon, $currency, $order, $package;
    		$billing_id = intval($main->getvar['billing_id']);
-   		$order_id	= intval($main->getvar['order_id']);
+   		$order_id	= intval($main->getvar['order_id']);   		
+   		$action	= $main->getvar['action'];
+   		
 		$order_info = $order->getOrderInfo($order_id);
 		
 		$packages = $package->getAllPackagesByBillingCycle($billing_id);
@@ -1281,8 +1290,12 @@ class AJAX {
    		
 		foreach($packages as $package) {
 			$package_list[$package['id']] = $package['name'].' - '.$currency->toCurrency($package['amount']);				
-		}	
-		echo $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);', 'class'=>'required'));
+		}
+		if ($action == 'add') {	
+			echo $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);', 'class'=>'required'));
+		} elseif ($action == 'edit') {
+			echo $package_list[$order_info['pid']];	
+		}		
    }
    
    function sendtemplate() {
@@ -1376,7 +1389,7 @@ class AJAX {
 
 if(isset($_GET['function']) && !empty($_GET['function'])) {
 	//If this is an AJAX request?
-	//if ($main->isXmlHttpRequest()) {
+	if ($main->isXmlHttpRequest()) {
 		$ajax = new AJAX();
 		if (method_exists($ajax, $_GET['function'])) {
 			//Protecting AJAX calls now we need a token set in variables.php
@@ -1385,8 +1398,8 @@ if(isset($_GET['function']) && !empty($_GET['function'])) {
 				//include LINK."output.php"; //This is not necessary
 			}
 		}
-	/*} else {
+	} else {
 		//Redirect to the homepage  
 		$main->redirect();
-	}*/
+	}
 }

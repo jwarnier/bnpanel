@@ -176,7 +176,7 @@ class page {
 				foreach($billing_list as $billing_item) {
 					$new_billing_list[$billing_item['id']] =$billing_item['name']; 
 				}
-				$array['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, $default['billing_cycle_id'], array('onchange'=>'loadPackages(this);', 'class'=>'required'));				
+				$array['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, '', array('onchange'=>'loadPackages(this);', 'class'=>'required'));				
 				$array['PACKAGES'] 		= '-';
 				$array['ADDON'] 		= '-';
 				$order_list = $main->getOrderStatusList();
@@ -262,6 +262,8 @@ class page {
 				}	
 						
 				$return_array = $order->getOrder($main->getvar['do'], false, false);
+				
+				$return_array['PACKAGE_ID'] = intval($order_info['pid']);
 				
 				$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);
 				
