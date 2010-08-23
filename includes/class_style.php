@@ -51,9 +51,9 @@ class style {
 	}
 
 	public function css() { # Fetches the CSS and prepares it
-        global $db;
-		$link = $db->config('url')."themes/". THEME . "/style.css";
-		$css = '<link rel="stylesheet" type="text/css" href="'.$link.'"/>';				
+        global $db;                
+		$link = URL."themes/". THEME . "/style.css";
+		$css = '<link rel="stylesheet" type="text/css" href="'.$link.'"/>';        
 		if(FOLDER != "install" && FOLDER != "includes") {
 	        $css .= '<link rel="stylesheet" href="'.URL.'includes/css/'.$db->config('ui-theme').'/jquery-ui.css" type="text/css" />';
 		}

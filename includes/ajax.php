@@ -5,7 +5,7 @@
  */
  
 $is_ajax_load = true;
-require_once 'compiler.php';
+require 'compiler.php';
 
 class AJAX {
 	
@@ -478,12 +478,11 @@ class AJAX {
 			$dbCon = mysql_connect($sql['host'], $sql['user'], $sql['pass']);
 			$dbSel = mysql_select_db($sql['db'], $dbCon);
 			
-			if($main->getvar['type'] == "install") {
+			if($_GET['type'] == "install") {
 				$errors = $this->installsql("sql/install.sql", $sql['pre'], $dbCon);
 				echo "Complete!<br /><strong>There were ".$errors['n']." errors while executing the SQL!</strong><br />";
-				echo '<div align="center"><input type="button" name="button4" id="button4" value="Next Step" onclick="change()" /></div>';
-					
-			} elseif($main->getvar['type'] == "upgrade") {									
+				echo '<div align="center"><input type="button" name="button4" id="button4" value="Next Step" onclick="change()" /></div>';					
+			} elseif($_GET['type'] == "upgrade") {									
 				if ($sql['upgrade'] == true) {
 					$errors = $this->installsql("sql/upgrade.sql", $sql['pre'], $dbCon);
 					echo "Complete!<br /><strong>There were ".$errors['n']." errors while executing the SQL!</strong><br />";
@@ -492,13 +491,11 @@ class AJAX {
 					echo 'Change the upgrade variable to true in conf.inc.php. Then try again.';					
 				}				
 			} else {
-				echo "Fatal Error Debug: ". $main->getvar['type'];
-			}
-			
+				echo "Fatal Error Debug";
+			}			
 			if(!$this->writeconfig($sql['host'], $sql['user'], $sql['pass'], $sql['db'], $sql['pre'], "true")) {
 				echo '<div class="errors">There was a problem re-writing to the config!</div>';	
-			}
-						
+			}					
 			if($errors['n']) {
 				echo "<strong>SQL Queries (Broke):</strong><br />";
 				foreach($errors['errors'] as $value) {
@@ -1393,6 +1390,9 @@ if(isset($_GET['function']) && !empty($_GET['function'])) {
 		$ajax = new AJAX();
 		if (method_exists($ajax, $_GET['function'])) {
 			//Protecting AJAX calls now we need a token set in variables.php
+			if (INSTALL != 1) {
+				$ajax->{$_GET['function']}();
+			}
 			if ($main->checkToken(false)) {
 				$ajax->{$_GET['function']}();
 				//include LINK."output.php"; //This is not necessary

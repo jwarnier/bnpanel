@@ -48,7 +48,7 @@ function generateSiteUrl() {
 define("CVER", "1.2.2");
 define("NVER", "1.2.3");
 
-include '../includes/compiler.php'; # Get compiler
+require_once '../includes/compiler.php'; # Get compiler
 
 define("THEME", 'bnpanel'); # Set the theme
 define("URL", "../"); # Set url to blank
