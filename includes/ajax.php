@@ -1114,12 +1114,14 @@ class AJAX {
 						//$setup_fee = '<b>Setup Fee:</b></td><td align="right">'.$addon['setup_fee'];
 						$setup_fee ='';
 						$html .='<tr><td width="1%">';
-						$checked = '';						
+						$checked = '';
+						$addon_mandatory_text = '';						
 						if ($addon['mandatory'] == 1) {
-							$checked = 'checked="on" disabled';	
+							$checked = 'checked="on" disabled';
+							$addon_mandatory_text = '(Mandatory)';
 						}						
 						$html .='<input id="addon_ids" '.$checked.' value="'.$data['addon_id'].'" name="addon_ids" type="checkbox"></td>';
-						$html .='<td width="33%">'.$addon['name'].'</td><td align="right">'.$setup_fee.'</td><td align="right"><strong>'.$addon['billing_name'].'</strong></td>';
+						$html .='<td width="33%">'.$addon['name'].' '.$addon_mandatory_text.' </td><td align="right">'.$setup_fee.'</td><td align="right"><strong>'.$addon['billing_name'].'</strong></td>';
 						$html .='<td width="33%" align="right">'.$addon['amount'].'</td></tr>';
 						$info_exist = true;
 					}
@@ -1360,12 +1362,21 @@ class AJAX {
 			echo 0;	
 		}			
 		return;
-	}		
+	}
+	public function usernameExists() {
+		global $user, $main;		
+		$user_info = $user->getUserByUserName($main->getvar['user']);			
+		if ($user_info == false) {
+			echo '0';
+		} else {
+			echo '1';
+		}
+	}
 }
 
 if(isset($_GET['function']) && !empty($_GET['function'])) {
 	//If this is an AJAX request?
-	if ($main->isXmlHttpRequest()) {
+	//if ($main->isXmlHttpRequest()) {
 		$ajax = new AJAX();
 		if (method_exists($ajax, $_GET['function'])) {
 			//Protecting AJAX calls now we need a token set in variables.php
@@ -1374,8 +1385,8 @@ if(isset($_GET['function']) && !empty($_GET['function'])) {
 				//include LINK."output.php"; //This is not necessary
 			}
 		}
-	} else {
+	/*} else {
 		//Redirect to the homepage  
 		$main->redirect();
-	}
+	}*/
 }

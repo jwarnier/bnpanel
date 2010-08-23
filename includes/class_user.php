@@ -158,8 +158,8 @@ class user extends model {
 		if (!empty($username)) {
 			$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE user = '{$db->strip($username)}'");
 			$data = array();
-			if($db->num_rows($query) > 0) {
-				$data = $db->fetch_array($query,'ASSOC');
+			if($db->num_rows($query) > 0) {				
+				$data = $db->fetch_array($query,'ASSOC');				
 				return $data;				
 			}				
 		}

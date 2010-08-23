@@ -262,7 +262,9 @@ class page {
 						$array['ADDON'] = $addon->generateAddonCheckboxes($myresults);	
 						global $server;
 						//Loading the server			
+						
 						$serverphp= $server->loadServer($package_info['server']);
+						
 						if ($serverphp != false) {							
 							//Getting all client templates in ISPConfig
 							$package_list = $serverphp->getAllPackageBackEnd();
@@ -271,12 +273,19 @@ class page {
 									$my_package_back_end = $package_item_panel;
 									break;
 								}							
+							}		
+							if (!empty($my_package_back_end)) {					
+								$html_result = $serverphp->parseBackendInfo($my_package_back_end);
+								$message = 'Package is related with the Control Panel';
+								$array['BACKEND_MESSAGE_CLASS'] = 'info';
+								$array['BACKEND_INFO'] 			= $html_result;
+							} else {								
+								$message = 'Package is not related with the Control Panel. Check Your Backend field.';
+								$array['BACKEND_MESSAGE_CLASS'] = 'warning';						
+								$array['BACKEND_INFO'] = 'Cannot load Package Info';
 							}
-							$html_result = $serverphp->parseBackendInfo($my_package_back_end);
-							$array['BACKEND_INFO'] = $html_result;
-						} else {
-							$array['BACKEND_INFO'] = 'Cannot load Package Info';
-						}						
+						}	
+						$array['BACKEND_MESSAGE'] = $message;					
 						echo $style->replaceVar("tpl/packages/editpackage.tpl", $array);
 					}
 				} else {

@@ -1,4 +1,23 @@
+<script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
 <script type="text/javascript">
+
+jQuery.validator.addMethod("validateUsername", 
+	function(value, element) {
+		var username_value = $("#user").val();	
+		$.ajax({
+			url:"<AJAX>function=usernameExists&user="+username_value,
+			async:false,
+			type: "GET",
+			success:  function(data) {
+				result = (data=='0') ? true : false;				
+			}
+		});
+		return result;			
+});
+
+$(function() {	
+	$("#adduser").validate(%json_encode%);
+});
 
 function check(name, value) {
 	$("#"+name+"check").html(loading);
@@ -27,7 +46,7 @@ var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></di
 <table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
                 <td>Username:</td>
-                <td><input type="text" name="user" id="user" value="%user%"/></td>
+                <td><input type="text" name="user" id="user" value="%user%" /></td>
                 <td align="left"><a title="The username is your unique identity to your account. This is both your client account and control panel username. Please keep it under 8 characters." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
                 <td align="left" id="usercheck">&nbsp;</td>
               </tr>
@@ -103,8 +122,8 @@ var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></di
               </tr>
               
               <tr>
-    			<td colspan="2" align="center"><input type="submit" name="add" id="add" value="Create client" /></td>
-    			</tr>
+    <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Create client" /></td>
+    </tr>
       
             </table>
 </form>            
