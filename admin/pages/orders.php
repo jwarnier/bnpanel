@@ -225,7 +225,7 @@ class page {
 						}
 						$main->redirect('?page=orders&sub=view&msg=1&do='.$main->getvar['do']);			
 					}
-					$return_array = $order->getOrder($main->getvar['do'], false, false);					
+					$return_array = $order->getOrder($main->getvar['do'], false, false);										
 					echo $style->replaceVar("tpl/orders/change-password.tpl", $return_array);
 				}				
 			break;
