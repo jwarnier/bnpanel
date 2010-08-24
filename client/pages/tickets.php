@@ -35,13 +35,21 @@ class page {
 					}
 					if(!$n) {
 						$time = time();
-						$db->query("INSERT INTO `<PRE>tickets` (title, content, urgency, time, userid) VALUES('{$main->postvar['title']}', '{$main->postvar['content']}', '{$main->postvar['urgency']}', '{$time}', '{$user_id}')");
+						
+						$ticket_params['title']		= $main->postvar['title'];
+						$ticket_params['content'] 	= $main->postvar['content'];
+						$ticket_params['urgency'] 	= $main->postvar['urgency'];
+						$ticket_params['time'] 		= $time;
+						$ticket_params['userid'] 	= $user_id;
+						$ticket->create($ticket_params);						
+						
 						$main->errors("Ticket has been added!");
 						$template = $db->emailTemplate("new ticket");
 						$array['TITLE'] = $main->postvar['title'];
 						$array['URGENCY'] = $main->postvar['urgency'];
 						$array['CONTENT'] = $main->postvar['content'];
 						$email->staff($template['subject'], $template['content'], $array);
+						$main->redirect('?page=tickets&sub=view&msg=1');
 					}
 				}
 				echo $style->replaceVar("tpl/support/addticket.tpl", $array);
@@ -61,7 +69,7 @@ class page {
 						}
 					}
 				} else {
-					$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `id` = '{$main->getvar['do']}' OR `ticketid` = '{$main->getvar['do']}' ORDER BY `time` ASC");
+					$query = $db->query("SELECT * FROM <PRE>tickets WHERE id = '{$main->getvar['do']}' OR ticketid = '{$main->getvar['do']}' ORDER BY time ASC");
 					if(!$db->num_rows($query)) {
 						echo "That ticket doesn't exist!";	
 					}
@@ -75,7 +83,16 @@ class page {
 							}
 							if(!$n) {
 								$time = time();
-								$db->query("INSERT INTO `<PRE>tickets` (title, content, time, userid, reply, ticketid) VALUES('{$main->postvar['title']}', '{$main->postvar['content']}', '{$time}', '{$user_id}', '1', '{$main->getvar['do']}')");
+								
+								$ticket_params['title']		= $main->postvar['title'];
+								$ticket_params['content'] 	= $main->postvar['content'];
+								$ticket_params['time'] 		= $time;
+								$ticket_params['userid'] 	= $user_id;
+								$ticket_params['reply'] 	= 1;
+								$ticket_params['ticketid'] 	= $main->getvar['do'];
+								
+								$ticket->create($ticket_params);					
+								
 								$main->errors("Reply has been added!");
 								$data = $db->fetch_array($query);
 								$client = $db->client($user_id);

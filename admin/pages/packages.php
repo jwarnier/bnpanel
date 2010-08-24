@@ -75,9 +75,18 @@ class page {
 					}	
 						
 					if(!$n) {
-						$db->query("INSERT INTO `<PRE>packages` (name, backend, description, type, server, admin, is_hidden, is_disabled, additional, reseller) VALUES('{$main->postvar['name']}', '{$main->postvar['backend']}', '{$main->postvar['description']}', '{$main->postvar['type']}', '{$main->postvar['server']}', '{$main->postvar['admin']}', '{$main->postvar['hidden']}', '{$main->postvar['disabled']}', '{$additional}', '{$main->postvar['reseller']}')");
-						$product_id = mysql_insert_id();
-						
+						$package_params['name'] 		= $main->postvar['name'];
+						$package_params['backend'] 		= $main->postvar['backend'];
+						$package_params['description'] 	= $main->postvar['description'];
+						$package_params['type'] 		= $main->postvar['type'];
+						$package_params['server'] 		= $main->postvar['server'];
+						$package_params['admin'] 		= $main->postvar['admin'];
+						$package_params['is_hidden'] 	= $main->postvar['hidden'];
+						$package_params['is_disabled'] 	= $main->postvar['disabled'];
+						//$package_params['additional']	= $additional;
+						$package_params['reseller'] 	= $main->postvar['reseller'];						
+						$product_id  = $package->create($package_params);
+												
 						$billing_list = $billing->getAllBillingCycles();
 						
 						foreach($billing_list as $billing_id=>$value) {
@@ -147,19 +156,18 @@ class page {
 										$n++;
 									}
 								}
-								
-								$db->query("UPDATE `<PRE>packages` SET
-										   `name` = '{$main->postvar['name']}',
-										   `backend` = '{$main->postvar['backend']}',
-										   `description` = '{$main->postvar['description']}',
-										   `server` = '{$main->postvar['server']}',
-										   `admin` = '{$main->postvar['admin']}',
-										   `additional` = '{$additional}',
-										   `reseller` = '{$main->postvar['reseller']}',
-										   `is_hidden` = '{$main->postvar['hidden']}',
-										   `is_disabled` = '{$main->postvar['disabled']}'
-										   WHERE `id` = '{$main->getvar['do']}'");
-								
+										   
+								$package_params['name'] 		= $main->postvar['name'];
+								$package_params['backend'] 		= $main->postvar['backend'];
+								$package_params['description'] 	= $main->postvar['description'];
+								//$package_params['type'] 		= $main->postvar['type'];
+								$package_params['server'] 		= $main->postvar['server'];
+								$package_params['admin'] 		= $main->postvar['admin'];
+								$package_params['is_hidden'] 	= $main->postvar['hidden'];
+								$package_params['is_disabled'] 	= $main->postvar['disabled'];
+								$package_params['additional']	= $additional;
+								$package_params['reseller'] 	= $main->postvar['reseller'];						
+								$package->edit($main->getvar['do'], $package_params);										
 								
 								//-----Adding billing cycles 
 								
@@ -183,7 +191,7 @@ class page {
 								
 								$query = $db->query("DELETE FROM `<PRE>package_addons` WHERE package_id = {$main->getvar['do']} ");
 								   
-								$query = $db->query("SELECT * FROM `<PRE>addons`");
+								$query = $db->query("SELECT * FROM <PRE>addons");
 								$product_id = $main->getvar['do'];
 								if($db->num_rows($query) > 0) {
 									
@@ -307,7 +315,7 @@ class page {
 				if($main->getvar['do']) {
 					if ($main->checkToken()) {
 						$main->getvar['do'] = intval($main->getvar['do']);
-						$db->query("DELETE FROM `<PRE>packages` 		WHERE id = '{$main->getvar['do']}'");
+						$package->delete($main->getvar['do']);
 						$db->query("DELETE FROM `<PRE>billing_products` WHERE product_id = '{$main->getvar['do']}' AND type = '".BILLING_TYPE_PACKAGE."'");
 						$db->query("DELETE FROM `<PRE>package_addons`	WHERE package_id = '{$main->getvar['do']}'");										
 						$main->errors("Package has been Deleted!");

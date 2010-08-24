@@ -5,12 +5,45 @@
 //Check if called by script
 if(THT != 1){die();}
 
-class ticket {	
+class ticket extends model {
+	
+	public $columns 	= array('id', 'title','content', 'urgency','time', 'reply', 'ticketid','staff','userid', 'status');
+	public $table_name 	= 'tickets';	
 	
 	public function __construct() { # When class is made, retrieves all details like sending method, details.
-
-
 	}
+	
+ 	/** 
+ 	 * Creates a new ticket
+	 * 
+	 * @param 	array	parameters
+	 * 
+	 */
+	public function create($params) {
+		global $main;		 
+		$id = $this->save($params);	    
+		$main->addLog("ticket::create #$id");    	
+  		return $id;		
+	}
+	
+	/**
+	 * Edits an object
+	 */
+	public function edit($id, $params) {
+		global $main;
+		$this->setId($id);		
+		$main->addLog("ticket::edit ticket #$id");
+		$this->update($params);
+	}
+	
+	public function delete($id) {
+		global $main;
+		$this->setId($id);
+		parent::delete();
+		$main->addLog("ticket::delete #$id");				 
+		return true;
+	}
+	
 	
 	public function showReply($id) { # Returns the HTML for a ticket box
 		global $db, $main, $style;
@@ -70,16 +103,13 @@ class ticket {
 		switch($status) {
 			default:
 				return "Other";
-				break;
-			
+				break;			
 			case 1:
 				return "Open";
-				break;
-				
+				break;				
 			case 2:
 				return "On Hold";
-				break;
-				
+				break;				
 			case 3:
 				return "Closed";
 				break;
