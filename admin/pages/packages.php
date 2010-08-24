@@ -290,10 +290,12 @@ class page {
 					}
 				} else {
 					$query = $db->query("SELECT * FROM `<PRE>packages`");
-					if($db->num_rows($query) == 0) {
-						echo "There are no packages to edit!";	
+					echo "<ERRORS>";
+					
+					if ($db->num_rows($query) == 0) {
+						echo '<div class="warning">There are no packages to edit!</div>';	
 					} else {
-						echo "<ERRORS>";
+						
 						while($data = $db->fetch_array($query)) {
 							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=packages&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=packages&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 							$n++;

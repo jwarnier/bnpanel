@@ -109,10 +109,12 @@ class page {
 				} else {
 					//@todo replace this queries
 					$query = $db->query("SELECT * FROM `<PRE>servers`");
+					echo "<ERRORS>";
+					
 					if($db->num_rows($query) == 0) {
-						echo "There are no servers to view!";	
+						echo '<div class="warning">There are no Servers!</div>';	
 					} else {
-						echo "<ERRORS>";
+						
 						while($data = $db->fetch_array($query)) {
 							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=servers&sub=view&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=servers&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 							if($n) {

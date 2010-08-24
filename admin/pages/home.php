@@ -43,16 +43,14 @@ class page {
 	}
     
 	public function content() { 
-		global $db,$main, $style, $page;
-	
-		
+		global $db,$main, $style, $page;	
 				
 		//$current_version = rtrim($this->curl_get_content('http://thehostingtool.com/updates/version.txt')); #Clears the end whitespace. ARGHHH
 		$current_version = '1.2.3';
 		
-		$running_version = $main->cleanwip($db->config('version'));
-		$install_check = $this->checkDir(LINK ."../install/");
-		$conf_check = $this->checkPerms(LINK ."conf.inc.php");
+		$running_version 	= $main->cleanwip($db->config('version'));
+		$install_check 		= $this->checkDir(LINK ."../install/");
+		$conf_check 		= $this->checkPerms(LINK ."conf.inc.php");
 		
 		if($current_version == $running_version){
 			$updatemsg = "<span style='color:green'>Up-To-Date</span>";
@@ -72,23 +70,26 @@ class page {
 		}
 		unset($current_version);
 		unset($running_version);
-		$stats['VERSION'] = $db->config('version');
-		$stats['THEME'] = $db->config('theme');
-		$stats['CENABLED'] = $main->cleaninteger($db->config('cenabled'));
-		$stats['SVID'] = $main->cleaninteger($db->config('show_version_id'));
-		$stats['SENABLED'] = $main->cleaninteger($db->config('senabled'));
-		$stats['DEFAULT'] = $db->config('default');
-		$stats['EMETHOD'] = $db->config('emailmethod');
-		$stats['SIGNENABLE'] = $main->cleaninteger($db->config('general'));
-		$stats['MULTI'] = $main->cleaninteger($db->config('multiple'));
-		$stats['UPDATE'] = $updatemsg;
-		$stats['UPG_BOX'] = $upgrademsg;
+		$stats['VERSION'] 	= $db->config('version');
+		$stats['THEME'] 	= $db->config('theme');
+		$stats['CENABLED'] 	= $main->cleaninteger($db->config('cenabled'));
+		$stats['SVID'] 		= $main->cleaninteger($db->config('show_version_id'));
+		$stats['SENABLED'] 	= $main->cleaninteger($db->config('senabled'));
+		$stats['DEFAULT'] 	= $db->config('default');
+		$stats['EMETHOD'] 	= $db->config('emailmethod');
+		$stats['SIGNENABLE']= $main->cleaninteger($db->config('general'));
+		$stats['MULTI'] 	= $main->cleaninteger($db->config('multiple'));
+		$stats['UPDATE'] 	= $updatemsg;
+		$stats['UPG_BOX']	= $upgrademsg;
 		$stats_box = $style->replaceVar('tpl/dashboard/stats.tpl', $stats);
 		
+		$cron ='<a href="'.$db->config('url').'includes/cron.php" target="_blank">Run cron here</a>';
+		
 		$content = '<strong>Welcome to your Admin Dashboard!</strong><br />Welcome to the dashboard of your Admin Control Panel. In this area you can do the tasks that you need to complete such as manage servers, create packages, manage users.<br />
-		Here, you can also change the look and feel of your BNPanel Installation. If you require any help, be sure to ask at the <a href="http://beeznest.com" title="BNPanel Community is the official stop for BNPanel Support, Modules, Developer Center and more! Visit our growing community now!" class="tooltip">BNPanel Community</a><br />'.$stats_box.'<br />'.$install_check.$conf_check.'</div></div>';
-		$content .='<a href="'.$db->config('url').'includes/cron.php" target="_blank">Run cron here</a>';
-		echo $content;
+					Here, you can also change the look and feel of your BNPanel Installation. If you require any help, be sure to ask at the <a href="http://www.beeznest.com" title="BNPanel Community is the official stop for BNPanel Support, Modules, Developer Center and more! Visit our growing community now!" class="tooltip">BNPanel Community</a>' .
+					'<br />'.$stats_box.$cron.'<br /></div></div>';
+		
+		
 		if($_POST) {
 			foreach($main->postvar as $key => $value) {
 				if($value == "" && !$n) {
@@ -106,9 +107,27 @@ class page {
 		}
 		$array['NOTEPAD'] = $db->resources('admin_notes');
 		$content_notepad = $style->replaceVar('tpl/notepad.tpl', $array);
+		
+		$subdomain_list = $main->getSubDomains();
+		
+		switch($db->config('domain_options')) {
+			case DOMAIN_OPTION_BOTH:	
+			case DOMAIN_OPTION_SUBDOMAIN:
+			if (empty($subdomain_list)) {
+				$todo_content = '<div class="warning">You need to Add subdomains <a href="?page=sub&sub=add">here</a>. Due your current <a href="?page=settings&sub=paths">Subdomain options.</a> The Order Form will not work.</div>';		
+			}
+			break;
+			case DOMAIN_OPTION_DOMAIN:
+			break;								
+		}		
+		$todo_content .= $install_check.$conf_check;
+		echo $content;		
+		echo $main->table('Admin TODO', $todo_content, 'auto', 'auto');		
+		
 		echo '<br />'; //br it, br it
 		echo $main->table('Admin Notepad', $content_notepad, 'auto', 'auto');
 		
+		//Temporaly code just to see the lastest commit
 		$output = array();
 		exec('hg heads', $output);
 		if (isset($output)) {
@@ -117,7 +136,9 @@ class page {
 			echo '<br />';
 			echo $output['3'];
 			echo '</h3>';	
-		}	
+		} else {
+			echo 'Seems that there is not a mercurial ... ';
+		}
 		
 		/*
 		
@@ -137,4 +158,3 @@ class page {
 		echo $main->table('THT News & Updates', $news);*/
 	}
 }
-?>
