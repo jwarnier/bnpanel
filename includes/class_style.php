@@ -107,22 +107,27 @@ class style {
         $notice .= '</em></strong>';
         return $notice;
     }
-
-	//Obsolete Functions...
-
-	public function update($template, $code) { # Updates a template
-		global $db;
-		$query = $db->query("SELECT * FROM `<PRE>templates` WHERE `name` = '{$db->strip($template)}'");
-		if($db->num_rows($query) == 0) {
-			$this->error("Template not found!", $template, __FUNCTION__);
-		}
-		else {
-			$db->query("UPDATE `<PRE>templates` SET `code` = '{$db->strip($code)}' WHERE `name` = '{$db->strip($template)}'");
-		}
-	}
-
-	public function delete($template) { # Gets a query and returns the rows/columns as array
-		global $db;
-		$query = $db->query("DELETE * FROM `<PRE>templates` WHERE `name` = '{$db->strip($template)}'");
-	}
+    
+    public function showMessage($message, $type = 'info',$allow_html = true) {
+		echo $this->returnMessage($message, $type, $allow_html);
+    }
+    
+    public function returnMessage($message, $type, $allow_html = true) {
+    	global $main;
+    	if (!empty($type) && in_array($type, array('info', 'warning', 'error', 'success'))) {
+    		if ($type == 'error') {
+    			$type = 'error_message';
+    		}
+    		$html = '<div class="'.$type.'">';    		
+    		if ($allow_html) {   		
+    			$html .= $message;
+    		} else {
+    			$html .= $main->removeXSS($message);    			
+    		}
+    		$html .= '</div>';    		
+    	} else {
+    		$type = 'info';
+    	}    	
+    	return $html;
+    }
 }

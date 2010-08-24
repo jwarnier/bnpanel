@@ -6,7 +6,7 @@ if(THT != 1){die();}
 
 class page {
 	
-	public function curl_get_content($url="http://thehostingtool.com/updates/version.txt"){  
+	/*public function curl_get_content($url="http://thehostingtool.com/updates/version.txt"){  
          $ch = curl_init();
          curl_setopt($ch,CURLOPT_URL, $url);
          curl_setopt($ch,CURLOPT_FRESH_CONNECT,TRUE);
@@ -21,26 +21,7 @@ class page {
          }
          curl_close($ch);
          return $html;
-    }  
-    
-    public function checkDir($dir){
-    	if (is_dir($dir)) { 
-    		return "<div class='warning'><img src='../themes/icons/cross.png' alt='' /> Warning: Your install directory still exists. Delete or rename it now!</div>";
-		}
-		else{
-			return "";
-		}
-	}
-	
-	public function checkPerms($file){
-		$filechk = substr(sprintf('%o', fileperms($file)), -3);
-		if ($filechk != 444){
-			return "<div class='warning'><img src='../themes/icons/error.png' alt='' /> Warning: Configuration file (conf.inc.php) is still writable, please chmod it to 444!</div>";
-		}
-		else{
-			return "";
-		}
-	}
+    } */
     
 	public function content() { 
 		global $db,$main, $style, $page;	
@@ -49,8 +30,8 @@ class page {
 		$current_version = '1.2.3';
 		
 		$running_version 	= $main->cleanwip($db->config('version'));
-		$install_check 		= $this->checkDir(LINK ."../install/");
-		$conf_check 		= $this->checkPerms(LINK ."conf.inc.php");
+		$install_check 		= $main->checkDir(LINK ."../install/");
+		$conf_check 		= $main->checkFilePermission(LINK ."conf.inc.php");
 		
 		if($current_version == $running_version){
 			$updatemsg = "<span style='color:green'>Up-To-Date</span>";
@@ -87,8 +68,7 @@ class page {
 		
 		$content = '<strong>Welcome to your Admin Dashboard!</strong><br />Welcome to the dashboard of your Admin Control Panel. In this area you can do the tasks that you need to complete such as manage servers, create packages, manage users.<br />
 					Here, you can also change the look and feel of your BNPanel Installation. If you require any help, be sure to ask at the <a href="http://www.beeznest.com" title="BNPanel Community is the official stop for BNPanel Support, Modules, Developer Center and more! Visit our growing community now!" class="tooltip">BNPanel Community</a>' .
-					'<br />'.$stats_box.$cron.'<br /></div></div>';
-		
+					'<br />'.$stats_box.$cron.'<br /></div></div>';	
 		
 		if($_POST) {
 			foreach($main->postvar as $key => $value) {
@@ -106,38 +86,43 @@ class page {
 			}
 		}
 		$array['NOTEPAD'] = $db->resources('admin_notes');
-		$content_notepad = $style->replaceVar('tpl/notepad.tpl', $array);
+		$content_notepad  = $style->replaceVar('tpl/notepad.tpl', $array);
 		
 		$subdomain_list = $main->getSubDomains();
 		
 		switch($db->config('domain_options')) {
 			case DOMAIN_OPTION_BOTH:	
 			case DOMAIN_OPTION_SUBDOMAIN:
-			if (empty($subdomain_list)) {
-				$todo_content = '<div class="warning">You need to Add subdomains <a href="?page=sub&sub=add">here</a>. Due your current <a href="?page=settings&sub=paths">Subdomain options.</a> The Order Form will not work.</div>';		
+			if (empty($subdomain_list)) {				
+				$todo_content = $style->returnMessage('You need to Add subdomains <a href="?page=sub&sub=add">here</a>. Due your current <a href="?page=settings&sub=paths">Subdomain options.</a> The Order Form will not work.', 'warning');					
 			}
 			break;
 			case DOMAIN_OPTION_DOMAIN:
 			break;								
 		}		
 		$todo_content .= $install_check.$conf_check;
-		echo $content;		
-		echo $main->table('Admin TODO', $todo_content, 'auto', 'auto');		
 		
-		echo '<br />'; //br it, br it
+		echo $content;		
+		if (!empty($todo_content)) {
+			echo $main->table('Admin TODO List', $todo_content, 'auto', 'auto');
+		}		
+		
+		echo '<br />';
 		echo $main->table('Admin Notepad', $content_notepad, 'auto', 'auto');
 		
 		//Temporaly code just to see the lastest commit
-		$output = array();
-		exec('hg heads', $output);
-		if (isset($output)) {
-			echo '<h3>';
-			echo $output['0'];
-			echo '<br />';
-			echo $output['3'];
-			echo '</h3>';	
-		} else {
-			echo 'Seems that there is not a mercurial ... ';
+		if (SERVER_STATUS == 'test') {
+			$output = array();		
+			exec('hg heads', $output);
+			if (isset($output)) {
+				echo '<h3>';
+				echo $output['0'];
+				echo '<br />';
+				echo $output['3'];
+				echo '</h3>';	
+			} else {
+				echo 'Seems that there is not a hg repo ... ';
+			}
 		}
 		
 		/*
