@@ -446,7 +446,8 @@ class order extends model {
 		} else {			
 			$total = 0;			
 			$array['ID'] 		= $order_info['id'];			
-			$array['DOMAIN'] 	= $order_info['domain'];			
+			$array['DOMAIN'] 	= $order_info['domain'];
+			$array['REAL_DOMAIN']= $order_info['real_domain'];			
 			$array['USERNAME'] 	= $order_info['username'];
 			$array['PASSWORD'] 	= $order_info['password'];								
 			$array['USER_ID'] 	= $order_info['userid'];			

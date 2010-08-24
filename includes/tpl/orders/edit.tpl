@@ -70,7 +70,7 @@ function loadAddons(obj) {
      <tr>
     <td valign="top">Domain</td>
     <td>
-    %DOMAIN%
+    %REAL_DOMAIN%
     </td>
   </tr>  
   <tr>
