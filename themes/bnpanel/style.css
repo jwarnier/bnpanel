@@ -5,6 +5,7 @@
 body {
 	margin:0;
 	background:url(images/background.png) repeat-x #eeeff1;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 p {
 	padding:0;
@@ -591,4 +592,12 @@ fieldset {
 
 legend {
 	border-color:#D0D0D0; 
+}
+
+
+.welcome {
+	color:#999999;
+	font-size:90%;
+	float:right;
+	height:30px;	
 }

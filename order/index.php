@@ -46,7 +46,13 @@ if(!$main->getvar['id']) {
 	$packages2 = $db->query("SELECT * FROM <PRE>packages` WHERE is_disabled = 0 AND id = '{$main->getvar['id']}'");
 }
 
+$user_info = $main->getCurrentUserInfo();
 
+if (!empty($user_info)) {
+	$array['WELCOME_MESSAGE'] = '<span class="welcome">Signed in as <a href="/client">'.$user_info['user'].'</a></span> <div style="clear:both"></div>';	
+} else {
+	$array['WELCOME_MESSAGE'] = '';
+}
 
 if($db->num_rows($packages2) == 0) {
 	echo $main->table("No packages", '<div class="warning">There are no available Packages!</div>');
@@ -67,7 +73,7 @@ if($db->num_rows($packages2) == 0) {
 			$array['PACKAGES'] .= '<td width="2%"></td>';	
 		}
 		if($n == 2) {
-			$array['PACKAGES'] .= "</tr>";	
+			$array['PACKAGES'] .= '</tr>';	
 			$n = 0;	
 		}		
 		//Selecting billing cycles
