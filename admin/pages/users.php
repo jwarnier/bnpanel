@@ -195,7 +195,7 @@ class page {
 					        'user' 			=> array('required'=>true,'validateUsername'=>'error'),			        
 					        'password' 		=> 'required',
 					        'confirmp' 		=> 'required',
-					        'email' 		=> 'required',
+					        'email' 		=> array('required'=>true, 'email'=>true),
 					        'status' 		=> 'required'					        					            
 					     ),			    
 					    'messages' => array(			

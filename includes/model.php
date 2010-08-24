@@ -655,11 +655,12 @@ class model {
 				'VALUES ('.join(',',array_values($new_attributes)).')';
 		//echo $sql; '<br />';
 		$db->query($sql);
+		$insert_id = $db->insert_id();
 		if (SERVER_STATUS == 'test') {
        		global $main;
        		$main->addlog($sql);
        	}       	
-		return $db->insert_id();
+		return $insert_id;
 	}
 	
 	/**

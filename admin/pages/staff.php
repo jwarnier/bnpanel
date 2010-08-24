@@ -33,7 +33,7 @@ class page {
 				$asOption = array(
 				    'rules' => array(
 				        'user' 		=> 'required',				        
-				        'email' 	=> 'required',
+				        'email' 	=> array('required'=>true, 'email'=>true),
 				        'conpass' 	=> 'required',
 				        'pass' 		=> 'required',
 				        'name' 		=> 'required',				        			            
@@ -104,7 +104,7 @@ class page {
 					$asOption = array(
 				    'rules' => array(
 				        'user' 		=> 'required',				        
-				        'email' 	=> 'required',
+				        'email' 	=> array('required'=>true, 'email'=>true),
 				        'name' 		=> 'required',				        			            
 				     ),			    
 				    'messages' => array(
@@ -182,7 +182,11 @@ class page {
 					$staff_list = $staff->gettAllStaff();
 					echo "<ERRORS>";
 					foreach($staff_list as $data) {
-						echo $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=edit&do='.$data['id'].'"><img title="Edit" src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=staff&sub=delete&do='.$data['id'].'"><img title="Delete" src="'. URL .'themes/icons/delete.png"></a>');											
+						if ($data['id'] != $main->getCurrentStaffId()) {
+							echo $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=edit&do='.$data['id'].'"><img title="Edit" src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=staff&sub=delete&do='.$data['id'].'"><img title="Delete" src="'. URL .'themes/icons/delete.png"></a>');
+						} else {
+							echo $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=edit&do='.$data['id'].'"><img title="Edit" src="'. URL .'themes/icons/pencil.png"></a>&nbsp; <img title="Delete" src="'. URL .'themes/icons/delete_na.png">');
+						}											
 					}
 				}
 				break;			
