@@ -507,8 +507,9 @@ CREATE TABLE IF NOT EXISTS `%PRE%logs` (
   loguser varchar(50) NOT NULL,
   logtime varchar(20) NOT NULL,
   message text NOT NULL,
+  ip varchar(255), 
   PRIMARY KEY  (id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+);
 
 
 
