@@ -1389,17 +1389,17 @@ if(isset($_GET['function']) && !empty($_GET['function'])) {
 	if ($main->isXmlHttpRequest()) {
 		$ajax = new AJAX();
 		if (method_exists($ajax, $_GET['function'])) {
-			//Protecting AJAX calls now we need a token set in variables.php
-			if (INSTALL != 1) {
+			if (INSTALL == 1) {
+				//Protecting AJAX calls now we need a token set in variables.php
+				if ($main->checkToken(false)) {
+					$ajax->{$_GET['function']}();
+				}
+			} else {
 				$ajax->{$_GET['function']}();
-			}
-			if ($main->checkToken(false)) {
-				$ajax->{$_GET['function']}();
-				//include LINK."output.php"; //This is not necessary
-			}
+			}		
 		}
 	} else {
-		//Redirect to the homepage  
+		//Someone is trying to check the AJAX Reponse from a browser  
 		$main->redirect();
 	}
 }

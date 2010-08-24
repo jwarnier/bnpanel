@@ -49,11 +49,10 @@ class page {
 			
 			case "view":
 				if(!$main->getvar['do'] && $main->checkToken()) {
-					$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `userid` = '{$user_id}' AND `reply` = '0'");
+					$query = $db->query("SELECT * FROM <PRE>tickets WHERE userid = '{$user_id}' AND reply = '0'");
 					if(!$db->num_rows($query)) {
-						echo "You currently have no tickets!";	
-					}
-					else {
+						$style->showMessage('You currently have no tickets');						
+					} else {
 						while($data = $db->fetch_array($query)) {
 							$array['TITLE'] = $data['title'];
 							$array['UPDATE'] = $ticket->lastUpdated($data['id']);

@@ -3,8 +3,8 @@
     	<table width="100%" class="content_table" border="0" cellspacing="2" cellpadding="0">
           <tr>
             <td>
-            	<a href="?page=tickets&sub=view&do=%ID%"><strong>%TITLE%</strong></a><br />Last Updated: %UPDATE%</td>            
-            <td align="center" width="5%"><a href="?page=tickets&sub=view&do=%ID%" class="tooltip" title="View the ticket '%TITLE%'."><img alt="View Ticket" src="<ICONDIR>eye.png"></a></td>
+            	<a href="?page=tickets&sub=view&do=%ID%"><strong>%TITLE%</strong></a><br />Last Updated: %UPDATE%
+            	</td>
           </tr>
         </table>
     </div>

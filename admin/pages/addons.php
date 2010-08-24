@@ -192,7 +192,7 @@ class page {
 				} else {
 					$query = $db->query("SELECT * FROM <PRE>addons");
 					if($db->num_rows($query) == 0) {
-						echo 'There are no addons to edit!';	
+						$style->showMessage('There are no Addons available');	
 					} else {
 						echo "<ERRORS>";
 						while($data = $db->fetch_array($query)) {

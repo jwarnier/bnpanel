@@ -32,23 +32,16 @@ class page {
 	public function content() { # Displays the page 
 		global $main, $style, $db;
 		
-		if($_POST && $main->checkToken()) {
+		if($_POST && $main->checkToken()) {					
 			foreach($main->postvar as $key => $value) {
-				if($value == "" && !$n) {
-					$main->errors("Please fill in all the fields!");
-					$n++;
-				}
+				$db->updateConfig($key, $value);
 			}
-			if(!$n) {				
-				foreach($main->postvar as $key => $value) {
-					$db->updateConfig($key, $value);
-				}
-				$main->errors("Settings Updated!");
-				$main->generateToken();
-				//Regenerate the config array
-				$db->getSystemConfigList(true);
-			}
+			$main->errors("Settings Updated!");
+			$main->generateToken();
+			//Regenerate the config array
+			$db->getSystemConfigList(true);		
 		}
+		
 		switch($main->getvar['sub']) {
 			default:
 				$array['NAME'] 			= $db->config('name');
@@ -69,7 +62,7 @@ class page {
 				echo $style->replaceVar("tpl/settings/pathsettings.tpl", $array);
 				break;
 				
-			case "security": #security settings
+			case 'security': #security settings
 			    global $db;
 			    $values[] = array("Yes", "1");
 			    $values[] = array("No", "0");
@@ -81,13 +74,13 @@ class page {
 			    echo $style->replaceVar("tpl/asecurity.tpl", $array);
 			    break;			
 				
-			case "tos":
+			case 'tos':
 				global $db;
 				$array['TOS'] = $db->config("tos");
 				echo $style->replaceVar("tpl/tos.tpl", $array);
 				break;
 				
-			case "signup":
+			case 'signup':
 				$values[] = array("Enabled", "1");
 				$values[] = array("Disabled", "0");
 				$array['MULTIPLE'] = $main->dropDown("multiple", $values, $db->config("multiple"));
@@ -98,17 +91,17 @@ class page {
 
 				break;
 				
-			case "client":
+			case 'client':
 				$values[] = array("Enabled", "1");
 				$values[] = array("Disabled", "0");
 				$array['DELACC'] = $main->dropDown("delacc", $values, $db->config("delacc"));
 				$array['CENABLED'] = $main->dropDown("cenabled", $values, $db->config("cenabled"));
 				$array['CMESSAGE'] = $db->config("cmessage");
 				$array['ALERTS'] = $db->config("alerts");
-				echo $style->replaceVar("tpl/user/clientsettings.tpl", $array);
+				echo $style->replaceVar("tpl/settings/clientsettings.tpl", $array);
 				break;
 				
-		    case "support":
+		    case 'support':
 		        $values[] = array("Enabled", "1");
 		        $values[] = array("Disabled", "0");
 		        $array['SENABLED'] = $main->dropDown("senabled", $values, $db->config("senabled"));
@@ -116,7 +109,7 @@ class page {
 		        echo $style->replaceVar("tpl/settings/supportsettings.tpl", $array);
 		        break;
 		        
-			case "email":
+			case 'email':
 				$values[] = array("PHP Mail", "php");
 				$values[] = array("SMTP (PEAR)", "smtp");
 				$array['METHOD'] = $main->dropDown("emailmethod", $values, $db->config("emailmethod"), 0);
@@ -148,9 +141,9 @@ class page {
 				$values[] = array("Israeli Shekel","ILS");
 				$values[] = array("Mexican Peso","MXN");
 				
-				$array['CURRENCY'] = $main->dropDown("currency", $values, $db->config("currency"));
-				$array['SUSDAYS'] = $db->config("suspensiondays");
-				$array['TERDAYS'] = $db->config("terminationdays");
+				$array['CURRENCY'] 	= $main->dropDown("currency", $values, $db->config("currency"));
+				$array['SUSDAYS'] 	= $db->config("suspensiondays");
+				$array['TERDAYS'] 	= $db->config("terminationdays");
 				
 				$selected_id = $db->config('paypal_mode');
 				$values=array(0=>'Sandbox',1=>'Live');			
