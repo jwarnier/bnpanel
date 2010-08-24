@@ -373,7 +373,7 @@ class page {
 						$user_info  =  $user->getUserById($order_info['userid']);				
 						
 						$return_array['USER'] 			= $user_info['firstname'].' '.$user_info['lastname'];
-						$return_array['DOMAIN'] 		= $order_info['domain'];					
+						$return_array['DOMAIN'] 		= $order_info['real_domain'];					
 						$billing_info 					= $billing->getBilling($billing_id);
 						$return_array['BILLING_CYCLES'] = $billing_info ['name'];
 						$return_array['BILLING_ID'] 	= $billing_id;
