@@ -327,7 +327,7 @@ function showAddons(obj) {
 }
 </script>
 <div class="box">
-
+%WELCOME_MESSAGE%
 <form action="" method="post" name="order" id="order">
 	
 	<div id="1">
@@ -403,7 +403,7 @@ function showAddons(obj) {
               <tr>
                 <td>Username:</td>
                 <td><input type="text" name="username" id="username" /></td>
-                <td align="left"><a title="The username is your unique identity to your account. This is both your client account and control panel username. Please keep it under 8 characters." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td align="left"><a title="The username is your unique identity to your account. Please keep it under 8 characters." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
                 <td align="left" id="usercheck">&nbsp;</td>
               </tr>
               <tr>

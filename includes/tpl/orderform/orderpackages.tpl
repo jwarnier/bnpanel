@@ -1,5 +1,4 @@
-<td width="49%" valign="top">
-	<br />
+<td width="49%" valign="top">	
 	<div class="table">
     	<div class="cat">
         <span class="cat_title">%NAME%</span>
