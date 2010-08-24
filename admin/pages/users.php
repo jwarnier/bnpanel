@@ -34,8 +34,9 @@ class page {
 		
 		switch($main->getvar['sub']) {
 			case 'search':
-				if($main->getvar['do'] ) {					
-					$client = $user->getUserById($main->getvar['do']);
+				if($main->getvar['do'] ) {			
+							
+					$client = $user->getUserById($main->getvar['do']);					
 					$array2['DATE'] 	= strftime("%D", $client['signup']);
 					$array2['EMAIL'] 	= $client['email'];
 					$array2['USER'] 	= $client['user'];
@@ -47,9 +48,8 @@ class page {
 					$array2['CITY'] 	= $client['city'];
 					$array2['STATE'] 	= $client['state'];
 					$array2['ZIP'] 		= $client['zip'];
-					$array2['COUNTRY'] 	= $client['country'];
-					$array2['PHONE'] 	= $client['phone'];			
-					
+					$array2['COUNTRY'] 	= strtolower($client['country']);
+					$array2['PHONE'] 	= $client['phone'];
 					$user_status_list 	= $main->getUserStatusList();										
 					$array2['STATUS']  	= $user_status_list[$client['status']];					
 					$array['CONTENT'] 	= $style->replaceVar("tpl/user/clientdetails.tpl", $array2);					
@@ -225,10 +225,12 @@ class page {
 					}
 					$main->generateToken();		
 				}			
+				$array['country']		= $main->countrySelect($array['country']);
 				$array['status'] = $main->createSelect('status', $main->getUserStatusList(), '');				
 				echo $style->replaceVar("tpl/user/add.tpl", $array);				
 			break;
 			case 'validate':		
+			//code removed from THT
 			break;					
 		}		
 	}
