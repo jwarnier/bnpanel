@@ -1,4 +1,3 @@
-<!--Stats.tpl-->
 <br />
 <strong>Your BNPanel Installation Statistics</strong>
 <p>Here you can see what is happening in your BNPanel Installation. You can also access to some quick links here.</p><br />

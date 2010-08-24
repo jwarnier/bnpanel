@@ -46,9 +46,12 @@ if(!$main->getvar['id']) {
 	$packages2 = $db->query("SELECT * FROM <PRE>packages` WHERE is_disabled = 0 AND id = '{$main->getvar['id']}'");
 }
 
+
+
 if($db->num_rows($packages2) == 0) {
-	echo $main->table("No packages", "Sorry there are no available packages!");
+	echo $main->table("No packages", '<div class="warning">There are no available Packages!</div>');
 } else {
+	
 	while($data = $db->fetch_array($packages2, 'ASSOC')) {
 		if(!$n) {
 			$array['PACKAGES'] .= "<tr>";	
@@ -79,7 +82,7 @@ if($db->num_rows($packages2) == 0) {
 	$array['USER'] = "";
 	$array['DOMAIN'] = '<input name="cdom" id="cdom" type="text" />';
 	$subdomain_list = $main->getSubDomains();
-		
+	
 	switch($db->config('domain_options')) {
 		case DOMAIN_OPTION_DOMAIN:	
 		$domain_options = '<div style="display:none"><select name="domain" id="domain">
@@ -92,7 +95,7 @@ if($db->num_rows($packages2) == 0) {
           			<option value="sub" selected="selected">Subdomain</option>	              			
         			</select></div>';
 		} else {
-			$domain_options = 'No current subdomain';
+			$domain_options = '';
 		}
 		break;
 		case DOMAIN_OPTION_BOTH:		
