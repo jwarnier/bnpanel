@@ -455,7 +455,7 @@ class server extends Model {
 		}
 		
 		//If the package is paid	
-		if($package_info['type'] == 'paid') {		
+		if($package_info['type'] == 'paid') {
 			global $invoice, $package, $billing;
 			//The order was saved with an status of admin validation now we should create an invoice an set the status to wait payment
 			$due 		= time();
