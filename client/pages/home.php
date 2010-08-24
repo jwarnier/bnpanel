@@ -25,14 +25,12 @@ class page {
 		//$array['LASTTIME'] = strftime("%T", $ldata['logtime']);
 		$array['EMAIL'] = $data['email'];
 		$array['ALERTS'] = $db->config('alerts');		
-		$array['BOX'] = "";	
-		
-		$alerts = $db->config('alerts');		
+		$array['BOX'] = "";			
+		$alerts = $db->config('alerts');
 		$array['ALERTS'] = '';
 		if (!empty($alerts)) {
 			$array['ALERTS'] = '<h3>Important Announcements </h3>'.$db->config('alerts').'';
-		}		
-			
+		}			
 		echo $style->replaceVar("tpl/user/clienthome.tpl", $array);
 	}
 }

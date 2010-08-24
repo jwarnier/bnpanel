@@ -109,7 +109,7 @@ class page {
 					$return_array['COUNT'] = $quantity;
 					echo $style->replaceVar("tpl/invoices/admin-page.tpl", $return_array);
 				} else {
-					$main->errors('No invoices available, you should create an Order first');
+					$main->errors('No invoices available, you should create an Order first <a href="?page=orders&sub=add">here</a>');
 					echo '<ERRORS>';
 				}								
 			break;			

@@ -112,7 +112,7 @@ class page {
 					echo "<ERRORS>";
 					
 					if($db->num_rows($query) == 0) {
-						echo '<div class="warning">There are no Servers!</div>';	
+						$style->showMessage('There are no Servers');						
 					} else {
 						
 						while($data = $db->fetch_array($query)) {

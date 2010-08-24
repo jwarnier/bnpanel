@@ -29,9 +29,13 @@ class page {
 			break;					
 			case 'all':
 			default :
-				$return_array = $order->getAllOrdersToArray($main->getCurrentUserId());		
-				echo '<ERRORS>';		
-				echo $style->replaceVar("tpl/orders/client-page.tpl", $return_array);		
+				$return_array = $order->getAllOrdersToArray($main->getCurrentUserId());
+				if(!empty($return_array) && isset($return_array['list']) && !empty($return_array['list'])) {
+					echo '<ERRORS>';		
+					echo $style->replaceVar("tpl/orders/client-page.tpl", $return_array);
+				} else {
+					$style->showMessage('No Orders available');
+				}		
 		}
 	}
 }

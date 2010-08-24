@@ -3,7 +3,8 @@
 	tinyMCE.init({
 	mode : "textareas",
 	skin : "o2k7",
-	theme : "simple",
+	theme : "advanced",
+	theme_advanced_toolbar_align : "left",	
 	width:"550px"
 	});
 </script>

@@ -25,6 +25,7 @@ class page {
 		$array['DISP'] 		= "<div>";
 		
 		if($_POST && $main->checkToken(true)) {
+			$main->generateToken();
 			if(!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i',$main->postvar['email'])) {
 				$main->errors("Your email is the wrong format!");				
 				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
@@ -99,28 +100,28 @@ class page {
 			
 			$user->edit($data['id'], $main->postvar);
 				
-			if ($main->postvar['change'] && $main->checkToken()) {
+			if ($main->postvar['change']) {
 				$data = $db->client($data['id']);
-				if(md5(md5($main->postvar['currentpass']) . md5($data['salt'])) == $data['password']) {
+				if (md5(md5($main->postvar['currentpass']) . md5($data['salt'])) == $data['password']) {
 					if($main->postvar['newpass'] === $main->postvar['cpass']) {
 					$cmd = $user->changeClientPassword($data['id'], $main->postvar['newpass']);
 					if($cmd === true) {
 						$main->errors("Details updated!");
 					} else {
-						$main->errors((string)$cmd);
+						$main->errors((string)$cmd);						
 					}
 				} else {
-						$main->errors("Your passwords don't match!");		
+						$main->errors("Your passwords don't match!");						
 					}
 				} else {
-					$main->errors("Your current password is incorrect.");
+					$main->errors("Your current password is incorrect.");					
 				}
 			} else {
 				$array['DISP'] = "<div style=\"display:none;\">";
 				$main->errors("Details updated!");					
 			}
 			$main->redirect('?page=details&sub=view&msg=1');
-			$main->generateToken();
+			
 		}		
 		echo $style->replaceVar("tpl/user/cedit.tpl", $array);
 	}		

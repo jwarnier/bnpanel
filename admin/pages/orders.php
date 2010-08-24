@@ -207,7 +207,7 @@ class page {
 				if ($db->config('domain_options') == DOMAIN_OPTION_SUBDOMAIN) {
 					$subdomain_list = $main->getSubDomains();
 					if( empty($subdomain_list)) {
-						echo '<div class ="warning">No subdomains available click <a href="?page=sub&sub=add">here</a> to add new subdomains</div>';		
+						$style->showMessage('No subdomains available. Click <a href="?page=sub&sub=add">here</a> to add new Subdomain', 'warning');								
 					}
 				}				
 				echo $style->replaceVar("tpl/orders/add.tpl", $array);
