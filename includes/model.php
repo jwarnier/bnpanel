@@ -4,45 +4,40 @@
 /**
  * Object model 
  * Inspired in the ActiveRecord in Akelos
+ * 
+ * The use of update, save, delete functions are encouge. Try to avoid direct mysql_query to insert data in the DB  
+ * 
+ * @todo finders methods are working but they are not use yet in the system (due lack of time and testing) 
+ * 
  * @author	Julio Montoya <gugli100@gmail.com>	Beeznest 
  */
 
 class model {
 	//Table columns id, field, value
-	public $columns;
-	
+	public $columns;	
 	//Attributes of the object
 	public $attributes;
 	//Table name
-	public $table_name;
-	
-	public $_modelName;
-	
+	public $table_name;	
+	public $_modelName;	
 	//Current primary key
-	public $primary_key;
-	
-	public $_db;
-		
+	public $primary_key;	
+	public $_db;		
 	public $_newRecord;
 	
 	public function __construct() {	
 		global $db;
 		$this->_db = $db;
-		//$this->_modelName = $this->table_name;
-		
         $attributes = (array)func_get_args();
         return $this->init($attributes);
     }
 
-    public function init($attributes = array()) {
-        
+    public function init($attributes = array()) {        
 //        $this->_internationalize = is_null($this->_internationalize) && AK_ACTIVE_RECORD_INTERNATIONALIZE_MODELS_BY_DEFAULT ? count($this->getAvailableLocales()) > 1 : $this->_internationalize;
-
   //      @$this->_instantiateDefaultObserver();
-
     //    $this->establishConnection();
 
-        if(!empty($this->table_name)){
+		if(!empty($this->table_name)){
       //      $this->setTableName($this->table_name);
         }
         
@@ -83,7 +78,6 @@ class model {
             $this->newRecord($attributes);
         }
         //empty($avoid_loading_associations) ? $this->loadAssociations() : null;
-
     }
     
         /**
@@ -92,8 +86,7 @@ class model {
     * In both instances, valid attribute keys are determined by the column names of the associated table; hence you can't
     * have attributes that aren't part of the table columns.
     */
-    public function newRecord($attributes)
-    {
+    public function newRecord($attributes) {
         $this->_newRecord = true;
 
         if(AK_ACTIVE_RECORD_SKIP_SETTING_ACTIVE_RECORD_DEFAULTS && empty($attributes)){
@@ -444,7 +437,7 @@ class model {
     }
     
     
-        public function _sanitizeConditionsVariables(&$options)
+	public function _sanitizeConditionsVariables(&$options)
     {
         if(!empty($options['conditions']) && is_array($options['conditions'])){
             if (isset($options['conditions'][0]) && strstr($options['conditions'][0], '?') && count($options['conditions']) > 1){
@@ -530,7 +523,6 @@ class model {
         if($attribute[0] == '_'){
             return false;
         }
-
        /* if($this->isFrozen()){
             return false;
         }*/
