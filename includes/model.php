@@ -663,6 +663,10 @@ class model {
 				'VALUES ('.join(',',array_values($new_attributes)).')';
 		//echo $sql; '<br />';
 		$db->query($sql);
+		if (SERVER_STATUS == 'test') {
+       		global $main;
+       		$main->addlog($sql);
+       	}       	
 		return $db->insert_id();
 	}
 	
@@ -679,6 +683,10 @@ class model {
         		"SET ".join(', ', $this->getAvailableAttributesQuoted($attributes)) ." ".
         		"WHERE id ='".$this->getId()."'";
        	$db->query($sql);
+       	if (SERVER_STATUS == 'test') {
+       		global $main;
+       		$main->addlog($sql);
+       	}
        	return true;
 	}
 	
@@ -690,7 +698,11 @@ class model {
 		global $db;		
 		$sql = "DELETE FROM ".$this->getTableName()." ".        		
 	           "WHERE id ='".$this->getId()."'";
-	    $db->query($sql);		
+	    $db->query($sql);
+	    if (SERVER_STATUS == 'test') {
+       		global $main;
+       		$main->addlog($sql);
+       	}
 	}
 
 	
@@ -725,8 +737,7 @@ class model {
     /**
     * Returns the primary key field.
     */
-    public function getPrimaryKey()
-    {
+    public function getPrimaryKey() {
         if(!isset($this->_primaryKey)){
             $this->setPrimaryKey();
         }
@@ -738,8 +749,7 @@ class model {
 	/**
     * Defines the primary key field ? can be overridden in subclasses.
     */
-    public function setPrimaryKey($primary_key = 'id')
-    {
+    public function setPrimaryKey($primary_key = 'id') {
         if(!$this->hasColumn($primary_key)){
             trigger_error($this->t('Opps! We could not find primary key column %primary_key on the table %table, for the model %model',array('%primary_key'=>$primary_key,'%table'=>$this->getTableName(), '%model'=>$this->getModelName())),E_USER_ERROR);
         }else {
