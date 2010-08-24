@@ -8,7 +8,41 @@ if(THT != 1){
 
 class package extends model {
 	
-	public $table_name 	= 'packages';	
+	public $columns 	= array('id', 'name','backend', 'description','type', 'server', 'admin','reseller','additional', 'order', 'is_hidden', 'is_disabled');	
+	public $table_name 	= 'packages';
+	
+	/** 
+ 	 * Creates a new package
+	 * 
+	 * @param 	array	parameters
+	 * 
+	 */
+	public function create($params) {
+		global $main;		 
+		$id = $this->save($params);	    
+		$main->addLog("package::create #$id");    	
+  		return $id;		
+	}
+	
+	/**
+	 * Edits an object
+	 */
+	public function edit($id, $params) {
+		global $main;
+		$this->setId($id);		
+		$main->addLog("package::edit ticket #$id");
+		$this->update($params);
+	}
+	
+	public function delete($id) {
+		global $main;
+		$this->setId($id);
+		parent::delete();
+		$main->addLog("package::delete #$id");				 
+		return true;
+	}
+	
+	
 	
 	/**
 	 * Gets all package information by billing cycle

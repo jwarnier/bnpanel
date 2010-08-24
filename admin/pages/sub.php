@@ -31,20 +31,21 @@ class page {
 					if($main->checkToken()) {
 						foreach($main->postvar as $key => $value) {
 							if($value == "" && !$n) {
-								$main->errors("Please fill in all the fields!");
+								$style->showMessage("Please fill in all the fields!");
 								$n++;
 							}
 						}						
 						if (!in_array($main->postvar['subdomain'],$subdomain_list)) {
-							if(!$n) {
-								
-								$main->validDomain($main->postvar['subdomain']);
-								
-								
-								$db->query("INSERT INTO `<PRE>subdomains` (subdomain, server) VALUES('{$main->postvar['subdomain']}', '{$main->postvar['server']}')");
-								$main->errors("Subdomain has been added!");
-								//$main->redirect('?page=sub&sub=edit&msg=1');
+							if(!$n) {								
+								if ($main->validDomain($main->postvar['subdomain'])) {
+									$db->query("INSERT INTO `<PRE>subdomains` (subdomain, server) VALUES('{$main->postvar['subdomain']}', '{$main->postvar['server']}')");
+									$main->errors("Subdomain has been added!");
+									$main->redirect('?page=sub&sub=view&msg=1');
+								} else {
+									$style->showMessage('Domain not valid');							
+								}
 							}
+							$main->generateToken();
 						} else {
 							$main->errors("Subdomain already exist");
 							$main->generateToken();							
@@ -105,10 +106,11 @@ class page {
 					}
 				} else {
 					$query = $db->query("SELECT * FROM `<PRE>subdomains`");
+					echo "<ERRORS>";
 					if($db->num_rows($query) == 0) {
-						echo "There are no subdomains to edit!";	
+						$style->showMessage("There are no Subdomains available!");	
 					} else {
-						echo "<ERRORS>";
+						
 						while($data = $db->fetch_array($query)) {
 							echo $main->sub("<strong>".$data['subdomain']."</strong>", '<a href="?page=sub&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=sub&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 						}

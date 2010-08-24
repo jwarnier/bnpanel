@@ -35,16 +35,16 @@ class page {
 				echo $style->replaceVar("tpl/support/acpticketjs.tpl", array('NUM_TICKETS' => $num_rows));
 				while($data = $db->fetch_array($query)) {
 					if($data['urgency'] == "Very High") {
-						$urg = " bgcolor=\"#FF0000\">";
+						$urg = " bgcolor=\"#FF4040\">";
 					}
 					elseif($data['urgency'] == "High") {
-						$urg = " bgcolor=\"#FFFF00\">";
+						$urg = " bgcolor=\"#FFB769\">";
 					}
 					elseif($data['urgency'] == "Medium") {
-						$urg = " bgcolor=\"#00FFFF\">";
+						$urg = " bgcolor=\"#FFF988\">";
 					}
 					else {
-						$urg = ">";
+						$urg = "  bgcolor=\"#FFFACD\" >";
 					}
 					$array['TITLE'] = $data['title'];
 					$array['UPDATE'] = $ticket->lastUpdated($data['id']);
@@ -65,16 +65,16 @@ class page {
 					echo $style->replaceVar("tpl/support/acpticketjs.tpl", array('NUM_TICKETS' => $num_rows));
 					while($data = $db->fetch_array($query)) {
 						if($data['urgency'] == "Very High") {
-							$urg = " bgcolor=\"#FF0000\">";
+							$urg = " bgcolor=\"#FF4040\">";
 						}
 						elseif($data['urgency'] == "High") {
-							$urg = " bgcolor=\"#FFFF00\">";
+							$urg = " bgcolor=\"#FFB769\">";
 						}
 						elseif($data['urgency'] == "Medium") {
-							$urg = " bgcolor=\"#00FFFF\">";
+							$urg = " bgcolor=\"#FFF988\">";
 						}
 						else {
-							$urg = ">";
+							$urg = " bgcolor=\"#FFFACD\">";
 						}
 						$array['TITLE'] = $data['title'];
 						$array['UPDATE'] = $ticket->lastUpdated($data['id']);
@@ -98,8 +98,18 @@ class page {
 						}
 						if(!$n) {
 							$time = time();
+							
 							$staff_id = $main->getCurrentStaffId();
-							$db->query("INSERT INTO `<PRE>tickets` (title, content, time, userid, reply, ticketid, staff) VALUES('{$main->postvar['title']}', '{$main->postvar['content']}', '{$time}', '{$staff_id}', '1', '{$main->getvar['do']}', '1')");
+							
+							$ticket_params['title'] 	= $main->postvar['title'];
+							$ticket_params['content'] 	= $main->postvar['content'];
+							$ticket_params['time'] 		= $time;
+							$ticket_params['userid'] 	= $staff_id;
+							$ticket_params['reply'] 	= 1;
+							$ticket_params['ticketid'] 	= $main->getvar['do'];
+							$ticket_params['staff'] 	= 1;
+							$ticket->create($ticket_params);
+							
 							$main->errors("Reply has been added!");
 							$data = $db->fetch_array($query);
 							$client = $db->staff($staff_id);

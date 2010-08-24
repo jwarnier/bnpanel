@@ -3,7 +3,8 @@
 
 //Check if called by script
 if(THT != 1){die();}
-
+//this page should be removed
+exit;
 class page {
 	
 	public $navtitle;

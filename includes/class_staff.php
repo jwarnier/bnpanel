@@ -18,7 +18,7 @@ class staff extends model {
 	 * @param	float	amount
 	 * @param	date	expiration date
 	 */
-	public function create($params, $clean_token = true) {
+	public function create($params) {
 		global $db, $main;		 
 		if (!empty($params['user']) &&  !empty($params['email'])) {
 			if ($this->userNameExists($params['user']) == false) {			
@@ -46,7 +46,7 @@ class staff extends model {
 			$params['salt']			= md5(rand(0,9999999));
 			$params['password'] 	= md5(md5($params['password']).md5($params['salt']));
 		}
-		$main->addLog("Staff User updated: $id");
+		$main->addLog("staff::edit Staff updated #$id");
 		$this->update($params);
 	}
 	
