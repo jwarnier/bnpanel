@@ -43,12 +43,15 @@ class page {
 					$n++;
 				}
 			}
-		if(!$n) {
-			foreach($main->postvar as $key => $value) {
-				$db->updateConfig($key, $value);
-			}
-			$main->errors("Settings Updated!");
-			$main->done();
+			if(!$n) {
+				foreach($main->postvar as $key => $value) {
+					$db->updateConfig($key, $value);
+				}
+				$main->errors("Settings Updated!");
+				$main->generateToken();
+				//Regenerate the config array
+				$db->getSystemConfigList(true);		
+				$main->done();
 			}
 		}
 		switch($main->getvar['sub']) {				
