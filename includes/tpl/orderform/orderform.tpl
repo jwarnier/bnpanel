@@ -490,7 +490,9 @@ function showAddons(obj) {
               </tr>
               <tr id="sub">
                 <td width="20%" id="domtitle">Subdomain:</td>                
-                <td id="domcontent"><input name="csub" id="csub" type="text" />.<span id="dropdownboxsub"></span></td>
+                <td id="domcontent">
+                	<input name="csub" id="csub" type="text" maxlength="40" />.<span id="dropdownboxsub"></span>
+                </td>
                 <td id="domaincheck" align="left">
                 	<a title="Your subdomain, this must be in the format: <strong>subdomain.example.com</strong>" class="tooltip">
                 		<img src="<URL>themes/icons/information.png" />

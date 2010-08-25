@@ -112,7 +112,7 @@ class style {
 		echo $this->returnMessage($message, $type, $allow_html);
     }
     
-    public function returnMessage($message, $type, $allow_html = true) {
+    public function returnMessage($message, $type = 'info', $allow_html = true) {
     	global $main;
     	if (!empty($type) && in_array($type, array('info', 'warning', 'error', 'success'))) {
     		if ($type == 'error') {

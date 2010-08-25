@@ -607,7 +607,7 @@ class AJAX {
 	
 	public function installfinal() {
 		global $db, $main;
-		$query = $db->query("SELECT * FROM `<PRE>staff`");
+		$query = $db->query("SELECT * FROM <PRE>staff");
 		
 		if($db->num_rows($query) == 0) {
 			foreach($main->getvar as $key => $value) {
@@ -638,8 +638,8 @@ class AJAX {
 	}
 	
 	function massemail() {
-		if ($_SESSION['logged']) {
-			global $main, $email, $db;
+		global $main, $email, $db;		
+		if ($main->getCurrentStaffId()) {			
 			$subject = $main->getvar['subject'];
 			$msg = $main->getvar['msg'];
 			$query = $db->query("SELECT * FROM `<PRE>users`");
@@ -846,13 +846,15 @@ class AJAX {
 
    function navbar() {
        global $main, $db;
-       if ($_SESSION['logged']) {         
+       if ($main->getCurrentStaffId()) {         
            if(isset($main->postvar['action']) || isset($main->getvar['action'])) {
                $action  = $_REQUEST['action'];
-               $id 		= intval($main->postvar['id']);
-               $name 	= $main->postvar['name'];
-               $icon 	= $main->postvar['icon'];
-               $link 	= $main->postvar['link'];
+               
+               $id 		= intval($main->postvar['id']);               
+               $name 	= $db->strip($main->postvar['name']);
+               $icon 	= $db->strip($main->postvar['icon']);
+               $link 	= $db->strip($main->postvar['link']);
+               
                if ($main->checkToken(false)) {
 	               switch($action) {
 	                   case "add":
@@ -1023,8 +1025,8 @@ class AJAX {
    }
 
    function uiThemeChange() {
-       global $main, $db;
-       if ($_SESSION['logged']) {
+       global $main, $db;       
+       if ($main->getCurrentStaffId()) {         
            if(isset($main->getvar['theme'])) {
                $db->updateConfig('ui-theme', $main->getvar['theme']);
            }
@@ -1050,13 +1052,13 @@ class AJAX {
    }
    
    function deleteTicket() {
-	   if($_SESSION['logged']) {
+	   if ($main->getCurrentStaffId()) {         
 		   global $main, $db;
 		   $tid = intval($main->getvar['ticket']);
 		   if($tid != "" && is_numeric($tid)) {
-			   $query = "DELETE FROM `<PRE>tickets` WHERE `id` = {$tid}";
+			   $query = "DELETE FROM <PRE>tickets WHERE id = {$tid}";
 			   $db->query($query);
-			   $query = "DELETE FROM `<PRE>tickets` WHERE `ticketid` = {$tid}";
+			   $query = "DELETE FROM <PRE>tickets WHERE ticketid = {$tid}";
 			   $db->query($query);
 		   }
 	   }
@@ -1072,7 +1074,7 @@ class AJAX {
 	   		$html = '<fieldset style="width: 98%;"><legend><b>Package Order</b></legend><table width="100%" >';
 	   		
 	   		$sql = "SELECT a.name, amount, bc.name  as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-					ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = {$main->getvar['billing_id']}  AND b.type = '".BILLING_TYPE_PACKAGE."' ";
+					ON (bc.id = b.billing_id) WHERE a.id = $package_id AND bc.id = $billing_id  AND b.type = '".BILLING_TYPE_PACKAGE."' ";
 			$result = $db->query($sql); 
 			$package_billing_info_exist = false;
 			if ($db->num_rows($result) > 0) {				
@@ -1090,17 +1092,17 @@ class AJAX {
 			
 	   		$html .='</table></fieldset><br />';
 	   		
-	   		$sql = "SELECT * FROM `<PRE>package_addons` WHERE `package_id` = '{$main->getvar['package_id']}' ";
+	   		$sql = "SELECT * FROM <PRE>package_addons WHERE package_id = $package_id ";
 	   		$result = $db->query($sql); 		
 	   		
 	   		if ($db->num_rows($result) > 0) {
 	   			$info_exist = false;
-		   		$html .= '<fieldset  style="width: 98%;"> <legend><b>Order Add-Ons</b></legend>';
+		   		$html .= '<fieldset style="width:98%;"><legend><b>Order Add-Ons</b></legend>';
 		   		$html .= '<table width="100%" >';
 		   		
 		   		while($data = $db->fetch_array($result,'ASSOC')) {		   			
 		   			$sql = "SELECT a.name, a.mandatory, description, setup_fee, bc.name as billing_name, b.amount FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-							ON (bc.id = b.billing_id) WHERE a.status = ".ADDON_STATUS_ACTIVE." AND a.id = {$data['addon_id']} AND bc.id = {$main->getvar['billing_id']}  AND b.type = '".BILLING_TYPE_ADDON."' ORDER BY a.name";
+							ON (bc.id = b.billing_id) WHERE a.status = ".ADDON_STATUS_ACTIVE." AND a.id = {$data['addon_id']} AND bc.id = $billing_id  AND b.type = '".BILLING_TYPE_ADDON."' ORDER BY a.name";
 					$addon_result = $db->query($sql);
 					if ($db->num_rows($addon_result) > 0) {
 						$addon = $db->fetch_array($addon_result, 'ASSOC');
@@ -1136,6 +1138,10 @@ class AJAX {
    		}
    }
    
+   /**
+    * Get Order summary
+    * @todo remove some html and move it in a template 
+    */
    function getSummary() {
    		global $main, $db, $currency;
    		
@@ -1156,7 +1162,7 @@ class AJAX {
 		$new_addon_list = implode(',', $new_addon_list);
 		
 		$sql = "SELECT a.name, amount , bc.name as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-				ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = {$main->getvar['billing_id']} AND b.type = '".BILLING_TYPE_PACKAGE."'";
+				ON (bc.id = b.billing_id) WHERE a.id = {$package_id} AND bc.id = $billing_id AND b.type = '".BILLING_TYPE_PACKAGE."'";
 		$result = $db->query($sql); 
 		$html = '';
 		$total = 0;
@@ -1171,7 +1177,7 @@ class AJAX {
 				            <td width="2%"></td>
 				        </tr>';
 				        					        
-		while($data = $db->fetch_array($result,'ASSOC')) {	
+		while($data = $db->fetch_array($result,'ASSOC')) {
 			$amount_to_show  = $currency->toCurrency($data['amount']);			
 	       	$html .= "<tr>
 	            <td></td>
@@ -1185,12 +1191,11 @@ class AJAX {
 		
 		if (!empty($new_addon_list) && !empty($main->getvar['billing_id'])) {
 			$sql = "SELECT a.name, setup_fee, bc.name as billing_name, b.amount FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
-					ON (bc.id = b.billing_id) WHERE a.id IN ({$new_addon_list}) AND bc.id = {$main->getvar['billing_id']} AND b.type = '".BILLING_TYPE_ADDON."' ORDER BY a.name";
+					ON (bc.id = b.billing_id) WHERE a.id IN ({$new_addon_list}) AND bc.id = $billing_id AND b.type = '".BILLING_TYPE_ADDON."' ORDER BY a.name";
 			$result = $db->query($sql); 
 		
 			while($data = $db->fetch_array($result)) {
-				$amount_to_show  = $currency->toCurrency($data['amount']);	
-				
+				$amount_to_show  = $currency->toCurrency($data['amount']);				
 		       	$html .= "<tr>
 		            <td></td>
 		            <td>{$data['name']}</td>
@@ -1232,8 +1237,7 @@ class AJAX {
 			}	
 			$html .= $main->createCheckbox($addon_item['name'], 'addon_'.$addon_item['id'], $checked);					
 		}
-		echo $html;
-   		
+		echo $html;   		
    }	   
    
    function loadaddons() {
@@ -1242,7 +1246,7 @@ class AJAX {
    		$package_id = $main->getvar['package_id'];
 		$billing_id	= $main->getvar['billing_id'];
 		$order_id	= $main->getvar['order_id'];
-		$action	= $main->getvar['action'];
+		$action		= $main->getvar['action'];
 		
 		$addon_selected_list = array();
 		if (!empty($order_id)) {
@@ -1275,24 +1279,26 @@ class AJAX {
    
    function loadpackages() {
    		global $main, $db, $addon, $currency, $order, $package;
-   		$billing_id = intval($main->getvar['billing_id']);
-   		$order_id	= intval($main->getvar['order_id']);   		
-   		$action	= $main->getvar['action'];
-   		
-		$order_info = $order->getOrderInfo($order_id);
-		
-		$packages = $package->getAllPackagesByBillingCycle($billing_id);
-				
-   		$package_list = array();
-   		
-		foreach($packages as $package) {
-			$package_list[$package['id']] = $package['name'].' - '.$currency->toCurrency($package['amount']);				
-		}
-		if ($action == 'add') {	
-			echo $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);', 'class'=>'required'));
-		} elseif ($action == 'edit') {
-			echo $package_list[$order_info['pid']];	
-		}		
+   		if ($main->getCurrentStaffId()) {	   		
+	   		$billing_id = intval($main->getvar['billing_id']);
+	   		$order_id	= intval($main->getvar['order_id']);   		
+	   		$action	= $main->getvar['action'];
+	   		
+			$order_info = $order->getOrderInfo($order_id);
+			
+			$packages = $package->getAllPackagesByBillingCycle($billing_id);
+					
+	   		$package_list = array();
+	   		
+			foreach($packages as $package) {
+				$package_list[$package['id']] = $package['name'].' - '.$currency->toCurrency($package['amount']);				
+			}
+			if ($action == 'add') {	
+				echo $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);', 'class'=>'required'));
+			} elseif ($action == 'edit') {
+				echo $package_list[$order_info['pid']];	
+			}
+   		}
    }
    
    function sendtemplate() {
@@ -1382,11 +1388,27 @@ class AJAX {
 			echo '1';
 		}
 	}
+	public function validateUserName() {
+		global $main, $user;
+		$result = $user->validateUserName($main->getvar['user']);
+		if ($result) {
+			echo '0';
+		} else {
+			echo '1';
+		}		
+	}
+		
 }
 
 if(isset($_GET['function']) && !empty($_GET['function'])) {
-	//If this is an AJAX request?
-	if ($main->isXmlHttpRequest()) {
+	//If this is an AJAX request?	
+	$is_xml_request = $main->isXmlHttpRequest();
+	if (SERVER_STATUS == 'test') {
+		//If this is a server test we set this to true to easy debug
+		$is_xml_request = true;
+	}
+	
+	if ($is_xml_request) {
 		$ajax = new AJAX();
 		if (method_exists($ajax, $_GET['function'])) {
 			if (INSTALL == 1) {

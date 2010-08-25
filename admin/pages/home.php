@@ -107,7 +107,7 @@ class page {
 			echo $main->table('Admin TODO List', $todo_content, 'auto', 'auto');
 		}		
 		
-		echo '<br />';
+		
 		echo $main->table('Admin Notepad', $content_notepad, 'auto', 'auto');
 		
 		//Temporaly code just to see the lastest commit
@@ -115,14 +115,15 @@ class page {
 			$output = array();		
 			exec('hg heads', $output);
 			if (isset($output)) {
-				echo '<h3>';
-				echo $output['0'];
-				echo '<br />';
-				echo $output['3'];
-				echo '</h3>';	
+				$html .= '<h4>';
+				$html .= $output['0'];
+				$html .= '<br />';
+				$html .= $output['3'];
+				$html .= '</h4>';	
 			} else {
-				echo 'Seems that there is not a hg repo ... ';
+				$html= 'You can check the lastest version here: https://bnpanel.googlecode.com/hg/';
 			}
+			echo $main->table('Test Server ', $style->returnMessage($html), 'auto', 'auto');
 		}
 		
 		/*

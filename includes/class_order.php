@@ -110,12 +110,13 @@ class order extends model {
 						if($result) { $send_email = true; }																	
 					} else {
 						//Sent to ISPConfiG!!!!
-						$result = $this->sendOrderToControlPanel($order_id);						
-									
+						$result = $this->sendOrderToControlPanel($order_id);
 						if (!$result) {
 							$result = true;
 							$status = ORDER_STATUS_FAILED;					
 						} else {
+							//We unsuspend the site
+							$result = $server->unsuspend($order_id);							
 							$send_email = true;
 						}				
 					}						
@@ -205,8 +206,7 @@ class order extends model {
 		$this->setId($order_id);
 		//Here we will change the status of the package in the Server
 		$result = true;
-		if(isset($params['status']) && !empty($params['status'])) {		
-			echo '7777777777777777777';	
+		if(isset($params['status']) && !empty($params['status'])) {
 			$result = $this->updateOrderStatus($order_id, $params['status']);
 			unset($params['status']); //do not update twice 			
 		}

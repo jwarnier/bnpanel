@@ -38,6 +38,8 @@ class page {
 						if (!in_array($main->postvar['subdomain'],$subdomain_list)) {
 							if(!$n) {								
 								if ($main->validDomain($main->postvar['subdomain'])) {
+									$main->postvar['subdomain'] = $db->strip($main->postvar['subdomain']);
+									$main->postvar['server'] = intval($main->postvar['server']);
 									$db->query("INSERT INTO `<PRE>subdomains` (subdomain, server) VALUES('{$main->postvar['subdomain']}', '{$main->postvar['server']}')");
 									$main->errors("Subdomain has been added!");
 									$main->redirect('?page=sub&sub=view&msg=1');
@@ -79,7 +81,11 @@ class page {
 							//if (!in_array($main->postvar['subdomain'], $subdomain_list)) {
 								if(!$n) {
 									if ($main->validDomain($main->postvar['subdomain'])) {
-									
+										
+										$main->postvar['subdomain'] = $db->strip($main->postvar['subdomain']);
+										$main->postvar['server'] = intval($main->postvar['server']);
+										$main->postvar['do'] = intval($main->postvar['do']);
+										
 										$db->query("UPDATE `<PRE>subdomains` SET subdomain = '{$main->postvar['subdomain']}', 
 																	  server = '{$main->postvar['server']}'
 																	   WHERE id = '{$main->getvar['do']}'");
@@ -89,11 +95,6 @@ class page {
 									}									
 									$main->redirect('?page=sub&sub=edit&msg=1');
 								}
-							//} else {
-								//$main->errors("Subdomain already taken");
-								//$main->generateToken();
-							//}
-
 						}
 						$data = $db->fetch_array($query);
 						$array['SUBDOMAIN'] = $data['subdomain'];
@@ -121,6 +122,7 @@ class page {
 			case "delete":
 				if(isset($main->getvar['do'])) {
 					if($main->checkToken()) {	
+						$main->getvar['do'] = intval($main->getvar['do']);
 						$db->query("DELETE FROM `<PRE>subdomains` WHERE `id` = '{$main->getvar['do']}'");
 						$main->errors("Subdomain Deleted!");
 						$main->redirect('?page=sub&sub=edit&msg=1');

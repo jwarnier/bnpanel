@@ -4,7 +4,8 @@
 //Check if called by script
 if(THT != 1){die();}
 define("PAGE", "Logs");
-class page {	
+class page {
+	
 	public function content() { # Displays the page 
 		global $style, $db, $main;		
 
@@ -23,6 +24,10 @@ class page {
 		} else {
 			$show = $main->postvar['show'];
 			$p = 0;
+		}
+		
+		if (isset($main->postvar['clean'])) {
+			$db->query('TRUNCATE <pre>logs');			
 		}
 		
 		echo '<div class="subborder">';		
@@ -47,8 +52,9 @@ class page {
 		
 		echo $main->createSelect('show', $values, $show);
 				
-		echo "<input type=\"submit\" name=\"filter\" id=\"filter\" value=\"Filter Log\" />";
-		//echo '<input type="submit" name="filter" id="filter" value="Filter Log"/>';
+		echo '<input type="submit" name="filter" id="filter" value="Filter Log" />';
+			
+		echo '<input type="submit" name="clean" id="clean" value="Clean Logs" />';		
 		
 		echo "</form>";
 				
@@ -65,6 +71,8 @@ class page {
 		if (!($p)) {
 			$p = 0;
 		}
+		
+	
 		
 		if ($show != 'all') {
 			$show  = $db->strip($show);

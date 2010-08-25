@@ -64,7 +64,7 @@ function loadAddons(obj) {
      <tr>
     <td width="20%">User</td>
     <td>
-    %USER%
+    <a href="?page=users&sub=search&do=%USER_ID%">%USER%</a>
     </td>
   </tr> 
      <tr>
