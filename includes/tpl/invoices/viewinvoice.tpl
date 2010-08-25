@@ -6,28 +6,28 @@
 <table class="content" border="0" cellspacing="2" cellpadding="0">
 
   <tr>
-    <td width="20%">Order id:</td>
+    <td class="label" width="20%">Order id:</td>
     <td><a href="?page=orders&sub=view&do=%ORDER_ID%">#%ORDER_ID%</a></td>
   </tr>  
      <tr>
-    <td valign="top">User</td>
+    <td class="label">User:</td>
     <td>
     %USER%
     </td>
   </tr> 
      <tr>
-    <td valign="top">Domain</td>
+    <td class="label">Domain:</td>
     <td>
    %DOMAIN%
     </td>
   </tr>  
       <tr>
-    <td valign="top">Description:</td>
+    <td class="label">Description:</td>
     <td>%NOTES%</td>
   </tr>
   
         <tr>
-    <td valign="top">Billing cycles</td>
+    <td class="label">Billing cycles:</td>
     <td>
     %BILLING_CYCLES%
     </td>
@@ -35,21 +35,21 @@
   
   
      <tr>
-    <td valign="top">Package</td>
+    <td class="label">Package:</td>
     <td>
     %PACKAGE_NAME%
     </td>
   </tr> 
   
      <tr>
-    <td valign="top">Package amount:</td>
+    <td class="label">Package amount:</td>
     <td>%PACKAGE_AMOUNT%</td>
   </tr>
   
 
   
        <tr>
-    <td valign="top">Addons</td>
+    <td class="label">Addons</td>
     <td>
     %ADDON%
     </td>
@@ -57,14 +57,14 @@
     
     
 	<tr>
-    <td valign="top">Status</td>
+    <td class="label">Status</td>
     <td>
     %STATUS%
     </td>
   </tr> 
       
 	<tr>
-    <td valign="top">Due date</td>
+    <td class="label">Due date:</td>
     <td>
     %DUE%
     </td>
@@ -72,8 +72,8 @@
   
   
    <tr>
-    <td >Total:</td>
-    <td valign="top" >
+    <td class="label">Total:</td>
+    <td  >
     	<p class="price">%TOTAL%</p>
     </td>
   </tr>
