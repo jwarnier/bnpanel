@@ -713,7 +713,7 @@ class model {
 	public function delete() {
 		global $db;		
 		$sql = "DELETE FROM ".$this->getTableName()." ".        		
-	           "WHERE id ='".$this->getId()."'";
+	           "WHERE ".$this->getPrimaryKey()." ='".$this->getId()."'";
 	    $db->query($sql);
 	    if (SERVER_STATUS == 'test') {
        		global $main;
@@ -766,9 +766,10 @@ class model {
     * Defines the primary key field ? can be overridden in subclasses.
     */
     public function setPrimaryKey($primary_key = 'id') {
-        if(!$this->hasColumn($primary_key)){
-            trigger_error($this->t('Opps! We could not find primary key column %primary_key on the table %table, for the model %model',array('%primary_key'=>$primary_key,'%table'=>$this->getTableName(), '%model'=>$this->getModelName())),E_USER_ERROR);
-        }else {
+        if(!$this->hasColumn($primary_key)) {
+        	global $main;
+        	$main->addlog('Opps! We could not find primary key column %primary_key on the table %table, for the model %model',array('%primary_key'=>$primary_key,'%table'=>$this->getTableName(), '%model'=>$this->getModelName()));
+        } else {
             $this->_primaryKey = $primary_key;
         }
     }

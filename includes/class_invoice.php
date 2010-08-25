@@ -29,8 +29,6 @@ class invoice extends model {
 				$params['order_id'] = $order_id;
 				$params['invoice_id'] = $invoice_id;
 				$order->order_invoices->save($params);
-				//$insert_sql = "INSERT INTO `<PRE>order_invoices` (order_id, invoice_id) VALUES('{$order_id}', '{$invoice_id}')";				
-				//$db->query($insert_sql);	
 			}			
 			
 			$user_info 		= $user->getUserById($params['uid']);		

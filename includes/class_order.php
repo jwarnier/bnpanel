@@ -75,9 +75,7 @@ class order extends model {
 					$addon_id = intval($addon_id);
 					$params['order_id'] = $order_id;
 					$params['addon_id'] = $addon_id;
-					$this->order_addons->save($params);								
-					//$sql_insert = "INSERT INTO order_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
-					//$db->query($sql_insert);					
+					$this->order_addons->save($params);
 				}
 			}
 		}
@@ -565,7 +563,9 @@ class order extends model {
 			foreach($invoice_list as $invoice_item) {				
 				$my_invoice = $invoice->getInvoiceInfo($invoice_item['invoice_id']);
 				if (!empty($my_invoice)) {										
-					$html .= '<li><a href="?page=invoices&sub=view&do='.$my_invoice['id'].'" title="Invoice id" >#'.$my_invoice['id'].'</a> '.date('Y-m-d', $my_invoice['due']).' '.$invoice_status[$my_invoice['status']].' '.$currency->toCurrency($my_invoice['total_amount']).'</li>';
+					$html .= '<li><a href="?page=invoices&sub=view&do='.$my_invoice['id'].'" title="Invoice id" >#'.$my_invoice['id'].'</a> ';
+					//Status:'.$invoice_status[$my_invoice['status']].' 
+					$html .=  'Due date: '.date('Y-m-d', $my_invoice['due']).' Total: '.$currency->toCurrency($my_invoice['total_amount']).'</li>';
 				} else {
 					$html .= '<li>Problem found with Invoice #'.$invoice_item['invoice_id'].'</li>';
 				}

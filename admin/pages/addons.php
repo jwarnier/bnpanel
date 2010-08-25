@@ -79,7 +79,7 @@ class page {
 						foreach($billing_list as $billing_item) {
 							$variable_name = 'billing_cycle_'.$billing_item['id'];
 							if (isset($main->postvar[$variable_name])) {									
-								$addon->createPackageAddons($billing_item['id'], $product_id, $main->postvar[$variable_name],BILLING_TYPE_ADDON);					
+								$addon->createPackageAddons($billing_item['id'], $product_id, $main->postvar[$variable_name], BILLING_TYPE_ADDON);					
 							}													
 						}
 						$main->errors('Addon has been added!');
@@ -148,9 +148,8 @@ class page {
 								//Add new relations
 								foreach($billing_list as $data) {												
 									$variable_name = 'billing_cycle_'.$data['id'];								
-									if (isset($main->postvar[$variable_name]) && !empty($main->postvar[$variable_name]) ) {
-										$sql_insert ="INSERT INTO <PRE>billing_products (billing_id, product_id, amount, type) VALUES('{$data['id']}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_ADDON."')";
-										$db->query($sql_insert);									
+									if (isset($main->postvar[$variable_name]) && !empty($main->postvar[$variable_name]) ) {										
+										$addon->createPackageAddons($data['id'], $product_id, $main->postvar[$variable_name], BILLING_TYPE_ADDON);														
 									}
 								}						
 							

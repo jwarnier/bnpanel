@@ -362,18 +362,15 @@ class page {
 							$invoice_params['status'] 	= $status;
 							$invoice_params['order_id'] = $main->getvar['do'];
 										
-							$invoice_id = $invoice->create($invoice_params);
+							$invoice_id = $invoice->create($invoice_params);							
 							
-							
-							$main->errors('Invoice created!');												
+							$main->errors('Invoice created #'.$invoice_id);												
 						} else {
 							$main->errors('Please fill all the fields');
 						}	
 						$main->redirect('?page=orders&sub=all&msg=1');					
-					} else {
-					
-						$user_info  =  $user->getUserById($order_info['userid']);				
-						
+					} else {					
+						$user_info  =  $user->getUserById($order_info['userid']);						
 						$return_array['USER'] 			= $user_info['firstname'].' '.$user_info['lastname'];
 						$return_array['DOMAIN'] 		= $order_info['real_domain'];					
 						$billing_info 					= $billing->getBilling($billing_id);
