@@ -48,16 +48,20 @@ class AJAX {
 	}
 	
 	public function passcheck() {
-		global $main;
-		if($main->getvar['pass'] == ":") {
+		global $main, $user;
+		if ($main->getvar['pass'] == ":") {
 			$_SESSION['check']['pass'] = false;
 		   echo 0;
 		   return;
 		} else {
 			$pass = explode(":", $main->getvar['pass']);
 			if($pass[0] == $pass[1]) {
-				$_SESSION['check']['pass'] = true;
-				echo 1;	
+				if ($user->validatePassword($pass[0])) {
+					$_SESSION['check']['pass'] = true;
+					echo 1;
+				} else {
+					echo 0;
+				}	
 			}
 			else {
 				$_SESSION['check']['pass'] = false;
