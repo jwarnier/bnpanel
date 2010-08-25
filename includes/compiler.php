@@ -222,5 +222,5 @@ function checkForDependencies() {
 
 //@todo remove this debug calls
 //var_dump($order->getOrder('8', true));
-//$invoice_info 	= $invoice->getInvoice('18', true);
+//$invoice_info 	= $addon->updateAddonOrders(array(1,2,3), '9');
 //var_dump($invoice_info 	);exit; 

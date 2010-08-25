@@ -1,6 +1,5 @@
 <?php
 
-
 //Check if called by script
 if(THT != 1){
 	die();
@@ -11,6 +10,10 @@ class billing extends model {
 	public $columns 	= array('id', 'number_months','name', 'status');
 	public $table_name = 'billing_cycles';
 	
+	// products = addons or packages
+	public $has_many	= array('products'=> array('table_name'=>'billing_products', 'columns'=>array('billing_id', 'product_id', 'amount','type')));
+	
+	
 	public function create($params) { 
 		$billing_id = $this->save($params);
 		return $billing_id;
@@ -20,6 +23,7 @@ class billing extends model {
 		$this->setId($id);		
 		$this->update($params);
 	}
+	
 	public function delete() {
 		parent::delete();
 	}	
@@ -85,8 +89,5 @@ class billing extends model {
 			$data = $db->fetch_array($result, 'ASSOC');	
 		}		
 		return $data;
-	}
-	
+	}	
 }
-
-?>

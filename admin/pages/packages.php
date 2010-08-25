@@ -36,9 +36,7 @@ class page {
 		
 		
 		switch($main->getvar['sub']) {
-			default:
-				$n = 0;
-				
+			default:								
 				$asOption = array(
 				    'rules' => array(
 				        'name' 				=> 'required',
@@ -58,11 +56,7 @@ class page {
 				if($_POST && $main->checkToken()) {					
 					
 					$exist_billing_cycle = false;
-					foreach($main->postvar as $key => $value) {
-						/*if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle") {
-							$main->errors("Please fill in all the fields: ".$key);							
-							$n++;
-						}*/
+					foreach($main->postvar as $key => $value) {						
 						if ($main->postvar['type'] == 'paid' && $exist_billing_cycle == false) {
 							if (substr($key,0,13) == "billing_cycle") {								
 								$exist_billing_cycle = true;
@@ -92,8 +86,11 @@ class page {
 						foreach($billing_list as $billing_id=>$value) {
 							$variable_name = 'billing_cycle_'.$billing_id;
 							if (isset($main->postvar[$variable_name])) {
-								$sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$billing_id}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_PACKAGE."')";
-								$db->query($sql_insert);									
+								$params['billing_id'] 	= $billing_id;
+								$params['product_id'] 	= $product_id;
+								$params['amount']		= $main->postvar[$variable_name];
+								$params['type'] 		= BILLING_TYPE_PACKAGE;
+								$billing->billing_products->save($params);																	
 							}
 						}
 
@@ -104,8 +101,10 @@ class page {
 										
 								$variable_name = 'addon_'.$data['id'];
 								if (isset($main->postvar[$variable_name]) && $main->postvar[$variable_name] == 'on') {
-									$sql_insert ="INSERT INTO `<PRE>package_addons` (addon_id, package_id) VALUES('{$data['id']}', '{$product_id}')";
-									$db->query($sql_insert);									
+									$params['addon_id'] = $data['id'];
+									$params['package_id'] = $product_id;
+									$package->package_addons->save($params);
+								
 								}
 							}						
 						}
@@ -177,9 +176,12 @@ class page {
 								$billing_list = $billing->getAllBillingCycles();
 								foreach($billing_list as $billing_id=>$value) {
 									$variable_name = 'billing_cycle_'.$billing_id;
-									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {
-											$sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$billing_id}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_PACKAGE."')";
-											$db->query($sql_insert);									
+									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
+											$params['billing_id'] 	= $billing_id;
+											$params['product_id'] 	= $product_id;
+											$params['amount']		= $main->postvar[$variable_name];
+											$params['type'] 		= BILLING_TYPE_PACKAGE;
+											$billing->billing_products->save($params);																		
 									}
 								}					
 								//-----Finish billing cycles
@@ -189,7 +191,11 @@ class page {
 								
 								//Deleting all billing_products relationship							
 								
-								$query = $db->query("DELETE FROM `<PRE>package_addons` WHERE package_id = {$main->getvar['do']} ");
+								//$query = $db->query("DELETE FROM `<PRE>package_addons` WHERE package_id = {$main->getvar['do']} ");
+								
+								$package->package_addons->setPrimaryKey('package_id');
+								$package->package_addons->setId($main->getvar['do']);								
+								$package->package_addons->delete();								
 								   
 								$query = $db->query("SELECT * FROM <PRE>addons");
 								$product_id = $main->getvar['do'];
@@ -199,8 +205,9 @@ class page {
 									while($data = $db->fetch_array($query)) {												
 										$variable_name = 'addon_'.$data['id'];
 										if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {
-											$sql_insert ="INSERT INTO `<PRE>package_addons` (addon_id, package_id) VALUES('{$data['id']}', '{$product_id}')";
-											$db->query($sql_insert);									
+											$params['addon_id'] = $data['id'];
+											$params['package_id'] = $product_id;
+											$package->package_addons->save($params);								
 										}
 									}						
 								}								
@@ -317,8 +324,14 @@ class page {
 						$main->getvar['do'] = intval($main->getvar['do']);
 						$package->delete($main->getvar['do']);
 						$db->query("DELETE FROM `<PRE>billing_products` WHERE product_id = '{$main->getvar['do']}' AND type = '".BILLING_TYPE_PACKAGE."'");
-						$db->query("DELETE FROM `<PRE>package_addons`	WHERE package_id = '{$main->getvar['do']}'");										
-						$main->errors("Package has been Deleted!");
+						
+						//Deleting package relations
+						$package->package_addons->setPrimaryKey('package_id');
+						$package->package_addons->setId($main->getvar['do']);								
+						$package->package_addons->delete();	
+						
+																
+						$main->errors('Package #'.$main->getvar['do'].' has been Deleted');
 						$main->redirect('?page=packages&sub=edit&msg=1');	
 					}		
 				}				

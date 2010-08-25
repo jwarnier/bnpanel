@@ -9,7 +9,7 @@ if(THT != 1){
 class addon extends model {
 	
 	public $columns 	= array('id', 'name','setup_fee', 'description','status', 'install_package', 'mandatory');
-	public $table_name  = 'addons';	
+	public $table_name  = 'addons';		
 	
 	public function create($params) {
 		$addon_id = $this->save($params);
@@ -19,8 +19,7 @@ class addon extends model {
 	public function edit($id, $params) {		
 		$this->setId($id);
 		$this->update($params);
-	}
-	
+	}	
 	
 	public function delete($id) {
 		global $db;
@@ -28,21 +27,27 @@ class addon extends model {
 		$this->setId($id);
 		parent::delete();		
 		//Deleting relation between addons and packages
-		$id = intval($id); 
-		$db->query("DELETE FROM `<PRE>package_addons` WHERE `addon_id` = '{$id}'");		
+		$id = intval($id);
+		global $package;
+		$package->package_addons->setPrimaryKey('addon_id');
+		$package->package_addons->setId($id); 
+		$package->package_addons->delete();				
 	}
 	
 	public function createPackageAddons($billing_id, $product_id, $amount, $type) {
-		global $db;
+		global $db,$billing;
 		$billing_id = intval($billing_id);
 		$product_id = intval($product_id);
 		$amount = $db->strip($amount);
 		
-		if (!in_array($type, array(BILLING_TYPE_ADDON,BILLING_TYPE_PACKAGE))) {
+		if (!in_array($type, array(BILLING_TYPE_ADDON, BILLING_TYPE_PACKAGE))) {
 			$type = 0;
-		}				
-		$sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$billing_id}', '{$product_id}', '{$amount}', '".$type."')";
-		$db->query($sql_insert);		
+		}		
+		$params['billing_id'] 	= $billing_id;
+		$params['product_id'] 	= $product_id;
+		$params['amount']		= $amount;
+		$params['type'] 		= $type;
+		$billing->billing_products->save($params);
 	}
 	
 	/**
@@ -193,16 +198,22 @@ class addon extends model {
 	 * Updates the order_addons table
 	 */
 	public function updateAddonOrders($list_of_addons_ids, $order_id) {
-		global $db;
+		global $db, $order;
 		$addon_fee = array();		
 		$order_id = intval($order_id);
-		$result = $db->query("DELETE FROM `<PRE>order_addons` WHERE order_id = ".$order_id);
+		
+		$order->order_addons->setPrimaryKey('order_id');
+		$order->order_addons->setId($order_id);
+		$order->order_addons->delete();		
+		//$result = $db->query("DELETE FROM `<PRE>order_addons` WHERE order_id = ".$order_id);
 		
 		if (is_array($list_of_addons_ids) && count($list_of_addons_ids) > 0 ) {
 			foreach ($list_of_addons_ids as $addon_id) {
 				if (is_numeric($addon_id)) {
 					$addon_id = intval($addon_id);
-					$result = $db->query("INSERT INTO `<PRE>order_addons` (addon_id, order_id) VALUES ('{$addon_id}', '{$order_id}')");				
+					$params['order_id'] = $order_id;
+					$params['addon_id'] = $addon_id;
+					$order->order_addons->save($params);			
 				}
 			}
 		}

@@ -11,6 +11,9 @@ class package extends model {
 	public $columns 	= array('id', 'name','backend', 'description','type', 'server', 'admin','reseller','additional', 'order', 'is_hidden', 'is_disabled');	
 	public $table_name 	= 'packages';
 	
+	public $has_many	= array('addon'  => array('table_name'=>'package_addons','columns'=>array('package_id', 'addon_id')));
+								
+	
 	/** 
  	 * Creates a new package
 	 * 
