@@ -5,7 +5,8 @@
 body {
 	margin:0;
 	background:url(images/background.png) repeat-x #eeeff1;
-	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	/* font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; */
+	font-family:Verdana,sans-serif;
 }
 p {
 	padding:0;
@@ -16,22 +17,36 @@ p {
 /***** Links *****/
 a, a:link, a:visited { color: #2A5685; text-decoration: none; }
 a:hover, a:active { color: #c61a1a; text-decoration: underline;}
-a img{ border: 0; }
+a img { border: 0; }
 
-
-img {
-    border:0;
+h1,h2,h3,h4 {
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;	
 }
+
 h1 {
+	font-size:24px;
 	padding:0;
-	margin:0;
-	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	margin:0;	
 	font-size:18px;
 	font-weight:normal;
 	color:#245ba9;
 	margin-bottom:5px;
 	border-bottom:dashed 1px #245ba9;
 }
+h2, h3 {
+	border-bottom:1px solid #BBBBBB;	
+	margin:0 0 10px;
+	padding:2px 10px 1px 0;
+}
+h2 {
+	font-size:20px;
+}
+
+h3 {
+	font-size:18px;
+}
+
+
 #wrapper {
 	width:980px;
 	margin:auto auto;
@@ -138,9 +153,8 @@ h1 {
 .text {
 	min-height:38px;
 	padding:2px;
-	color:#333;
-	font-family:'Trebuchet MS','Lucida Grande',Verdana,Arial,Sans-Serif;
-	font-size:90%;
+	color:#333;	
+	font-size:12px;
 	margin-left:5px;
 	margin-bottom:15px;
 }
@@ -287,75 +301,12 @@ input, option {
      margin-bottom: 5px;
      -moz-border-radius: "4px";
      -webkit-border-radius: "4px";
-     }
+}
     
 #pagination_loading {
 	position: absolute;	
 }    
     
-    
-    
-    /*
-.error {
-	border:1px solid #F9DD34;
-}*/
-
-input.error, select.error {
-	border:1px dotted red;
-}
-
-label.error {
-	padding-left:15px;	
-	color:red;
-	/* position:absolute; 
-	display:inline-block;
-	line-height:1.8;*/
-}
-
-#navigation {
- /*	background-color: #162A67; */
-}
-
-
-
-.readonly {
-   background-color:red;
-}
-
-
-
-
-.info, .success, .warning, .error_message, .validation {
-    border: 1px solid;
-    margin: 10px 15px 5px 15px;
-    padding:15px 10px 15px 50px;
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    font-size:90%;
-    
-    
-}
-.info {
-    color: #00529B;
-    background-color: #BDE5F8;
-    background-image: url('images/info.png');
-}
-.success {
-    color: #4F8A10;
-    background-color: #DFF2BF;
-    background-image:url('images/success.png');
-}
-.warning {
-    color: #9F6000;
-    background-color: #FEEFB3;
-    background-image: url('images/warning.png');
-}
-.error_message {
-    color: #D8000C;
-    background-color: #FFBABA;
-    background-image: url('images/error.png');
-}
-
 
 #description {
 	background-color:white;	
@@ -370,15 +321,10 @@ label.error {
 	white-space:nowrap;
 }
 
-h2, h3 {
-	border-bottom:1px solid #BBBBBB;	
-	margin:0 0 10px;
-	padding:2px 10px 1px 0;
-}
 
 
 .leftmenu {
-	font-size:90%;
+	font-size:11px;
 	color:#21759B;
 	list-style-type:none;
 	padding:0px;
@@ -398,7 +344,7 @@ h2, h3 {
 }
 
 .submenu {
-	font-size:80%;
+	font-size:11px;
 	height:25px;
 	list-style-type:none;
 	margin:1px 0 0;
@@ -463,6 +409,11 @@ form {
 	margin-left:8px;
 	padding:16px 16px 40px;
 	width:95%;
+}
+
+.content .label {
+	font-weight: bold;
+	color:#484848;
 }
 
 .content_table {		
@@ -602,6 +553,61 @@ legend {
 	height:30px;	
 }
 
-disabled {
-	background-color: #ccc;
+    
+/*
+.error {
+	border:1px solid #F9DD34;
+}*/
+
+input.error, select.error {
+	border:1px dotted red;
 }
+
+label.error {
+	padding-left:15px;	
+	color:red;
+	/* position:absolute; 
+	display:inline-block;
+	line-height:1.8;*/
+}
+
+#navigation {
+ /*	background-color: #162A67; */
+}
+
+
+.readonly {
+   background-color:red;
+}
+
+
+.info, .success, .warning, .error_message, .validation {
+    border: 1px solid;
+    margin: 10px 15px 5px 15px;
+    padding:15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    font-size:100%;
+}
+
+.info {
+    color: #00529B;
+    background-color: #BDE5F8;
+    background-image: url('images/info.png');
+}
+.success {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+    background-image:url('images/success.png');
+}
+.warning {
+    color: #9F6000;
+    background-color: #FEEFB3;
+    background-image: url('images/warning.png');
+}
+.error_message {
+    color: #D8000C;
+    background-color: #FFBABA;
+    background-image: url('images/error.png');
+}
+

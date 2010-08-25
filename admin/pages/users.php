@@ -31,8 +31,96 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db, $order,$package, $invoice, $server, $email,$user;
+		require_once LINK.'validator.class.php';
 		
-		switch($main->getvar['sub']) {
+		switch($main->getvar['sub']) {			
+			case 'add':
+				
+				$asOption = array(
+					    'rules' => array(
+					        'user' 			=> array('required'=>true,'validateUsername'=>'error','UsernameExists'=>'Error'),			        
+					        'password' 		=> 'required',
+					        'confirmp' 		=> 'required',
+					        'email' 		=> array('required'=>true, 'email'=>true),
+					        'status' 		=> 'required'					        					            
+					     ),			    
+					    'messages' => array(			
+					    	'user'=>array('required'=>'This field is required', 'validateUsername'=>'Not a valid Username (6 character minimum)',  'UsernameExists'=>'Username already exists' )		        			       
+					    )
+					);				
+				$array = $user->setDefaults();	
+				$array['json_encode'] = json_encode($asOption);				
+				$oValidator = new Validator($asOption);		
+								
+				if ($_POST && $main->checkToken()) {		
+					$result = $oValidator->validate($_POST);					
+					if (empty($result)) {	
+						$user_id = $user->create($main->postvar);					
+						if (!empty($user_id) && is_numeric($user_id)) {
+							$main->errors("Account added!");
+							$main->redirect('?page=users&sub=search&msg=1');
+						} else {
+							$main->errors("Account NOT added!", true);	
+							$array = $main->postvar;					
+							$main->redirect('?page=users&sub=add&msg=1');												
+						}
+					} else {
+						$main->errors("Account NOT added!", true);	
+						$array = $main->postvar;					
+						$main->redirect('?page=users&sub=add&msg=1');
+					}
+					$main->generateToken();		
+				}			
+				$array['country']		= $main->countrySelect($array['country']);
+				$array['status'] = $main->createSelect('status', $main->getUserStatusList(), '');				
+				echo $style->replaceVar("tpl/user/add.tpl", $array);				
+			break;
+			
+			case 'edit':
+				if ($main->getvar['do']) {
+					
+					$asOption = array(
+					    'rules' => array(
+					        'user' 			=> array('required'=>true,'validateUsername'=>'error'),
+					        'email' 		=> array('required'=>true, 'email'=>true),
+					        'status' 		=> 'required'					        					            
+					     ),			    
+					    'messages' => array(			
+					    	'user'=>array('required'=>'This field is required', 'validateUsername'=>'Not a valid Username (6 character minimum)')
+					    )
+					);
+							
+					$oValidator = new Validator($asOption);	
+							
+					if ($_POST && $main->checkToken()) {
+						$result = $oValidator->validate($_POST);
+						if (empty($result)) {
+							$user->edit($main->getvar['do'], $main->postvar);
+							if ($main->postvar['status'] == USER_STATUS_DELETED) {
+								$main->redirect('?page=users&sub=search');
+							}
+							$main->errors('Client edited');
+							$main->redirect('?page=users&sub=search&msg=1&do='.$main->getvar['do']);
+						} else {
+							$main->errors("Account NOT edited!", true);												
+							$main->redirect('?page=users&sub=search&msg=1');
+						}
+					}
+					
+					$array = $user->getUserById($main->getvar['do']);
+					
+					$array['status'] 		= $main->createSelect('status', $main->getUserStatusList(), $array['status']);					
+					$array['country']		= $main->countrySelect($array['country']);
+					$array['json_encode'] 	= json_encode($asOption);
+						
+					$main_array['CONTENT'] 	= $style->replaceVar("tpl/user/edit.tpl", $array);
+					$main_array['BOX'] 		= "";
+					$main_array['ID'] 		= $main->getvar['do'];
+										
+					echo $style->replaceVar("tpl/user/clientview.tpl", $main_array);							
+				}
+			break;
+			
 			case 'search':
 				if($main->getvar['do'] ) {			
 							
@@ -70,6 +158,7 @@ class page {
 				}
 			break;
 			
+			
 			case 'orders':
 				if($main->getvar['do'] ) {					
 					$return_array  		= $order->getAllOrdersToArray($main->getvar['do']);	
@@ -92,29 +181,7 @@ class page {
 					echo $style->replaceVar("tpl/user/clientview.tpl", $array);	
 				}			
 			break;			
-			case 'edit':
-				if($main->getvar['do']) {
-					if ($_POST && $main->checkToken()) {
-						$user->edit($main->getvar['do'], $main->postvar);
-						if ($main->postvar['status'] == USER_STATUS_DELETED) {
-							$main->redirect('?page=users&sub=search');
-						}
-						$main->errors('Client edited');
-						$main->redirect('?page=users&sub=search&msg=1&do='.$main->getvar['do']);
-					}
-					
-					$array = $user->getUserById($main->getvar['do']);
-					
-					$array['status'] 		= $main->createSelect('status', $main->getUserStatusList(), $array['status']);					
-					$array['country']		= $main->countrySelect($array['country']);
-						
-					$main_array['CONTENT'] 	= $style->replaceVar("tpl/user/edit.tpl", $array);
-					$main_array['BOX'] 		= "";
-					$main_array['ID'] 		= $main->getvar['do'];
-										
-					echo $style->replaceVar("tpl/user/clientview.tpl", $main_array);							
-				}
-			break;
+			
 			
 			case 'email':
 				if($main->getvar['do']) {
@@ -188,47 +255,7 @@ class page {
 				echo $style->replaceVar("tpl/user/clientstats.tpl", $array);
 				break;
 			
-			case 'add':
-				require_once LINK.'validator.class.php';
-				$asOption = array(
-					    'rules' => array(
-					        'user' 			=> array('required'=>true,'validateUsername'=>'error','UsernameExists'=>'Error'),			        
-					        'password' 		=> 'required',
-					        'confirmp' 		=> 'required',
-					        'email' 		=> array('required'=>true, 'email'=>true),
-					        'status' 		=> 'required'					        					            
-					     ),			    
-					    'messages' => array(			
-					    	'user'=>array('required'=>'This field is required', 'validateUsername'=>'Please try with other Username ',  'UsernameExists'=>'Username already exists' )		        			       
-					    )
-					);				
-				$array = $user->setDefaults();	
-				$array['json_encode'] = json_encode($asOption);				
-				$oValidator = new Validator($asOption);		
-								
-				if ($_POST && $main->checkToken()) {		
-					$result = $oValidator->validate($_POST);					
-					if (empty($result)) {	
-						$user_id = $user->create($main->postvar);					
-						if (!empty($user_id) && is_numeric($user_id)) {
-							$main->errors("Account added!");
-							$main->redirect('?page=users&sub=search&msg=1');
-						} else {
-							$main->errors("Account NOT added!", true);	
-							$array = $main->postvar;					
-							$main->redirect('?page=users&sub=add&msg=1');												
-						}
-					} else {
-						$main->errors("Account NOT added!", true);	
-						$array = $main->postvar;					
-						$main->redirect('?page=users&sub=add&msg=1');
-					}
-					$main->generateToken();		
-				}			
-				$array['country']		= $main->countrySelect($array['country']);
-				$array['status'] = $main->createSelect('status', $main->getUserStatusList(), '');				
-				echo $style->replaceVar("tpl/user/add.tpl", $array);				
-			break;
+			
 			case 'validate':		
 			//code removed from THT
 			break;					

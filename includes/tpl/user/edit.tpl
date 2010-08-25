@@ -1,4 +1,41 @@
+<script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
 <script type="text/javascript">
+
+
+jQuery.validator.addMethod("UsernameExists", 
+		function(value, element) {
+			var username_value = $("#user").val();	
+			$.ajax({
+				url:"<AJAX>function=usernameExists&user="+username_value,
+				async:false,
+				type: "GET",
+				success:  function(data) {
+					result = (data=='0') ? true : false;				
+				}
+			});
+			return result;			
+	});
+
+jQuery.validator.addMethod("validateUsername", 
+	function(value, element) {
+		var username_value = $("#user").val();	
+		$.ajax({
+			url:"<AJAX>function=validateUserName&user="+username_value,
+			async:false,
+			type: "GET",
+			success:  function(data) {
+				result = (data=='0') ? true : false;				
+			}
+		});
+		return result;			
+});
+
+
+$(function() {
+	$("#edituser").validate(%json_encode%);
+});
+
+
 
 function check(name, value) {
 	$("#"+name+"check").html(loading);
@@ -20,10 +57,12 @@ var right = '<img src="<URL>themes/icons/accept.png">';
 var loading = '<img src="<URL>themes/icons/ajax-loader.gif">';
 var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></div>';
 
+
+
 </script>
 
 <ERRORS>
-<form id="adduser" name="adduser" method="post" action="">
+<form id="edituser" name="edituser" method="post" action="">
 <table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
                 <td>Username:</td>

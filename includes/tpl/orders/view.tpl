@@ -8,19 +8,19 @@
 <ERRORS>
 <table class="content" width="100%" border="0" cellspacing="2" cellpadding="0"> 
      <tr>
-    <td valign="top">User</td>
+    <td class="label">User:</td>
     <td>    
     <a href="?page=users&sub=search&do=%USER_ID%">%USER%</a>
     </td>
   </tr> 
      <tr>
-    <td valign="top">Domain</td>
+    <td class="label">Domain:</td>
     <td>
    %REAL_DOMAIN%
     </td>
   </tr>  
       <tr>
-    <td valign="top">Billing cycles</td>
+    <td class="label">Billing cycles:</td>
     <td>
     %BILLING_CYCLES%
     </td>
@@ -28,50 +28,48 @@
   
   
      <tr>
-    <td valign="top">Packages</td>
+    <td class="label">Packages:</td>
     <td>
     %PACKAGES%
     </td>
   </tr> 
   
    <tr>
-    <td valign="top">Package amount:</td>
+    <td class="label">Package amount:</td>
     <td>%PACKAGE_AMOUNT%</td>
   </tr>
   
   
   <tr>
-    <td valign="top">Addons</td>
+    <td class="label">Addons:</td>
     <td>
     %ADDON%
     </td>
   </tr>   
   <tr>
-    <td valign="top">Status</td>
+    <td class="label">Status:</td>
     <td>
     %STATUS%
     </td>
   </tr>
       <tr>
-    <td valign="top">Creation date</td>
+    <td class="label">Creation date:</td>
     <td>
     %CREATED_AT%
     </td>
   </tr>
 	<tr>
-    <td valign="top">Control Panel Username</td>
+    <td class="label">Control Panel Username:</td>
     <td>  		
 		%USERNAME%
     </td>
   </tr>
   
-          <tr>
-    <td valign="top">Control Panel Password</td>
+	<tr>
+    <td class="label">Control Panel Password:</td>
     <td>  		
 		%PASSWORD%
     </td>
   </tr>
 </table>
 %INVOICE_LIST%
- 
-
