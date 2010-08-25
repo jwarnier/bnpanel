@@ -422,8 +422,8 @@ form {
 }
 .content_table th {
 	text-align:center;
-	font-size:14px;
-	font-weight:normal;
+	font-size:12px;
+	font-weight:bold;
 	padding:10px 8px;
 	color:#2A5685;
 	background-color:#EEEEEE;

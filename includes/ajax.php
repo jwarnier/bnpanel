@@ -317,14 +317,11 @@ class AJAX {
 				$rownum = $db->num_rows($query);
 				
 				echo '<table class="content_table" width="100%" border="0" cellpadding="0" cellspacing="2">
-			          <tbody><tr>
-			            <td width="250px">User</td>
-			            <td width="250px">Status</td>
-			            <td width="250px" rowspan="2" align="right">
-			            	Actions
-			            </td>
-			          </tr>		          
-			        </tbody></table>';
+			          <tr>
+			            <th width="250px">User</th>
+			            <th width="250px">Status</th>
+			            <th width="250px" align="right">Actions</th>
+			          </tr>';		        
 						
 				if($db->num_rows($query) == 0) {
 					echo "No clients found!";	
@@ -341,6 +338,8 @@ class AJAX {
 							$n++;
 						}
 					}
+					echo '</table>';
+					
 					echo '<div class="break"></div>';
 					echo '<div align="center">';
 					$query = $db->query("SELECT * FROM `<PRE>users` u  WHERE u.{$type} LIKE '%{$value}%' ORDER BY u.{$type} ASC");
