@@ -690,17 +690,19 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				//Create a new database for chamilo		
 				
 				//$db_part_name = substr($order_info['domain'],0,6);
-								
-				$url_parts = $main->parseUrl($order_info['domain']);
-				
-				if ($url_parts['subdomain'] != '') {
-					$url_parts['domain'] = $url_parts['subdomain'];					
-				} else {
+				if (isset($order_info['subdomain_id']) && $order_info['subdomain_id'] != 0) {
+					$url_parts['domain'] = $order_info['domain'];
+				} else {					
+					$url_parts = $main->parseUrl($order_info['domain']);					
+					/*if ($url_parts['subdomain'] != '') {
+						$url_parts['domain'] = $url_parts['subdomain'];					
+					} else {*/					
 					$url_parts['domain'] = substr($url_parts['domain'], 0 , strlen($url_parts['domain']) - ( strlen($url_parts['extension']) + 1) );
-				}
+					//}					
+				}				
 				
 				//We take only 20 chars
-				$url_parts['domain'] = substr($url_parts['domain'], 0, 20);
+				$url_parts['domain'] 				= substr($url_parts['domain'], 0, 20);
 				
 				$mysql_params['client_id'] 			= $user_info['client_id'];				
 				$mysql_params['server_id']			= $this->getServerId();				
@@ -722,7 +724,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					$install_params['status'] 		= 2;// 0 not install / 1 installed 2 pending 3 error
 					$install_params['database_id'] 	= $database_id;  
 					$result = $this->remote('install_chamilo', $install_params);
-					$main->addLog("ispconfig::install_chamilo domain_id: $domain_id database_id: $database_id");
+					$main->addLog("ispconfig::install_chamilo domain_id #$domain_id db id #$database_id db name {$mysql_params['database_name']} ");
 					return true;
 				} else {
 					if ($database_id['error']) {

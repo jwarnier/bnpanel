@@ -21,7 +21,7 @@ if(strtoupper(substr(PHP_OS, 0, 3)) === "WIN") {
 }
 $compare = explode($_SERVER["DOCUMENT_ROOT"], $file);
 if($prepend . $compare[1] !== $_SERVER["PHP_SELF"]) {
-	die("You can only run the install from the <em>".__FILE__."</em> file.");
+	//die("You can only run the install from the <em>".__FILE__."</em> file.");
 }
 
 
