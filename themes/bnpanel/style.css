@@ -601,3 +601,7 @@ legend {
 	float:right;
 	height:30px;	
 }
+
+disabled {
+	background-color: #ccc;
+}

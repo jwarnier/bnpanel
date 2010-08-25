@@ -10,7 +10,12 @@ class order extends model {
 	
 	public $columns 	= array('id', 'userid','username', 'password','domain','pid', 'signup', 'status', 'additional', 'billing_cycle_id','subdomain_id');	
 	public $table_name 	= 'orders';
-	public $_modelName 	= 'order';
+	//public $_modelName 	= 'order';
+	
+	//experimental object handlers inspired by Akelos
+	public $has_many	= array('invoice'=> array('table_name'=>'order_invoices', 'columns'=>array('id', 'order_id', 'invoice_id')),
+								'addon'  => array('table_name'=>'order_addons',   'columns'=>array('id', 'order_id', 'addon_id'))
+								);
 	
 	/** 
 	 * Creates an order
@@ -22,7 +27,12 @@ class order extends model {
 	public function create($params, $clean_token = true) {		
 		global $main, $db, $email, $user;
 		$order_id = $this->save($params);
+		
+		
 		if (!empty($order_id) && is_numeric($order_id )) {
+			
+			$this->addAddons($order_id, $params['addon_list']);
+			
 			$main->addLog("order::create : $order_id");
 		
 			$emailtemp 				= $db->emailTemplate('orders_new');
@@ -35,7 +45,7 @@ class order extends model {
 			$array['ORDER_ID'] 		= $order_id;
 			$array['PACKAGE'] 		= $order_info['PACKAGES'];
 			$array['ADDONS'] 		= $order_info['ADDON'];
-			$array['DOMAIN'] 		= $order_info['domain'];
+			$array['DOMAIN'] 		= $order_info['REAL_DOMAIN'];
 			$array['BILLING_CYCLE'] = $order_info['BILLING_CYCLES'];
 			$array['TOTAL'] 		= $order_info['TOTAL'];
 			$array['TOS'] 		    = $db->config('TOS');
@@ -62,9 +72,12 @@ class order extends model {
 		if (is_array($addon_list) && count($addon_list) > 0) {
 			foreach ($addon_list as $addon_id) {
 				if (!empty($addon_id) && is_numeric($addon_id)) {
-					$addon_id = intval($addon_id);								
-					$sql_insert = "INSERT INTO order_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
-					$db->query($sql_insert);					
+					$addon_id = intval($addon_id);
+					$params['order_id'] = $order_id;
+					$params['addon_id'] = $addon_id;
+					$this->order_addons->save($params);								
+					//$sql_insert = "INSERT INTO order_addons(order_id, addon_id) VALUES ('$order_id', '$addon_id')";
+					//$db->query($sql_insert);					
 				}
 			}
 		}

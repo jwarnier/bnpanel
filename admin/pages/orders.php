@@ -97,8 +97,21 @@ class page {
 							$params['status'] 		= $main->postvar['status'];			
 							$params['additional']	= '';
 							$params['subdomain_id']	= $subdomain_id;
-							$params['billing_cycle_id'] = $main->postvar['billing_cycle_id'];			
+							$params['billing_cycle_id'] = $main->postvar['billing_cycle_id'];	
 							
+							//Add addons
+							$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
+							$new_addon_list = array();			
+							if (is_array($addon_list)) {																		
+								foreach($addon_list as $addon_id=>$value) {																								
+									$variable_name = 'addon_'.$addon_id;
+									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
+										$new_addon_list[] = $addon_id;				
+									}															
+								}
+							}
+							
+							$params['addon_list'] = $new_addon_list;							
 																			
 							if (!empty($params['userid']) && !empty($params['pid'])) {
 								$order_id = $order->create($params);
@@ -107,21 +120,8 @@ class page {
 							//Add addons to a new order	
 							if (!empty($order_id) && is_numeric($order_id)) {
 								
-								$main->errors("Order #$order_id has been created");
-																										
-								//Add addons
-								$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);
-								$new_addon_list = array();			
-								if (is_array($addon_list)) {																		
-									foreach($addon_list as $addon_id=>$value) {																								
-										$variable_name = 'addon_'.$addon_id;
-										if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
-											$new_addon_list[] = $addon_id;				
-										}															
-									}
-								}
+								$main->errors("Order #$order_id has been created");																									
 								
-								$order->addAddons($order_id, $new_addon_list);
 								$send_control_panel = false;
 								if ($main->postvar['status'] == ORDER_STATUS_ACTIVE) {
 									
@@ -134,7 +134,9 @@ class page {
 								
 								//Creating an auto Invoice
 								$package_info 		= $package->getPackageByBillingCycle($main->postvar['package_id'], $main->postvar['billing_cycle_id']);
-								$addon_serialized 	= $addon->generateAddonFee($new_addon_list, $main->postvar['billing_cycle_id'], true);				
+								
+								$addon_serialized 	= $addon->generateAddonFee($new_addon_list, $main->postvar['billing_cycle_id'], true);
+												
 								$billing_info 		= $billing->getBilling($main->postvar['billing_cycle_id']);
 																				
 								$invoice_params['uid'] 		= $main->postvar['user_id'];
@@ -338,7 +340,7 @@ class page {
 							$package_id	= $main->postvar['package_id'];
 							$status		= $main->postvar['status'];
 							
-							$addong_list = $addon->getAllAddonsByBillingCycleAndPackage($billing_id, $package_id);							
+							$addong_list = $addon->getAllAddonsByBillingCycleAndPackage($billing_id, $package_id);	
 							
 							$new_addon_list = array();																						
 							foreach($addong_list as $addon_id=>$value) {																								
@@ -351,8 +353,7 @@ class page {
 							$addon_serialized = $addon->generateAddonFee($new_addon_list, $billing_id, true);
 							
 							$package_info = $package->getPackageByBillingCycle($package_id, $billing_id);
-																			
-												
+														 	
 							$invoice_params['uid'] 		= $order_info['userid'];
 							$invoice_params['amount'] 	= $package_info['amount'];
 							$invoice_params['due'] 		= $due;
@@ -362,6 +363,7 @@ class page {
 							$invoice_params['order_id'] = $main->getvar['do'];
 										
 							$invoice_id = $invoice->create($invoice_params);
+							
 							
 							$main->errors('Invoice created!');												
 						} else {
@@ -389,9 +391,10 @@ class page {
 				   		
 						foreach($packages as $package) {
 							$package_list[$package['id']] = $package['name'].' - '.$currency->toCurrency($package['amount']);				
-						}			
-						//$return_array['PACKAGES']  		=  $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);','class'=>'required'));									
-						$return_array['PACKAGES']  		=  $package_list[$order_info['pid']];
+						}	
+						//$return_array['PACKAGES']   	=  $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);','class'=>'required'));									
+						$return_array['PACKAGES']  		= $package_list[$order_info['pid']];
+						$return_array['PACKAGE_ID']  	= $order_info['pid'];
 						//$return_array['DUE'] 			= date('Y-m-d', time() + $billing_info['number_months']*30*24*60*60);					
 						$return_array['DUE'] 			= date('Y-m-d');
 						$return_array['ID'] 			= $main->getvar['do'];

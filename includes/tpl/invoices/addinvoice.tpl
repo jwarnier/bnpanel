@@ -36,6 +36,8 @@
 <ERRORS>
 <form class="content"  id="addinvoice" name="addinvoice" method="post" action="">
 <input name="billing_id" type="hidden" id="billing_id" value="%BILLING_ID%"/>
+<input name="package_id" type="hidden" id="package_id" value="%PACKAGE_ID%"/>
+
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Order id:</td>

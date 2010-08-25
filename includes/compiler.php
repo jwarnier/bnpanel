@@ -41,7 +41,6 @@ define('DOMAIN_OPTION_BOTH', 					3); // Cancelled in 9
 define('SERVER_STATUS', 						'test'); //test or production 
 define('PAYPAL_STATUS_LIVE', 					1);
 define('PAYPAL_STATUS_SANDBOX', 				0);
-//define(SERVER_STATUS, 'test'); //show mysql errors + user paypal sandbox
 
 // User status 
 define('USER_STATUS_ACTIVE', 					1);// Active users
@@ -91,9 +90,7 @@ if ($sql['install']) {
 	define("INSTALL", 1);
 	$db = new db(); # Create the class	
 	global $db; # Globalise it
-	$db->getSystemConfigList();
-	
-	
+	$db->getSystemConfigList();	
 }
 
 $folder = LINK;
@@ -222,3 +219,8 @@ function checkForDependencies() {
 		return $output;
 	}
 }
+
+//@todo remove this debug calls
+//var_dump($order->getOrder('8', true));
+//$invoice_info 	= $invoice->getInvoice('18', true);
+//var_dump($invoice_info 	);exit; 
