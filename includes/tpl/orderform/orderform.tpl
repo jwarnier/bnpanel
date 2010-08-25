@@ -402,19 +402,19 @@ function showAddons(obj) {
         	<table class="data_table" border="0" cellspacing="2" cellpadding="0" align="center" style="width: 400px;">
               <tr>
                 <td>Username:</td>
-                <td><input type="text" name="username" id="username" /></td>
+                <td><input type="text" name="username" id="username" maxlength="20" /></td>
                 <td align="left"><a title="The username is your unique identity to your account. Please keep it under 8 characters." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
                 <td align="left" id="usercheck">&nbsp;</td>
               </tr>
               <tr>
                 <td>Password:</td>
-                <td><input type="password" name="password" id="password" onchange="check('pass', this.value+':'+document.getElementById('confirmp').value)"/></td>
+                <td><input type="password" name="password" id="password" maxlength="40" onchange="check('pass', this.value+':'+document.getElementById('confirmp').value)"/></td>
                 <td rowspan="2" align="left" valign="middle"><a title="Your password is your own personal key that allows only you to log you into your account." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
                 <td rowspan="2" align="left" valign="middle" id="passcheck">&nbsp;</td>
               </tr>
               <tr>
                 <td>Confirm Password:</td>
-                <td><input type="password" name="confirmp" id="confirmp" onchange="check('pass', this.value+':'+document.getElementById('password').value)"/></td>
+                <td><input type="password" name="confirmp" id="confirmp" maxlength="40" onchange="check('pass', this.value+':'+document.getElementById('password').value)"/></td>
               </tr>
               <tr>
                 <td>Email:</td>
@@ -424,13 +424,13 @@ function showAddons(obj) {
               </tr>
               <tr>
                 <td>First Name:</td>
-                <td><input type="text" name="firstname" id="firstname" onchange="check('firstname', this.value)" /></td>
+                <td><input type="text" name="firstname" id="firstname" maxlength="40" onchange="check('firstname', this.value)" /></td>
                 <td align="left"><a title="Your first name." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
                 <td id="firstnamecheck" align="left">&nbsp;</td>
               </tr>
               <tr>
                 <td>Last Name:</td>
-                <td><input type="text" name="lastname" id="lastname" onchange="check('lastname', this.value)" /></td>
+                <td><input type="text" name="lastname" id="lastname" maxlength="40" onchange="check('lastname', this.value)" /></td>
                 <td align="left"><a title="Your last name." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
                 <td id="lastnamecheck" align="left">&nbsp;</td>
               </tr>

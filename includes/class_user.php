@@ -140,14 +140,6 @@ class user extends model {
 		return $data;		
 	}
 	
-	public function validateUserName($username) {
-		//Min 8 - Max 20		
-		if (preg_match('/^[a-z\d_]{8,20}$/i', $username)) {
-			return true;
-		}		
-		return false;
-	}
-	
 	/**
 	 * Gets user information by username
 	 * @param	int		user id
@@ -267,5 +259,22 @@ class user extends model {
 		 */
 		//Let's wrap it all up.
 		return true;
-	}	
+	}
+	
+	public function validateUserName($username) {
+		//Min 6 - Max 12 AlphaNumeric
+		if (preg_match('/^[a-z0-9]{8,20}$/i', $username)) {
+			return true;
+		}		
+		return false;
+	}
+	
+	public function validatePassword($password) {
+		//Min 6 - Max 12 AlphaNumeric
+		if (preg_match('/^[a-z0-9]{6,12}$/i',$password)) {		
+			return true;
+		}		
+		return false;		
+	}
+		
 }
