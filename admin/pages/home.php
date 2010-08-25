@@ -27,7 +27,7 @@ class page {
 		global $db,$main, $style, $page;	
 				
 		//$current_version = rtrim($this->curl_get_content('http://thehostingtool.com/updates/version.txt')); #Clears the end whitespace. ARGHHH
-		$current_version = '1.2.3';
+		$current_version = '1.3';
 		
 		$running_version 	= $main->cleanwip($db->config('version'));
 		$install_check 		= $main->checkDir(LINK ."../install/");

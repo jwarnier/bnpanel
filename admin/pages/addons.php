@@ -147,10 +147,9 @@ class page {
 									
 								//Add new relations
 								foreach($billing_list as $data) {												
-									$variable_name = 'billing_cycle_'.$data['id'];
-									//var_dump($variable_name);
+									$variable_name = 'billing_cycle_'.$data['id'];								
 									if (isset($main->postvar[$variable_name]) && !empty($main->postvar[$variable_name]) ) {
-										$sql_insert ="INSERT INTO `<PRE>billing_products` (billing_id, product_id, amount, type) VALUES('{$data['id']}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_ADDON."')";
+										$sql_insert ="INSERT INTO <PRE>billing_products (billing_id, product_id, amount, type) VALUES('{$data['id']}', '{$product_id}', '{$main->postvar[$variable_name]}', '".BILLING_TYPE_ADDON."')";
 										$db->query($sql_insert);									
 									}
 								}						

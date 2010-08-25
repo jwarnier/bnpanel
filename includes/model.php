@@ -23,16 +23,19 @@ class model {
 	//Current primary key
 	public $primary_key;	
 	public $_db;		
-	public $_newRecord;
+	public $_newRecord;	
+	public $has_many;
 	
+		
 	public function __construct() {	
 		global $db;
-		$this->_db = $db;
-        $attributes = (array)func_get_args();
+		$this->_db 	= $db;
+        $attributes = (array)func_get_args();        
         return $this->init($attributes);
     }
 
-    public function init($attributes = array()) {        
+    public function init($attributes = array()) {  
+    	    
 //        $this->_internationalize = is_null($this->_internationalize) && AK_ACTIVE_RECORD_INTERNATIONALIZE_MODELS_BY_DEFAULT ? count($this->getAvailableLocales()) > 1 : $this->_internationalize;
   //      @$this->_instantiateDefaultObserver();
     //    $this->establishConnection();
@@ -77,7 +80,27 @@ class model {
         }else{
             $this->newRecord($attributes);
         }
+        
+        if (isset($this->has_many)) {        	
+        	foreach($this->has_many as $class_item) {
+        		$handler_name = $class_item['table_name'];
+        		$handler = new Model();
+        		$handler->setColumns($class_item['columns']);   
+        		$handler->setTableName($handler_name);        				
+        		$this->$handler_name = $handler;        		
+        	}        	        	
+        }
         //empty($avoid_loading_associations) ? $this->loadAssociations() : null;
+    }
+    
+    
+    public function setColumns($columns) {
+    	$this->columns = $columns;
+    	
+    }
+    
+    public function setTableName($tablename) {    	
+    	$this->table_name = $tablename;
     }
     
         /**

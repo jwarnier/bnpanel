@@ -45,8 +45,8 @@ function generateSiteUrl() {
 }
 
 //INSTALL GLOBALS
-define("CVER", "1.2.2");
-define("NVER", "1.2.3");
+define("CVER", "1.3");
+define("NVER", "1.3");
 
 require_once '../includes/compiler.php'; # Get compiler
 

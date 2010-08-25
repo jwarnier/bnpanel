@@ -117,4 +117,3 @@ class email {
 		return $content;
 	}
 }
-?>

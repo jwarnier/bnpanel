@@ -9,7 +9,7 @@ if(THT != 1){
 class addon extends model {
 	
 	public $columns 	= array('id', 'name','setup_fee', 'description','status', 'install_package', 'mandatory');
-	public $table_name = 'addons';
+	public $table_name  = 'addons';	
 	
 	public function create($params) {
 		$addon_id = $this->save($params);

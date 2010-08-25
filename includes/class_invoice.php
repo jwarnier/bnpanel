@@ -10,6 +10,7 @@ class invoice extends model {
 	
 	public $columns 	= array('id', 'uid','amount', 'is_paid','created', 'due', 'is_suspended', 'notes', 'uniqueid', 'addon_fee', 'status', 'transaction_id');	
 	public $table_name 	= 'invoices';	
+	//public $_modelName 	= 'invoice';
 	
 	/**
 	 * @param 	int		User id
@@ -22,18 +23,28 @@ class invoice extends model {
 		$invoice_id = $this->save($params);
 		$order_id 	= intval($params['order_id']);		
 		if (!empty($invoice_id) && is_numeric($invoice_id )) {
+			$main->addLog("invoice::create $invoice_id");
+			
+			if (!empty($order_id)) {
+				$params['order_id'] = $order_id;
+				$params['invoice_id'] = $invoice_id;
+				$order->order_invoices->save($params);
+				//$insert_sql = "INSERT INTO `<PRE>order_invoices` (order_id, invoice_id) VALUES('{$order_id}', '{$invoice_id}')";				
+				//$db->query($insert_sql);	
+			}			
 			
 			$user_info 		= $user->getUserById($params['uid']);		
-			$emailtemp 		= $db->emailTemplate('invoices_new');	
+			$emaildata 		= $db->emailTemplate('invoices_new');	
 			$order_info     = $order->getOrderInfo($order_id);
-			$invoice_info = $this->getInvoice($invoice_id, true);											
+			$invoice_info 	= $this->getInvoice($invoice_id, true);	
+							
 			$replace_array['USERNAME'] 				=  $user_info['firstname'].' '.$user_info['lastname'];
 			$replace_array['INVOICE_CREATE_DATE'] 	=  substr($invoice_info['CREATED'], 0,10);
 			
 			$replace_array['PAYMENT_METHOD'] 		=  'Paypal';
 			$replace_array['DOMAIN'] 				=  $order_info['real_domain'];
 			
-			$replace_array['BILLING_CYCLE'] 		=  $invoice_info['BILLING_CYCLE'];
+			$replace_array['BILLING_CYCLE'] 		=  $invoice_info['BILLING_CYCLES'];
 			$replace_array['INVOICE_NUMBER'] 		=  $invoice_info['ID'];
 			$replace_array['AMOUNT'] 				=  $invoice_info['TOTAL'];
 			$replace_array['INVOICE_DUE_DATE'] 		=  substr($invoice_info['DUE'], 0, 10);
@@ -48,16 +59,9 @@ class invoice extends model {
 			$replace_array['COMPANY_NAME'] 			=  $db->config('name');
 			$replace_array['URL'] 					=  $db->config('url');
 			$replace_array['USER_LOGIN'] 			=  $user_info['user'];					
-			
-			$emaildata['subject'] = 'New Invoice';
-			$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $replace_array);	
-							
-			if (!empty($order_id)) {
-				$insert_sql = "INSERT INTO `<PRE>order_invoices` (order_id, invoice_id) VALUES('{$order_id}', '{$invoice_id}')";				
-				$db->query($insert_sql);		
-			}			
-			$main->addLog("invoice::create $invoice_id");
+			$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $replace_array);
 			return	$invoice_id;
+		
 		}
 		return false;		
 	}
@@ -333,21 +337,18 @@ class invoice extends model {
 		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE id = '{$invoice_id}'");
 		if($db->num_rows($query) == 0) {
 			echo "That invoice doesn't exist!";	
-		} else {
-			
+		} else {			
 			$total = 0;			
-			$invoice_info 		= $db->fetch_array($query);
-			
+			$invoice_info 		= $db->fetch_array($query, 'ASSOC');			
 			$array['ID'] 		= $invoice_info['id'];
 			$user_id 			= $invoice_info['uid'];
 			$total				= $total + $invoice_info['amount'];
-			
+						
 			//User info
 			$user_info = $user->getUserById($user_id);
 			//Invoice status list
-			$invoice_status = $main->getInvoiceStatusList();
-						
-			$array['USER'] 		=  $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';			
+			$invoice_status = $main->getInvoiceStatusList();						
+			$array['USER'] 		=  $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';
 			
 			if ($read_only == true) {
 				$array['STATUS'] 	= $invoice_status[$invoice_info['status']];
@@ -359,8 +360,8 @@ class invoice extends model {
 			$array['NOTES'] 	= $invoice_info['notes'];	
 			$array['DUE'] 		= date('Y-m-d', $invoice_info['due']);
 		
-			//$array['ADDON_FEE'] = $invoice_info['addon_fee'];
 			$addon_selected_list = array();
+						
 			if (!empty($invoice_info['addon_fee'])) {				
 				/**
 				 * Addon_fee structure
@@ -380,30 +381,22 @@ class invoice extends model {
 					}							
 				}
 			}							
-			$subdomain_list = $main->getSubDomains();
-			
-			$order_id 	= $this->getOrderByInvoiceId($invoice_id);			
-			$order_info = $order->getOrderInfo($order_id);
 						
-			//Getting the domain info					
-			if (empty($order_info['subdomain_id'])) {
-				$array['domain'] 	= $order_info['domain'];
-			} else {
-				$array['domain'] 	= $order_info['domain'].'.'.$subdomain_list[$order_info['subdomain_id']];
-			}
+			$order_id 	= $this->getOrderByInvoiceId($invoice_id);	
+					
+			$order_info = $order->getOrderInfo($order_id);
 			
 			
-			
-			$package_id 	  	= $order_info['pid'];
-			$billing_cycle_id 	= $order_info['billing_cycle_id'];							
+			$array['DOMAIN'] 		= $order_info['domain'];
+			$array['REAL_DOMAIN'] 	= $order_info['real_domain']; 
+			$package_id 	  		= $order_info['pid'];
+			$billing_cycle_id 		= $order_info['billing_cycle_id'];							
 						
 			//Addon feature added			
 			$array['ADDON'] = ' - ';
 			$addong_result_string = '';			
 			$addon_list = $addon->getAddonsByPackage($package_id);		
 			$addon_list = $addon->getAllAddonsByBillingId($billing_cycle_id);
-			
-			$array['ADDON']='-';
 			
 			if (is_array($addon_selected_list) && count($addon_selected_list) > 0) {
 				$array['ADDON']='<fieldset style="width:200px">';
