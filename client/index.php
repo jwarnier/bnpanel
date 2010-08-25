@@ -179,14 +179,13 @@ if(!$_SESSION['clogged']) {
 	} else {
 		define("SUB", "Login");
 		define("INFO", " ");		
-		if($_POST) {
-			if ($main->checkToken()) {
-				if($main->clientLogin($main->postvar['user'], $main->postvar['pass'])) {
-					$main->redirect("?page=home");	
-				} else {
-					$main->generateToken();
-				}
-			}		
+		if($_POST && $main->checkToken()) {			
+			if($main->clientLogin($main->postvar['user'], $main->postvar['pass'])) {
+				$main->redirect("?page=home");	
+			} else {
+				$main->generateToken();
+			}
+		
 		}	
 		echo $style->get("header.tpl");
 		$array[] = "";

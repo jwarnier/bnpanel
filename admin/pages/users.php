@@ -192,14 +192,14 @@ class page {
 				require_once LINK.'validator.class.php';
 				$asOption = array(
 					    'rules' => array(
-					        'user' 			=> array('required'=>true,'validateUsername'=>'error'),			        
+					        'user' 			=> array('required'=>true,'validateUsername'=>'error','UsernameExists'=>'Error'),			        
 					        'password' 		=> 'required',
 					        'confirmp' 		=> 'required',
 					        'email' 		=> array('required'=>true, 'email'=>true),
 					        'status' 		=> 'required'					        					            
 					     ),			    
 					    'messages' => array(			
-					    	'user'=>array('required'=>'This field is required', 'validateUsername'=>'Username already exists' )		        			       
+					    	'user'=>array('required'=>'This field is required', 'validateUsername'=>'Please try with other Username ',  'UsernameExists'=>'Username already exists' )		        			       
 					    )
 					);				
 				$array = $user->setDefaults();	

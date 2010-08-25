@@ -1,6 +1,11 @@
 <?php
 /* For licensing terms, see /license.txt */
 
+/**
+ * @todo change everything here and use the model class
+ * 
+ */ 
+
 //Check if called by script
 if(THT != 1){die();}
 
@@ -33,6 +38,10 @@ class page {
 						}
 					}
 					if(!$n) {
+						
+						$main->postvar['name'] 			= $db->strip($main->postvar['name']);
+						$main->postvar['description'] 	= $db->strip($main->postvar['description']);
+						
 						$db->query("INSERT INTO `<PRE>cats` (name, description) VALUES('{$main->postvar['name']}','{$main->postvar['description']}')");
 						$main->errors("Category Added!");
 					}
@@ -45,11 +54,17 @@ class page {
 						}
 					}
 					if(!$n) {
+						
+						$main->postvar['editname'] 			= $db->strip($main->postvar['editname']);
+						$main->postvar['editdescription'] 	= $db->strip($main->postvar['editdescription']);
+						$main->postvar['id'] = intval($main->postvar['id']);
+						
 						$db->query("UPDATE <PRE>cats SET name = '{$main->postvar['editname']}', `description` = '{$main->postvar['editdescription']}' WHERE id = '{$main->postvar['id']}'");
 						$main->errors("Category Edited!");
 					}
 				}
 				if($main->getvar['del'] && $main->checkToken(false)) {
+					$main->getvar['del'] = intval($main->getvar['del']);
 					$db->query("DELETE FROM <PRE>cats WHERE id = {$main->getvar['del']}");
 					$main->errors("Category Deleted!");					
 				}
@@ -87,6 +102,10 @@ class page {
 						}
 					}
 					if(!$n) {
+						$main->postvar['name'] 			= $db->strip($main->postvar['name']);
+						$main->postvar['description'] 	= $db->strip($main->postvar['description']);
+						$main->postvar['catid'] 		= intval($main->postvar['catid']);
+						
 						$db->query("INSERT INTO `<PRE>articles` (name, content, catid) VALUES('{$main->postvar['name']}','{$main->postvar['description']}', '{$main->postvar['catid']}')");
 						$main->errors("Article Added!");
 					}
@@ -99,6 +118,10 @@ class page {
 						}
 					}
 					if(!$n) {
+						$main->postvar['editname'] 			= $db->strip($main->postvar['editname']);
+						$main->postvar['editdescription'] 	= $db->strip($main->postvar['editdescription']);
+						$main->postvar['id'] = intval($main->postvar['id']);
+						
 						$db->query("UPDATE `<PRE>articles` SET `name` = '{$main->postvar['editname']}', `content` = '{$main->postvar['editdescription']}' WHERE `id` = '{$main->postvar['id']}'");
 						$main->errors("Article Edited!");
 					}

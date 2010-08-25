@@ -241,6 +241,8 @@ class page {
 							//Editing the Order								
 							$result = $order->edit($main->getvar['do'], $main->postvar);
 							if ($result) {
+								//We dont update addons for the moment....
+								/*
 								$addon_list = $addon->getAllAddonsByBillingCycleAndPackage($main->postvar['billing_cycle_id'], $main->postvar['package_id']);																	
 								$new_addon_list = array();																
 								foreach($addon_list as $addon_id=>$value) {																								
@@ -250,7 +252,7 @@ class page {
 									}															
 								}
 								//Updating addons of an Order													
-								$addon->updateAddonOrders($new_addon_list, $main->postvar['order_id']);		
+								$addon->updateAddonOrders($new_addon_list, $main->postvar['order_id']);		*/
 								$main->errors("Order has been edited!");
 								$main->redirect('?page=orders&sub=view&do='.$main->getvar['do'].'&msg=1');
 							} else {

@@ -68,11 +68,10 @@ function changeDomain() {
 	var domain_obj = document.getElementById("domain_type");
 	var id=domain_obj.options[domain_obj.selectedIndex].value;
 		
-	var text = '<input name="domain" autocomplete="off" type="text" id="domain" class="required" /><span id="domain_result"></span>';
+	var text = '<input name="domain" maxlength="40" autocomplete="off" type="text" id="domain" class="required" /><span id="domain_result"></span>';
 	if (id == 1) {
 		 $('#domain_input').html(text);
-	} else if(id == 2) {
-		
+	} else if(id == 2) {		
 		if (document.getElementById("package_id") != undefined) {
 			var pid = document.getElementById("package_id").value;
 			if (pid != '') {				
@@ -94,8 +93,7 @@ function changeDomain() {
 			}		
 		} else {
 			domain_obj.selectedIndex = 0;		
-			$('#domain_input').html('Select a billing cycle and a package first');	
-			
+			$('#domain_input').html('Select a billing cycle and a package first');
 		}
 	}
 }

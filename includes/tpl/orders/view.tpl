@@ -9,8 +9,8 @@
 <table class="content" width="100%" border="0" cellspacing="2" cellpadding="0"> 
      <tr>
     <td valign="top">User</td>
-    <td>
-    %USER%
+    <td>    
+    <a href="?page=users&sub=search&do=%USER_ID%">%USER%</a>
     </td>
   </tr> 
      <tr>

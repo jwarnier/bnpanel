@@ -141,7 +141,7 @@ class user extends model {
 	}
 	
 	public function validateUserName($username) {
-		//Min 8 - Max 15
+		//Min 8 - Max 20		
 		if (preg_match('/^[a-z\d_]{8,20}$/i', $username)) {
 			return true;
 		}		
