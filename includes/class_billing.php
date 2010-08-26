@@ -9,6 +9,7 @@ class billing extends model {
 	
 	public $columns 	= array('id', 'number_months','name', 'status');
 	public $table_name = 'billing_cycles';
+	public $_modelName = 'billing';
 	
 	// products = addons or packages
 	public $has_many	= array('products'=> array('table_name'=>'billing_products', 'columns'=>array('billing_id', 'product_id', 'amount','type')));
