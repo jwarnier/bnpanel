@@ -41,13 +41,14 @@ class page {
 						$ticket_params['urgency'] 	= $main->postvar['urgency'];
 						$ticket_params['time'] 		= $time;
 						$ticket_params['userid'] 	= $user_id;
-						$ticket->create($ticket_params);						
+						$ticket_id = $ticket->create($ticket_params);						
 						
 						$main->errors("Ticket has been added!");
-						$template = $db->emailTemplate("new ticket");
+						$template = $db->emailTemplate("new_ticket");
 						$array['TITLE'] = $main->postvar['title'];
 						$array['URGENCY'] = $main->postvar['urgency'];
 						$array['CONTENT'] = $main->postvar['content'];
+						$array['ID'] = $ticket_id;
 						$email->staff($template['subject'], $template['content'], $array);
 						$main->redirect('?page=tickets&sub=view&msg=1');
 					}
@@ -65,6 +66,7 @@ class page {
 							$array['TITLE'] = $data['title'];
 							$array['UPDATE'] = $ticket->lastUpdated($data['id']);
 							$array['ID'] = $data['id'];
+							$array['STATUS'] = $data['status'];
 							echo $style->replaceVar("tpl/support/ticketviewbox.tpl", $array);
 						}
 					}
@@ -96,7 +98,7 @@ class page {
 								$main->errors("Reply has been added!");
 								$data = $db->fetch_array($query);
 								$client = $db->client($user_id);
-								$template = $db->emailTemplate("new response");
+								$template = $db->emailTemplate("new_response");
 								$array['TITLE'] = $data['title'];
 								$array['USER'] = $client['user'];
 								$array['CONTENT'] = $main->postvar['content'];
@@ -130,8 +132,8 @@ class page {
 						}
 						else {
 							$array['ADDREPLY'] = "";	
-						}
-						
+						}						
+						$array['ID'] = $data['id'];
 						echo $style->replaceVar("tpl/support/viewticket.tpl", $array);	
 					}
 				}
