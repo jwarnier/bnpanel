@@ -96,8 +96,8 @@ class paypal_class {
       
       $this->last_error = '';
       
-      //$this->ipn_log_file = '/tmp/ipn_log.txt';
-      $this->ipn_log_file = '';
+      $this->ipn_log_file = '/tmp/ipn_log.txt';
+      //$this->ipn_log_file = '';
       $this->ipn_log = true;
       $this->ipn_response = '';
       
@@ -150,9 +150,22 @@ class paypal_class {
          $post_string .= $field.'='.urlencode($value).'&'; 
       }
       $post_string.="cmd=_notify-validate"; // append ipn command
+      
+	if ($url_parsed['scheme'] == 'https') { 
+    	$url_parsed['port']='443';  
+        $ssl='ssl://'; 
+	} else {
+		$url_parsed['port']='80'; 
+		$ssl = ''; 
+	}
+
+
 
       // open the connection to paypal
-      $fp = fsockopen($url_parsed[host],"80",$err_num,$err_str,30); 
+      //$fp = fsockopen($url_parsed[host],"80",$err_num,$err_str,30);
+      // $fp = fsockopen($url_parsed[host],"443",$err_num,$err_str,30); 
+      $fp=@fsockopen($ssl . $url_parsed['host'],$url_parsed['port'],$errnum,$errstr,30);      
+       
       if(!$fp) {
           
          // could not open the connection.  If loggin is on, the error message
