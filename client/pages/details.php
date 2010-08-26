@@ -16,6 +16,9 @@ class page {
 		$array['DOMAIN'] 	= $data['domain'];
 		$array['FIRSTNAME'] = $data['firstname'];
 		$array['LASTNAME']	= $data['lastname'];
+		$array['COMPANY']	= $data['company'];
+		$array['VATID']		= $data['vatid'];
+		$array['FISCALID']	= $data['fiscalid'];
 		$array['ADDRESS'] 	= $data['address'];
 		$array['CITY']		= $data['city'];
 		$array['STATE'] 	= $data['state'];

@@ -7,8 +7,8 @@ if(THT != 1){
 }
 
 class user extends model {
-	
-	public $columns 	= array('id', 'user','email', 'password','salt', 'signup', 'ip', 'firstname', 'lastname', 'address', 'city', 'zip', 'state', 'country', 'phone', 'status');
+		
+	public $columns 	= array('id', 'user','email', 'password','salt', 'signup', 'ip', 'firstname', 'lastname', 'company', 'vatid', 'fiscalid', 'address', 'city', 'zip', 'state', 'country', 'phone', 'status');
 	public $table_name 	= 'users';
 	
 	/** 
@@ -186,7 +186,8 @@ class user extends model {
 					  WHERE user 		LIKE '%$query%'  OR 
 							email 		LIKE '%$query%'  OR 
 							firstname 	LIKE '%$query%'  OR
-							lastname 	LIKE '%$query%'";
+							lastname	LIKE '%$query%'  OR
+							company		LIKE '%$query%'";
 			$result = $db->query($sql);
 			
 			if($db->num_rows($result) > 0) {

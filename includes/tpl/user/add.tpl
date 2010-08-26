@@ -93,6 +93,24 @@ var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></di
                 <td align="left"><a title="Your last name." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
                 <td id="lastnamecheck" align="left">&nbsp;</td>
               </tr>
+             <tr>
+                <td>Company:</td>
+                <td><input type="text" name="company" id="company" onchange="check('company', this.value)" /></td>
+                <td align="left"><a title="Your company name" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td id="companynamecheck" align="left">&nbsp;</td>
+              </tr>
+              <tr>
+                <td>Tax ID (VAT):</td>
+                <td><input type="text" name="vatid" id="vatid" onchange="check('vatid', this.value)" /></td>
+                <td align="left"><a title="Company Tax registration number (VAT ID)" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td id="vatid" align="left">&nbsp;</td>
+              </tr>
+              <tr>
+                <td>SSN/Fiscal ID</td>
+                <td><input type="text" name="fiscalid" id="fiscalid" onchange="check('fiscalid', this.value)" /></td>
+                <td align="left"><a title="Your SSN or Fiscal ID" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td id="fiscalid" align="left">&nbsp;</td>
+              </tr>
               <tr>
                 <td>Address:</td>
                 <td><input type="text" name="address" id="address" value="%address%"  onchange="check('address', this.value)" /></td>

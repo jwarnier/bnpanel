@@ -302,6 +302,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		$user_info					= $user->getUserById($user_id);			
 		$params['email'] 			= $user_info['email'];
 		$params['contact_name'] 	= $user->formatUsername($user_info['firstname'], $user_info['lastname']);
+		
+		$params['company_name']		= $user_info['company'];
 		$params['street'] 			= $user_info['address'];
 		$params['city'] 			= $user_info['city'];
 		$params['state'] 			= $user_info['state'];
