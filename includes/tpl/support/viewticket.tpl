@@ -1,8 +1,8 @@
 <ERRORS>
 <div class="subborder">
 	<div class="sub">
-    	<strong>Ticket Information</strong>
-        <div class="break"></div>
+    	<h2>Ticket #%ID%</h2>
+        
         <strong>Author:</strong> %AUTHOR%<br />
         <strong>Status:</strong> %STATUS%<br />
         <strong>Urgency:</strong> %URGENCY%<br />
