@@ -5,7 +5,7 @@
 	BNPanel	
 	@package	Admin Area - Packages
 	@author 	Jonny H
-	@author 	Julio Montoya <gugli100@gmail.com> Beeznest 2010 Addon feature implemented 
+	@author 	Julio Montoya <gugli100@gmail.com> BeezNest 2010 Addon feature implemented 
 	@package	tht.packages	
 */
 

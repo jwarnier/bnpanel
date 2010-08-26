@@ -5,7 +5,7 @@
 //Concept from:
 //Abax Server Status v1.04, Copyright 2002 By Nathan Dickman, visit http://www.NathanDickman.com/
 //Location of the live or dead server images
-//@author Julio Montoya <gugli100@gmail.com> Beeznest - Fixing the url/port management
+//@author Julio Montoya <gugli100@gmail.com> BeezNest - Fixing the url/port management
 
 //Please change to your server specifications
 $live = "../themes/icons/lightbulb.png";

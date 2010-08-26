@@ -3,7 +3,7 @@
 
 /**
 	ISPConfig Plugin for BNPanel (THT)
-	@author Julio Montoya <gugli100@gmail.com> Beeznest	2010
+	@author Julio Montoya <gugli100@gmail.com> BeezNest	2010
 */
 
 class ispconfig extends Panel {
@@ -19,7 +19,7 @@ class ispconfig extends Panel {
 	public function testConnection() {		
 		$soap_client = $this->load();
 		if ($soap_client && $this->getSessionId()) {
-			return 'Logged into ISPConfig3 Remote Server sucessfully. The SessionID is '.$this->getSessionId().'<br />';
+			return 'Logged into ISPConfig3 Remote Server successfully. The SessionID is '.$this->getSessionId().'<br />';
 		} else {
 			return 'The Test Connection failed. Please check the host name parameters. You can also check the logs <a href="?page=logs">here</a>';
 		}				
@@ -45,7 +45,7 @@ class ispconfig extends Panel {
 		try {
 			//* Login to the remote server
 			if($session_id = $client->login($data['user'],$data['accesshash'])) {
-				if ($this->debug) {echo 'Logged into remote server sucessfully. The SessionID is '.$session_id.'<br />';}
+				if ($this->debug) {echo 'Logged into remote server successfully. The SessionID is '.$session_id.'<br />';}
 				$main->addLog("ispconfig::load Session id $session_id");				
 				$this->session_id = $session_id;	
 				return $client;
@@ -239,7 +239,7 @@ class ispconfig extends Panel {
 		@param string	new password
 		@param int	server id		
 		@return bool true if success
-		@author Julio Montoya <gugli100@gmail.com> Beeznest	2010
+		@author Julio Montoya <gugli100@gmail.com> BeezNest	2010
 	*/
 	public function changePwd($username, $newpwd, $server_id) {
 		$this->server_id = $server_id;
@@ -264,7 +264,7 @@ class ispconfig extends Panel {
 		@param	string user email
 		@param	string user password	
 		
-		@author Julio Montoya <gugli100@gmail.com> Beeznest	2010
+		@author Julio Montoya <gugli100@gmail.com> BeezNest	2010
 	*/
 	public function signup($order_id) {		
 		global $main, $db, $package, $order, $user;
@@ -490,7 +490,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		@param string	order id 
 		@param int		server id 
 		@param string	reason 
-		@author Julio Montoya <gugli100@gmail.com> Beeznest 2010
+		@author Julio Montoya <gugli100@gmail.com> BeezNest 2010
 	*/
 	public function suspend($order_id, $server_id, $reason = false) {
 		global $main, $db, $order, $user;
@@ -576,7 +576,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 		Unsuspends a website/order
 		@param string	order id
 		@param int		server id 
-		@author Julio Montoya <gugli100@gmail.com> Beeznest
+		@author Julio Montoya <gugli100@gmail.com> BeezNest
 	*/
 	public function unsuspend($order_id, $server_id) {
 		global $main,$db, $order, $user;
@@ -659,7 +659,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	}
 	
 	/**
-	 * Install chamilo
+	 * Install Chamilo
 	 */
 	public function installChamilo($order_id, $params = array()) {
 		global	$main, $order;
@@ -689,7 +689,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 			}
 			
 			if (!empty($domain_id)) {
-				//Create a new database for chamilo		
+				//Create a new database for Chamilo		
 				
 				//$db_part_name = substr($order_info['domain'],0,6);
 				if (isset($order_info['subdomain_id']) && $order_info['subdomain_id'] != 0) {
@@ -721,8 +721,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$database_id = $this->remote('sites_database_add', $mysql_params);
 				
 				if (is_numeric(($database_id))) {		
-					$install_params['package_id'] 	= 1; // this value can be find in the ispconfig install_package table
-					$install_params['domain_id'] 	= $domain_id ; // chamilo
+					$install_params['package_id'] 	= 1; // this value can be found in the ISPConfig install_package table
+					$install_params['domain_id'] 	= $domain_id ; // Chamilo
 					$install_params['status'] 		= 2;// 0 not install / 1 installed 2 pending 3 error
 					$install_params['database_id'] 	= $database_id;  
 					$result = $this->remote('install_chamilo', $install_params);

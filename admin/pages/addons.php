@@ -2,7 +2,7 @@
 /* For licensing terms, see /license.txt */
 /**
 			
-	@author 	Julio Montoya <gugli100@gmail.com> Beeznest 2010
+	@author 	Julio Montoya <gugli100@gmail.com> BeezNest 2010
 	@package	tht.addons	
 */
 

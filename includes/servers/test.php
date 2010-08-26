@@ -2,7 +2,7 @@
 /* For licensing terms, see /license.txt */
 /**
 	Test Plugin for BNPanel (THT)
-	@author Julio Montoya <gugli100@gmail.com> Beeznest	2010
+	@author Julio Montoya <gugli100@gmail.com> BeezNest	2010
 */
 
 class test extends Panel {
@@ -11,7 +11,7 @@ class test extends Panel {
 	public	$hash = false; # Password or Access Hash?	
 			
 	public function testConnection() {		
-		return 'Logged into the Test Server sucessfully';						
+		return 'Logged into the Test Server successfully';						
 	}	
 
 	/**
@@ -20,10 +20,10 @@ class test extends Panel {
 		@param string	new password
 		@param int	server id		
 		@return bool true if success
-		@author Julio Montoya <gugli100@gmail.com> Beeznest	2010
+		@author Julio Montoya <gugli100@gmail.com> BeezNest	2010
 	*/
 	public function changePwd($username, $newpwd, $server_id) {
-		echo 'Changing password in the Test Server: '.$username;
+		echo 'Changing password on the Test Server: '.$username;
 		return true;
 	}
 	
@@ -35,7 +35,7 @@ class test extends Panel {
 		@param	string user email
 		@param	string user password	
 		
-		@author Julio Montoya <gugli100@gmail.com> Beeznest	2010
+		@author Julio Montoya <gugli100@gmail.com> BeezNest	2010
 	*/
 	public function signup($order_id, $package_id, $domain_username, $domain_password, $user_id, $domain, $sub_domain_id) {		
 		return true;	
@@ -46,7 +46,7 @@ class test extends Panel {
 		@param string	order id 
 		@param int		server id 
 		@param string	reason 
-		@author Julio Montoya <gugli100@gmail.com> Beeznest 2010
+		@author Julio Montoya <gugli100@gmail.com> BeezNest 2010
 	*/
 	public function suspend($order_id, $server_id, $reason = false) {
 		return true;
@@ -56,7 +56,7 @@ class test extends Panel {
 		Unsuspends a website/order
 		@param string	order id
 		@param int		server id 
-		@author Julio Montoya <gugli100@gmail.com> Beeznest
+		@author Julio Montoya <gugli100@gmail.com> BeezNest
 	*/
 	public function unsuspend($order_id, $server_id) {	
 		return true;
@@ -66,7 +66,7 @@ class test extends Panel {
 		Deletes an user account
 		@param string	user name
 		@param int		server id
-		@return bool true if sucess
+		@return bool true if success
 	*/
 	
 	public function terminate($username, $server_id) {
@@ -83,7 +83,7 @@ class test extends Panel {
 			$html .='<ul>';
 			foreach ($data as $key=>$value) {
 				$html .='<li>';
-				$html.="<strong>$key</strong> :  $value";
+				$html .="<strong>$key</strong> :  $value";
 				$html .='</li>';			
 			}
 			$html .='</ul>';

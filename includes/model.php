@@ -9,7 +9,7 @@
  * 
  * @todo finders methods are working but they are not use yet in the system (due lack of time and testing) 
  * 
- * @author	Julio Montoya <gugli100@gmail.com>	Beeznest 
+ * @author	Julio Montoya <gugli100@gmail.com>	BeezNest 
  */
 
 class model {
