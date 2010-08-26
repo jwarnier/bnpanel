@@ -11,14 +11,14 @@ function onlyNumbers(evt)
 }
 
 function tblshowhide(id, imgid, url) {
+	
 	if(document.getElementById(id).style.display == "none") {
-		$("#"+id).slideDown(500, function() {
+		$("#"+id).slideDown(200, function() {
 			document.getElementById(imgid).src = url+"themes/icons/bullet_toggle_minus.png";
-										});
-	}
-	else {
-		$("#"+id).slideUp(500, function() {
+		});
+	} else {
+		$("#"+id).slideUp(200, function() {
 			document.getElementById(imgid).src = url+"themes/icons/bullet_toggle_plus.png";
-										});
+		});
 	}
 }
