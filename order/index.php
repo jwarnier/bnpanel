@@ -15,7 +15,6 @@ if($main->getvar['do'] == "logout") {
 }
 
 echo $style->get("header.tpl"); #Output Header
-$ip = $_SERVER['REMOTE_ADDR'];
 
 //Deleting check  
 unset($_SESSION['check']);
@@ -26,7 +25,7 @@ unset($_SESSION['last_invoice_id']);
 #Check stuff
 if($db->config('general') == 0) {
 	$maincontent = $main->table("Signups Closed", $db->config("message"));
-} elseif(!$main->checkIP($ip) && !$db->config('multiple')) {
+} elseif(!$main->checkIP($_SERVER['REMOTE_ADDR']) && !$db->config('multiple')) {
 	$maincontent = $main->table("IP Already Exists!", "Your IP already exists in the database!");
 } elseif($_SESSION['clogged'] && $db->config('multiple') != 1) {
 	$maincontent = $main->table("Unable to sign-up!", "One package per account!");

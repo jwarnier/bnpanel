@@ -1,4 +1,4 @@
-<div id='navigation'>
+<div id="navigation">
     <ul>
     	%NAV%    	
     </ul>

@@ -373,7 +373,8 @@ class order extends model {
 			}
 			
 			if (!empty($user_info)) {
-				$array['USERINFO']  = '<a href="index.php?page=users&sub=search&do='.$user_info['id'].'" title="'.$user_info['lastname'].', '.$user_info['firstname'].'" >'.$user_info['user'].'</a>';
+				$user_name_info = $user->formatUsername($user_info['firstname'], $user_info['lastname']);
+				$array['USERINFO']  = '<a href="index.php?page=users&sub=search&do='.$user_info['id'].'" title="'.$user_name_info.'" >'.$user_info['user'].'</a>';
 			} else {
 				$array['USERINFO']  = ' - ';
 			}
@@ -469,7 +470,7 @@ class order extends model {
 			//User info
 			$user_info = $user->getUserById($order_info['userid']);
 						
-			$array['USER'] 		= $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';	
+			$array['USER'] 		= $user->formatUsername($user_info['firstname'], $user_info['lastname'], $user_info['user']);	
 			if(!empty($order_info['signup'])) {								
 				$array['CREATED_AT'] = date('Y-m-d', $order_info['signup']);
 			} else {

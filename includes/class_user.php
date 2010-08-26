@@ -261,6 +261,15 @@ class user extends model {
 		return true;
 	}
 	
+	//@todo this function needs to be improved
+	public function formatUsername($firstname, $lastname, $username = '') {
+		if (!empty($username)) {
+			return $firstname." ".$lastname." ($username)";
+		} else {
+			return $firstname.' '.$lastname;
+		}
+	}
+	
 	public function validateUserName($username) {
 		//Min 6 - Max 12 AlphaNumeric
 		if (preg_match('/^[a-z0-9]{8,20}$/i', $username)) {
@@ -275,6 +284,5 @@ class user extends model {
 			return true;
 		}		
 		return false;		
-	}
-		
+	}		
 }

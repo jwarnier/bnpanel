@@ -1272,9 +1272,10 @@ class AJAX {
 	   		$query 		= $main->postvar['query'];
 	   		$user_list 	= $user->searchUser($query);
 	   		if (is_array($user_list) && count($user_list) > 0) {
-	   			foreach($user_list as $user) {
-	   				$user_name = $user['firstname']." - ".$user['lastname']." ( ".$user['email'].")";
-	   				echo "<li onclick=\"fill('{$user_name}', '{$user['id']}');\">$user_name</li>";	
+	   			foreach($user_list as $user_item) {
+	   				$user_name = $user->formatUsername($user_item['firstname'], $user_item['lastname']);
+	   				$user_name = $user_name." (".$user_item['email'].")";
+	   				echo "<li onclick=\"fill('{$user_name}', '{$user_item['id']}');\">$user_name</li>";	
 	   			}
 	   		}
 		}

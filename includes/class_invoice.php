@@ -36,7 +36,7 @@ class invoice extends model {
 			$order_info     = $order->getOrderInfo($order_id);
 			$invoice_info 	= $this->getInvoice($invoice_id, true);	
 							
-			$replace_array['USERNAME'] 				=  $user_info['firstname'].' '.$user_info['lastname'];
+			$replace_array['USERNAME'] 				=  $user->formatUsername($user_info['firstname'], $user_info['lastname']);
 			$replace_array['INVOICE_CREATE_DATE'] 	=  substr($invoice_info['CREATED'], 0,10);
 			
 			$replace_array['PAYMENT_METHOD'] 		=  'Paypal';
@@ -219,7 +219,8 @@ class invoice extends model {
 			//Getting the user info
 			if(!empty($array['uid'])) {
 				$user_info = $user->getUserById($array['uid']);
-				$array['userinfo']  = '<a href="index.php?page=users&sub=search&do='.$user_info['id'].'" >'.$user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')</a>';
+				$array['userinfo']  = '<a href="index.php?page=users&sub=search&do='.$user_info['id'].'" >';
+				$array['userinfo']  .= $user->formatUsername($user_info['firstname'], $user_info['lastname'], $user_info['user']).'</a>';
 			} else {
 				$array['userinfo']  = '-';
 			}
@@ -346,7 +347,7 @@ class invoice extends model {
 			$user_info = $user->getUserById($user_id);
 			//Invoice status list
 			$invoice_status = $main->getInvoiceStatusList();						
-			$array['USER'] 		=  $user_info['lastname'].', '.$user_info['firstname'].' ('.$user_info['user'].')';
+			$array['USER'] 		=  $user->formatUsername($user_info['firstname'], $user_info['lastname'], $user_info['user']);
 			
 			if ($read_only == true) {
 				$array['STATUS'] 	= $invoice_status[$invoice_info['status']];
@@ -622,7 +623,7 @@ class invoice extends model {
 							
 							$invoice_info = $this->getInvoice($my_invoice['id'], true); 
 												
-							$replace_array['USERNAME'] 				=  $user_info['firstname'].' '.$user_info['lastname'];
+							$replace_array['USERNAME'] 				=  $user->formatUsername($user_info['firstname'], $user_info['lastname']);
 							$replace_array['INVOICE_CREATE_DATE'] 	=  substr($invoice_info['CREATED'], 0,10);
 							
 							$replace_array['PAYMENT_METHOD'] 		=  'Paypal';
