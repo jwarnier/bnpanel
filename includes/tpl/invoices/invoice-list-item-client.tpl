@@ -5,8 +5,8 @@ function doswirl(id) {
 }
 </script>
 <tr>
-	<td><strong><a href="index.php?page=invoices&sub=view&do=%id%">#%id%</a></strong></td>
-	<td>%domain%</td>
+	<td><strong><a href="index.php?page=invoices&sub=view&do=%id%">#%id%</a></strong></td>	
+	<td><a target="_blank"  href="http://%domain%">%domain%</a></td>
 	<td>%amount%</td>
   	
   	<!-- <td>%package%</td>  -->    

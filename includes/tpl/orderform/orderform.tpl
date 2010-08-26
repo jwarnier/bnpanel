@@ -190,16 +190,16 @@ function nextstep() {
 			var final_domain= document.getElementById("cdom").value;
 
 					
-			if (document.getElementById("domain").value == 'sub') { //this is a subdomain
+			if (domain_id == 'sub') { //this is a subdomain
 				var subdomain_id 	= document.getElementById("csub2").value;
 				var subdomain		= document.getElementById("csub").value;
 				
 				if (subdomain == '') {
-					$("#verify").html("<strong>You must fill a domain name</strong> "+wrong);
+					$("#verify").html("<strong>You must fill all the fields</strong> "+wrong);
 					break;
 				}
 				if (subdomain_id == '' ) {
-					$("#verify").html("<strong>You must select a sub domain</strong> "+wrong);
+					$("#verify").html("<strong>You must select a domain</strong> "+wrong);
 					break;
 				}
 				final_domain = subdomain;
@@ -215,7 +215,7 @@ function nextstep() {
 			
 			$.get("<AJAX>function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {							
 				if (data == '1') {
-					$("#verify").html("<strong>Domain already exist</strong> "+wrong);					
+					$("#verify").html("<strong>Domain already exists</strong> "+wrong);					
 				} else if(data == '0') {
 					final(step, step + 1);
 					step = step + 1
@@ -322,9 +322,43 @@ function showAddons(obj) {
 	var billing_id=obj.options[obj.selectedIndex].value;	
 	$.get("<AJAX>function=getAddons&billing_id="+billing_id +"&package_id="+document.getElementById("package").value, function(data) {
 		document.getElementById("showaddons").innerHTML = data;
-	});
-															
+	});															
 }
+
+function checkSubdomain() {
+	//adding subdomain			
+	var domain_id 	= document.getElementById("domain").value;
+	var package_id 	= document.getElementById("package").value;
+	var final_domain= document.getElementById("cdom").value;
+			
+	if (domain_id == 'sub') { //this is a subdomain
+		var subdomain_id 	= document.getElementById("csub2").value;
+		var subdomain		= document.getElementById("csub").value;	
+		final_domain = subdomain;
+
+	} else {
+		var subdomain_id 	= '';
+		var subdomain       = '';
+	} 
+	
+	$("#verify").html(''); //Cleaning the verify
+	 
+	if (subdomain_id != '') {
+		if (final_domain != '') {
+			$.get("<AJAX>function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {							
+				if (data == '1') {
+					$("#subdomain_result").html("<strong>Subdomain already exists</strong> "+wrong);	
+				} else {
+					$("#subdomain_result").html("<strong>Subdomain available</strong> "+right);
+				}
+			});
+		}
+	} else {
+		$("#subdomain_result").html("<strong>Select a domain first</strong> "+wrong);
+	}
+			
+}
+
 </script>
 <div class="box">
 %WELCOME_MESSAGE%
@@ -507,18 +541,35 @@ function showAddons(obj) {
                 <td width="78%" id="domcontent">%DOMAIN%</td>
                 <td width="2%" align="left" id="domaincheck"><a title="Your domain, this must be in the format: <strong>example.com</strong>" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
               </tr>
+              
+              
               <tr id="sub">
+              
+                <td width="20%" id="domtitle">Domain:</td>                
+                <td id="domcontent">
+                	<span id="dropdownboxsub"></span>                	
+                </td>
+                <td id="domaincheck" align="left">
+                	<a title="Your domain name" class="tooltip">
+                		<img src="<URL>themes/icons/information.png" />
+                	</a>
+                </td>                
+              </tr>
+              
+			<tr id="sub">              
                 <td width="20%" id="domtitle">Subdomain:</td>                
                 <td id="domcontent">
-                	<input name="csub" id="csub" type="text" maxlength="40" />.<span id="dropdownboxsub"></span>
+                	<input name="csub" id="csub" type="text" maxlength="40" onkeyup="checkSubdomain();" />
+                	<span id="subdomain_result"></span>
                 </td>
                 <td id="domaincheck" align="left">
                 	<a title="Your subdomain, this must be in the format: <strong>subdomain.example.com</strong>" class="tooltip">
                 		<img src="<URL>themes/icons/information.png" />
                 	</a>
-                </td>
-              </tr>
+                </td>                
+              </tr>              
             </table>
+            
             <div id="custom">
             </div>
         </div>
