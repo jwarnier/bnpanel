@@ -76,6 +76,41 @@
       </table>
     </div>
 </div>
+
+<div class="subborder">
+    <div class="sub">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="50%">Company:</td>
+          <td align="right">%COMPANY%</a>
+          <a title="Company name" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+        </tr>
+      </table>
+    </div>
+</div>
+<div class="subborder">
+    <div class="sub">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="50%">Vat ID:</td>
+          <td align="right">%VATID%</a>
+          <a title="Company VAT ID" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+        </tr>
+      </table>
+    </div>
+</div>
+<div class="subborder">
+    <div class="sub">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="50%">Fiscal ID</td>
+          <td align="right">%FISCALID%</a>
+          <a title="User's SSN/Fiscal ID" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+        </tr>
+      </table>
+    </div>
+</div>
+
 <div class="subborder">
     <div class="sub">
       <table width="100%" border="0" cellspacing="0" cellpadding="0">

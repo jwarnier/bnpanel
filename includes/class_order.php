@@ -50,6 +50,9 @@ class order extends model {
 			$array['TOTAL'] 		= $order_info['TOTAL'];
 			$array['TOS'] 		    = $db->config('TOS');
 			$array['ADMIN_EMAIL'] 	= $db->config('EMAIL');
+			$array['COMPANY'] 		= $user_info['company'];			
+			$array['VATID'] 		= $user_info['vatid'];			
+			$array['FISCALID'] 		= $user_info['fiscalid'];		
 			
 			$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
 			return	$order_id;

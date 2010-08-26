@@ -403,7 +403,7 @@ function showAddons(obj) {
               <tr>
                 <td>Username:</td>
                 <td><input type="text" name="username" id="username" maxlength="20" /></td>
-                <td align="left"><a title="The username is your unique identity to your account. Please keep it under 8 characters." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td align="left"><a title="The username is your unique identity to your account. Please keep it between 8 and 20." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
                 <td align="left" id="usercheck">&nbsp;</td>
               </tr>
               <tr>
@@ -434,6 +434,25 @@ function showAddons(obj) {
                 <td align="left"><a title="Your last name." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
                 <td id="lastnamecheck" align="left">&nbsp;</td>
               </tr>
+              
+               <tr>
+                <td>Company:</td>
+                <td><input type="text" name="company" id="company" onchange="check('company', this.value)" /></td>
+                <td align="left"><a title="Your company name" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td id="companynamecheck" align="left">&nbsp;</td>
+              </tr>
+              <tr>
+                <td>Tax ID (VAT):</td>
+                <td><input type="text" name="vatid" id="vatid" onchange="check('vatid', this.value)" /></td>
+                <td align="left"><a title="Company Tax registration number (VAT ID)" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td id="vatid" align="left">&nbsp;</td>
+              </tr>
+              <tr>
+                <td>SSN/Fiscal ID</td>
+                <td><input type="text" name="fiscalid" id="fiscalid" onchange="check('fiscalid', this.value)" /></td>
+                <td align="left"><a title="Your SSN or Fiscal ID" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td id="fiscalid" align="left">&nbsp;</td>
+               </tr>
               <tr>
                 <td>Address:</td>
                 <td><input type="text" name="address" id="address" onchange="check('address', this.value)" /></td>

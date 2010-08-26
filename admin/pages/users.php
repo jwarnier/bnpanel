@@ -107,7 +107,7 @@ class page {
 						}
 					}
 					
-					$array = $user->getUserById($main->getvar['do']);
+					$array 					= $user->getUserById($main->getvar['do']);
 					
 					$array['status'] 		= $main->createSelect('status', $main->getUserStatusList(), $array['status']);					
 					$array['country']		= $main->countrySelect($array['country']);
@@ -138,12 +138,18 @@ class page {
 					$array2['ZIP'] 		= $client['zip'];
 					$array2['COUNTRY'] 	= strtolower($client['country']);
 					$array2['PHONE'] 	= $client['phone'];
+					
+					$array2['COMPANY'] 	= $client['company'];
+					$array2['VATID'] 	= $client['vatid'];
+					$array2['FISCALID'] = $client['fiscalid'];
+
 					$user_status_list 	= $main->getUserStatusList();										
 					$array2['STATUS']  	= $user_status_list[$client['status']];					
 					$array['CONTENT'] 	= $style->replaceVar("tpl/user/clientdetails.tpl", $array2);					
 					$array['URL'] 		= URL;
 					$array['ID'] 		= $client['id'];
 					$array['BOX'] 		= '';
+					
 					echo $style->replaceVar("tpl/user/clientview.tpl", $array);
 					
 				} else {

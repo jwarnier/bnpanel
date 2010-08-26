@@ -43,6 +43,8 @@ function check() {
       <a title="Your last name." class="tooltip"><img src="<ICONDIR>information.png" /></a>
     </td>
   </tr>
+  
+   
   <tr>
     <td width="20%">Address:</td>
     <td>
@@ -84,6 +86,31 @@ function check() {
       <a title="Your phone number." class="tooltip"><img src="<ICONDIR>information.png" /></a>
     </td>
   </tr>
+  
+  <tr>
+    <td width="20%">Company:</td>
+    <td>
+    %COMPANY%
+      <!-- <input type="text" name="company" id="company" value="%COMPANY%" readonly="readonly"/> -->
+      <a title="Company name." class="tooltip"><img src="<ICONDIR>information.png" /></a>
+    </td>
+  </tr>
+    <tr>
+    <td width="20%">VAT ID:</td>
+    <td>
+    %VATID%
+      <!-- <input type="text" name="vatid" id="vatid" value="%VATID%" readonly="readonly"/> -->
+     <a title="Company VAT ID." class="tooltip"><img src="<ICONDIR>information.png" /></a>
+    </td>
+  </tr>
+    <tr>
+    <td width="20%">SSN/Fiscal ID:</td>
+    <td>
+    %FISCALID%
+      <!-- <input type="text" name="fiscalid" id="fiscalid" value="%FISCALID%" readonly="readonly"/> -->
+     <a title="User's SSN or Fiscal ID." class="tooltip"><img src="<ICONDIR>information.png" /></a>
+  </tr>
+  
   <tr>
     <td>Change Password: 
     </td>

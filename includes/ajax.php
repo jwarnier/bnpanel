@@ -1321,6 +1321,9 @@ class AJAX {
 		$array['LASTNAME'] 		= $user_info['lastname'];			
 		$array['SITENAME'] 		= $db->config('name');
 		$array['ORDER_ID'] 		= $order_id;
+		$array['COMPANY'] 		= $user_info['company'];			
+		$array['VATID'] 		= $user_info['vatid'];			
+		$array['FISCALID'] 		= $user_info['fiscalid'];
 		$array['PACKAGE'] 		= $order_info['PACKAGES'];
 		$array['ADDONS'] 		= $order_info['ADDON'];
 		$array['DOMAIN'] 		= $order_info['domain'];
