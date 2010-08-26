@@ -28,10 +28,10 @@ class page {
 					$paypal = new paypal_class();
 					//This is a very important step, this thing checks if the payment was sucessfull or not
 					$invoice_id = intval($_GET['invoiceID']);
-					
-					if($paypal->validate_ipn()) {						
+					 
+					if ($paypal->validate_ipn()) {						
 						$invoice->set_paid($invoice_id);
-						$main->errors("Your invoice has been paid!");
+						
 						$user_id = $main->getCurrentUserId();
 						$order_id = $invoice->getOrderByInvoiceId($invoice_id);
 						
