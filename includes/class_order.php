@@ -589,8 +589,9 @@ class order extends model {
 			$domain = trim($domain);
 			$domain = $db->strip($domain);
 			$subdomain_id = intval($subdomain_id);
-			//Getting the domain info
-			$sql 	= "SELECT domain FROM ".$this->getTableName()." WHERE domain = '".$domain."' AND subdomain_id = $subdomain_id ";
+			
+			//Getting the domain info. 
+			$sql 	= "SELECT domain FROM ".$this->getTableName()." WHERE domain = '".$domain."' AND subdomain_id = $subdomain_id AND status <> ".ORDER_STATUS_DELETED." ";
 			$result = $db->query($sql);
 			if($db->num_rows($result) > 0 ) {
 				return true;
