@@ -372,8 +372,8 @@ class page {
 						}	
 						$main->redirect('?page=orders&sub=all&msg=1');					
 					} else {					
-						$user_info  =  $user->getUserById($order_info['userid']);						
-						$return_array['USER'] 			= $user_info['firstname'].' '.$user_info['lastname'];
+						$user_info  					= $user->getUserById($order_info['userid']);						
+						$return_array['USER'] 			= $user->formatUsername($user_info['firstname'], $user_info['lastname']);
 						$return_array['DOMAIN'] 		= $order_info['real_domain'];					
 						$billing_info 					= $billing->getBilling($billing_id);
 						$return_array['BILLING_CYCLES'] = $billing_info ['name'];

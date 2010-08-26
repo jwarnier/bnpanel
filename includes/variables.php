@@ -34,7 +34,7 @@ if (INSTALL == 1) {
 			$array['TITLE'] = $style->replaceVar('tpl/aserverstatus.tpl',$array2);
 			$pagegen .= $style->replaceVar('tpl/footerdebug.tpl',$array);
 		}
-	} else{
+	} else {
 		$pagegen = '';
 	}
 	 
@@ -47,13 +47,14 @@ if (INSTALL == 1) {
 	if (FOLDER != 'install') {
 		$array = array();
 		$navigation_list = $main->getMainNavigation();		
-		foreach($navigation_list as $nav_item) {
-			if(!$db->config("show_acp_menu") && $nav_item['name'] == 'admin') {
+		
+		foreach($navigation_list as $nav_item) {			
+			if(!$db->config("show_acp_menu") && $nav_item['link'] == 'admin') {
 				continue;
 			} else {
-				$array['ID'] = "nav_". $nav_item['name'];
-				if(PAGE == $data2['visual']) {
-					$array['ACTIVE'] = ' class="active"';
+				$array['ID'] = "nav_". $nav_item['link'];
+				if(PAGE == $nav_item['visual']) {
+					$array['ACTIVE'] = ' class="active" ';
 				}
 				else {
 					$array['ACTIVE'] = '';
@@ -61,13 +62,12 @@ if (INSTALL == 1) {
 				$array['LINK'] = $nav_item['link'];
 				$array['ICON'] = $nav_item['icon'];
 				$array['NAME'] = $nav_item['visual'];
-				$navbits .= $style->replaceVar("tpl/navbit.tpl", $array);
+				$navbits .= $style->replaceVar("tpl/menu/top_link.tpl", $array);
 			}
 		}
-	}
-	
+	}	
 	$array3['NAV'] = $navbits;
-	$navigation = $style->replaceVar("tpl/nav.tpl", $array3);
+	$navigation = $style->replaceVar("tpl/menu/top_main.tpl", $array3);
 }
 
 global $main;
@@ -86,7 +86,6 @@ $data = preg_replace("/<PAGEGEN>/si", $pagegen, $data); #Page Generation Time
 $data = preg_replace("/<COPYRIGHT>/si", '<div id="footer">Powered by <a href="http://www.beeznest.com" target="_blank">BNPPanel</a> '. $version .'</div>', $data);
 $error_messages = $main->errors();
 if (!empty($error_messages)) {
-	$data = preg_replace("/<ERRORS>/si", '<div class="info">'.$error_messages.'</div><div style="clear:both"></div>', $data);
-	
+	$data = preg_replace("/<ERRORS>/si", '<div class="info">'.$error_messages.'</div><div style="clear:both"></div>', $data);	
 }
 $data = preg_replace("/%INFO%/si", INFO, $data);
