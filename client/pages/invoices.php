@@ -12,8 +12,7 @@ class page {
 	}
 	
 	public function description() {
-		return "<strong>Invoices Area</strong><br />
-		This is the area where you can view invoices.";	
+		return "<strong>Invoices Area</strong><br />This is the area where you can view invoices.";	
 	}	
 	
 	public function content() {
@@ -59,16 +58,17 @@ class page {
 						$transaction_id = $main->postvar['txn_id'];
 						$params['transaction_id'] = $transaction_id;						
 						$invoice->edit($invoice_id, $params);										
-						$message = "Your Invoice #$invoice_id is paid!<br />";
+						$message = "Your Invoice #$invoice_id is paid.<br />";
 						
 						if ($result) {
-							$message .= "You Order #$order_id has been also proceed";	
+							$message .= "You Order #$order_id has been also proceed.<br />";
+							$message .= "Check your email for access information. You should be able to see your site working in a few minutes.<br />";
 						} else {
-							$message .= 'There was a problem while dealing with you order please contact the administrator.';
+							$message .= 'There was a problem while dealing with you Order please contact the administrator.';
 						}						
 						$main->errors($message);										
 					} else {						
-						$main->errors("Your invoice #$invoice_id hasn't been paid!");						
+						$main->errors("Your invoice #$invoice_id hasn't been paid");						
 					}		
 					$main->redirect('?page=invoices&msg=1');
 				}
@@ -109,7 +109,7 @@ class page {
 						
 						switch ($invoice_item['status']) {
 							case INVOICE_STATUS_PAID:
-								$array['paid']	=  '<span style="color:green">Already Paid</span>';
+								$array['paid']	=  '<span style="color:green">Paid</span>';
 								$array['pay']	=  '<span style="color:green">Already Paid</span>';
 								$array['due']	=  '<span style="color:green">'.$array['due'].'</span>' ;						  
 							break;
