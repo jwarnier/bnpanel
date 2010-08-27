@@ -392,16 +392,31 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$site_params['system_group'] 	= 'client'.$client_info['client_id'];	//This field will be overwritten by ISPconfig
 						
 				$site_params['client_group_id'] = $new_client_id + 1;	 //always will be this 	groupd id +1			
-				$site_params['server_id'] 		= $this->getServerId();
+				$site_params['server_id'] 		= $this->getServerId();				
+		
+				
+				$list_templates = $this->getAllPackageBackEnd();
+				
+				//Default values in case we don't find the template id 
+				$limit_package_web_quota 		= 10;
+				$limit_package_traffic_quota 	= 10;
+				
+				foreach($list_templates as $template) {
+					if ($template['template_id'] == $package_back_end_id) {
+						$limit_package_web_quota 	 = $template['limit_web_quota'];
+						$limit_package_traffic_quota = $template['limit_traffic_quota'];
+						break;						
+					}
+				}				
 	
 				if (empty($client_info['limit_web_quota'])) {
 				 	//Not 0 values otherwise the script will not work
-					$site_params['hd_quota'] = 5; //ISPCOnfig field
+					$site_params['hd_quota'] = $limit_package_web_quota; //ISPCOnfig field
 				}
 	
 				if (empty($client_info['site_infolimit_traffic_quota'])) {
 					 //Not 0 values otherwise the script will not work
-					$site_params['traffic_quota'] = 5; // ISPCOnfig field
+					$site_params['traffic_quota'] = $limit_package_traffic_quota; // ISPCOnfig field
 				}
 	
 				//Hardcoded values
@@ -716,7 +731,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$mysql_params['database_password'] 	= $main->generatePassword();
 				$mysql_params['database_charset']	= 'utf8';
 				$mysql_params['remote_access'] 		= 'n';
-				$mysql_params['active'] 			= 'y';	
+				$mysql_params['active'] 			= 'y';				
 				
 				$database_id = $this->remote('sites_database_add', $mysql_params);
 				
