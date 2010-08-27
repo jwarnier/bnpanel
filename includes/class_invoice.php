@@ -90,7 +90,7 @@ class invoice extends model {
 		$order_id 		= $this->getOrderByInvoiceId($invoice_id);
 		$order_info		= $order->getOrderInfo($order_id);
 		
-		if($user_id == $invoice_info['uid']) {
+		if ($user_id == $invoice_info['uid']) {
 			
 			if ($db->config('paypal_mode') == PAYPAL_STATUS_LIVE) {
 				$paypal->paypal_url = 'https://www.paypal.com/cgi-bin/webscr';				
@@ -108,10 +108,19 @@ class invoice extends model {
 			//$paypal->add_field('item_number', 		$invoice_id);
 			$paypal->add_field('invoice', 			$invoice_id);
 			$paypal->add_field('no_note', 			0);			
-			$paypal->add_field('no_shipping', 		1);		
-				
-			//Image is 150*50
-			//$paypal->add_field('image_url', 		'http://www.beeznest.com/sites/all/themes/beeznest/images/logo-beez.png');
+			$paypal->add_field('no_shipping', 		1);	
+			
+			$paypal->add_field('continue_button_text', 'Continue >>');
+			$paypal->add_field('cbt', 'Continue >>');
+			
+			
+			$paypal->add_field('background_color', ''); //""=white 1=black
+			$paypal->add_field('display_shipping_address', '1'); //""=yes 1=no
+			$paypal->add_field('display_comment', '1'); //""=yes 1=no
+						
+			//Image is 150*50px otherwise the image will not work
+			//@todo add a new paypal parameter to the URL image 
+			//$paypal->add_field('image_url', 		'http://demo.contidos.cblue.be/logo-beez.png');			
 
 			$paypal->add_field('amount', 			$invoice_info['total_amount']);
 			$paypal->add_field('currency_code', 	$db->config('currency'));
