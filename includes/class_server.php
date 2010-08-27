@@ -372,7 +372,7 @@ class server extends Model {
 			if (!empty($user_id) && is_numeric($user_id)){
 				$user_already_registered = true;
 				$main->addLog('server::signup User id #'.$user_id.' registered');										
-				$login = $main->clientLogin($system_username, $system_password);
+				$main->clientLogin($system_username, $system_password);
 			} else {
 				$main->addLog("server::signup Error while trying to create an user $system_username $system_email ");		
 				return "Can't create an user";
@@ -392,11 +392,11 @@ class server extends Model {
 			$params['additional']		= '';//@todo this field is not used
 			$params['billing_cycle_id'] = $billing_cycle_id;
 			
+			$user_info = $user->getUserById($user_id);
 			//Username + password for the ISPConfig
-			$params['password']			= $main->generateUsername();
-			$params['username']			= $main->generatePassword();
-			$params['subdomain_id']			= $subdomain_id;
-			
+			$params['username']			= substr($user_info['firstname'], 0 ,1).substr($user_info['lastname'], 0 ,1).$main->generateUsername();
+			$params['password']			= $main->generatePassword();
+			$params['subdomain_id']		= $subdomain_id;			
 
 			//Getting mandatory addons and adding if somebody 
 			$mandatory_addons = $addon->getMandatoryAddonsByPackage($package_id);
@@ -423,7 +423,7 @@ class server extends Model {
 			$array['EMAIL'] 	= $system_email;
 			$array['DOMAIN'] 	= $final_domain;	
 			
-			//We avoid the user confirmation for the moment
+			//@todo Email User confirmation
 			if ($user_already_registered == true && $user_info['status'] == USER_STATUS_ACTIVE) {			
 				$array['CONFIRM'] 	= '';
 			} else {
@@ -439,11 +439,7 @@ class server extends Model {
 			if ($package_info['admin'] == 0) {
 				//New hosting account created	
 				echo "<strong>Your account has been completed!</strong><br />You may now use the client login bar to see your client area or proceed to your control panel.";							
-			} elseif($package_info['admin'] == 1) {				
-				//Needs admin validation so we suspend the order
-				//$order->updateOrderStatus($order_id, ORDER_STATUS_WAITING_ADMIN_VALIDATION);					
-				
-				//$email_to_admin = $db->emailTemplate('adminval');
+			} elseif($package_info['admin'] == 1) {
 				$email_to_admin = $db->emailTemplate('orders_needs_validation');				
 				$email->staff($email_to_admin['subject'], $email_to_admin['content']);				
 				echo "<strong>Your order is awaiting admin validation!</strong><br />An email has been dispatched to the address on file. You will recieve another email when the admin has overlooked your account.";				

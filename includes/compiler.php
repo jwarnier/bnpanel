@@ -53,6 +53,59 @@ define('USER_STATUS_DELETED', 					9); //cancelled deleted users
 //Used in admin/billing.php
 define('MAX_NUMBER_MONTHS',						48);
 
+/**
+ * 
+ * Experimental translation BNPanel feature using getext
+ * 
+ * Please install this (ubuntu)
+ * 
+ * sudo locale-gen es_ES
+ * sudo apt-get install php-gettext
+ *  
+ * Translate po files GUI 
+ * sudo apt-get install poedit 
+ * 
+ * 
+ * Some help here:
+ * 
+ * Config getext
+ * http://zez.org/article/articleview/42/3/
+ * 
+ * Using getext in ubuntu
+ * http://www.sourcerally.net/regin/49-How-to-get-PHP-and-gettext-working-%28ubuntu,-debian%29
+ * 
+ * Getext tutorial
+ * http://mel.melaxis.com/devblog/2005/08/06/localizing-php-web-sites-using-gettext/
+ * 
+ * 
+ */
+/*
+$locale = $_GET['l'];
+$locale = 'es';
+switch ($locale) {
+	case 'es':
+		$locale = 'es_ES';	
+	break;
+	case 'en':
+	default:
+		$locale = 'en_GB';
+	break;
+}
+
+$domain = 'main';
+putenv("LC_ALL=$locale");
+setlocale(LC_ALL,$locale);
+bindtextdomain($domain, "/var/www/bnpanel/locale");
+bind_textdomain_codeset($domain, "UTF-8");
+textdomain($domain);
+
+/*
+putenv("LC_ALL=$locale");
+putenv("LANG=$locale"); 
+setlocale(LC_ALL, $locale);
+setlocale(LC_MESSAGES, $locale);
+*/
+
 #Page generated
 $starttime = explode(' ', microtime());
 $starttime = $starttime[1] + $starttime[0];
@@ -224,3 +277,4 @@ function checkForDependencies() {
 //var_dump($order->getOrder('8', true));
 //$invoice_info 	= $addon->updateAddonOrders(array(1,2,3), '9');
 //var_dump($invoice_info 	);exit; 
+//echo $main->generateUsername(); exit;
