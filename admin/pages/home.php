@@ -110,7 +110,7 @@ class page {
 		
 		echo $main->table('Admin Notepad', $content_notepad, 'auto', 'auto');
 		
-		//Temporaly code just to see the lastest commit
+		//Temporary code just to see the latest commit
 		if (SERVER_STATUS == 'test') {
 			$output = array();		
 			exec('hg heads', $output);
@@ -121,7 +121,7 @@ class page {
 				$html .= $output['3'];
 				$html .= '</h4>';	
 			} else {
-				$html= 'You can check the lastest version here: https://bnpanel.googlecode.com/hg/';
+				$html= 'You can check the latest version here: https://bnpanel.googlecode.com/hg/';
 			}
 			echo $main->table('Test Server ', $style->returnMessage($html), 'auto', 'auto');
 		}

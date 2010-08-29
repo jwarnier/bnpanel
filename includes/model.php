@@ -3,11 +3,11 @@
 
 /**
  * Object model 
- * Inspired in the ActiveRecord in Akelos
+ * Inspired from the ActiveRecord in Akelos
  * 
- * The use of update, save, delete functions are encouge. Try to avoid direct mysql_query to insert data in the DB  
+ * The use of update, save, delete functions are encouraged. Try to avoid direct mysql_query to insert data in the DB  
  * 
- * @todo finders methods are working but they are not use yet in the system (due lack of time and testing) 
+ * @todo finders methods are working but they are not used yet in the system (due lack of time and testing) 
  * 
  * @author	Julio Montoya <gugli100@gmail.com>	BeezNest 
  */
