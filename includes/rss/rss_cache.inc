@@ -7,7 +7,7 @@
  * Version:     0.51
  * License:     GPL
  *
- * The lastest version of MagpieRSS can be obtained from:
+ * The latest version of MagpieRSS can be obtained from:
  * http://magpierss.sourceforge.net
  *
  * For questions, help, comments, discussion, etc., please join the
