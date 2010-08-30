@@ -81,7 +81,7 @@ function showhide(hide, show) {
 }
 
 function nextstep() {
-	 alert(step); 
+	 //alert(step); 
 	switch(step) {
 		//addon info
 		/*case 2:
