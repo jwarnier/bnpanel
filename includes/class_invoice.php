@@ -99,20 +99,22 @@ class invoice extends model {
 			}
 			//More infor for paypal variables : https://www.paypal.com/cgi-bin/webscr?cmd=p/pdn/howto_checkout-outside
 			
-			$paypal->add_field('business', 			$db->config('paypalemail'));					
-			$paypal->add_field('return', 			urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
-			$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
-			$paypal->add_field('notify_url',  		urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&invoiceID=".$invoice_id));
+			$paypal->add_field('business', 			$db->config('paypalemail'));
+			
+			// Will only work if Auto Return is set in the Paypal account  								
+			$paypal->add_field('return', 			urlencode($db->config('url')."client/index.php?page=invoices&sub=view&p=sucess&do=.$invoice_id")); // Paypal Sucess
+			
+			$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=view&p=cancel&do=".$invoice_id)); // Paypal Cancel 
+			
+			$paypal->add_field('notify_url',  		urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&do=".$invoice_id)); // IPN
 			
 			$paypal->add_field('item_name', 		$db->config('name').' - '.$order_info['real_domain'].' Invoice id: '.$invoice_id);
-			//$paypal->add_field('item_number', 		$invoice_id);
-			$paypal->add_field('invoice', 			$invoice_id);
+			$paypal->add_field('invoice', 			$invoice_id); //When trying to buy something with the same Invoice id Paypal will send a message that the invoice was already done 
 			$paypal->add_field('no_note', 			0);			
-			$paypal->add_field('no_shipping', 		1);	
+			$paypal->add_field('no_shipping', 		1);
 			
 			$paypal->add_field('continue_button_text', 'Continue >>');
-			$paypal->add_field('cbt', 'Continue >>');
-			
+			$paypal->add_field('cbt', 'Continue >>');			
 			
 			$paypal->add_field('background_color', ''); //""=white 1=black
 			$paypal->add_field('display_shipping_address', '1'); //""=yes 1=no

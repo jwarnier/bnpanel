@@ -20,15 +20,17 @@ class page {
 
 		switch($main->getvar['sub']) {
 			case 'paid':				
-				//var_dump($main->postvar);
-			
-				if(isset($_GET['invoiceID'])) {				
+				error_log('ipn');
+				if(isset($main->getvar['do'])) {				
 					require_once "../includes/paypal/paypal.class.php";
 					$paypal = new paypal_class();
 					//This is a very important step, this thing checks if the payment was sucessfull or not
-					$invoice_id = intval($_GET['invoiceID']);
-					 
-					if ($paypal->validate_ipn()) {						
+					$invoice_id = intval($main->getvar['do']);
+					 error_log('validate_ipn called');
+					if ($paypal->validate_ipn()) {
+						
+						error_log('ok');	
+								
 						$invoice->set_paid($invoice_id);
 						
 						$user_id = $main->getCurrentUserId();
@@ -60,21 +62,30 @@ class page {
 						$invoice->edit($invoice_id, $params);										
 						$message = "Your Invoice #$invoice_id is paid.<br />";
 						
-						if ($result) {
+						if ($result) {							
 							$message .= "You Order #$order_id has been also proceed.<br />";
 							$message .= "Check your email for access information. You should be able to see your site working in a few minutes.<br />";
 						} else {
 							$message .= 'There was a problem while dealing with you Order please contact the administrator.';
 						}						
-						$main->errors($message);										
-					} else {						
-						$main->errors("Your invoice #$invoice_id hasn't been paid");						
+						$main->addLog($message);										
+					} else {
+						$main->addLog("Your invoice #$invoice_id hasn't been paid");						
 					}		
-					$main->redirect('?page=invoices&msg=1');
 				}
-			break;
+			break;			
+			
 			case 'view':				
-				if(isset($main->getvar['do'])) {					
+				if(isset($main->getvar['do'])) {
+					
+					switch ($main->getvar['p']) {
+						case 'cancel':
+						$main->showMessage('Cancel');
+						break;						
+						case 'sucess':
+						$main->showMessage('Success');
+						break;
+					}		
 					$return_array = $invoice->getInvoice($main->getvar['do'], true);
 					echo $style->replaceVar('tpl/invoices/viewinvoice.tpl', $return_array);					
 				}
