@@ -81,7 +81,7 @@ function showhide(hide, show) {
 }
 
 function nextstep() {
-	 //alert(step); 
+	 alert(step); 
 	switch(step) {
 		//addon info
 		/*case 2:
@@ -250,11 +250,16 @@ function nextstep() {
 					document.getElementById("finished").innerHTML = working;
 					document.getElementById("next").disabled = true;
 					document.getElementById("back").disabled = true;
+
+					//Remove both buttons
+					$("#next").hide();
+					$("#back").hide();
+					
 					//showing the signup code
 					//alert(url);
 					$.get("<AJAX>"+url, function(data) {
 						document.getElementById("finished").innerHTML = data;
-						document.getElementById("back").disabled = false;
+						
 						document.getElementById("verify").innerHTML = "";				
 						//Check if an invoice is generated
 						$.get("<AJAX>function=ispaid", function(invoice_id) {
