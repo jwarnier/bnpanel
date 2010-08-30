@@ -29,8 +29,7 @@ class page {
 							$style->showMessage('Cancel');
 						break;						
 						case 'success':
-							$message = 'Your Invoice #'.$main->getvar['do'].' has been paid';
-							$message .= "You Order #$order_id has been also proceed.<br />";
+							$message = 'Your Invoice #'.$main->getvar['do'].' has been paid<br />';
 							$message .= "Check your email for access information. You should be able to see your site working in a few minutes.<br />";
 							$style->showMessage($message,'success');
 						break;

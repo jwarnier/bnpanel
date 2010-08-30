@@ -2,15 +2,18 @@
 require '../compiler.php';
 
 global $style, $db, $main, $invoice,  $addon, $billing, $order, $server, $package;
+$main->addLog('paypal::ipn file called');
 
 if(isset($main->getvar['do'])) {			
-	require_once LINK."includes/paypal/paypal.class.php";
+	require_once LINK."paypal/paypal.class.php";
 	$paypal = new paypal_class();
 	//This is a very important step, this thing checks if the payment was sucessfull or not
-	$invoice_id = intval($main->getvar['do']);
-	 error_log('validate_ipn called');
-	if ($paypal->validate_ipn()) {		
-		error_log('ok');					
+	$invoice_id = intval($main->getvar['do']);	
+	if ($paypal->validate_ipn()) {	
+		
+		$main->addLog('paypal::ipn validate ok');
+		$main->addLog('paypal::ipn Invoice id #'.$invoice_id.' set to paid ');
+		
 		$invoice->set_paid($invoice_id);		
 		$user_id = $main->getCurrentUserId();
 		$order_id = $invoice->getOrderByInvoiceId($invoice_id);
@@ -25,30 +28,25 @@ if(isset($main->getvar['do'])) {
 		
 		if ($site_status == false) {
 			//We send to the server finally
+			$main->addLog('paypal::ipn $order->sendOrderToControlPanel function called');
 			$result = $order->sendOrderToControlPanel($order_id);
-		}
+		}	
 		
 		if ($result) {
 			//Unsuspend order status + unsuspend the webhosting just in case 
 			$order->updateOrderStatus($order_id, ORDER_STATUS_ACTIVE);
+			$main->addLog('paypal::ipn updateOrderStatus to Active');
 		} else {
 			$order->updateOrderStatus($order_id, ORDER_STATUS_FAILED);
+			$main->addLog('paypal::ipn updateOrderStatus to Fail');
 		}
 		
 		//Adding the transaction id (comes from a post of paypal)
 		$transaction_id = $main->postvar['txn_id'];
 		$params['transaction_id'] = $transaction_id;						
-		$invoice->edit($invoice_id, $params);										
-		$message = "Your Invoice #$invoice_id is paid.<br />";
-		
-		if ($result) {							
-			$message .= "You Order #$order_id has been also proceed.<br />";
-			$message .= "Check your email for access information. You should be able to see your site working in a few minutes.<br />";
-		} else {
-			$message .= 'There was a problem while dealing with you Order please contact the administrator.';
-		}						
-		$main->addLog($message);										
+		$invoice->edit($invoice_id, $params);			
+		$main->addLog('paypal::ipn adding transaction id #'.$transaction_id);
 	} else {
-		$main->addLog("Your invoice #$invoice_id hasn't been paid");						
+		$main->addLog('paypal::ipn validate error');						
 	}
 }
