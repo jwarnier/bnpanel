@@ -63,7 +63,10 @@ define('MAX_NUMBER_MONTHS',						48);
  * sudo apt-get install php-gettext
  * 
  * Install Spanish locale: $ sudo locale-gen es_ES
- * Install English locale: $ sudo locale-gen en_BR
+ * Install English locale: $ sudo locale-gen en_GB
+ * 
+ * In debian check this file
+ * vim /etc/locale.gen
  *  
  * Translate po files GUI 
  * sudo apt-get install poedit 
@@ -74,6 +77,7 @@ define('MAX_NUMBER_MONTHS',						48);
  * Config getext
  * http://zez.org/article/articleview/42/3/
  * 
+ * http://algorytmy.pl/doc/php/ref.gettext.php
  * 
  * Using getext in ubuntu
  * http://www.sourcerally.net/regin/49-How-to-get-PHP-and-gettext-working-%28ubuntu,-debian%29
@@ -105,11 +109,11 @@ if (empty($_GET['l'])) {
 $_SESSION['locale'] = $locale;
 switch ($locale) {
 	case 'es':
-		$locale = 'es_ES';	
+		$locale = 'es_ES.UTF-8';	
 	break;
 	case 'en':
 	default:
-		$locale = 'en_GB';
+		$locale = 'en_GB.UTF-8';
 	break;
 }
 
