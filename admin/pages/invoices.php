@@ -84,7 +84,7 @@ class page {
 			case 'view':				
 				if(isset($main->getvar['do'])) {					
 					$return_array = $invoice->getInvoice($main->getvar['do'], true);									
-					echo $style->replaceVar("tpl/invoices/viewinvoice.tpl", $return_array);					
+					echo $style->replaceVar("tpl/invoices/view-admin.tpl", $return_array);					
 				}
 			break;
 			case 'delete':			
