@@ -106,7 +106,7 @@ class invoice extends model {
 			
 			$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=view&p=cancel&do=".$invoice_id)); // Paypal Cancel 
 			
-			$paypal->add_field('notify_url',  		urlencode($db->config('url')."client/index.php?page=invoices&sub=paid&do=".$invoice_id)); // IPN
+			$paypal->add_field('notify_url',  		urlencode($db->config('url')."includes/paypal/ipn.php?do=".$invoice_id)); // IPN
 			
 			$paypal->add_field('item_name', 		$db->config('name').' - '.$order_info['real_domain'].' Invoice id: '.$invoice_id);
 			$paypal->add_field('invoice', 			$invoice_id); //When trying to buy something with the same Invoice id Paypal will send a message that the invoice was already done 
