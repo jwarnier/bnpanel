@@ -14,7 +14,7 @@
           </tr>
           <tr>
             <td align="right">
-            	<input name="order" id="order%ID%" type="button" value="Order" onclick="orderstepme('%ID%', '%PACKAGE_TYPE%')" />
+            	<input name="order" id="order%ID%" type="button" value="{Order}" onclick="orderstepme('%ID%', '%PACKAGE_TYPE%')" />
             </td>
           </tr>
         </table>

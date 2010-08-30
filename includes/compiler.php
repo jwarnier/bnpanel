@@ -79,9 +79,26 @@ define('MAX_NUMBER_MONTHS',						48);
  * 
  * 
  */
-/*
-$locale = $_GET['l'];
-$locale = 'es';
+
+#Start us up
+if (CRON != 1) {
+	session_start();	
+}
+
+if (empty($_GET['l'])) {
+	if(isset($_SESSION['locale'])) {
+		$locale = $_SESSION['locale'];
+	} else {
+		$locale = 'en';
+	}
+} else {
+	if (in_array($_GET['l'], array('es', 'en'))) {
+		$locale = $_GET['l'];		
+	} else {
+		$locale = 'en';
+	}	
+}
+$_SESSION['locale'] = $locale;
 switch ($locale) {
 	case 'es':
 		$locale = 'es_ES';	
@@ -92,7 +109,7 @@ switch ($locale) {
 	break;
 }
 
-$domain = 'main';
+$domain = 'default';
 putenv("LC_ALL=$locale");
 setlocale(LC_ALL,$locale);
 bindtextdomain($domain, "/var/www/bnpanel/locale");
@@ -110,10 +127,7 @@ setlocale(LC_MESSAGES, $locale);
 $starttime = explode(' ', microtime());
 $starttime = $starttime[1] + $starttime[0];
 
-#Start us up
-if (CRON != 1) {
-	session_start();	
-}
+
 
 $includePath = dirname(__FILE__);
 define('LINK', $includePath.'/');
