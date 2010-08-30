@@ -102,7 +102,7 @@ class invoice extends model {
 			$paypal->add_field('business', 			$db->config('paypalemail'));
 			
 			// Will only work if Auto Return is set in the Paypal account  								
-			$paypal->add_field('return', 			urlencode($db->config('url')."client/index.php?page=invoices&sub=view&p=sucess&do=.$invoice_id")); // Paypal Sucess
+			$paypal->add_field('return', 			urlencode($db->config('url')."client/index.php?page=invoices&sub=view&p=success&do=$invoice_id")); // Paypal Sucess
 			
 			$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=view&p=cancel&do=".$invoice_id)); // Paypal Cancel 
 			

@@ -82,7 +82,7 @@ class page {
 						case 'cancel':
 						$main->showMessage('Cancel');
 						break;						
-						case 'sucess':
+						case 'success':
 						$main->showMessage('Success');
 						break;
 					}		
