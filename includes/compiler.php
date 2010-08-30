@@ -61,6 +61,9 @@ define('MAX_NUMBER_MONTHS',						48);
  * 
  * sudo locale-gen es_ES
  * sudo apt-get install php-gettext
+ * 
+ * Install Spanish locale: $ sudo locale-gen es_ES
+ * Install English locale: $ sudo locale-gen en_BR
  *  
  * Translate po files GUI 
  * sudo apt-get install poedit 
@@ -70,6 +73,7 @@ define('MAX_NUMBER_MONTHS',						48);
  * 
  * Config getext
  * http://zez.org/article/articleview/42/3/
+ * 
  * 
  * Using getext in ubuntu
  * http://www.sourcerally.net/regin/49-How-to-get-PHP-and-gettext-working-%28ubuntu,-debian%29

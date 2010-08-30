@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BNPanel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-30 18:46+0100\n"
+"POT-Creation-Date: 2010-08-30 19:21+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Julio <julio.montoya@beeznest.com>\n"
 "Language-Team: BeezNest <julio.montoya@beeznest.com>\n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #: /var/www/bnpanel/admin/pages/orders.php:21
 msgid "<strong>Managing Orders</strong><br />Welcome to the Invoice Management Area. Here you can add, edit and delete Invoices. <br />To get started, choose a link from the sidebar's SubMenu."
-msgstr ""
+msgstr "<strong>Órdenes</strong><br />Bienvenido to the Invoice Management Area. Here you can add, edit and delete Invoices. <br />To get started, choose a link from the sidebar's SubMenu."
 
 #: /var/www/bnpanel/locale/cache/clogin.tpl.php:2
 msgid "Username"
