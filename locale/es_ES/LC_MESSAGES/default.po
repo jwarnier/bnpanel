@@ -1,0 +1,41 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: BNPanel\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-08-30 18:46+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Julio <julio.montoya@beeznest.com>\n"
+"Language-Team: BeezNest <julio.montoya@beeznest.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Spanish\n"
+"X-Poedit-Country: SPAIN\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: /var/www/bnpanel\n"
+
+#: /var/www/bnpanel/admin/pages/orders.php:21
+msgid "<strong>Managing Orders</strong><br />Welcome to the Invoice Management Area. Here you can add, edit and delete Invoices. <br />To get started, choose a link from the sidebar's SubMenu."
+msgstr ""
+
+#: /var/www/bnpanel/locale/cache/clogin.tpl.php:2
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: /var/www/bnpanel/locale/cache/clogin.tpl.php:3
+msgid "Password"
+msgstr "Contrasena"
+
+#: /var/www/bnpanel/locale/cache/clogin.tpl.php:4
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: /var/www/bnpanel/locale/cache/clogin.tpl.php:5
+msgid "Lost your password?"
+msgstr "¿Ha olvidado su contraseña?"
+
+#: /var/www/bnpanel/locale/cache/orderpackages.tpl.php:2
+msgid "Order"
+msgstr "Comprar"
+

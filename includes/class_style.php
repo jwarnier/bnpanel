@@ -63,11 +63,53 @@ class style {
 	public function replaceVar($template, $array = 0, $style = 0) { #Fetches a template then replaces all the variables in it with that key
 		$data = $this->getFile($template, 0, $style);
 		if($array) {
-			foreach($array as $key => $value) {
+			foreach($array as $key => $value) {		
 				$data = preg_replace("/%". $key ."%/si", $value, $data);
 			}
+			//Commented lines are the traduction like Chamilo
+			
+			//include '/var/www/bnpanel/locale/es_ES/LC_MESSAGES/main.php';					 
+		
+			preg_match_all("/{.*?}/", $data, $output);
+			//preg_match_all("/_\(.*?\)/", $data, $output);			
+			
+			$cache = '/var/www/bnpanel/locale/cache/'.basename($template).'.php';
+			
+			$handle = fopen($cache,'w');
+						   		
+			if (!empty($output)) {				
+				foreach($output as $out) {
+					if (!empty($out)) {
+						fputs($handle,"<?php \n");
+						foreach($out as $item) {							
+							if (!empty($item)) {							
+								$item_original = $item;
+								$item = str_replace(array('{','}'), '', $item);
+								$save = "gettext('$item');\n";								
+								fputs($handle, $save);								
+								//$item = str_replace(array('_(',')'), '', $item);
+								//if (isset($$item)) {
+								if (isset($item)) {
+									$item_to_prereg = preg_quote($item);			
+									$data = preg_replace("/\{$item_to_prereg\}/si", gettext($item), $data);
+									//$data = preg_replace("/_\($item\)/si", gettext($item), $data);
+								}				
+							}
+						}
+						fputs($handle,'?>');
+					}			
+				}
+			}			
+			fclose($handle) or die ("Error Closing File!");			
 		}
+		//$data = $this->translateVar($array, $data);
 		return $data;
+	}
+	
+
+	
+	public function translateVar($array, $data) {
+	
 	}
 
 	public function javascript() { # Returns the HTML code for the header that includes all the JS in the javascript folder

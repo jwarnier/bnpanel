@@ -18,9 +18,7 @@ class page {
 	}
 	
 	public function description() {
-		return "<strong>Managing Orders</strong><br />
-		Welcome to the Invoice Management Area. Here you can add, edit and delete Invoices. <br />
-		To get started, choose a link from the sidebar's SubMenu.";	
+		return _("<strong>Managing Orders</strong><br />Welcome to the Invoice Management Area. Here you can add, edit and delete Invoices. <br />To get started, choose a link from the sidebar's SubMenu.");	
 	}
 		
 	public function content() {		
