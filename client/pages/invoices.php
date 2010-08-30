@@ -35,7 +35,7 @@ class page {
 						break;
 					}		
 					$return_array = $invoice->getInvoice($main->getvar['do'], true);
-					echo $style->replaceVar('tpl/invoices/viewinvoice.tpl', $return_array);					
+					echo $style->replaceVar('tpl/invoices/view-client.tpl', $return_array);					
 				}
 			break;					
 			case 'all':

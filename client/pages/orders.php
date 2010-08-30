@@ -24,7 +24,7 @@ class page {
 				if(isset($main->getvar['do'])) {					
 					$return_array = $order->getOrder($main->getvar['do'], true);	
 					$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);						
-					echo $style->replaceVar("tpl/orders/view.tpl", $return_array);				
+					echo $style->replaceVar("tpl/orders/view-client.tpl", $return_array);				
 				}
 			break;					
 			case 'all':
