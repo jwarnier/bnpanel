@@ -1,7 +1,5 @@
 <script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
 <script type="text/javascript">
-
-
 jQuery.validator.addMethod("UsernameExists", 
 		function(value, element) {
 			var username_value = $("#user").val();	
@@ -63,6 +61,10 @@ var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></di
 
 <ERRORS>
 <form id="edituser" name="edituser" method="post" action="">
+<fieldset>
+	<legend>
+		User information
+	</legend>
 <table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
                 <td>Username:</td>
@@ -97,25 +99,7 @@ var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></di
                 <td><input type="text" name="lastname" id="lastname" value="%lastname%" onchange="check('lastname', this.value)" /></td>
                 <td align="left"><a title="Your last name." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
                 <td id="lastnamecheck" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>Company:</td>
-                <td><input type="text" name="company" id="company" value="%company%" onchange="check('company', this.value)" /></td>
-                <td align="left"><a title="Company name." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="companynamecheck" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>VAT ID:</td>
-                <td><input type="text" name="vatid" id="vatid" value="%vatid%" onchange="check('vatid', this.value)" /></td>
-                <td align="left"><a title="Company VAT id." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="vatid" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>SSN/Fiscal ID:</td>
-                <td><input type="text" name="fiscalid" id="fiscalid" value="%fiscalid%" onchange="check('lastname', this.value)" /></td>
-                <td align="left"><a title="Fiscal ID or SSN." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="fiscalidcheck" align="left">&nbsp;</td>
-              </tr>
+              </tr>              
               <tr>
                 <td>Address:</td>
                 <td><input type="text" name="address" id="address" value="%address%"  onchange="check('address', this.value)" /></td>
@@ -157,13 +141,38 @@ var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></di
                 <td>Status:</td>
                 <td>%STATUS%</td>
                 <td align="left"><a title="User status" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>                
-              </tr>
-              
-              
-              <tr>
-    			<td colspan="2" align="center"><input type="submit" name="edit" id="edit" value="Edit client" /></td>
-    			</tr>
-      
+              </tr>              
             </table>
+</fieldset>            
+<fieldset>
+	<legend>
+		Company information
+	</legend>
+<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
+<tr>
+                <td>Company:</td>
+                <td><input type="text" name="company" id="company" value="%company%" onchange="check('company', this.value)" /></td>
+                <td align="left"><a title="Company name." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td id="companynamecheck" align="left">&nbsp;</td>
+              </tr>
+              <tr>
+                <td>VAT ID:</td>
+                <td><input type="text" name="vatid" id="vatid" value="%vatid%" onchange="check('vatid', this.value)" /></td>
+                <td align="left"><a title="Company VAT id." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td id="vatid" align="left">&nbsp;</td>
+              </tr>
+              <tr>
+                <td>SSN/Fiscal ID:</td>
+                <td><input type="text" name="fiscalid" id="fiscalid" value="%fiscalid%" onchange="check('lastname', this.value)" /></td>
+                <td align="left"><a title="Fiscal ID or SSN." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td id="fiscalidcheck" align="left">&nbsp;</td>
+              </tr>
+</table>
+
+</fieldset>
+
+<input type="submit" name="edit" id="edit" value="Edit client" />            
+                        
+
 </form>            
             
