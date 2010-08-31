@@ -8,7 +8,8 @@ if(isset($main->getvar['do'])) {
 	require_once LINK."paypal/paypal.class.php";
 	$paypal = new paypal_class();
 	//This is a very important step, this thing checks if the payment was sucessfull or not
-	$invoice_id = intval($main->getvar['do']);	
+	$invoice_id = intval($main->getvar['do']);
+		
 	if ($paypal->validate_ipn()) {	
 		
 		$main->addLog('paypal::ipn validate ok');
@@ -27,16 +28,11 @@ if(isset($main->getvar['do'])) {
 		$result = true;
 		
 		if ($site_status == false) {
-			//We send to the server finally
-			$main->addLog('paypal::ipn $order->sendOrderToControlPanel function called');
-			$result = $order->sendOrderToControlPanel($order_id);
-		}	
-		
-		if ($result) {
-			//Unsuspend order status + unsuspend the webhosting just in case 
+			//Unsuspend order status + create web site 
 			$order->updateOrderStatus($order_id, ORDER_STATUS_ACTIVE);
 			$main->addLog('paypal::ipn updateOrderStatus to Active');
 		} else {
+			//The site already exist
 			$order->updateOrderStatus($order_id, ORDER_STATUS_FAILED);
 			$main->addLog('paypal::ipn updateOrderStatus to Fail');
 		}
@@ -46,6 +42,7 @@ if(isset($main->getvar['do'])) {
 		$params['transaction_id'] = $transaction_id;						
 		$invoice->edit($invoice_id, $params);			
 		$main->addLog('paypal::ipn adding transaction id #'.$transaction_id);
+		
 	} else {
 		$main->addLog('paypal::ipn validate error');						
 	}

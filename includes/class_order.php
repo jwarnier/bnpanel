@@ -112,16 +112,25 @@ class order extends model {
 						$result = $server->unsuspend($order_id);
 						if($result) { $send_email = true; }																	
 					} else {
-						//Sent to ISPConfiG!!!!
+						
+						//Sent to CPanel/ISPConfig
+						
+						//1. We update the Order to active so the sendOrderToControlPanel could work
+						$params['status'] = ORDER_STATUS_ACTIVE;
+						$this->update($params);
+						
+						//2. We send a message to ISPConfig3 to create a site  
 						$result = $this->sendOrderToControlPanel($order_id);
+						
 						if (!$result) {
+							//If something goes wrong we change to Order failed
 							$result = true;
 							$status = ORDER_STATUS_FAILED;					
 						} else {
-							//We unsuspend the site
+							//We unsuspend the site just in case
 							$result = $server->unsuspend($order_id);							
 							$send_email = true;
-						}				
+						}								
 					}						
 					if ($send_email) {
 						$emailtemp 	= $db->emailTemplate('orders_active');
@@ -131,7 +140,7 @@ class order extends model {
 				break;
 				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:	
 					$result = true;
-					if ($site_info != false) { 				
+					if ($site_info != false) {		
 						$emailtemp 	= $db->emailTemplate('orders_waiting_admin');
 						$array['ORDER_ID'] 	= $order_id;					
 						$array['USER'] 		= $order_info['username'];

@@ -227,6 +227,7 @@ class ispconfig extends Panel {
 					break;
 				}
 				if ($this->debug) { echo 'Result: '; var_dump($soap_result); echo '------------------>><br />';}
+				$main->addLog("Result of ispconfig:: $action - ".print_r($soap_result,1));
 				return $soap_result;	
 			} catch (SoapFault $e) {				
 				$main->addLog("ispconfig::remote Soap error: ".$e->getMessage());
