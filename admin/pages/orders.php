@@ -327,7 +327,7 @@ class page {
 				$return_array['json_encode'] = json_encode($asOption);				
 				$oValidator = new Validator($asOption);			
 				
-				if(isset($main->getvar['do'])) {									
+				if (isset($main->getvar['do'])) {									
 					$order_info = $order->getOrderInfo($main->getvar['do']);
 					$billing_id = $order_info['billing_cycle_id'];
 							 								
@@ -372,7 +372,7 @@ class page {
 					} else {					
 						$user_info  					= $user->getUserById($order_info['userid']);						
 						$return_array['USER'] 			= $user->formatUsername($user_info['firstname'], $user_info['lastname']);
-						$return_array['DOMAIN'] 		= $order_info['real_domain'];					
+						$return_array['REAL_DOMAIN'] 	= $order_info['real_domain'];					
 						$billing_info 					= $billing->getBilling($billing_id);
 						$return_array['BILLING_CYCLES'] = $billing_info ['name'];
 						$return_array['BILLING_ID'] 	= $billing_id;
