@@ -9,11 +9,16 @@ var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></di
 var result;
 var pid;
 
-$(document).ready(function(){
+$(document).ready(function(){	
    $("#username").change(function(event) {
 	   this.value = this.value.toLowerCase();
 	   check('user', this.value);
-   });
+   });   
+   
+   //Avoid dialog problem
+   $('#login_form').dialog({
+		autoOpen: false			
+	});   
 });
 
 function stopRKey(evt) { 
@@ -41,6 +46,7 @@ function check(name, value) {
 		});
 	},500);
 }
+
 
 function orderstepme(id, type) {
 	pid = id;
@@ -82,8 +88,30 @@ function showhide(hide, show) {
      });
 }
 
+function login() {
+	
+	var user = $("#user_login").val();
+	var pass = $("#pass_login").val();	
+	$.get("<AJAX>function=clientLogin&user="+user+"&pass="+pass, function(data) {
+		if (data != '') {
+			if (data == 1) {
+				$.get("<AJAX>function=getNavigation", function(data2) {
+					$("#welcome").html(data2);	
+				});			
+				$("#login_form").dialog('close');			
+			} else {
+				alert('Try again');
+			}
+		}		
+	});		
+}
+
+function showLogin(){
+	$("#login_form").dialog('open');
+}
+
 function nextstep() {
-	 //alert(step); 
+	//alert(step); 
 	switch(step) {
 		//addon info
 		/*case 2:
@@ -134,42 +162,26 @@ function nextstep() {
 			//After selecting the payment mode
 			showhide(step, step + 1);
 			step = step + 1;
-			/*	
-			if(document.getElementById("agree").checked == true) {
-				$.get("<AJAX>function=orderIsUser", function(data) {
-					if (data == "1") {
-						showhide(step, step + 2)
-						step = step + 2
-					}
-					else {
-						showhide(step, step + 1)
-						step = step + 1
-					}
-				});
-			}
-			else {
-				document.getElementById("verify").innerHTML = wrong
-			}*/
-			
 			break;			
 		case 4:
 			//TOS				
-			if(document.getElementById("agree").checked == true) {								
-				$.get("<AJAX>function=orderIsUser", function(data) {
+			if(document.getElementById("agree").checked == true) {							
+				$.get("<AJAX>function=userIsLogged", function(data) {
 					if (data == "1") {
-						showhide(step, step + 2)
-						step = step + 2
-					} else {						
-						showhide(step, step + 1)
-						step = step + 1
+						showhide(step, step + 2);
+						step = step + 2;
+					} else {	
+						//alert('here');
+						$("#login_form").show();					
+						showhide(step, step + 1);
+						step = step + 1;
 					}
 				});
 			} else {
 				$("#verify").html("<strong>You must agree the Terms of Service</strong> "+wrong);
 			}			
-			break;
-			
-		case 5:			
+			break;			
+		case 5:					
 			//User form
 			$.get("<AJAX>function=clientcheck", function(data) {
 				if(data == "1") {					
@@ -184,6 +196,7 @@ function nextstep() {
 					$("#verify").html("<strong>You must fill all the fields</strong> "+wrong);
 				}													
 			});
+			
 			break;			
 		case 6:
 			//adding subdomain			
@@ -291,40 +304,49 @@ function final(hide, show) {
      });
 }
 function previousstep() {
+	//alert(step);
 	if (step == 2 ) {
 		$("#steps").hide();
 	}	
 	if(step != 1) {
 		document.getElementById("next").disabled = true;
 		document.getElementById("back").disabled = true;
+		
 		document.getElementById("verify").innerHTML = ""
 		
 		var newstep = step - 1;
+		
 		if (newstep == 3) {
-			$.get("<AJAX>function=orderIsUser", function(data) {
-				if (data == "1") {
+			$.get("<AJAX>function=userIsLogged", function(data) {
+				if (data == "1") {					
 					newstep = 2
+				}
+			});
+		} else if (newstep == 5) {
+			
+			$.get("<AJAX>function=userIsLogged", function(data) {
+				if (data == "1") {					
+					newstep = 4;
 				}
 			});
 		}
 		$("#"+step).fadeOut(speed, function() {
-		step = newstep;
-		$("#"+step).fadeIn(speed, function() {
-			document.getElementById("next").disabled = false;
-			if(step != "1") {
-				document.getElementById("back").disabled = false;
-			}
-			if(step == "1") {
-				document.getElementById("next").disabled = true;
-				document.getElementById("order"+pid).disabled = false;
-			}
-		});		
-     });
+			step = newstep;
+			$("#"+step).fadeIn(speed, function() {
+				document.getElementById("next").disabled = false;
+				if(step != "1") {
+					document.getElementById("back").disabled = false;
+				}		
+				if(step == "1") {
+					document.getElementById("next").disabled = true;
+					document.getElementById("order"+pid).disabled = false;
+				}
+			});		
+     	});
 	}
 }
 
 function showAddons(obj) {	
-//	step = step + 1;
 	$("#verify").html('');
 	var billing_id=obj.options[obj.selectedIndex].value;	
 	$.get("<AJAX>function=getAddons&billing_id="+billing_id +"&package_id="+document.getElementById("package").value, function(data) {
@@ -368,7 +390,12 @@ function checkSubdomain() {
 
 </script>
 <div class="box">
-%WELCOME_MESSAGE%
+
+	<span id="welcome" class="welcome">
+	%WELCOME_MESSAGE%
+	</span>
+	<div style="clear:both"></div>
+	
 <form action="" method="post" name="order" id="order">
 	
 	<div id="1">
@@ -431,7 +458,11 @@ function checkSubdomain() {
 				</td>
               </tr>
               <tr>
-                <td width="330"><input name="agree" id="agree" type="checkbox" value="1" /> Do you agree to the <NAME> Terms of Service?</td>
+                <td width="330">
+                	<label for="agree">
+               			<input name="agree" id="agree" type="checkbox" value="1" /> Do you agree to the <NAME> Terms of Service?
+                	</label>
+                </td>
                 <td><a title="The Terms of Service is the set of rules you abide by. These must be agreed to." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
               </tr>
             </table>
@@ -439,7 +470,11 @@ function checkSubdomain() {
     </div>    
 	<div class="table" id="5" style="display:none">
         <div class="cat"><span class="cat_title">Client Account</span></div>
-        <div class="text">
+        <div class="text">        
+        	<table  class="data_table">
+        	<tr>
+        	<td>
+        	
         	<fieldset>
         	<legend>
         		User information
@@ -550,8 +585,17 @@ function checkSubdomain() {
                 <td id="fiscalid" align="left">&nbsp;</td>
                </tr>
             </table>
-           </fieldset>    
-            
+           </fieldset>   
+           
+           </td>
+           <td>
+           Or
+           </td>
+           <td>
+           %LOGIN_TPL%           
+           </td>
+           </tr> 
+           </table>            
         </div>
     </div>
     <div class="table" id="6" style="display:none">
@@ -605,7 +649,8 @@ function checkSubdomain() {
     </div>
     <table width="100%" border="0" cellspacing="2" cellpadding="0" id="steps" style="display:none;">
       <tr>
-        <td width="33%" align="center"><input type="button" name="back" id="back" value="Previous Step" onclick="previousstep()" disabled="disabled" /></td>
+        <td width="33%" align="center">
+        	<input type="button" name="back" id="back" value="Previous Step" onclick="previousstep()" disabled="disabled" /></td>
         <td width="33%" align="center" id="verify">&nbsp;</td>
         <td width="33%" align="center"><input type="button" name="next" id="next" value="Next Step" onclick="nextstep()" ondblclick="return false" /></td>
       </tr>

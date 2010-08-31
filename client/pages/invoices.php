@@ -26,7 +26,7 @@ class page {
 				if(isset($main->getvar['do'])) {					
 					switch ($main->getvar['p']) {
 						case 'cancel':
-							$style->showMessage('Cancel');
+							$style->showMessage('Your Invoice is not paid. You can Pay your Invoice clicking in the Pay Now Button');
 						break;						
 						case 'success':
 							$message = 'Your Invoice #'.$main->getvar['do'].' has been paid<br />';
@@ -35,6 +35,12 @@ class page {
 						break;
 					}		
 					$return_array = $invoice->getInvoice($main->getvar['do'], true);
+					
+					if ($return_array['STATUS'] == 'Pending') {					
+						$return_array['pay'] = '<input type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$main->getvar['do'].'\');" />';
+					} else {
+						$return_array['pay'] = '';
+					}					
 					echo $style->replaceVar('tpl/invoices/view-client.tpl', $return_array);					
 				}
 			break;					

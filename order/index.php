@@ -48,15 +48,14 @@ if(!$main->getvar['id']) {
 $user_info = $main->getCurrentUserInfo();
 
 if (!empty($user_info)) {
-	$array['WELCOME_MESSAGE'] = '<span class="welcome">Signed in as <a href="/client">'.$user_info['user'].'</a></span> <div style="clear:both"></div>';	
+	$array['WELCOME_MESSAGE'] = 'Signed in as <a href="/client">'.$user_info['user'].'</a> | <a href="/client/?page=logout">Logout</a>';	
 } else {
-	$array['WELCOME_MESSAGE'] = '';
+	$array['WELCOME_MESSAGE'] = '<a href="#" onclick="showLogin();">Log in to your account</a>';
 }
 
 if($db->num_rows($packages2) == 0) {
 	echo $main->table("No packages", '<div class="warning">There are no available Packages!</div>');
-} else {
-	
+} else {	
 	while($data = $db->fetch_array($packages2, 'ASSOC')) {
 		if(!$n) {
 			$array['PACKAGES'] .= "<tr>";	
@@ -86,6 +85,13 @@ if($db->num_rows($packages2) == 0) {
 	$array['TOS'] = $db->config('tos');
 	$array['USER'] = "";
 	$array['DOMAIN'] = '<input name="cdom" id="cdom" type="text" maxlength="40" />';
+	
+	if ($main->getCurrentUserId()) {
+		$array['LOGIN_TPL'] = '';
+	} else {
+		$array['LOGIN_TPL'] = '<div id="login_form">'.$style->replaceVar("tpl/login/login_widget.tpl", array()).'</div>';		
+		//$array['LOGIN_TPL'] = $main->table("Client Area - Login", $style->replaceVar("tpl/login/login_widget.tpl", array()), '300px');
+	}		
 	$subdomain_list = $main->getSubDomains();
 	
 	switch($db->config('domain_options')) {

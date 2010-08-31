@@ -9,8 +9,9 @@ require 'compiler.php';
 
 class AJAX {
 	
-	public function orderIsUser() {
-		if(!$_SESSION['clogged']) {
+	public function userIsLogged() {
+		global $main;		
+		if(!$main->getCurrentUserId()) {
 			echo "0";
 		} else {
 			echo "1";
@@ -1402,6 +1403,27 @@ class AJAX {
 			echo '0';
 		} else {
 			echo '1';
+		}		
+	}
+	
+	public function clientLogin() {
+		global $main;
+		$user  = $main->getvar['user'];	
+		$pass  = $main->getvar['pass'];
+		if ($main->clientLogin($user, $pass)) {
+			echo '1';		
+		} else {
+			echo '0';
+		}		
+	}
+	
+	public function getNavigation() {
+		global $main;
+		$user_info = $main->getCurrentUserInfo();		
+		if (!empty($user_info)) {
+			echo 'Signed in as <a href="'.URL.'client">'.$user_info['user'].'</a> | <a href="'.URL.'client/?page=logout">Logout</a>';
+		} else {
+			echo 'Log in to your account';
 		}		
 	}
 		
