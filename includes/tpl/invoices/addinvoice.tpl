@@ -52,8 +52,8 @@
 	  
      <tr>
     <td valign="top">Domain</td>
-    <td>
-    	%DOMAIN%
+    <td>    	
+    	 <a target="_blank" href="http://%REAL_DOMAIN%">%REAL_DOMAIN%</a>
     </td>
   </tr>
   

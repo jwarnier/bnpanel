@@ -69,8 +69,8 @@ function loadAddons(obj) {
   </tr> 
      <tr>
     <td valign="top">Domain</td>
-    <td>
-    %REAL_DOMAIN%
+    <td>    
+       <a target="_blank" href="http://%REAL_DOMAIN%">%REAL_DOMAIN%</a>
     </td>
   </tr>  
   <tr>
