@@ -1,3 +1,10 @@
+<script type="text/javascript">
+function doswirl(id) {
+	document.getElementById("swirl"+id).innerHTML = '<img src="<URL>themes/icons/ajax-loader.gif">';
+	window.location = 'index.php?page=invoices&iid='+id;
+}
+</script>
+
 <h2>Invoice #%ID%</h2>
 <ERRORS>
 <table class="content" border="0" cellspacing="2" cellpadding="0">
@@ -74,5 +81,14 @@
     	<p class="price">%TOTAL%</p>
     </td>
   </tr>
+  
+  
     
 </table>
+
+<div id="navigation">
+	<div id="swirl%ID%">
+	%pay%	
+	</div>
+</div>
+

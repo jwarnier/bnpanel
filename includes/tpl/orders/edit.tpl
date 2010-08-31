@@ -12,7 +12,7 @@ $(function() {
 		buttonImage: '<URL>themes/icons/calendar_add.png'			 
 	});*/
 
-	$("#show_preview").dialog({ autoOpen: false, width: '400px' });
+	/* $("#show_preview").dialog({ autoOpen: false, width: '400px' }); */
 });
 
 /*
