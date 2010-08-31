@@ -55,14 +55,17 @@ function lookup(inputString) {
         // Hide the suggestion box.
         $('#suggestions').hide();
     } else {
-        $.post("<AJAX>function=searchuser", {query: ""+inputString+""}, function(data){
-            if(data.length >0) {
-                $('#suggestions').show();
-                $('#autoSuggestionsList').html(data);
-            }
-        });
+        $.post("<AJAX>function=searchuser",{
+            query:inputString
+            }, 
+            function(data) {
+            	if (data.length >0) {
+                	$('#suggestions').show();
+                	$('#autoSuggestionsList').html(data);
+            	}
+        } );
     }
-} // lookup
+}
 
 function changeDomain() {
 	var domain_obj = document.getElementById("domain_type");
