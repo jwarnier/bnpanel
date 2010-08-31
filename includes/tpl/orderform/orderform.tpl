@@ -440,6 +440,10 @@ function checkSubdomain() {
 	<div class="table" id="5" style="display:none">
         <div class="cat"><span class="cat_title">Client Account</span></div>
         <div class="text">
+        	<fieldset>
+        	<legend>
+        		User information
+        	</legend>
         	<table class="data_table" border="0" cellspacing="2" cellpadding="0" align="center" style="width: 400px;">
               <tr>
                 <td>Username:</td>
@@ -476,24 +480,7 @@ function checkSubdomain() {
                 <td id="lastnamecheck" align="left">&nbsp;</td>
               </tr>
               
-               <tr>
-                <td>Company:</td>
-                <td><input type="text" name="company" id="company" onchange="check('company', this.value)" /></td>
-                <td align="left"><a title="Your company name" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="companynamecheck" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>Tax ID (VAT):</td>
-                <td><input type="text" name="vatid" id="vatid" onchange="check('vatid', this.value)" /></td>
-                <td align="left"><a title="Company Tax registration number (VAT ID)" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="vatid" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>SSN/Fiscal ID</td>
-                <td><input type="text" name="fiscalid" id="fiscalid" onchange="check('fiscalid', this.value)" /></td>
-                <td align="left"><a title="Your SSN or Fiscal ID" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="fiscalid" align="left">&nbsp;</td>
-               </tr>
+   
               <tr>
                 <td>Address:</td>
                 <td><input type="text" name="address" id="address" onchange="check('address', this.value)" /></td>
@@ -537,6 +524,34 @@ function checkSubdomain() {
                 <td id="humancheck" align="left">&nbsp;</td>
               </tr>
             </table>
+			</fieldset>
+			<br />
+            <fieldset>
+            <legend>
+        		Company information (Optional)
+        	</legend>
+            <table class="data_table" border="0" cellspacing="2" cellpadding="0" align="center" style="width: 400px;">
+              <tr>
+                <td>Company:</td>
+                <td><input type="text" name="company" id="company" onchange="check('company', this.value)" /></td>
+                <td align="left"><a title="Your company name" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td id="companynamecheck" align="left">&nbsp;</td>
+              </tr>
+              <tr>
+                <td>Tax ID (VAT):</td>
+                <td><input type="text" name="vatid" id="vatid" onchange="check('vatid', this.value)" /></td>
+                <td align="left"><a title="Company Tax registration number (VAT ID)" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td id="vatid" align="left">&nbsp;</td>
+              </tr>
+              <tr>
+                <td>SSN/Fiscal ID</td>
+                <td><input type="text" name="fiscalid" id="fiscalid" onchange="check('fiscalid', this.value)" /></td>
+                <td align="left"><a title="Your SSN or Fiscal ID" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td id="fiscalid" align="left">&nbsp;</td>
+               </tr>
+            </table>
+           </fieldset>    
+            
         </div>
     </div>
     <div class="table" id="6" style="display:none">

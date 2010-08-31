@@ -11,6 +11,11 @@ function check() {
 <ERRORS>
 %DISP%
 <form class="content" id="edit" name="edit" method="post" action="">
+
+<fieldset>
+	<legend>
+		User information
+	</legend>
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Username:</td>
@@ -86,7 +91,49 @@ function check() {
       <a title="Your phone number." class="tooltip"><img src="<ICONDIR>information.png" /></a>
     </td>
   </tr>
+  <tr>
+    <td>Change Password: 
+    </td>
+    <td><input name="change" type="checkbox" id="change" value="1" onchange="check()" /></td>
+  </tr>
   
+  <tr>
+  	<td colspan="2">
+    <div class="subborder" id="changepass" style="display:none;">
+    
+    <div class="sub">
+    
+	    <table width="100%" border="0" cellspacing="0" cellpadding="1">
+	  <tr>
+	    <td>Current Password:</td>
+	    <td><input type="password" name="currentpass" id="currentpass" />
+	     <a title="Type your current password here." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
+	  </tr>
+	  <tr>
+	    <td>New Password:</td>
+	    <td><input type="password" name="newpass" id="newpass" />
+	     <a title="Type your new password here." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
+	  </tr>
+	  <tr>
+	    <td>Confirm Password:</td>
+	    <td><input type="password" name="cpass" id="cpass" />
+	     <a title="Confirm your new password here." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
+	  </tr>
+	</table>
+	</div>
+</div>
+    </td>
+  </tr>
+</table>
+	
+</fieldset>	
+
+<fieldset>
+	<legend>
+		Company information (Optional)
+	</legend>
+	<table width="100%" border="0" cellspacing="2" cellpadding="0">
+	
   <tr>
     <td width="20%">Company:</td>
     <td>
@@ -110,37 +157,8 @@ function check() {
       <!-- <input type="text" name="fiscalid" id="fiscalid" value="%FISCALID%" readonly="readonly"/> -->
      <a title="User's SSN or Fiscal ID." class="tooltip"><img src="<ICONDIR>information.png" /></a>
   </tr>
+  </table>
   
-  <tr>
-    <td>Change Password: 
-    </td>
-    <td><input name="change" type="checkbox" id="change" value="1" onchange="check()" /></td>
-  </tr>
-  <tr>
-  	<td colspan="2">
-    <div class="subborder" id="changepass" style="display:none;"><div class="sub"><table width="100%" border="0" cellspacing="0" cellpadding="1">
-  <tr>
-    <td width="20%">Current Password:</td>
-    <td><input type="password" name="currentpass" id="currentpass" />
-     <a title="Type your current password here." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
-  </tr>
-  <tr>
-    <td>New Password:</td>
-    <td><input type="password" name="newpass" id="newpass" />
-     <a title="Type your new password here." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
-  </tr>
-  <tr>
-    <td>Confirm Password:</td>
-    <td><input type="password" name="cpass" id="cpass" />
-     <a title="Confirm your new password here." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
-  </tr>
-</table>
-</div></div>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center"><input type="submit" name="edit2" id="edit2" value="Edit Details" /></td>
-    </tr>
-</table>
+</fieldset>	
+    <input type="submit" name="edit2" id="edit2" value="Edit Details" />
 </form>
-</div>
