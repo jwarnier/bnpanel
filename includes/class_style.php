@@ -70,7 +70,7 @@ class style {
 			
 			//include '/var/www/bnpanel/locale/es_ES/LC_MESSAGES/main.php';					 
 		
-			preg_match_all("/{.*?}/", $data, $output);
+			preg_match_all("/_{.*?}/", $data, $output);
 			//preg_match_all("/_\(.*?\)/", $data, $output);			
 			
 			$cache = '/var/www/bnpanel/locale/cache/'.basename($template).'.php';
@@ -84,14 +84,14 @@ class style {
 						foreach($out as $item) {							
 							if (!empty($item)) {							
 								$item_original = $item;
-								$item = str_replace(array('{','}'), '', $item);
+								$item = str_replace(array('_{','}'), '', $item);
 								$save = "gettext('$item');\n";								
 								fputs($handle, $save);								
 								//$item = str_replace(array('_(',')'), '', $item);
 								//if (isset($$item)) {
 								if (isset($item)) {
 									$item_to_prereg = preg_quote($item);			
-									$data = preg_replace("/\{$item_to_prereg\}/si", gettext($item), $data);
+									$data = preg_replace("/_\{$item_to_prereg\}/si", gettext($item), $data);
 									//$data = preg_replace("/_\($item\)/si", gettext($item), $data);
 								}				
 							}
