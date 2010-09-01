@@ -26,7 +26,7 @@ class page {
 				if(isset($main->getvar['do'])) {					
 					switch ($main->getvar['p']) {
 						case 'cancel':
-							$style->showMessage('Your Invoice is not paid. You can Pay your Invoice clicking in the Pay Now Button');
+							$style->showMessage('Your Invoice #'.$main->getvar['do'].' is not paid. <br /> You can pay your Invoice clicking in the "Pay Now" button');
 						break;						
 						case 'success':
 							$message = 'Your Invoice #'.$main->getvar['do'].' has been paid<br />';
@@ -79,14 +79,14 @@ class page {
 								$array['due']	=  '<span style="color:green">'.$array['due'].'</span>' ;						  
 							break;
 							case INVOICE_STATUS_CANCELLED:
-								$array['paid'] 	= "<span style='color:red'>Canceled</span>";
+								$array['paid'] 	= '<span style="color:red">Canceled</span>';
 								$array['pay'] 	= '<input type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$invoice_item['id'].'\')" />';
-								$array['due']	=  '<span style="color:red">'.$array['due'].'</span>';		
+								$array['due']	= '<span style="color:red">'.$array['due'].'</span>';		
 							break;
 							case INVOICE_STATUS_WAITING_PAYMENT:
-								$array['paid'] = "<span style='color:red'>Pending</span>";
+								$array['paid'] 	= '<span style="color:red">Pending</span>';
 								$array['pay'] 	= '<input type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$invoice_item['id'].'\')" />';
-								$array['due']	=  '<span style="color:red">'.$array['due'].'</span>';		
+								$array['due']	= '<span style="color:red">'.$array['due'].'</span>';		
 							break;
 							case INVOICE_STATUS_DELETED:
 								///	$array['paid'] = "<span style='color:green'>Already Paid</span>";
