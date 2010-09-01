@@ -81,17 +81,23 @@ function orderstepme(id, type) {
 }
 
 function showhide(hide, show) {	
+	/*$("#next").hide();
+	$("#back").hide();*/
 	document.getElementById("next").disabled = true;
 	document.getElementById("back").disabled = true;
 	document.getElementById("verify").innerHTML = "";
 	
 	$("#"+hide).fadeOut(speed, function() {
 		$("#steps").fadeIn(speed);
+		//$("#next").fadeIn(speed);
+		//$("#back").fadeIn(speed);
 		$("#"+show).fadeIn(speed, function() {
 			document.getElementById("next").disabled = false;
 			document.getElementById("back").disabled = false;
+			
 		});
      });
+		
 }
 
 function login() {	
@@ -120,7 +126,7 @@ function showLogin() {
 }
 
 function nextstep() {
-	//alert(step); 
+	//alert(step);
 	switch(step) {
 		//addon info
 		/*case 2:
@@ -173,12 +179,13 @@ function nextstep() {
 			step = step + 1;
 			break;			
 		case 4:
-			//TOS				
+			//TOS
 			if(document.getElementById("agree").checked == true) {							
 				$.get("<AJAX>function=userIsLogged", function(data) {
 					if (data == "1") {
 						showhide(step, step + 2);
 						step = step + 2;
+						$("#next").val('Pay now');						
 					} else {	
 						//alert('here');
 						$("#login_form").show();					
@@ -193,11 +200,12 @@ function nextstep() {
 		case 5:					
 			//User form
 			$.get("<AJAX>function=clientcheck", function(data) {
-				if(data == "1") {					
+				if(data == "1") {	
 					if (document.getElementById("username").value != '' ) {
 						document.getElementById("verify").innerHTML = right;
+						$("#next").val('Pay now');						
 						showhide(step, step + 1)
-						step = step + 1;
+						step = step + 1;						
 					} else {
 						$("#verify").html("<strong>You must fill all the fields</strong> "+wrong);
 					}	
@@ -314,6 +322,9 @@ function final(hide, show) {
 }
 function previousstep() {
 	//alert(step);
+	
+	$("#next").val('Next Step');
+	
 	if (step == 2 ) {
 		$("#steps").hide();
 	}	

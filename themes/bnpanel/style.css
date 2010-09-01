@@ -1,6 +1,7 @@
 * {
 	margin:0px;
 	padding:0px;
+	outline :none; /* No more border in  anchors or buttons */
 }
 body {
 	margin:0;
