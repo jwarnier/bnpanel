@@ -16,49 +16,51 @@ class AJAX {
 	 */
 	
 	public function sqlcheck() {
-		global $main, $style;
-		
-		if(INSTALL != 1) {
-			$host 	= $_GET['host'];
-			$user 	= $_GET['user'];
-			$pass 	= $_GET['pass'];
-			$db 	= $_GET['db'];
-			$pre 	= $_GET['pre'];
-			//die($_SERVER['REQUEST_URI']);
-			$con = @mysql_connect($host, $user, $pass);
-			if(!$con) {
-				echo 0;	
-			} else {
-				$seldb = mysql_select_db($db, $con);
-				if(!$seldb) {
-					echo 1;	
+		global $main;
+		//This call only will work if the conf.inc.php is writable, this means that the installation is not protected yet
+		$link = LINK."conf.inc.php";		
+		if (file_exists($link) && is_writable($link)) {
+			if (INSTALL != 1) {
+				$host 	= $_GET['host'];
+				$user 	= $_GET['user'];
+				$pass 	= $_GET['pass'];
+				$db 	= $_GET['db'];
+				$pre 	= $_GET['pre'];
+				//die($_SERVER['REQUEST_URI']);
+				$con = @mysql_connect($host, $user, $pass);
+				if(!$con) {
+					echo 0;	
 				} else {
-					if ($this->writeconfig($host, $user, $pass, $db, $pre, "false")) {
-						echo 2;	
+					$seldb = mysql_select_db($db, $con);
+					if(!$seldb) {
+						echo 1;	
 					} else {
-						echo 3;	
+						if ($this->writeconfig($host, $user, $pass, $db, $pre, "false")) {
+							echo 2;	
+						} else {
+							echo 3;	
+						}
 					}
 				}
+			} else {
+				echo 4;	
 			}
-		} else {
-			echo 4;	
 		}
 	}
 	
 	private function writeconfig($host, $user, $pass, $db, $pre, $true, $upgrade = 'false') {
-		global $style;
-		
-		$array['HOST'] 		=  $host;
-		$array['USER'] 		=  $user;
-		$array['PASS'] 		=  $pass;
-		$array['DB'] 		=  $db;
-		$array['PRE'] 		=  $pre;
-		$array['TRUE'] 		=  $true;		
-		$array['UPGRADE'] 	=  $upgrade;		
-		
-		$tpl = $style->replaceVar("tpl/install/conftemp.tpl", $array);
+		global $style;		
 		$link = LINK."conf.inc.php";		
-		if (is_writable($link)) {
+		if (file_exists($link) && is_writable($link)) {			
+			$array['HOST'] 		=  $host;
+			$array['USER'] 		=  $user;
+			$array['PASS'] 		=  $pass;
+			$array['DB'] 		=  $db;
+			$array['PRE'] 		=  $pre;
+			$array['TRUE'] 		=  $true;		
+			$array['UPGRADE'] 	=  $upgrade;		
+			
+			$tpl = $style->replaceVar("tpl/install/conftemp.tpl", $array);					
 			file_put_contents($link, $tpl);
 			return true;
 		} else {
@@ -67,7 +69,7 @@ class AJAX {
 	}
 	
 	public function install() {
-		global $style, $db, $main;
+		global $db, $main;
 		$conf_file = LINK."conf.inc.php";
 		
 		if (file_exists($conf_file) && is_writable($conf_file)) {
@@ -75,7 +77,7 @@ class AJAX {
 			$dbCon = mysql_connect($sql['host'], $sql['user'], $sql['pass']);
 			$dbSel = mysql_select_db($sql['db'], $dbCon);
 			
-			if($_GET['type'] == "install") {
+			if ($_GET['type'] == "install") {
 				$errors = $this->installsql("sql/install.sql", $sql['pre'], $dbCon);
 				echo "Complete!<br /><strong>There were ".$errors['n']." errors while executing the SQL!</strong><br />";
 				echo '<div align="center"><input type="button" name="button4" id="button4" value="Next Step" onclick="change()" /></div>';					
@@ -90,10 +92,10 @@ class AJAX {
 			} else {
 				echo "Fatal Error Debug";
 			}			
-			if(!$this->writeconfig($sql['host'], $sql['user'], $sql['pass'], $sql['db'], $sql['pre'], "true")) {
+			if (!$this->writeconfig($sql['host'], $sql['user'], $sql['pass'], $sql['db'], $sql['pre'], "true")) {
 				echo '<div class="errors">There was a problem re-writing to the config!</div>';	
 			}					
-			if($errors['n']) {
+			if ($errors['n']) {
 				echo "<strong>SQL Queries (Broke):</strong><br />";
 				foreach($errors['errors'] as $value) {
 					echo $value."<br />";	
@@ -102,133 +104,147 @@ class AJAX {
 		}
 	}
 	
+	/**
+	 * @todo this function should be moved to a includes/install.lib.php file 
+	 */
 	private function installsql($data, $pre, $con = 0) {
 		global $style, $db;
-		$array['PRE'] = $pre;
-		$array['API-KEY'] = hash('sha512', $this->randomString());
-		$sContents = $style->replaceVar($data, $array);
 		
-		// replace slash quotes so they don't get in the way during parse
-		// tried a replacement array for this but it didn't work
-		// what's a couple extra lines of code, anyway?
-		$sDoubleSlash   = '~~DOUBLE_SLASH~~';
-		$sSlashQuote    = '~~SLASH_QUOTE~~';
-		$sSlashSQuote   = '~~SLASH_SQUOTE~~';
-		
-		$sContents = str_replace('\\\\', $sDoubleSlash,  $sContents);
-		$sContents = str_replace('\"', $sSlashQuote,  $sContents);
-		$sContents = str_replace("\'", $sSlashSQuote, $sContents);
-		
-		$iContents = strlen($sContents);
-		$sDefaultDelimiter = ';';
-		
-		$aSql = array();
-		$sSql = '';
-		$bInQuote   = false;
-		$sDelimiter = $sDefaultDelimiter;
-		$iDelimiter = strlen($sDelimiter);
-		$aQuote = array("'", '"');
-		
-		for ($i = 0;  $i < $iContents;  $i++) {
-			if ($sContents[$i] == "\n"
-			||  $sContents[$i] == "\r") {
-				// Check for Delimiter Statement
-				if (preg_match('/delimiter\s+(.+)/i', $sSql, $aMatches)) {
-						$sDelimiter = $aMatches[1];
-						$iDelimiter = strlen($sDelimiter);
-						$sSql = '';
-						continue;
+		$conf_file = LINK."conf.inc.php";		
+		if (file_exists($conf_file) && is_writable($conf_file)) {
+			
+			$array['PRE'] = $pre;
+			$array['API-KEY'] = hash('sha512', $this->randomString());
+			$sContents = $style->replaceVar($data, $array);
+			
+			// replace slash quotes so they don't get in the way during parse
+			// tried a replacement array for this but it didn't work
+			// what's a couple extra lines of code, anyway?
+			$sDoubleSlash   = '~~DOUBLE_SLASH~~';
+			$sSlashQuote    = '~~SLASH_QUOTE~~';
+			$sSlashSQuote   = '~~SLASH_SQUOTE~~';
+			
+			$sContents = str_replace('\\\\', $sDoubleSlash,  $sContents);
+			$sContents = str_replace('\"', $sSlashQuote,  $sContents);
+			$sContents = str_replace("\'", $sSlashSQuote, $sContents);
+			
+			$iContents = strlen($sContents);
+			$sDefaultDelimiter = ';';
+			
+			$aSql = array();
+			$sSql = '';
+			$bInQuote   = false;
+			$sDelimiter = $sDefaultDelimiter;
+			$iDelimiter = strlen($sDelimiter);
+			$aQuote = array("'", '"');
+			
+			for ($i = 0;  $i < $iContents;  $i++) {
+				if ($sContents[$i] == "\n"
+				||  $sContents[$i] == "\r") {
+					// Check for Delimiter Statement
+					if (preg_match('/delimiter\s+(.+)/i', $sSql, $aMatches)) {
+							$sDelimiter = $aMatches[1];
+							$iDelimiter = strlen($sDelimiter);
+							$sSql = '';
+							continue;
+					}
 				}
-			}
-		
-			if (in_array($sContents[$i], $aQuote)) {
-				$bInQuote = !$bInQuote;
+			
+				if (in_array($sContents[$i], $aQuote)) {
+					$bInQuote = !$bInQuote;
+					if ($bInQuote) {
+							$aQuote = array($sContents[$i]);
+					} else {
+							$aQuote = array("'", '"');
+					}
+				}
+			
 				if ($bInQuote) {
-						$aQuote = array($sContents[$i]);
+					$sSql .= $sContents[$i];
 				} else {
-						$aQuote = array("'", '"');
+					// fill a var with the potential delimiter - aka read-ahead
+					if(substr($sContents, $i, $iDelimiter) == $sDelimiter) {
+							// Clear Comments
+							$sSql = preg_replace("/^(-{2,}.+)/", '', $sSql);
+							$sSql = preg_replace("/(?:\r|\n)(-{2,}.+)/", '', $sSql);
+			
+							// Put quotes back where you found them
+							$sSql = str_replace($sDoubleSlash, '\\\\',  $sSql);
+							$sSql = str_replace($sSlashQuote,  '\\"',   $sSql);
+							$sSql = str_replace($sSlashSQuote, "\\'",   $sSql);
+			
+							// FIXME: odd replacement issue, just fix it for now and move on
+							$sSql = str_replace('IFEXISTS`', 'IF EXISTS `', $sSql);
+			
+							$aSql[] = $sSql;
+							$sSql = '';
+			
+							// pass delimiter
+							$i += $iDelimiter;
+					} else {
+							$sSql .= $sContents[$i];
+					}
 				}
 			}
-		
-			if ($bInQuote) {
-				$sSql .= $sContents[$i];
-			} else {
-				// fill a var with the potential delimiter - aka read-ahead
-				if(substr($sContents, $i, $iDelimiter) == $sDelimiter) {
-						// Clear Comments
-						$sSql = preg_replace("/^(-{2,}.+)/", '', $sSql);
-						$sSql = preg_replace("/(?:\r|\n)(-{2,}.+)/", '', $sSql);
-		
-						// Put quotes back where you found them
-						$sSql = str_replace($sDoubleSlash, '\\\\',  $sSql);
-						$sSql = str_replace($sSlashQuote,  '\\"',   $sSql);
-						$sSql = str_replace($sSlashSQuote, "\\'",   $sSql);
-		
-						// FIXME: odd replacement issue, just fix it for now and move on
-						$sSql = str_replace('IFEXISTS`', 'IF EXISTS `', $sSql);
-		
-						$aSql[] = $sSql;
-						$sSql = '';
-		
-						// pass delimiter
-						$i += $iDelimiter;
-				} else {
-						$sSql .= $sContents[$i];
+			
+			$aSql = array_map('trim', $aSql);
+			$aSql = array_filter($aSql);
+			
+			$n = 0;
+			foreach($aSql as $sSql) {
+				if($con) {
+					$query = mysql_query($sSql, $con);
+				}
+				else {
+					$query = $db->query($sSql);	
+				}
+				if(!$query) {
+					$n++;
+					$errors[] = $sSql;
 				}
 			}
-		}
-		
-		$aSql = array_map('trim', $aSql);
-		$aSql = array_filter($aSql);
-		
-		$n = 0;
-		foreach($aSql as $sSql) {
-			if($con) {
-				$query = mysql_query($sSql, $con);
+			if(!$n) {
+				$n = 0;	
 			}
-			else {
-				$query = $db->query($sSql);	
-			}
-			if(!$query) {
-				$n++;
-				$errors[] = $sSql;
-			}
+			$stuff['n'] = $n;
+			$stuff['errors'] = $errors;
+			return $stuff;
 		}
-		if(!$n) {
-			$n = 0;	
-		}
-		$stuff['n'] = $n;
-		$stuff['errors'] = $errors;
-		return $stuff;
 	}
 	
 	public function installfinal() {
 		global $db, $main;
-		$query = $db->query("SELECT * FROM <PRE>staff");
-		
-		if($db->num_rows($query) == 0) {
-			foreach($main->getvar as $key => $value) {
-				if(!$value) {
-					$n++;	
+		$conf_file = LINK."conf.inc.php";		
+		if (file_exists($conf_file) && is_writable($conf_file)) {			
+			$query = $db->query("SELECT * FROM <PRE>staff");			
+			if($db->num_rows($query) == 0) {
+				foreach($main->getvar as $key => $value) {
+					if(!$value) {
+						$n++;	
+					}
 				}
-			}
-			if ($main->checkToken(false)) {
-				if(!$n) {				
-					$db->updateConfig('url', 		$main->getvar['url']);
-					$db->updateConfig('name', 		$main->getvar['site_name']);
-					$db->updateConfig('emailfrom', 	$main->getvar['site_email']);
-					
-					$salt = md5(rand(0,99999));
-					$password = md5(md5($main->getvar['pass']).md5($salt));
-					$db->query("INSERT INTO <PRE>staff (user, email, password, salt, name) VALUES(
-							  '{$main->getvar['user']}',
-							  '{$main->getvar['email']}',
-							  '{$password}',
-							  '{$salt}',
-							  '{$main->getvar['name']}')");
-					echo 1;
-				} else {
-					echo 0;	
+				if ($main->checkToken(false)) {
+					if(!$n) {				
+						$db->updateConfig('url', 		$main->getvar['url']);
+						$db->updateConfig('name', 		$main->getvar['site_name']);
+						$db->updateConfig('emailfrom', 	$main->getvar['site_email']);
+						
+						$salt = md5(rand(0,99999));
+						$password = md5(md5($main->getvar['pass']).md5($salt));
+						$main->getvar['user']	=	$db->strip($main->getvar['user']);
+						$main->getvar['email'] 	=	$db->strip($main->getvar['email']);
+						$main->getvar['name'] 	=	$db->strip($main->getvar['name']);
+						 
+						$db->query("INSERT INTO <PRE>staff (user, email, password, salt, name) VALUES(
+								  '{$main->getvar['user']}',
+								  '{$main->getvar['email']}',
+								  '{$password}',
+								  '{$salt}',
+								  '{$main->getvar['name']}')");
+						echo 1;
+					} else {
+						echo 0;	
+					}
 				}
 			}
 		}
@@ -450,6 +466,11 @@ class AJAX {
 		}
 	}
 	
+	/**
+	 * Creates an Order to the system
+	 * This function is called in the Order form when all steps are finished.
+	 */
+	 
 	public function create() { 
 		global $server;
 		$server->signup();
@@ -1480,7 +1501,7 @@ if(isset($_GET['function']) && !empty($_GET['function'])) {
 			}		
 		}
 	} else {
-		//Someone is trying to check the AJAX Reponse from a browser  
+		//Someone is trying to check the AJAX Reponse from a browser
 		$main->redirect();
 	}
 }
