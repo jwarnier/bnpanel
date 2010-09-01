@@ -211,9 +211,9 @@ class server extends Model {
 			if((!$main->getvar['username'])) {
 				echo "Please enter a username!";
 				return;
-			} else {
-				$query = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$main->getvar['username']}'");
-				if($db->num_rows($query) != 0) {
+			} else {				
+				$user_result = $user->getUserByUserName($main->getvar['username']);
+				if(!empty($user_result)) {
 					echo "That username already exists!";
 					return;
 				}
@@ -235,8 +235,8 @@ class server extends Model {
 					echo "Your email is the wrong format!";	
 					return;
 			} else {
-				$query = $db->query("SELECT * FROM `<PRE>users` WHERE `email` = '{$main->getvar['email']}'");
-				if($db->num_rows($query) != 0) {
+				$email_result = $user->getUserByEmail($main->getvar['email']);				
+				if(!empty($email_result)) {
 					echo "That e-mail address is already in use!";
 					return;
 				}
@@ -713,7 +713,7 @@ class server extends Model {
 			}
 			if($this->servers[$server]->unsuspend($data2['user'], $server) == true) {
 				$date = time();
-				$db->query("UPDATE `<PRE>user_packs` SET `status` = '1' WHERE `id` = '{$data['id']}'");
+				//$db->query("UPDATE `<PRE>user_packs` SET `status` = '1' WHERE `id` = '{$data['id']}'");
 				/*$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
 													  '{$db->strip($data['userid'])}',
 													  '{$data2['user']}',

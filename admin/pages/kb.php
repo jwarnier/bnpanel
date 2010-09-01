@@ -58,7 +58,7 @@ class page {
 						
 						$main->postvar['editname'] 			= $db->strip($main->postvar['editname']);
 						$main->postvar['editdescription'] 	= $db->strip($main->postvar['editdescription']);
-						$main->postvar['id'] = intval($main->postvar['id']);
+						$main->postvar['id'] 				= intval($main->postvar['id']);
 						
 						$db->query("UPDATE <PRE>cats SET name = '{$main->postvar['editname']}', `description` = '{$main->postvar['editdescription']}' WHERE id = '{$main->postvar['id']}'");
 						$main->errors("Category Edited!");
@@ -123,7 +123,7 @@ class page {
 					if(!$n) {
 						$main->postvar['editname'] 			= $db->strip($main->postvar['editname']);
 						$main->postvar['editdescription'] 	= $db->strip($main->postvar['editdescription']);
-						$main->postvar['id'] = intval($main->postvar['id']);
+						$main->postvar['id'] 				= intval($main->postvar['id']);
 						
 						$db->query("UPDATE `<PRE>articles` SET `name` = '{$main->postvar['editname']}', `content` = '{$main->postvar['editdescription']}' WHERE `id` = '{$main->postvar['id']}'");
 						$main->errors("Article Edited!");
