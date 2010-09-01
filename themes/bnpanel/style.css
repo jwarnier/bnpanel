@@ -220,6 +220,8 @@ input, option {
 	margin-right:5px;
 	font-family:Arial,Helvetica,sans-serif;
 }
+
+
 .break {
 	height:1px;
 	border-bottom:1px dashed #245ba9;
@@ -532,11 +534,16 @@ input[type="submit"], input[type="button"] {
 	border-style:solid;
 	border-width:1px;
 	cursor:pointer;
-	font-size:11px !important;
-	line-height:13px;
+	font-size:12px !important;
+	line-height:12px;
 	padding:3px 8px;
 	text-decoration:none;   
 }
+
+input[type="submit"]:hover , input[type="button"]:hover {
+	/* border-color:#ccc; */		
+}
+
 
 fieldset {
 	 border:1px solid #ccc;
@@ -618,3 +625,6 @@ label.error {
 	padding-top:5px;	
 }
 
+.big_title {
+	font-size:24px !important
+}

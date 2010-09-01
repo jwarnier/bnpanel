@@ -610,7 +610,10 @@ function checkSubdomain() {
            Or
            </td>
            <td>
-           <a onclick="showLogin();" href="#">Log in to your account</a>
+           <div class="big_title">
+				<a onclick="showLogin();" href="#">Log in to your account</a>
+			</div>
+				
            %LOGIN_TPL%           
            </td>
            </tr> 
