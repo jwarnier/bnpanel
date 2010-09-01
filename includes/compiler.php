@@ -57,38 +57,36 @@ define('MAX_NUMBER_MONTHS',						48);
  * 
  * Experimental translation BNPanel feature using getext
  * 
- * Please install this (ubuntu)
+ * Please install this in Ubuntu
  * 
  * sudo locale-gen es_ES
+ * 
  * sudo apt-get install php-gettext
  * 
  * Install Spanish locale: $ sudo locale-gen es_ES
  * Install English locale: $ sudo locale-gen en_GB
  * 
- * In debian check this file
+ * In Debian check this file More info: http://algorytmy.pl/doc/php/ref.gettext.php
  * vim /etc/locale.gen
- *  
- * Translate po files GUI 
- * sudo apt-get install poedit 
  * 
+ *  
+ * Translate po files using this GUI 
+ * sudo apt-get install poedit 
  * 
  * Some help here:
  * 
  * Config getext
  * http://zez.org/article/articleview/42/3/
- * 
- * http://algorytmy.pl/doc/php/ref.gettext.php
- * 
+ *  * 
  * Using getext in ubuntu
  * http://www.sourcerally.net/regin/49-How-to-get-PHP-and-gettext-working-%28ubuntu,-debian%29
  * 
  * Getext tutorial
  * http://mel.melaxis.com/devblog/2005/08/06/localizing-php-web-sites-using-gettext/
- * 
- * 
+ *  
  */
 
-#Start us up
+//Start us up
 if (CRON != 1) {
 	session_start();	
 }
@@ -131,10 +129,10 @@ setlocale(LC_ALL, $locale);
 setlocale(LC_MESSAGES, $locale);
 */
 
+
 #Page generated
 $starttime = explode(' ', microtime());
 $starttime = $starttime[1] + $starttime[0];
-
 
 
 $includePath = dirname(__FILE__);
@@ -294,9 +292,3 @@ function checkForDependencies() {
 		return $output;
 	}
 }
-
-//@todo remove this debug calls
-//var_dump($order->getOrder('8', true));
-//$invoice_info 	= $addon->updateAddonOrders(array(1,2,3), '9');
-//var_dump($invoice_info 	);exit; 
-//echo $main->generateUsername(); exit;
