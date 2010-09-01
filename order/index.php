@@ -8,12 +8,6 @@ define("PAGE", "Order Form");
 define("SUB", "Account Creation");
 define("INFO", "IP Logged: ". $main->removeXSS($_SERVER['REMOTE_ADDR']));
 
-#If logout
-if($main->getvar['do'] == "logout") {
-	$main->logout();
-	$main->redirect("../order/");
-}
-
 echo $style->get("header.tpl"); #Output Header
 
 //Deleting check  
@@ -42,7 +36,7 @@ $main->getvar['id'] = intval($main->getvar['id']);
 if(!$main->getvar['id']) {
 	$packages2 = $db->query("SELECT * FROM <PRE>packages WHERE is_hidden = 0 AND is_disabled = 0 ORDER BY `order` ASC"); 
 } else {
-	$packages2 = $db->query("SELECT * FROM <PRE>packages` WHERE is_disabled = 0 AND id = '{$main->getvar['id']}'");
+	$packages2 = $db->query("SELECT * FROM <PRE>packages WHERE is_disabled = 0 AND id = '{$main->getvar['id']}'");
 }
 
 $user_info = $main->getCurrentUserInfo();

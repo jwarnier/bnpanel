@@ -1,10 +1,5 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Support Area - Tickets
-// By Jonny H
-// Released under the GNU-GPL
-//////////////////////////////
+/* For licensing terms, see /license.txt */
 
 class page {
 	
@@ -62,4 +57,3 @@ class page {
 		}
 	}
 }
-?>
