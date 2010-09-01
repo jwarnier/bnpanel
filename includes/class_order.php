@@ -105,6 +105,9 @@ class order extends model {
 			$site_info 		= $serverphp->getSiteStatus($order_id);
 		}
 		
+		//Email
+		$array['USERNAME']	= $user->formatUsername($user_info['firstname'], $user_info['lastname']);		
+		
 		if (in_array($status, $order_status)) {				
 			switch($status) {
 				case ORDER_STATUS_ACTIVE:			
