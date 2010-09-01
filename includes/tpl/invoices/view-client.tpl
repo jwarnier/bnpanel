@@ -82,13 +82,11 @@ function doswirl(id) {
     </td>
   </tr>
   
-  
-    
+	<tr>
+    	<td class="label">
+			<div class="submit_button" id="swirl%ID%">
+				%pay%	
+			</div>
+    	</td>
+  	</tr>    
 </table>
-
-<div id="navigation">
-	<div id="swirl%ID%">
-	%pay%	
-	</div>
-</div>
-

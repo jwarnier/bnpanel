@@ -201,9 +201,14 @@ if(!$_SESSION['clogged']) {
 } elseif($_SESSION['clogged']) {
 	if(!$main->getvar['page']) {
 		$main->getvar['page'] = "home";
-	} elseif($main->getvar['page'] == 'logout') {		
+	} elseif($main->getvar['page'] == 'logout') {	
+		$referer = basename($_SERVER['HTTP_REFERER']);		
 		$main->logout();
-		$main->redirect("?page=home");
+		if ($referer == 'order') {
+			$main->redirect('/order');
+		} else {
+			$main->redirect('?page=home');
+		}		
 	}
 	if(!$db->config("cenabled")) {
 		define("SUB", "Disabled");

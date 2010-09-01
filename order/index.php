@@ -89,7 +89,7 @@ if($db->num_rows($packages2) == 0) {
 	if ($main->getCurrentUserId()) {
 		$array['LOGIN_TPL'] = '';
 	} else {
-		$array['LOGIN_TPL'] = '<div id="login_form">'.$style->replaceVar("tpl/login/login_widget.tpl", array()).'</div>';		
+		$array['LOGIN_TPL'] = '<div id="login_form" title="Login ">'.$style->replaceVar("tpl/login/login_widget.tpl", array()).'</div>';		
 		//$array['LOGIN_TPL'] = $main->table("Client Area - Login", $style->replaceVar("tpl/login/login_widget.tpl", array()), '300px');
 	}		
 	$subdomain_list = $main->getSubDomains();
