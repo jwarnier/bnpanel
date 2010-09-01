@@ -8,6 +8,8 @@
 
 	$(function() {		
 		$("#addaddon").validate(%json_encode%);		
+		/* $("button, input:submit", "#addaddon").button(); */
+		
 	});
 </script>
 <ERRORS>
