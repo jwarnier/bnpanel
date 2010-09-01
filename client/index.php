@@ -205,7 +205,7 @@ if(!$_SESSION['clogged']) {
 		$referer = basename($_SERVER['HTTP_REFERER']);		
 		$main->logout();
 		if ($referer == 'order') {
-			$main->redirect('/order');
+			$main->redirect(URL.'/order');
 		} else {
 			$main->redirect('?page=home');
 		}		
