@@ -89,10 +89,11 @@ class page {
 					}
 				}					
 							
-				$array['PAGES'] = '<table width="100%" border="0" cellspacing="0" cellpadding="1">';
+				$array['PAGES'] = '<table class="staff_settings" width="100%" border="0" cellspacing="0" cellpadding="1">';
 				
 				foreach( $admin_navigation as $data) {
 					$array['PAGES'] .= '<tr><td width="30%" align="left">'.$data['visual'].':</td><td><input name="pages_'.$data['link'].'" id="pages_'.$data['link'].'" type="checkbox" value="1" /></td></tr>';
+					//<label for="pages_'.$data['link'].'">On</label>
 				}
 				$array['PAGES'] .= "</table>";
 				echo $style->replaceVar("tpl/staff/addstaff.tpl", $array);

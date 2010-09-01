@@ -45,6 +45,7 @@ class page {
 							   		WHERE id = '{$main->postvar['template']}'");
 							   		
 						$main->errors("Template edited!");
+						$main->generateToken();						
 					}
 				}
 				$query = $db->query("SELECT * FROM `<PRE>templates` ORDER BY `acpvisual` ASC");
