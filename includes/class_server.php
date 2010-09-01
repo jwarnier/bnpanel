@@ -550,11 +550,7 @@ class server extends Model {
 				$serverphp= $this->createServer($order_info['pid']); # Create server class
 			
 				//Suspending the website of that user
-				if($serverphp->suspend($order_id, $server_id) == true) {					
-					$emaildata 			= $db->emailTemplate('orders_cancelled');
-					$array['DOMAIN'] 	= $order_info['domain'];
-					$array['REASON'] 	= 'Web Hosting Cancelled';
-					$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $array);
+				if($serverphp->suspend($order_id, $server_id) == true) {
 					$order->updateOrderStatus($order_id, ORDER_STATUS_CANCELLED);		
 					return true;
 				}				
@@ -588,11 +584,11 @@ class server extends Model {
 				$this->servers[$server] = $this->createServer($data['pid']); # Create server class
 			}
 			if($this->servers[$server]->terminate($data2['user'], $server) == true) {
-				$date = time();
+				/*$date = time();
 				$emaildata = $db->emailTemplate('orders_cancelled');
 				$array['REASON'] = "Account Declined.";
 				$email->send($data2['email'], $emaildata['subject'], $emaildata['content'], $array);
-				/*
+				
 				$db->query("UPDATE `<PRE>user_packs` SET `status` = '9' WHERE `id` = '{$data['id']}'");
 				$db->query("UPDATE `<PRE>users` SET `status` = '9' WHERE `id` = '{$db->strip($data['userid'])}'");
 				$db->query("INSERT INTO `<PRE>logs` (uid, loguser, logtime, message) VALUES(
