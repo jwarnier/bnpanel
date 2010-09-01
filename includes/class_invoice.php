@@ -315,12 +315,13 @@ class invoice extends model {
 		global $db;
 		$status = intval($status);
 		if (!empty($user_id)) {
+			$user_id 	= intval($user_id);
 			$user_where = " AND uid = $user_id ";
 		}
 		$limit = '';
 		if (!empty($page)) {
 			$page = intval($page);
-			$per_page = $db->config('rows_per_page');
+			$per_page = intval($db->config('rows_per_page'));
 			$start = ($page-1)*$per_page;
 			$limit = "LIMIT $start , $per_page";
 		}		
@@ -343,8 +344,8 @@ class invoice extends model {
 	 */
 	public function getInvoice($invoice_id, $read_only = false, $show_price = true) {
 		global $main, $db, $currency, $addon, $email, $package, $order, $user,$billing;	
-		
-		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE id = '{$invoice_id}'");
+		$invoice_id = intval($invoice_id);
+		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE id = $invoice_id ");
 		if($db->num_rows($query) == 0) {
 			echo "That invoice doesn't exist!";	
 		} else {			
@@ -441,7 +442,7 @@ class invoice extends model {
 				$array['BILLING_CYCLES'] = $billing_list[$billing_cycle_id]['name'].'<input type="hidden" id="billing_id" name="billing_id" value="'.$billing_cycle_id.'">';
 			}
 			
-			$query = $db->query("SELECT * FROM <PRE>order_invoices WHERE invoice_id = '{$invoice_id}'");
+			$query = $db->query("SELECT * FROM <PRE>order_invoices WHERE invoice_id = $invoice_id ");
 			$order_item = $db->fetch_array($query);
 			
 			if (!empty($order_item['order_id'])) {

@@ -47,6 +47,7 @@ class ticket extends model {
 	
 	public function showReply($id) { # Returns the HTML for a ticket box
 		global $db, $main, $style;
+		$id = intval($id);
 		$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `id` = '{$id}'");
 		$data = $db->fetch_array($query);
 		$array['AUTHOR'] = $this->determineAuthor($data['userid'], $data['staff']);
