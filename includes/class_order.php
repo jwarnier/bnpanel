@@ -12,7 +12,11 @@ class order extends model {
 	public $table_name 	= 'orders';
 	//public $_modelName 	= 'order';
 	
-	//experimental object handlers inspired by Akelos
+	/** 
+	 * Experimental object handlers inspired by Akelos
+	 * With this definition we can call model methods like save,delete,update like this :  $order->order_invoices->save(); $order->order_invoices->delete(); 
+	 * See the addAddons() function in this class
+	 */
 	public $has_many	= array('invoice'=> array('table_name'=>'order_invoices', 'columns'=>array('id', 'order_id', 'invoice_id')),
 								'addon'  => array('table_name'=>'order_addons',   'columns'=>array('id', 'order_id', 'addon_id'))
 								);
@@ -26,13 +30,10 @@ class order extends model {
 	 */
 	public function create($params, $clean_token = true) {		
 		global $main, $db, $email, $user;
-		$order_id = $this->save($params);
+		$order_id = $this->save($params);		
 		
-		
-		if (!empty($order_id) && is_numeric($order_id )) {
-			
-			$this->addAddons($order_id, $params['addon_list']);
-			
+		if (!empty($order_id) && is_numeric($order_id )) {			
+			$this->addAddons($order_id, $params['addon_list']);			
 			$main->addLog("order::create : $order_id");
 		
 			$emailtemp 				= $db->emailTemplate('orders_new');
@@ -66,8 +67,7 @@ class order extends model {
 	 * @param 	int		User id
 	 * @param	float	amount
 	 * @param	date	expiration date
-	 */
-	 
+	 */	 
 	public function addAddons($order_id, $addon_list) {
 		global $db, $main;
 		//Insert into user_pack_addons
@@ -81,15 +81,16 @@ class order extends model {
 					$this->order_addons->save($params);
 				}
 			}
-		}
-		
+		}		
 	}
 	
 	/**
 	 * Updates an order status. Also sends an email to the user order owner
+	 * @param	int		order id
+	 * @param	int 	order status	check the $main->getOrderStatusList() for more information
+	 * @param	bool	true if success	
 	 */
-	public function updateOrderStatus($order_id, $status) {	
-			
+	public function updateOrderStatus($order_id, $status) {			
 		global $main, $server, $email, $user, $db, $package;		
 		$this->setId($order_id);
 		
@@ -103,18 +104,19 @@ class order extends model {
 		if ($serverphp != false ) {				
 			$site_info 		= $serverphp->getSiteStatus($order_id);
 		}
+		
 		if (in_array($status, $order_status)) {				
 			switch($status) {
-				case ORDER_STATUS_ACTIVE:				
+				case ORDER_STATUS_ACTIVE:			
 					//Setting email
 					$send_email = false;					
 					if ($site_info != false) {
+						//Activating site
 						$result = $server->unsuspend($order_id);
 						if($result) { $send_email = true; }																	
-					} else {
-						
+					} else {						
 						//Sent to CPanel/ISPConfig
-						
+												
 						//1. We update the Order to active so the sendOrderToControlPanel could work
 						$params['status'] = ORDER_STATUS_ACTIVE;
 						$this->update($params);
@@ -122,25 +124,24 @@ class order extends model {
 						//2. We send a message to ISPConfig3 to create a site  
 						$result = $this->sendOrderToControlPanel($order_id);
 						
-						if (!$result) {
-							//If something goes wrong we change to Order failed
-							$result = true;
-							$status = ORDER_STATUS_FAILED;					
-						} else {
-							//We unsuspend the site just in case
-							$result = $server->unsuspend($order_id);							
-							$send_email = true;
+						if ($result) {
+							$send_email = true;																	
+						} else {														
+							//3. If something goes wrong we change to Order to Failed						
+							$params['status'] = ORDER_STATUS_FAILED;
+							$this->update($params);
 						}								
-					}						
+					}
+					//4. We sent an email only if the order was correctly created 
 					if ($send_email) {
 						$emailtemp 	= $db->emailTemplate('orders_active');
 						$array['ORDER_ID'] = $order_id;						
 						$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);				
 					}				
-				break;
-				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:	
-					$result = true;
-					if ($site_info != false) {		
+					break;
+				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:
+					if ($site_info != false) {
+						//If site exists we sent an email and user the server->suspend		
 						$emailtemp 	= $db->emailTemplate('orders_waiting_admin');
 						$array['ORDER_ID'] 	= $order_id;					
 						$array['USER'] 		= $order_info['username'];
@@ -150,49 +151,49 @@ class order extends model {
 						$result = $server->suspend($order_id);
 						if ($result)
 							$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
-					}			
-				break;
-				case ORDER_STATUS_CANCELLED:
-					$result = true;
-					if ($site_info != false) { 
+					}
+					$params['status'] = $status;
+					$this->update($params);		
+					break;
+				case ORDER_STATUS_CANCELLED:					
+					if ($site_info != false) {
+						//If site exists we sent an email and user the server->suspend 
 						$emailtemp 	= $db->emailTemplate('orders_cancelled');
 						$array['ORDER_ID'] = $order_id;
 						$result = $server->suspend($order_id);
 						if ($result)
 							$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
 					}
-				break;
+					$params['status'] = $status;
+					$this->update($params);	
+					break;
 				case ORDER_STATUS_DELETED:				
-				case ORDER_STATUS_WAITING_USER_VALIDATION:		
-					$result = true;
+				case ORDER_STATUS_WAITING_USER_VALIDATION:
 					if ($site_info != false) { 		
-						//We just suspend the order not delete it					
+						//If site exists we sent an email and user the server->suspend we dont delete the Order in ISPConfig3					
 						$result = $server->suspend($order_id);
 					}
-				break;
+					$params['status'] = $status;
+					$this->update($params);
+					break;
 				case ORDER_STATUS_FAILED:
-					$result = true;
-				break;
+					$params['status'] = $status;
+					$this->update($params);
+					break;
 				default:
-				break;
-			}
-			
+					break;
+			}			
 			$main->addLog("order::updateOrderStatus function called: $order_id changed to $status");
-			
-			$params['status'] = $status;
-			if ($result) {
-				$this->update($params);
-				$main->addLog("order::updateOrderStatus function called succeed");
-				return true;
-			}	
-			$main->addLog("order::updateOrderStatus function called error");		
+			return true;
 		}
 		return false;	
 	}	
 	
 	
 	/**
-	 * Deletes an order
+	 * Deletes an order (we just change the Order status to delete)
+	 * @param	int		order id
+	 * @param	bool	true if success
 	 */
 	public function delete($id) { # Deletes invoice upon invoice id
 		global $main, $invoice;
