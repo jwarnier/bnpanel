@@ -16,14 +16,18 @@ define("PAGE", "Admin Area");
  * @todo Important TODO message
  * 
  * 
- * This acp function should be change so everytime we do a called URL like this:
+ * This acp function should be change so everytime we called an URL like this:
  * 
  * ?page=servers&sub=show&do=1 
  * 
  * the page::show() function should be called
  * 
- * Then we can add some url friendly changes so we should load this page: * 
- * server/show/1 when in fact we are loading the page=servers&sub=show&do=1 URL
+ * Then we can add URL friendly so we should load this page: 
+ * server/show/1 
+ * 
+ * when in fact we are loading this:
+ * 
+ * page=servers&sub=show&do=1
  * 
  * That means changing everything in the page class and while loading every controller
  * 
@@ -34,7 +38,8 @@ define("PAGE", "Admin Area");
  * page::delete
  * page::list
  * 
- * This will be more like Akelos controller class see the example I did with the Billing Cycle page: 
+ * This is more like the Akelos controller class. See the example I already did with the Billing Cycle page:
+ *  
  * admin/pages/billing.php, 
  * includes/class_billing.php 
  * includes/tpl/billing 
