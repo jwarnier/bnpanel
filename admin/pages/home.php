@@ -102,6 +102,10 @@ class page {
 		}		
 		$todo_content .= $install_check.$conf_check;
 		
+		if (SERVER_STATUS == 'test') {
+			$todo_content .= $style->returnMessage('Your Server is in Test Mode, you can manually change in the includes/compiler.php file', 'warning');
+		}
+		
 		echo $content;		
 		if (!empty($todo_content)) {
 			echo $main->table('Admin TODO List', $todo_content, 'auto', 'auto');
