@@ -1,10 +1,16 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
-
 #Define the main THT
 define('THT', 1);
+
+//Server status
+//@todo this variable should be in the DB
+define('SERVER_STATUS', 						'test'); // test or production
+
+if (SERVER_STATUS == 'test') {
+	error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+} 
 
 //Billing types
 define('BILLING_TYPE_ADDON', 					'addon');
@@ -37,8 +43,6 @@ define('DOMAIN_OPTION_DOMAIN', 					1); // Cancelled in 9
 define('DOMAIN_OPTION_SUBDOMAIN', 				2); // Cancelled in 9
 define('DOMAIN_OPTION_BOTH', 					3); // Cancelled in 9
 
-//Server status
-define('SERVER_STATUS', 						'test'); //test or production 
 define('PAYPAL_STATUS_LIVE', 					1);
 define('PAYPAL_STATUS_SANDBOX', 				0);
 
