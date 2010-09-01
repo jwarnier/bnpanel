@@ -39,8 +39,9 @@ class page {
 							if(!$n) {								
 								if ($main->validDomain($main->postvar['subdomain'])) {
 									$main->postvar['subdomain'] = $db->strip($main->postvar['subdomain']);
-									$main->postvar['server'] = intval($main->postvar['server']);
-									$db->query("INSERT INTO `<PRE>subdomains` (subdomain, server) VALUES('{$main->postvar['subdomain']}', '{$main->postvar['server']}')");
+									$main->postvar['server'] 	= intval($main->postvar['server']);
+									$db->query("INSERT INTO `<PRE>subdomains` (subdomain, server) 
+												VALUES('{$main->postvar['subdomain']}', '{$main->postvar['server']}')");
 									$main->errors("Subdomain has been added!");
 									$main->redirect('?page=sub&sub=view&msg=1');
 								} else {

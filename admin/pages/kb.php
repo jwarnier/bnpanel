@@ -42,7 +42,8 @@ class page {
 						$main->postvar['name'] 			= $db->strip($main->postvar['name']);
 						$main->postvar['description'] 	= $db->strip($main->postvar['description']);
 						
-						$db->query("INSERT INTO `<PRE>cats` (name, description) VALUES('{$main->postvar['name']}','{$main->postvar['description']}')");
+						$db->query("INSERT INTO <PRE>cats (name, description) 
+									VALUES('{$main->postvar['name']}','{$main->postvar['description']}')");
 						$main->errors("Category Added!");
 					}
 				}
@@ -106,7 +107,9 @@ class page {
 						$main->postvar['description'] 	= $db->strip($main->postvar['description']);
 						$main->postvar['catid'] 		= intval($main->postvar['catid']);
 						
-						$db->query("INSERT INTO `<PRE>articles` (name, content, catid) VALUES('{$main->postvar['name']}','{$main->postvar['description']}', '{$main->postvar['catid']}')");
+						$db->query("INSERT INTO <PRE>articles (name, content, catid)
+								VALUES('{$main->postvar['name']}','{$main->postvar['description']}', '{$main->postvar['catid']}')");
+								
 						$main->errors("Article Added!");
 					}
 				}

@@ -4,17 +4,17 @@
 class page {
 	
 	public function content() { # Displays the page 
-		global $main;
-		global $style;
-		global $db;
-		global $email;
+		global $main, $style, $db, $email;
+		
+		$main->getvar['cat'] = intval($main->getvar['cat']);
 		$query = $db->query("SELECT * FROM `<PRE>cats`");
 		if(!$db->num_rows($query)) {
 			echo "There are no Knowledge Base Categories/Articles!";	
 		}
 		else {
 			if($main->getvar['cat']) {
-				$cat = $db->query("SELECT * FROM `<PRE>cats` WHERE `id` = '{$main->getvar['cat']}'");
+				
+				$cat = $db->query("SELECT * FROM <PRE>cats WHERE id = '{$main->getvar['cat']}'");
 				if(!$db->num_rows($cat)) {
 					echo "That category doesn't exist!";	
 				}

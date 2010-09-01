@@ -100,8 +100,9 @@ class page {
 			case 'view':
 			case 'edit':
 				if(isset($main->getvar['do'])) {
+					$addon_id = intval($main->getvar['do']);
 															
-					$query = $db->query("SELECT * FROM `<PRE>addons` WHERE id = '{$main->getvar['do']}'");
+					$query = $db->query("SELECT * FROM <PRE>addons WHERE id = $addon_id");
 					
 					if($db->num_rows($query) == 0) {
 						echo "That Addon doesn't exist!";	
@@ -166,13 +167,11 @@ class page {
 						$array['STATUS'] 		= $main->createCheckbox('', 'status', $data['status']);							
 						$array['INSTALL_PACKAGE']= $main->createCheckbox('', 'install_package', $data['install_package']);
 						$array['MANDATORY']		= $main->createCheckbox('', 'mandatory', $data['mandatory']);											
-						$array['NAME'] 			= $data['name'];
-						
-						$array['ID'] = $data['id'];
-						
+						$array['NAME'] 			= $data['name'];						
+						$array['ID'] 			= $data['id'];						
 						
 						//----- Adding billing cycle						
-						$sql = "SELECT billing_id, b.name, amount FROM `<PRE>billing_cycles`  b INNER JOIN `<PRE>billing_products` bp on (bp.billing_id = b.id) WHERE product_id =".$data['id']." AND bp.type = '".BILLING_TYPE_ADDON."' ";
+						$sql = "SELECT billing_id, b.name, amount FROM <PRE>billing_cycles  b INNER JOIN <PRE>billing_products bp on (bp.billing_id = b.id) WHERE product_id =".$data['id']." AND bp.type = '".BILLING_TYPE_ADDON."' ";
 						$query = $db->query($sql);		
 						
 						while($data = $db->fetch_array($query)) {
