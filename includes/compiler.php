@@ -224,8 +224,16 @@ if(INSTALL == 1) {
 	//var_dump('postvar->'.$main->postvar['_post_token']);
 	
 	//Converts all GET into variable - DB Friendly.
-	foreach($_GET as $key => $value) {	
-		$main->getvar[$key] = $db->strip($value);	
+	foreach($_GET as $key => $value) {
+		switch ($key) {
+			case 'do':
+			case 'id':
+				$main->getvar[$key] = intval($value);
+				break;
+			default:
+				$main->getvar[$key] = $db->strip($value);
+				break;
+		}				
 	}
 	$main->getvar['_get_token'] = $main->getToken();
 

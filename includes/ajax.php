@@ -299,7 +299,7 @@ class AJAX {
 			$type = $main->getvar['type'];	
 			
 			if(in_array($type, array('user','id','ip','email'))) {				
-				$value = $main->getvar['value'];
+				$value = $db->strip($main->getvar['value']);
 				if($main->getvar['num']) {
 					$show = intval($main->getvar['num']);
 				} else {
@@ -627,7 +627,7 @@ class AJAX {
 					
 					$salt = md5(rand(0,99999));
 					$password = md5(md5($main->getvar['pass']).md5($salt));
-					$db->query("INSERT INTO `<PRE>staff` (user, email, password, salt, name) VALUES(
+					$db->query("INSERT INTO <PRE>staff (user, email, password, salt, name) VALUES(
 							  '{$main->getvar['user']}',
 							  '{$main->getvar['email']}',
 							  '{$password}',

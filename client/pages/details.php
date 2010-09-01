@@ -34,6 +34,7 @@ class page {
 				echo $style->replaceVar("tpl/user/cedit.tpl", $array);
 				return;
 			}
+			$main->postvar['email'] = $db->strip($main->postvar['email']);
 			$query = $db->query("SELECT * FROM `<PRE>users` WHERE `email` = '{$main->postvar['email']}' AND `id` != '{$data['id']}'");
 			if($db->num_rows($query) != 0) {
 				$main->errors("That e-mail address is already in use!");

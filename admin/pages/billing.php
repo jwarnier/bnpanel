@@ -68,6 +68,7 @@ class page {
 	public function edit() {
 		global $main, $style, $db, $billing;
 		if(isset($main->getvar['do'])) {
+			$main->getvar['do'] = intval($main->getvar['do']);
 			$query = $db->query("SELECT * FROM `<PRE>billing_cycles` WHERE `id` = '{$main->getvar['do']}'");
 			if($db->num_rows($query) == 0) {
 				echo "That billing cycle doesn't exist!";	

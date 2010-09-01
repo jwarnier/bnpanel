@@ -32,7 +32,7 @@ class page {
 			break;
 			case 'edit':
 				if(isset($main->getvar['do'])) {
-					$query = $db->query("SELECT * FROM `<PRE>invoices` WHERE `id` = '{$main->getvar['do']}'");
+					$query = $db->query("SELECT * FROM <PRE>invoices WHERE id = '{$main->getvar['do']}'");
 					if($db->num_rows($query) == 0) {
 						echo "That invoice doesn't exist!";	
 					} else {						
