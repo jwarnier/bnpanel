@@ -1,7 +1,8 @@
 <script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
 <script type="text/javascript">
 	$(function() {
-		$("#addstaff").validate(%json_encode%);		
+		$("#addstaff").validate(%json_encode%);
+		/* $(".staff_settings").buttonset(); */		
 	});	
 </script>
 <ERRORS>

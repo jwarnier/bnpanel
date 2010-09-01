@@ -591,7 +591,8 @@ class invoice extends model {
 						
 						if( $time_passed < $today ) {
 							echo "<br />Send reminder because the invoice was created on ".$my_invoice['created']." and user does not pay til ".$time_passed_to_date;		
-							$emailtemp 	= $db->emailTemplate('invoices_pending');							
+							$emailtemp 	= $db->emailTemplate('invoices_pending');									
+							$array['USERNAME']	= $user->formatUsername($user_info['firstname'], $user_info['lastname']);						
 							$array['INVOICE_ID'] = $my_invoice['id'];							
 							$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);	
 						}						
@@ -796,12 +797,14 @@ class invoice extends model {
 		$order_info = $this->getOrderByInvoiceId($invoice_id);
 		$user_info 	= $user->getUserById($order_info['userid']);
 		
+		$array['USERNAME']	= $user->formatUsername($user_info['firstname'], $user_info['lastname']);
+		
 		$invoice_status = array_keys($main->getInvoiceStatusList());		
 		if (in_array($status, $invoice_status)) {	
 			switch($status) {
 				case INVOICE_STATUS_PAID:
-					$emailtemp 	= $db->emailTemplate('invoices_paid');
-					$array['INVOICE_ID'] = $invoice_id;					
+					$emailtemp 			= $db->emailTemplate('invoices_paid');					
+					$array['INVOICE_ID']= $invoice_id;					
 					$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
 				break;
 				case INVOICE_STATUS_CANCELLED:
