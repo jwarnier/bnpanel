@@ -612,3 +612,8 @@ label.error {
     background-image: url('images/error.png');
 }
 
+.submit_button {
+	float:left;
+	padding-top:5px;	
+}
+

@@ -1,9 +1,9 @@
 <script type="text/javascript">
-var step = 1;
-var speed = 250; //default 1000
-var form = document.getElementById("order");
-var wrong = '<img src="<URL>themes/icons/cross.png">';
-var right = '<img src="<URL>themes/icons/accept.png">';
+var step 	= 1;
+var speed 	= 250; //default 1000
+var form 	= document.getElementById("order");
+var wrong 	= '<img src="<URL>themes/icons/cross.png">';
+var right 	= '<img src="<URL>themes/icons/accept.png">';
 var loading = '<img src="<URL>themes/icons/ajax-loader.gif">';
 var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></div>';
 var result;
@@ -15,9 +15,15 @@ $(document).ready(function(){
 	   check('user', this.value);
    });   
    
-   //Avoid dialog problem
+   //Modal login options see http://jqueryui.com/demos/dialog/#animated for more information
    $('#login_form').dialog({
-		autoOpen: false			
+		autoOpen: 	false, //Avoid dialog problem
+		modal: 		true,
+		draggable: 	false,
+		resizable:	false,
+		height:		'auto',
+		position: 	'center'
+			
 	});   
 });
 
@@ -88,25 +94,28 @@ function showhide(hide, show) {
      });
 }
 
-function login() {
-	
+function login() {	
 	var user = $("#user_login").val();
 	var pass = $("#pass_login").val();	
 	$.get("<AJAX>function=clientLogin&user="+user+"&pass="+pass, function(data) {
 		if (data != '') {
 			if (data == 1) {
+				if (step == '5') {					
+					showhide(step, step + 1)
+					step = step + 1;						
+				}
 				$.get("<AJAX>function=getNavigation", function(data2) {
 					$("#welcome").html(data2);	
 				});			
 				$("#login_form").dialog('close');			
 			} else {
-				alert('Try again');
+				alert('Please, try again');
 			}
 		}		
 	});		
 }
 
-function showLogin(){
+function showLogin() {	
 	$("#login_form").dialog('open');
 }
 
@@ -396,8 +405,7 @@ function checkSubdomain() {
 	</span>
 	<div style="clear:both"></div>
 	
-<form action="" method="post" name="order" id="order">
-	
+<form action="" method="post" name="order" id="order">	
 	<div id="1">
     	<input name="package" id="package" type="hidden" value="" /> 
 		%DOMAIN_CONFIGURATION%              
@@ -405,7 +413,6 @@ function checkSubdomain() {
           %PACKAGES%          
         </table>
     </div>    
-	<!-- cambios por julio billing thing --> 
     <div class="table" id="2" style="display:none">
         <div class="cat"><span class="cat_title">Select a billing cycle</span></div>
         <div class="text">
@@ -588,10 +595,11 @@ function checkSubdomain() {
            </fieldset>   
            
            </td>
-           <td>
+           <td width="50px" align="center">
            Or
            </td>
            <td>
+           <a onclick="showLogin();" href="#">Log in to your account</a>
            %LOGIN_TPL%           
            </td>
            </tr> 
