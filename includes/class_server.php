@@ -26,6 +26,7 @@ class server extends Model {
 	
 	/**
 	 * Reads the includes/servers folder
+	 * @todo right know this code is hardcoded
 	 */
 	private function getAvailablePanelsFromDir() {
 		/*$server_path = LINK.'servers';

@@ -273,7 +273,7 @@ class order extends model {
 		global $db;
 		$user_id = intval($user_id);
 		//Getting the domain info
-		$sql = "SELECT id, pid, domain, billing_cycle_id FROM ".$this->getTableName()." WHERE `userid` = ".$user_id;
+		$sql = "SELECT id, pid, domain, billing_cycle_id FROM ".$this->getTableName()." WHERE userid = ".$user_id;
 		$result 		= $db->query($sql);
 		$order_info  	= $db->fetch_array($result, 'ASSOC');
 		return $order_info;
@@ -287,7 +287,7 @@ class order extends model {
 		global $db;
 		$user_id = intval($user_id);
 		//Getting the domain info
-		$sql 	= "SELECT id, pid, domain, billing_cycle_id, status FROM ".$this->getTableName()." WHERE `userid` = ".$user_id;		
+		$sql 	= "SELECT id, pid, domain, billing_cycle_id, status FROM ".$this->getTableName()." WHERE userid = ".$user_id;		
 		$result = $db->query($sql);
 		$orders = $db->store_result($result,'ASSOC');
 		return $orders;
@@ -303,7 +303,7 @@ class order extends model {
 	public function getOrderInfo($id) {
 		global $db, $main;		
 		$id = intval($id);
-		$sql = "SELECT * FROM ".$this->getTableName()." up WHERE up.id = '{$id}'";
+		$sql = "SELECT * FROM ".$this->getTableName()." WHERE id = $id ";
 		$result = $db->query($sql);
 		$array = array();	
 		
@@ -317,7 +317,7 @@ class order extends model {
 				$array['real_domain'] = $array['domain'];
 			}
 			
-			$sql = "SELECT addon_id FROM  <PRE>order_addons WHERE order_id = '{$id}'";
+			$sql = "SELECT addon_id FROM  <PRE>order_addons WHERE order_id = $id ";
 			$result_addons = $db->query($sql);
 			$addon_list = array();
 			while ($addon = $db->fetch_array($result_addons)) {
@@ -551,7 +551,7 @@ class order extends model {
 	public function getLastInvoiceByOrderId($order_id) {
 		global $db;
 		$order_id = intval($order_id);
-		$query = $db->query("SELECT invoice_id FROM <PRE>order_invoices WHERE order_id = '{$order_id}' ORDER BY id DESC LIMIT 1");
+		$query = $db->query("SELECT invoice_id FROM <PRE>order_invoices WHERE order_id = $order_id ORDER BY id DESC LIMIT 1");
 		$data = $db->fetch_array($query);
 		return $data['invoice_id'];
 	}
@@ -559,7 +559,7 @@ class order extends model {
 	public function getAllInvoicesByOrderId($order_id) {
 		global $db;
 		$order_id = intval($order_id);
-		$sql = "SELECT DISTINCT invoice_id FROM `<PRE>order_invoices` WHERE `order_id` = '{$order_id}'";
+		$sql = "SELECT DISTINCT invoice_id FROM <PRE>order_invoices WHERE order_id = $order_id";
 		$query = $db->query($sql);
 		$array = $db->store_result($query);	
 		return $array;

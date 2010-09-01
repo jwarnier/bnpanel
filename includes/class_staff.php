@@ -57,7 +57,8 @@ class staff extends model {
 	 */
 	public function userNameExists($username) {
 		global $db;
-		$query = $db->query("SELECT id FROM ".$this->getTableName()." WHERE user = '{$username}'");
+		$username = $db->strip($username);
+		$query = $db->query("SELECT id FROM ".$this->getTableName()." WHERE user = '$username'");
 		if($db->num_rows($query) > 0) {
 			return true;
 		} else {	
@@ -118,16 +119,17 @@ class staff extends model {
 		global $db;
 		$user_list = array();
 		if (!empty($query)) {
+			$query = $db->strip($query);
 			$sql = "SELECT * FROM ".$this->getTableName()." 
-					  WHERE user 		LIKE '%{$db->strip($query)}%' OR 
-							email 		LIKE '%{$db->strip($query)}%'  OR 								
-							name 	LIKE '%{$db->strip($query)}%'";
+					  WHERE user 		LIKE '%$query%' OR 
+							email 		LIKE '%$query%'  OR 								
+							name 		LIKE '%$query%'";
 			$result = $db->query($sql);
 			
 			if($db->num_rows($result) > 0) {
 				while($data = $db->fetch_array($result,'ASSOC')) {
 					$user_list[] = $data;
-				};		
+				}	
 			}
 		}
 		return $user_list;		
@@ -179,8 +181,6 @@ class staff extends model {
 		}		
 		return true;
 	}
-	
-
 	
 	/*
 	public function updateUserStatus($user_id, $status) {

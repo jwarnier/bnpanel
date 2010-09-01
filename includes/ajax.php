@@ -9,6 +9,238 @@ require 'compiler.php';
 
 class AJAX {
 	
+	/**
+	 * 
+	 * AJAX Calls used during installation  
+	 * 
+	 */
+	
+	public function sqlcheck() {
+		global $main, $style;
+		
+		if(INSTALL != 1) {
+			$host 	= $_GET['host'];
+			$user 	= $_GET['user'];
+			$pass 	= $_GET['pass'];
+			$db 	= $_GET['db'];
+			$pre 	= $_GET['pre'];
+			//die($_SERVER['REQUEST_URI']);
+			$con = @mysql_connect($host, $user, $pass);
+			if(!$con) {
+				echo 0;	
+			} else {
+				$seldb = mysql_select_db($db, $con);
+				if(!$seldb) {
+					echo 1;	
+				} else {
+					if ($this->writeconfig($host, $user, $pass, $db, $pre, "false")) {
+						echo 2;	
+					} else {
+						echo 3;	
+					}
+				}
+			}
+		} else {
+			echo 4;	
+		}
+	}
+	
+	private function writeconfig($host, $user, $pass, $db, $pre, $true, $upgrade = 'false') {
+		global $style;
+		
+		$array['HOST'] 		=  $host;
+		$array['USER'] 		=  $user;
+		$array['PASS'] 		=  $pass;
+		$array['DB'] 		=  $db;
+		$array['PRE'] 		=  $pre;
+		$array['TRUE'] 		=  $true;		
+		$array['UPGRADE'] 	=  $upgrade;		
+		
+		$tpl = $style->replaceVar("tpl/install/conftemp.tpl", $array);
+		$link = LINK."conf.inc.php";		
+		if (is_writable($link)) {
+			file_put_contents($link, $tpl);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public function install() {
+		global $style, $db, $main;
+		$conf_file = LINK."conf.inc.php";
+		
+		if (file_exists($conf_file) && is_writable($conf_file)) {
+			include $conf_file;
+			$dbCon = mysql_connect($sql['host'], $sql['user'], $sql['pass']);
+			$dbSel = mysql_select_db($sql['db'], $dbCon);
+			
+			if($_GET['type'] == "install") {
+				$errors = $this->installsql("sql/install.sql", $sql['pre'], $dbCon);
+				echo "Complete!<br /><strong>There were ".$errors['n']." errors while executing the SQL!</strong><br />";
+				echo '<div align="center"><input type="button" name="button4" id="button4" value="Next Step" onclick="change()" /></div>';					
+			} elseif($_GET['type'] == "upgrade") {									
+				if ($sql['upgrade'] == true) {
+					$errors = $this->installsql("sql/upgrade.sql", $sql['pre'], $dbCon);
+					echo "Complete!<br /><strong>There were ".$errors['n']." errors while executing the SQL!</strong><br />";
+					echo '<div class="errors">Your upgrade is now complete.</div>';
+				} else {
+					echo 'Change the upgrade variable to true in conf.inc.php. Then try again.';					
+				}				
+			} else {
+				echo "Fatal Error Debug";
+			}			
+			if(!$this->writeconfig($sql['host'], $sql['user'], $sql['pass'], $sql['db'], $sql['pre'], "true")) {
+				echo '<div class="errors">There was a problem re-writing to the config!</div>';	
+			}					
+			if($errors['n']) {
+				echo "<strong>SQL Queries (Broke):</strong><br />";
+				foreach($errors['errors'] as $value) {
+					echo $value."<br />";	
+				}
+			}
+		}
+	}
+	
+	private function installsql($data, $pre, $con = 0) {
+		global $style, $db;
+		$array['PRE'] = $pre;
+		$array['API-KEY'] = hash('sha512', $this->randomString());
+		$sContents = $style->replaceVar($data, $array);
+		
+		// replace slash quotes so they don't get in the way during parse
+		// tried a replacement array for this but it didn't work
+		// what's a couple extra lines of code, anyway?
+		$sDoubleSlash   = '~~DOUBLE_SLASH~~';
+		$sSlashQuote    = '~~SLASH_QUOTE~~';
+		$sSlashSQuote   = '~~SLASH_SQUOTE~~';
+		
+		$sContents = str_replace('\\\\', $sDoubleSlash,  $sContents);
+		$sContents = str_replace('\"', $sSlashQuote,  $sContents);
+		$sContents = str_replace("\'", $sSlashSQuote, $sContents);
+		
+		$iContents = strlen($sContents);
+		$sDefaultDelimiter = ';';
+		
+		$aSql = array();
+		$sSql = '';
+		$bInQuote   = false;
+		$sDelimiter = $sDefaultDelimiter;
+		$iDelimiter = strlen($sDelimiter);
+		$aQuote = array("'", '"');
+		
+		for ($i = 0;  $i < $iContents;  $i++) {
+			if ($sContents[$i] == "\n"
+			||  $sContents[$i] == "\r") {
+				// Check for Delimiter Statement
+				if (preg_match('/delimiter\s+(.+)/i', $sSql, $aMatches)) {
+						$sDelimiter = $aMatches[1];
+						$iDelimiter = strlen($sDelimiter);
+						$sSql = '';
+						continue;
+				}
+			}
+		
+			if (in_array($sContents[$i], $aQuote)) {
+				$bInQuote = !$bInQuote;
+				if ($bInQuote) {
+						$aQuote = array($sContents[$i]);
+				} else {
+						$aQuote = array("'", '"');
+				}
+			}
+		
+			if ($bInQuote) {
+				$sSql .= $sContents[$i];
+			} else {
+				// fill a var with the potential delimiter - aka read-ahead
+				if(substr($sContents, $i, $iDelimiter) == $sDelimiter) {
+						// Clear Comments
+						$sSql = preg_replace("/^(-{2,}.+)/", '', $sSql);
+						$sSql = preg_replace("/(?:\r|\n)(-{2,}.+)/", '', $sSql);
+		
+						// Put quotes back where you found them
+						$sSql = str_replace($sDoubleSlash, '\\\\',  $sSql);
+						$sSql = str_replace($sSlashQuote,  '\\"',   $sSql);
+						$sSql = str_replace($sSlashSQuote, "\\'",   $sSql);
+		
+						// FIXME: odd replacement issue, just fix it for now and move on
+						$sSql = str_replace('IFEXISTS`', 'IF EXISTS `', $sSql);
+		
+						$aSql[] = $sSql;
+						$sSql = '';
+		
+						// pass delimiter
+						$i += $iDelimiter;
+				} else {
+						$sSql .= $sContents[$i];
+				}
+			}
+		}
+		
+		$aSql = array_map('trim', $aSql);
+		$aSql = array_filter($aSql);
+		
+		$n = 0;
+		foreach($aSql as $sSql) {
+			if($con) {
+				$query = mysql_query($sSql, $con);
+			}
+			else {
+				$query = $db->query($sSql);	
+			}
+			if(!$query) {
+				$n++;
+				$errors[] = $sSql;
+			}
+		}
+		if(!$n) {
+			$n = 0;	
+		}
+		$stuff['n'] = $n;
+		$stuff['errors'] = $errors;
+		return $stuff;
+	}
+	
+	public function installfinal() {
+		global $db, $main;
+		$query = $db->query("SELECT * FROM <PRE>staff");
+		
+		if($db->num_rows($query) == 0) {
+			foreach($main->getvar as $key => $value) {
+				if(!$value) {
+					$n++;	
+				}
+			}
+			if ($main->checkToken(false)) {
+				if(!$n) {				
+					$db->updateConfig('url', 		$main->getvar['url']);
+					$db->updateConfig('name', 		$main->getvar['site_name']);
+					$db->updateConfig('emailfrom', 	$main->getvar['site_email']);
+					
+					$salt = md5(rand(0,99999));
+					$password = md5(md5($main->getvar['pass']).md5($salt));
+					$db->query("INSERT INTO <PRE>staff (user, email, password, salt, name) VALUES(
+							  '{$main->getvar['user']}',
+							  '{$main->getvar['email']}',
+							  '{$password}',
+							  '{$salt}',
+							  '{$main->getvar['name']}')");
+					echo 1;
+				} else {
+					echo 0;	
+				}
+			}
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * AJAX Calls
+	 * 
+	 */	
+	
 	public function userIsLogged() {
 		global $main;		
 		if(!$main->getCurrentUserId()) {
@@ -293,6 +525,10 @@ class AJAX {
 		}
 	}
 	
+	/**
+	 * Searchs an user
+	 * 
+	 */
 	public function search() {
 		global $main, $db, $style;
 		if ($main->getCurrentStaffId()) {
@@ -388,17 +624,18 @@ class AJAX {
 	}
 	
 	public function serverhash() {
-		global $main;
+		global $main, $server;
 		if ($main->getCurrentStaffId()) {
 			$type = $main->getvar['type'];
-			require_once LINK.'servers/panel.php';
-			
-			require_once LINK ."servers/". $type .".php";
-			$server = new $type;
-			if($server->hash) {
-				echo 0;	
-			} else {
-				echo 1;	
+			require_once LINK.'servers/panel.php';	
+			if (in_array($type, $server->getAvailablePanels())) {		
+				require_once LINK ."servers/". $type .".php";
+				$server = new $type;
+				if($server->hash) {
+					echo 0;	
+				} else {
+					echo 1;	
+				}
 			}
 		}
 	}
@@ -423,230 +660,12 @@ class AJAX {
 		}
 	}
 	
-	public function sqlcheck() {
-		global $main, $style;
-		if(INSTALL != 1) {
-			$host 	= $_GET['host'];
-			$user 	= $_GET['user'];
-			$pass 	= $_GET['pass'];
-			$db 	= $_GET['db'];
-			$pre 	= $_GET['pre'];
-			//die($_SERVER['REQUEST_URI']);
-			$con = @mysql_connect($host, $user, $pass);
-			if(!$con) {
-				echo 0;	
-			} else {
-				$seldb = mysql_select_db($db, $con);
-				if(!$seldb) {
-					echo 1;	
-				} else {
-					if ($this->writeconfig($host, $user, $pass, $db, $pre, "false")) {
-						echo 2;	
-					} else {
-						echo 3;	
-					}
-				}
-			}
-		} else {
-			echo 4;	
-		}
-	}
-	
-	private function writeconfig($host, $user, $pass, $db, $pre, $true, $upgrade = 'false') {
-		global $style;
-		
-		$array['HOST'] 		=  $host;
-		$array['USER'] 		=  $user;
-		$array['PASS'] 		=  $pass;
-		$array['DB'] 		=  $db;
-		$array['PRE'] 		=  $pre;
-		$array['TRUE'] 		=  $true;		
-		$array['UPGRADE'] 	=  $upgrade;		
-		
-		$tpl = $style->replaceVar("tpl/install/conftemp.tpl", $array);
-		$link = LINK."conf.inc.php";		
-		if (is_writable($link)) {
-			file_put_contents($link, $tpl);
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public function install() {
-		global $style, $db, $main;
-		$conf_file = LINK."conf.inc.php";
-		
-		if (file_exists($conf_file) && is_writable($conf_file)) {
-			include $conf_file;
-			$dbCon = mysql_connect($sql['host'], $sql['user'], $sql['pass']);
-			$dbSel = mysql_select_db($sql['db'], $dbCon);
-			
-			if($_GET['type'] == "install") {
-				$errors = $this->installsql("sql/install.sql", $sql['pre'], $dbCon);
-				echo "Complete!<br /><strong>There were ".$errors['n']." errors while executing the SQL!</strong><br />";
-				echo '<div align="center"><input type="button" name="button4" id="button4" value="Next Step" onclick="change()" /></div>';					
-			} elseif($_GET['type'] == "upgrade") {									
-				if ($sql['upgrade'] == true) {
-					$errors = $this->installsql("sql/upgrade.sql", $sql['pre'], $dbCon);
-					echo "Complete!<br /><strong>There were ".$errors['n']." errors while executing the SQL!</strong><br />";
-					echo '<div class="errors">Your upgrade is now complete.</div>';
-				} else {
-					echo 'Change the upgrade variable to true in conf.inc.php. Then try again.';					
-				}				
-			} else {
-				echo "Fatal Error Debug";
-			}			
-			if(!$this->writeconfig($sql['host'], $sql['user'], $sql['pass'], $sql['db'], $sql['pre'], "true")) {
-				echo '<div class="errors">There was a problem re-writing to the config!</div>';	
-			}					
-			if($errors['n']) {
-				echo "<strong>SQL Queries (Broke):</strong><br />";
-				foreach($errors['errors'] as $value) {
-					echo $value."<br />";	
-				}
-			}
-		}
-	}
-	
-	private function installsql($data, $pre, $con = 0) {
-		global $style, $db;
-		$array['PRE'] = $pre;
-		$array['API-KEY'] = hash('sha512', $this->randomString());
-		$sContents = $style->replaceVar($data, $array);
-		
-		// replace slash quotes so they don't get in the way during parse
-		// tried a replacement array for this but it didn't work
-		// what's a couple extra lines of code, anyway?
-		$sDoubleSlash   = '~~DOUBLE_SLASH~~';
-		$sSlashQuote    = '~~SLASH_QUOTE~~';
-		$sSlashSQuote   = '~~SLASH_SQUOTE~~';
-		
-		$sContents = str_replace('\\\\', $sDoubleSlash,  $sContents);
-		$sContents = str_replace('\"', $sSlashQuote,  $sContents);
-		$sContents = str_replace("\'", $sSlashSQuote, $sContents);
-		
-		$iContents = strlen($sContents);
-		$sDefaultDelimiter = ';';
-		
-		$aSql = array();
-		$sSql = '';
-		$bInQuote   = false;
-		$sDelimiter = $sDefaultDelimiter;
-		$iDelimiter = strlen($sDelimiter);
-		$aQuote = array("'", '"');
-		
-		for ($i = 0;  $i < $iContents;  $i++) {
-			if ($sContents[$i] == "\n"
-			||  $sContents[$i] == "\r") {
-				// Check for Delimiter Statement
-				if (preg_match('/delimiter\s+(.+)/i', $sSql, $aMatches)) {
-						$sDelimiter = $aMatches[1];
-						$iDelimiter = strlen($sDelimiter);
-						$sSql = '';
-						continue;
-				}
-			}
-		
-			if (in_array($sContents[$i], $aQuote)) {
-				$bInQuote = !$bInQuote;
-				if ($bInQuote) {
-						$aQuote = array($sContents[$i]);
-				} else {
-						$aQuote = array("'", '"');
-				}
-			}
-		
-			if ($bInQuote) {
-				$sSql .= $sContents[$i];
-			} else {
-				// fill a var with the potential delimiter - aka read-ahead
-				if(substr($sContents, $i, $iDelimiter) == $sDelimiter) {
-						// Clear Comments
-						$sSql = preg_replace("/^(-{2,}.+)/", '', $sSql);
-						$sSql = preg_replace("/(?:\r|\n)(-{2,}.+)/", '', $sSql);
-		
-						// Put quotes back where you found them
-						$sSql = str_replace($sDoubleSlash, '\\\\',  $sSql);
-						$sSql = str_replace($sSlashQuote,  '\\"',   $sSql);
-						$sSql = str_replace($sSlashSQuote, "\\'",   $sSql);
-		
-						// FIXME: odd replacement issue, just fix it for now and move on
-						$sSql = str_replace('IFEXISTS`', 'IF EXISTS `', $sSql);
-		
-						$aSql[] = $sSql;
-						$sSql = '';
-		
-						// pass delimiter
-						$i += $iDelimiter;
-				} else {
-						$sSql .= $sContents[$i];
-				}
-			}
-		}
-		
-		$aSql = array_map('trim', $aSql);
-		$aSql = array_filter($aSql);
-		
-		$n = 0;
-		foreach($aSql as $sSql) {
-			if($con) {
-				$query = mysql_query($sSql, $con);
-			}
-			else {
-				$query = $db->query($sSql);	
-			}
-			if(!$query) {
-				$n++;
-				$errors[] = $sSql;
-			}
-		}
-		if(!$n) {
-			$n = 0;	
-		}
-		$stuff['n'] = $n;
-		$stuff['errors'] = $errors;
-		return $stuff;
-	}
-	
-	public function installfinal() {
-		global $db, $main;
-		$query = $db->query("SELECT * FROM <PRE>staff");
-		
-		if($db->num_rows($query) == 0) {
-			foreach($main->getvar as $key => $value) {
-				if(!$value) {
-					$n++;	
-				}
-			}
-			if ($main->checkToken(false)) {
-				if(!$n) {				
-					$db->updateConfig('url', 		$main->getvar['url']);
-					$db->updateConfig('name', 		$main->getvar['site_name']);
-					$db->updateConfig('emailfrom', 	$main->getvar['site_email']);
-					
-					$salt = md5(rand(0,99999));
-					$password = md5(md5($main->getvar['pass']).md5($salt));
-					$db->query("INSERT INTO <PRE>staff (user, email, password, salt, name) VALUES(
-							  '{$main->getvar['user']}',
-							  '{$main->getvar['email']}',
-							  '{$password}',
-							  '{$salt}',
-							  '{$main->getvar['name']}')");
-					echo 1;
-				} else {
-					echo 0;	
-				}
-			}
-		}
-	}
-	
 	function massemail() {
 		global $main, $email, $db;		
 		if ($main->getCurrentStaffId()) {			
 			$subject = $main->getvar['subject'];
 			$msg = $main->getvar['msg'];
-			$query = $db->query("SELECT * FROM `<PRE>users`");
+			$query = $db->query("SELECT * FROM <PRE>users");
 			while($client = $db->fetch_array($query)) {
 				$email->send($client['email'], $subject, $msg);	
 			}
@@ -664,7 +683,7 @@ class AJAX {
 	}
 	
 	function padd() {
-				//deprecated?
+		//deprecated?
 		/*
 		global $style;
 		echo $style->replaceVar("tpl/acppacks/addbox.tpl");
@@ -729,7 +748,8 @@ class AJAX {
             return true;
         }*/
     }
-
+    
+	//deprecated?
     private function randomString($length = 8, $possible = '0123456789bcdfghjkmnpqrstvwxyz') {
             $string = "";
             $i = 0;
@@ -742,7 +762,8 @@ class AJAX {
             }
             return $string;
     }
-
+    
+	//deprecated?
     function genkey() {
         global $main, $db;
         if($_SESSION['logged'] and $main->getvar['do'] == "it") {
@@ -755,7 +776,12 @@ class AJAX {
             return true;
         }
     }
-
+    
+	/**
+	 * 
+	 * Disable for security reasons
+	 * 	 
+	 */	 
     function editcss() {
         global $main, $db, $style;
         if($_SESSION['logged']) {
@@ -774,7 +800,12 @@ class AJAX {
         }
         return true;
     }
-
+    
+	/**
+	 * 
+	 * Disable for security reasons
+	 * 	 
+	 */	 
     function edittpl() {
         global $main, $db, $style;
         if($_SESSION['logged']) {
@@ -824,7 +855,8 @@ class AJAX {
         }
         return true;
     }
-
+	
+	//Deprecated?
     function notice() {
     	/*
         global $style;
@@ -839,7 +871,7 @@ class AJAX {
         }
         return true;*/
     }
-
+	//deprecated?
    function upload() {
    	//deprecated?
    	/*
@@ -1038,8 +1070,7 @@ class AJAX {
    }
    
    function ispaid() {   		
-		global $db, $main, $invoice;
-		
+		global $db, $main, $invoice;		
 		if ($main->getCurrentUserId()) {
 			if (isset($_SESSION['last_invoice_id']) && !empty($_SESSION['last_invoice_id']) && is_numeric($_SESSION['last_invoice_id'])) {
 				//$invoice_info = $invoice->getInvoiceInfo($_SESSION['last_invoice_id']);
@@ -1151,8 +1182,7 @@ class AJAX {
    		
    		$package_id = intval($main->getvar['package_id']);
 		$billing_id = intval($main->getvar['billing_id']);
-		$addon_list = $main->getvar['addon_list'];
-		
+		$addon_list = $main->getvar['addon_list'];		
 		$addon_list = explode('-' , $addon_list);
 		
 		$new_addon_list = array();

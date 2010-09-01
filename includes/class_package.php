@@ -43,9 +43,7 @@ class package extends model {
 		parent::delete();
 		$main->addLog("package::delete #$id");				 
 		return true;
-	}
-	
-	
+	}	
 	
 	/**
 	 * Gets all package information by billing cycle
@@ -57,6 +55,7 @@ class package extends model {
 		global $db;
 		$addong_list = array();		
 		if (!empty($billing_id)) {		
+			$billing_id = intval($billing_id);
 			$sql = "SELECT a.id, a.name, amount, bc.name  as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 					ON (bc.id = b.billing_id) WHERE bc.id = {$billing_id} AND b.type= '".BILLING_TYPE_PACKAGE."'";	
 			$addons_billing = $db->query($sql);
@@ -78,6 +77,9 @@ class package extends model {
 		global $db;
 		$package_info = array();		
 		if (!empty($package_id) && !empty($billing_id)) {		
+			$billing_id = intval($billing_id);
+			$package_id = intval($package_id);
+			
 			$sql = "SELECT a.id, a.name, amount, bc.name  as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 					ON (bc.id = b.billing_id) WHERE bc.id = {$billing_id} AND a.id = {$package_id} AND b.type= '".BILLING_TYPE_PACKAGE."'";					
 			$addons_billing = $db->query($sql);
@@ -96,7 +98,7 @@ class package extends model {
 	public function getPackage($package_id) {
 		global $db;
 		$package_id = intval($package_id);
-		$sql = "SELECT * FROM ".$this->getTableName()." WHERE `id` = '{$package_id}'";
+		$sql = "SELECT * FROM ".$this->getTableName()." WHERE id = $package_id ";
 		$result = $db->query($sql);
 		$data = array();
 		if ($db->num_rows($result)> 0) {
@@ -108,7 +110,7 @@ class package extends model {
 	public function getAllPackages($status = 0) {
 		global $db;
 		$status = intval($status);
-		$sql = "SELECT * FROM ".$this->getTableName()." WHERE `is_hidden` = '{$status}'";
+		$sql = "SELECT * FROM ".$this->getTableName()." WHERE is_hidden = $status";
 		$result = $db->query($sql);
 		$data = array();
 		if ($db->num_rows($result)> 0) {
