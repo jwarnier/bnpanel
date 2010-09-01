@@ -265,6 +265,7 @@ class db {
 	
 	public function updateResource($name, $value) { # Updates a config value
 		$name = $this->strip($name);
+		$value= $this->strip($value);
 		$query = $this->query("UPDATE `<PRE>resources` SET `resource_value` = '{$value}' WHERE `resource_name` = '{$name}'");
 	}
 	

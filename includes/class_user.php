@@ -91,6 +91,7 @@ class user extends model {
 	 */
 	public function userNameExists($username) {
 		global $db;
+		$username = $db->strip($username);
 		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE user = '{$username}'");
 		if($db->num_rows($query) > 0) {
 			return true;
@@ -153,7 +154,8 @@ class user extends model {
 			if($db->num_rows($query) > 0) {				
 				$data = $db->fetch_array($query,'ASSOC');				
 				return $data;				
-			}				
+			}
+			return false;				
 		}
 		return false;
 	}
@@ -167,7 +169,8 @@ class user extends model {
 			if($db->num_rows($query) > 0) {
 				$data = $db->fetch_array($query,'ASSOC');
 				return $data;				
-			}				
+			}
+			return false;		
 		}
 		return false;
 	}

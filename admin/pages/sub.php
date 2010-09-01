@@ -84,8 +84,8 @@ class page {
 									if ($main->validDomain($main->postvar['subdomain'])) {
 										
 										$main->postvar['subdomain'] = $db->strip($main->postvar['subdomain']);
-										$main->postvar['server'] = intval($main->postvar['server']);
-										$main->postvar['do'] = intval($main->postvar['do']);
+										$main->postvar['server'] 	= intval($main->postvar['server']);
+										$main->postvar['do'] 		= intval($main->postvar['do']);
 										
 										$db->query("UPDATE `<PRE>subdomains` SET subdomain = '{$main->postvar['subdomain']}', 
 																	  server = '{$main->postvar['server']}'

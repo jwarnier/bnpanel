@@ -33,10 +33,17 @@ class page {
 						}
 					}
 					if(!$n) {
-						$db->query("UPDATE `<PRE>templates` SET
-								   `subject` = '{$main->postvar['subject']}',
-							   `content` = '{$main->postvar['content']}'
-							   WHERE `id` = '{$main->postvar['template']}'");
+						
+						$main->postvar['subject'] 	= $db->strip($main->postvar['subject']);
+						$main->postvar['content'] 	= $db->strip($main->postvar['content']);
+						$main->postvar['template'] 	= $db->strip($main->postvar['template']);
+						
+						
+						$db->query("UPDATE <PRE>templates SET
+								    subject = '{$main->postvar['subject']}',
+							   		content = '{$main->postvar['content']}'
+							   		WHERE id = '{$main->postvar['template']}'");
+							   		
 						$main->errors("Template edited!");
 					}
 				}
