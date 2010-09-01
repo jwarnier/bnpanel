@@ -60,6 +60,8 @@ class addon extends model {
 		global $db;
 		$addon_list = array();		//&& !empty($package_id)
 		if (!empty($billing_id) && !empty($package_id) ) {		
+			$billing_id = intval($billing_id);
+			$package_id = intval($package_id);
 			$sql = "SELECT a.id, a.name, amount, bc.name  as billing_name  FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 					ON (bc.id = b.billing_id) INNER JOIN `<PRE>package_addons` pa ON (pa.addon_id= a.id) WHERE bc.id = {$billing_id} AND pa.package_id  = {$package_id} AND b.type = '".BILLING_TYPE_ADDON."' ";
 			$result = $db->query($sql);			
@@ -119,6 +121,7 @@ class addon extends model {
 		global $db;
 		$addon_list = array();		
 		if (!empty($billing_id)) {		
+			$billing_id = intval($billing_id);
 			$sql = "SELECT a.id, a.name, amount, bc.name  as billing_name  FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 					ON (bc.id = b.billing_id) WHERE bc.id = {$billing_id} AND b.type = '".BILLING_TYPE_ADDON."' ";
 			$addons_billing = $db->query($sql);			
@@ -154,7 +157,7 @@ class addon extends model {
 		if (is_array($list_of_addons_ids) && count($list_of_addons_ids) > 0 ) {
 			foreach ($list_of_addons_ids as $addon_id) {
 				if (is_numeric($addon_id)) {
-					$addon_id = intval($addon_id);
+					$addon_id 			= intval($addon_id);
 					$sql_select 		= "SELECT amount  FROM `<PRE>billing_products` WHERE product_id = $addon_id AND type = '".BILLING_TYPE_ADDON."' AND billing_id = $billing_id ";
 					$result 			= $db->query($sql_select);
 					$data_amount_addon 	= $db->fetch_array($result);							
@@ -270,7 +273,7 @@ class addon extends model {
 		if (!in_array($status, array(ADDON_STATUS_ACTIVE, ADDON_STATUS_INACTIVE))) {
 			$status = ADDON_STATUS_ACTIVE;
 		}
-		$result = $db->query("SELECT * FROM `<PRE>addons` WHERE status = ".$status);
+		$result = $db->query("SELECT * FROM <PRE>addons WHERE status = ".$status);
 		$addon_list = array();				
 		if($db->num_rows($result) > 0) {
 			while($data = $db->fetch_array($result, 'ASSOC')) {		
@@ -287,7 +290,9 @@ class addon extends model {
 	public function getAddonByBillingCycle($addon_id, $billing_id) {
 		global $db;
 		$addon_list = array();		
-		if (!empty($billing_id)) {		
+		if (!empty($billing_id) && !empty($addon_id)) {	
+			$billing_id = intval($billing_id);
+			$addon_id = intval($addon_id);
 			$sql = "SELECT a.id, a.name, amount, bc.name  as billing_name  FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 					ON (bc.id = b.billing_id) WHERE bc.id = {$billing_id} AND a.id = {$addon_id}  AND b.type= '".BILLING_TYPE_ADDON."'";		
 			$addons_billing = $db->query($sql);
@@ -307,8 +312,8 @@ class addon extends model {
 		$package_id = intval($package_id);
 		$addon_list = array();	
 		if (!empty($package_id)) {
-			$result = $db->query("SELECT * FROM `<PRE>addons` a INNER JOIN  `<PRE>package_addons` pa ON (pa.addon_id = a.id) WHERE package_id = ".$package_id);						
-			if($db->num_rows($result) > 0) {
+			$result = $db->query("SELECT * FROM <PRE>addons a INNER JOIN  <PRE>package_addons pa ON (pa.addon_id = a.id) WHERE package_id = ".$package_id);						
+			if ($db->num_rows($result) > 0) {
 				while($data = $db->fetch_array($result)) {		
 					$addon_list[$data['id']] = $data;
 				}								
@@ -325,7 +330,7 @@ class addon extends model {
 		$package_id = intval($package_id);
 		$addon_list = array();	
 		if (!empty($package_id)) {
-			$result = $db->query("SELECT id FROM `<PRE>addons` a INNER JOIN  `<PRE>package_addons` pa ON (pa.addon_id = a.id) WHERE package_id = ".$package_id." AND mandatory = 1");						
+			$result = $db->query("SELECT id FROM <PRE>addons a INNER JOIN  <PRE>package_addon pa ON (pa.addon_id = a.id) WHERE package_id = ".$package_id." AND mandatory = 1");						
 			if($db->num_rows($result) > 0) {
 				while($data = $db->fetch_array($result, 'ASSOC')) {		
 					$addon_list[$data['id']] = $data;
@@ -333,9 +338,7 @@ class addon extends model {
 			}
 		}
 		return $addon_list;
-	}	
-	
-	
+	}
 	
 	/*
 	public function getAddonByBillingCycleByOrder($addon_id, $billing_id) {
