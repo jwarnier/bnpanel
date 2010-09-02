@@ -222,7 +222,7 @@ if(INSTALL == 1) {
 	}
 	//Converts all POSTS into variable - DB Friendly.
 	foreach($_POST as $key => $value) {
-		$main->postvar[$key] = $db->strip($value);
+		$main->postvar[$key] = $value;
 	}
 	$main->postvar['_post_token'] =	$main->getToken();
 	//var_dump('postvar->'.$main->postvar['_post_token']);
