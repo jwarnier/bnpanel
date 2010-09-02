@@ -130,7 +130,7 @@ class style {
 				}
 			}
 		}*/		
-        $html .= "<script type=\"text/javascript\" src='".URL."includes/tinymce/jscripts/tiny_mce/tiny_mce.js'></script>";
+        $html .= "<script type=\"text/javascript\" src='".URL."includes/tiny_mce/tiny_mce.js'></script>";
 		//closedir($handle); #Close the folder
 		return $html;
 	}
