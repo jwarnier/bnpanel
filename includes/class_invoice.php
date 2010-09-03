@@ -780,6 +780,7 @@ class invoice extends model {
 	
 	public function is_paid($id) { # Is the invoice paid - True = Paid / False = Not
 		global $db;
+		$id = intval($id);
 		$data = $db->fetch_array($db->query("SELECT status FROM ".$this->getTableName()." WHERE id = '{$id}'"));
 		if($data['status'] == INVOICE_STATUS_PAID) {
 			return true;	

@@ -731,7 +731,7 @@ class server extends Model {
 	public function confirm($username, $confirm) {
 		return false; // not implemented yet
 		global $db, $main, $type, $email;
-		
+		$username = $db->strip($username);
 		$query = $db->query("SELECT * FROM `<PRE>users` WHERE `user` = '{$username}'");
 		// AND `status` = '".USER_STATUS_WAITING_ADMIN_VALIDATION."'");
 		if($db->num_rows($query) == 0) {
