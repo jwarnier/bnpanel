@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `%PRE%clientnav` (
 
 INSERT INTO `%PRE%clientnav` (`visual`, `icon`, `link`) VALUES
 ('Home', 'house.png', 'home'),
-('Edit Details', 'user_edit.png', 'details'),
+('My Account', 'user_edit.png', 'details'),
 ('Delete Account', 'cross.png', 'delete'),
 ('Invoices', 'script.png', 'invoices'),
 ('Orders', 'order.png', 'orders'),
