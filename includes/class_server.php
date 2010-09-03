@@ -676,12 +676,12 @@ class server extends Model {
 		$order_info = $order->getOrderInfo($order_id);
 		$package_info = $package->getPackage($order_info['pid']);
 		$server_id = $package_info['server'];	
-		$serverphp = $this->createServer($order_info['pid']); # Create server class		
+		$serverphp = $this->createServer($order_info['pid']); # Create server class
 		if($serverphp->changePwd($order_info['username'], $new_password, $server_id) == true) {
-			$main->addlog("server::changePwd Control Panel password updated $order_id");
-			$order->edit($order_id, array('password'=>$new_password));
-			return true;
-		}
+				$main->addlog("server::changePwd Control Panel password updated $order_id");
+				$order->edit($order_id, array('password'=>$new_password));
+				return true;
+		}		
 		return false;	
 	}	
 	
