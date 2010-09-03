@@ -11,15 +11,22 @@ class ispconfig extends Panel {
 	public	$name = 'ISPConfig3';
 	public	$hash = false; # Password or Access Hash?
 	public  $status;	
+	
+	public $_soap_client;
 	private	$session_id;	
 	
 	public function __construct() {
+		global $main;
 		parent::__construct();
-		$this->status = false;
-		if ($this->_testConnection()) {
+		$this->status = false;		
+		if ($this->_testConnection()) {			
 			$this->status = true;
+			$main->addlog('ispconfig::construct testing connection ok');			
+		} else {
+			$main->addlog('ispconfig::construct testing connection failed');
 		}		
 	}
+	
 	public function getSessionId() {
 		return	$this->session_id;
 	}	
@@ -32,7 +39,9 @@ class ispconfig extends Panel {
 			return false;
 		}				
 	}	
-			
+	/**
+	 * This is a wrapper of _testConnection()
+	 */
 	public function testConnection() {
 		$result = $this->_testConnection();
 		if ($result) {
@@ -41,7 +50,7 @@ class ispconfig extends Panel {
 			if ($this->status) {
 				return 'The Test Connection failed. Please check the host name parameters. <br />You can also check the logs <a href="?page=logs">here</a><br /> You should also check the Server id in ISPConfig';
 			} else {
-				return 'Seems that we can reach the host.<br />';
+				return 'Cannot reach the host.<br />';
 			}
 		}				
 	}
@@ -51,34 +60,41 @@ class ispconfig extends Panel {
 	*/
 	public function load() {	
 		global $main;		
-		$data = $this->serverDetails($this->getServerId());
-		if (!empty($data) && is_array($data)) {				
-			//	$host_parts = parse_url($data['host']);
-			//$data['host']	= $host_parts['scheme'].$host_parts['host'].$host_parts['path'];
-			
-			//* The URI to the remoting interface. Please replace with the URI to your real server
-			$soap_location	= $data['host'].'/remote/index.php';
-			$soap_uri 		= $data['host'].'/remote/';
-			
-			// Create the SOAP Client
-			$client = new SoapClient(null, array('location' => $soap_location,'uri'=> $soap_uri));				
-			try {
-				//* Login to the remote server
-				if($session_id = $client->login($data['user'],$data['accesshash'])) {
-					if ($this->debug) {echo 'Logged into remote server successfully. The SessionID is '.$session_id.'<br />';}
-					$main->addLog("ispconfig::load Session id $session_id");				
-					$this->session_id = $session_id;	
-					return $client;
+		$my_session_id = $this->getSessionId();
+		//Try to check if there is already a soap client available
+		if (isset($this->_soap_client) && !empty($this->_soap_client) && !empty($my_session_id)) {
+			$main->addLog("ispconfig::load returning existent SOAP client");
+			return $this->_soap_client;
+		} else {
+			$data = $this->serverDetails($this->getServerId());
+			if (!empty($data) && is_array($data)) {				
+				//	$host_parts = parse_url($data['host']);
+				//$data['host']	= $host_parts['scheme'].$host_parts['host'].$host_parts['path'];
+				
+				//* The URI to the remoting interface. Please replace with the URI to your real server
+				$soap_location	= $data['host'].'/remote/index.php';
+				$soap_uri 		= $data['host'].'/remote/';
+				
+				// Create the SOAP Client
+				$client = new SoapClient(null, array('location' => $soap_location,'uri'=> $soap_uri));				
+				try {
+					//* Login to the remote server
+					if($session_id = $client->login($data['user'],$data['accesshash'])) {
+						if ($this->debug) {echo 'Logged into remote server successfully. The SessionID is '.$session_id.'<br />';}
+						$main->addLog("ispconfig::load Session id $session_id");				
+						$this->session_id = $session_id;	
+						return $client;
+					}
+				} catch (SoapFault $e) {
+					$main->addLog("ispconfig::load Soap error. Trying to load URL: $soap_location URI: $soap_uri ".$e->getMessage());
+					if ($this->debug) 			
+						//die('SOAP Error: '.$e->getMessage());
+					return false;
 				}
-			} catch (SoapFault $e) {
-				$main->addLog("ispconfig::load Soap error. Trying to load URL: $soap_location URI: $soap_uri ".$e->getMessage());
-				if ($this->debug) 			
-					//die('SOAP Error: '.$e->getMessage());
-				return false;
 			}
+			$main->addLog("ispconfig::load error seems that the server id is wrong");
+			return false;
 		}
-		$main->addLog("ispconfig::load error seems that the server id is wrong");
-		return false;
 	}
 		
 	/**
@@ -88,7 +104,8 @@ class ispconfig extends Panel {
 		@return mixed  result of the SOAP call
 	*/
 	private function remote($action, $params = array()) {
-		global $main;		
+		global $main;
+		
 		$main->addLog('ispconfig::remote action called:' . $action);
 		$soap_client = $this->load();	
 			
@@ -272,13 +289,15 @@ class ispconfig extends Panel {
 	public function changePwd($username, $newpwd, $server_id) {
 		$this->server_id = $server_id;
 		$params['username'] = $username;
-		$user_info = $this->remote('client_get_by_username',$params);	
-		if (!empty($user_info['client_id'])) {	
-			$client_update_params['client_id'] = $user_info['client_id'];	
-			$client_update_params['password'] = $newpwd;
-			$result = $this->remote('client_change_password',$client_update_params);
-			if ($result) {
-				return true;
+		if ($this->status) {
+			$user_info = $this->remote('client_get_by_username',$params);	
+			if (!empty($user_info['client_id'])) {	
+				$client_update_params['client_id'] = $user_info['client_id'];	
+				$client_update_params['password'] = $newpwd;
+				$result = $this->remote('client_change_password',$client_update_params);
+				if ($result) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -718,76 +737,78 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	 */
 	public function installChamilo($order_id, $params = array()) {
 		global	$main, $order;
-		
 		$main->addLog("ispconfig::install_chamilo Order #$order_id");
-				
-		$order_info = $order->getOrderInfo($order_id);
-		//Getting user info 
-		$params['username'] = $order_info['username'];
-		$user_info = $this->remote('client_get_by_username',$params);
 		
-		if (!empty($user_info)) {
-			
-			$site_params['sys_userid']	= $user_info['userid'];		
-			$site_params['groups'] 		= $user_info['groups'];	
-			
-			$site_info = $this->remote('client_get_sites_by_user',$site_params);
+		if ($this->status) {
 					
-			$domain_id = 0;
-			if ($site_info !==false) {
-				foreach($site_info as $key=>$domain) {
-					if ($order_info['real_domain'] == $domain['domain']) {
-						$domain_id = $domain['domain_id'];
-						break;
+			$order_info = $order->getOrderInfo($order_id);
+			//Getting user info 
+			$params['username'] = $order_info['username'];
+			$user_info = $this->remote('client_get_by_username',$params);
+			
+			if (!empty($user_info)) {
+				
+				$site_params['sys_userid']	= $user_info['userid'];		
+				$site_params['groups'] 		= $user_info['groups'];	
+				
+				$site_info = $this->remote('client_get_sites_by_user',$site_params);
+						
+				$domain_id = 0;
+				if ($site_info !==false) {
+					foreach($site_info as $key=>$domain) {
+						if ($order_info['real_domain'] == $domain['domain']) {
+							$domain_id = $domain['domain_id'];
+							break;
+						}
 					}
 				}
-			}
-			
-			if (!empty($domain_id)) {
-				//Create a new database for Chamilo		
 				
-				//$db_part_name = substr($order_info['domain'],0,6);
-				if (isset($order_info['subdomain_id']) && $order_info['subdomain_id'] != 0) {
-					$url_parts['domain'] = $order_info['domain'];
-				} else {					
-					$url_parts = $main->parseUrl($order_info['domain']);					
-					/*if ($url_parts['subdomain'] != '') {
-						$url_parts['domain'] = $url_parts['subdomain'];					
-					} else {*/					
-					$url_parts['domain'] = substr($url_parts['domain'], 0 , strlen($url_parts['domain']) - ( strlen($url_parts['extension']) + 1) );
-					//}					
-				}				
-				
-				//We take only 20 chars
-				$url_parts['domain'] 				= substr($url_parts['domain'], 0, 20);
-				
-				$mysql_params['client_id'] 			= $user_info['client_id'];				
-				$mysql_params['server_id']			= $this->getServerId();				
-				$mysql_params['type'] 				= 'mysql';
-				
-				//$generate_username					= $main->generateUsername();
-				$mysql_params['database_name'] 		= 'c'.$user_info['client_id'].'_'.$url_parts['domain'].'_chamilo_main';
-				$mysql_params['database_user'] 		= 'c'.$user_info['client_id'].'_'.$url_parts['domain'];
-				$mysql_params['database_password'] 	= $main->generatePassword();
-				$mysql_params['database_charset']	= 'utf8';
-				$mysql_params['remote_access'] 		= 'n';
-				$mysql_params['active'] 			= 'y';				
-				
-				$database_id = $this->remote('sites_database_add', $mysql_params);
-				
-				if (is_numeric(($database_id))) {		
-					$install_params['package_id'] 	= 1; // this value can be found in the ISPConfig install_package table
-					$install_params['domain_id'] 	= $domain_id ; // Chamilo
-					$install_params['status'] 		= 2;// 0 not install / 1 installed 2 pending 3 error
-					$install_params['database_id'] 	= $database_id;  
-					$result = $this->remote('install_chamilo', $install_params);
-					$main->addLog("ispconfig::install_chamilo domain_id #$domain_id db id #$database_id db name {$mysql_params['database_name']} ");
-					return true;
-				} else {
-					if ($database_id['error']) {
-						$main->addLog("ispconfig::install_chamilo error: {$database_id['text']}");
-						return false;	
-					}			
+				if (!empty($domain_id)) {
+					//Create a new database for Chamilo		
+					
+					//$db_part_name = substr($order_info['domain'],0,6);
+					if (isset($order_info['subdomain_id']) && $order_info['subdomain_id'] != 0) {
+						$url_parts['domain'] = $order_info['domain'];
+					} else {					
+						$url_parts = $main->parseUrl($order_info['domain']);					
+						/*if ($url_parts['subdomain'] != '') {
+							$url_parts['domain'] = $url_parts['subdomain'];					
+						} else {*/					
+						$url_parts['domain'] = substr($url_parts['domain'], 0 , strlen($url_parts['domain']) - ( strlen($url_parts['extension']) + 1) );
+						//}					
+					}				
+					
+					//We take only 20 chars
+					$url_parts['domain'] 				= substr($url_parts['domain'], 0, 20);
+					
+					$mysql_params['client_id'] 			= $user_info['client_id'];				
+					$mysql_params['server_id']			= $this->getServerId();				
+					$mysql_params['type'] 				= 'mysql';
+					
+					//$generate_username					= $main->generateUsername();
+					$mysql_params['database_name'] 		= 'c'.$user_info['client_id'].'_'.$url_parts['domain'].'_chamilo_main';
+					$mysql_params['database_user'] 		= 'c'.$user_info['client_id'].'_'.$url_parts['domain'];
+					$mysql_params['database_password'] 	= $main->generatePassword();
+					$mysql_params['database_charset']	= 'utf8';
+					$mysql_params['remote_access'] 		= 'n';
+					$mysql_params['active'] 			= 'y';				
+					
+					$database_id = $this->remote('sites_database_add', $mysql_params);
+					
+					if (is_numeric(($database_id))) {		
+						$install_params['package_id'] 	= 1; // this value can be found in the ISPConfig install_package table
+						$install_params['domain_id'] 	= $domain_id ; // Chamilo
+						$install_params['status'] 		= 2;// 0 not install / 1 installed 2 pending 3 error
+						$install_params['database_id'] 	= $database_id;  
+						$result = $this->remote('install_chamilo', $install_params);
+						$main->addLog("ispconfig::install_chamilo domain_id #$domain_id db id #$database_id db name {$mysql_params['database_name']} ");
+						return true;
+					} else {
+						if ($database_id['error']) {
+							$main->addLog("ispconfig::install_chamilo error: {$database_id['text']}");
+							return false;	
+						}			
+					}
 				}
 			}
 		}

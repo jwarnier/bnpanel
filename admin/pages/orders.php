@@ -124,12 +124,12 @@ class page {
 								if ($main->postvar['status'] == ORDER_STATUS_ACTIVE) {
 									
 									//Creating the account in ISPconfig only if order is active									
-									$send_control_panel = $order->sendOrderToControlPanel($order_id);
+									$send_control_panel = $order->sendOrderToControlPanel($order_id);								
 									if (!$send_control_panel) {
-										$order->edit($order_id, ORDER_STATUS_FAILED);
+										$order->edit($order_id, array('status'=>ORDER_STATUS_FAILED));
 									}
 								}
-								
+							
 								//Creating an auto Invoice
 								$package_info 		= $package->getPackageByBillingCycle($main->postvar['package_id'], $main->postvar['billing_cycle_id']);
 								
@@ -153,7 +153,7 @@ class page {
 								}
 								
 								if ($main->postvar['status'] == ORDER_STATUS_ACTIVE && $send_control_panel == false) {
-									$main->errors("There was a problem, while creating the Web package in the Control Panel, please check the logs");
+									$main->errors("There was a problem, while sending the Order to the Control Panel, please check the logs for more information");
 								}								
 							}							
 							
@@ -217,13 +217,16 @@ class page {
 				if(isset($main->getvar['do'])) {
 					if($_POST && $main->checkToken()) {					
 						if ($main->postvar['password'] == $main->postvar['confirm']) {													
-							if ($server->changePwd($main->getvar['do'], $main->postvar['password'])) {
+							if ($server->changePwd($main->getvar['do'], $main->postvar['password'])) {								
 								$main->errors("Password has been changed");
 							} else {
 								$main->errors("There was an error. Please try again.");
 							}
+						} else {
+							$main->errors("Both passwords must be the same");
 						}
-						$main->redirect('?page=orders&sub=view&msg=1&do='.$main->getvar['do']);			
+						$main->generateToken();
+						//$main->redirect('?page=orders&sub=view&msg=1&do='.$main->getvar['do']);			
 					}
 					$return_array = $order->getOrder($main->getvar['do'], false, false);										
 					echo $style->replaceVar("tpl/orders/change-password.tpl", $return_array);
