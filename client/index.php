@@ -158,12 +158,13 @@ if(!$_SESSION['clogged']) {
 				$user_info 		= $user->getUserByUserName($username);
 				if (!empty($user_info)) {
 					if ($user_info['email'] == $useremail) {				
-						$password = rand(0,99999) . $main->generatePassword(). rand(0,99999);
+						$password = $main->generatePassword();
 						$user->changeClientPassword($user_info['id'], $password);
-						$main->errors("Password reset!");
+						$main->errors("Password reset, please check your email");
 						$array['PASS'] = $password;
 						$emaildata = $db->emailTemplate('reset');
 						$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $array);
+						$main->generateToken();
 					} else {
 						$main->errors("That account doesn't exist!");
 					}

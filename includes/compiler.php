@@ -135,9 +135,10 @@ setlocale(LC_MESSAGES, $locale);
 
 
 #Page generated
-$starttime = explode(' ', microtime());
-$starttime = $starttime[1] + $starttime[0];
-
+if (SERVER_STATUS == 'test') {
+	$starttime = explode(' ', microtime());
+	$starttime = $starttime[1] + $starttime[0];
+}
 
 $includePath = dirname(__FILE__);
 define('LINK', $includePath.'/');

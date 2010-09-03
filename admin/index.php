@@ -266,13 +266,12 @@ if(!$_SESSION['logged']) {
 				$useremail		= $main->postvar['email'];			
 				$staff_info 	= $staff->getStaffUserByUserName($username);
 				
-				if (!empty($staff_info)) {										
-					$password = rand(0,999999);
-					$newpass = md5(md5($password) . md5($user_info['salt']));
-					$params['password'] = $newpass;
+				if (!empty($staff_info)) {
+					$password = $main->generatePassword();
+					$params['password'] = $password;
 					$staff->edit($staff_info['id'], $params);
 					
-					$main->errors("Password reset!");
+					$main->errors("Password reset, please check your email");
 					$array['PASS'] = $password;
 					$emaildata = $db->emailTemplate("areset");
 					$email->send($email2, $emaildata['subject'], $emaildata['content'], $array);
@@ -322,12 +321,14 @@ if(!$_SESSION['logged']) {
 require_once LINK ."output.php";
 
 //Memory usage
-echo ('MemoryUsage').': '.number_format((memory_get_usage()/1048576), 3, '.', '') .'Mb' ;
-echo '<br />';
-echo ('MemoryUsagePeak').': '.number_format((memory_get_peak_usage()/1048576), 3, '.', '').'Mb';
-$mtime = microtime();
-$mtime = explode(" ",$mtime);
-$mtime = $mtime[1] + $mtime[0];
-$endtime = $mtime;
-$totaltime = ($endtime - $starttime);
-echo '<br />'.$totaltime = number_format(($totaltime), 4, '.', '');
+if (SERVER_STATUS == 'test') {
+	echo ('MemoryUsage').': '.number_format((memory_get_usage()/1048576), 3, '.', '') .'Mb' ;
+	echo '<br />';
+	echo ('MemoryUsagePeak').': '.number_format((memory_get_peak_usage()/1048576), 3, '.', '').'Mb';
+	$mtime = microtime();
+	$mtime = explode(" ",$mtime);
+	$mtime = $mtime[1] + $mtime[0];
+	$endtime = $mtime;
+	$totaltime = ($endtime - $starttime);
+	echo '<br />'.$totaltime = number_format(($totaltime), 4, '.', '');
+}
