@@ -135,26 +135,23 @@ function check() {
 	<table width="100%" border="0" cellspacing="2" cellpadding="0">
 	
   <tr>
-    <td width="20%">Company:</td>
-    <td>
-    %COMPANY%
-      <!-- <input type="text" name="company" id="company" value="%COMPANY%" readonly="readonly"/> -->
+    <td width="50%">Company:</td>
+    <td>    
+     <input type="text" name="company" id="company" value="%COMPANY%" /> 
       <a title="Company name." class="tooltip"><img src="<ICONDIR>information.png" /></a>
     </td>
   </tr>
     <tr>
     <td width="20%">VAT ID:</td>
-    <td>
-    %VATID%
-      <!-- <input type="text" name="vatid" id="vatid" value="%VATID%" readonly="readonly"/> -->
+    <td>    
+     <input type="text" name="vatid" id="vatid" value="%VATID%" />
      <a title="Company VAT ID." class="tooltip"><img src="<ICONDIR>information.png" /></a>
     </td>
   </tr>
     <tr>
     <td width="20%">SSN/Fiscal ID:</td>
-    <td>
-    %FISCALID%
-      <!-- <input type="text" name="fiscalid" id="fiscalid" value="%FISCALID%" readonly="readonly"/> -->
+    <td>    
+     <input type="text" name="fiscalid" id="fiscalid" value="%FISCALID%" /> 
      <a title="User's SSN or Fiscal ID." class="tooltip"><img src="<ICONDIR>information.png" /></a>
   </tr>
   </table>
