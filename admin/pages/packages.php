@@ -278,33 +278,41 @@ class page {
 						global $server;
 						//Loading the server			
 						
-						$serverphp= $server->loadServer($package_info['server']);
-						
-						if ($serverphp != false) {							
+						$serverphp = $server->loadServer($package_info['server']);
+					
+						if ($serverphp->status) {	
 							//Getting all client templates in ISPConfig
 							$package_list = $serverphp->getAllPackageBackEnd();
-							foreach($package_list as $package_item_panel) {
-								if ($package_item_panel['template_id'] == $package_info['backend']) {
-									$my_package_back_end = $package_item_panel;
-									break;
-								}							
-							}		
-							if (!empty($my_package_back_end)) {					
-								$html_result = $serverphp->parseBackendInfo($my_package_back_end);
-								$message = 'This Package is related with the Control Panel';
-								$array['BACKEND_MESSAGE_CLASS'] = 'info';
-								$array['BACKEND_INFO'] 			= $html_result;
-							} else {								
-								$message = 'This Package is not related with the Control Panel. Check Your Backend field.';
-								$array['BACKEND_MESSAGE_CLASS'] = 'warning';						
-								$array['BACKEND_INFO'] = 'Cannot load Package Info';
-							}
-						}	
-						$array['BACKEND_MESSAGE'] = $message;					
+							if (!empty($package_list)) {
+								foreach($package_list as $package_item_panel) {
+									if ($package_item_panel['template_id'] == $package_info['backend']) {
+										$my_package_back_end = $package_item_panel;
+										break;
+									}							
+								}		
+								if (!empty($my_package_back_end)) {					
+									$html_result = $serverphp->parseBackendInfo($my_package_back_end);
+									$message = 'This Package is related with the Control Panel';
+									$array['BACKEND_MESSAGE_CLASS'] = 'info';
+									$array['BACKEND_INFO'] 			= $html_result;
+								} else {								
+									$message = 'This Package is not related with the Control Panel. Check Your Backend field.';
+									$array['BACKEND_MESSAGE_CLASS'] = 'warning';						
+									$array['BACKEND_INFO'] = 'Cannot load Package Info';
+								}
+							} else {
+								$array['BACKEND_MESSAGE_CLASS'] = 'warning';
+								$message = 'There are problems while trying to connect to the Control Panel server, please check the logs';
+							}						
+						} else {
+							$array['BACKEND_MESSAGE_CLASS'] = 'warning';
+							$message = 'There are problems while trying to connect to the Control Panel server, please check the logs';
+						}						
+						$array['BACKEND_MESSAGE'] = $message;						
 						echo $style->replaceVar("tpl/packages/editpackage.tpl", $array);
 					}
 				} else {
-					$query = $db->query("SELECT * FROM `<PRE>packages`");
+					$query = $db->query("SELECT * FROM <PRE>packages");
 					echo "<ERRORS>";
 					
 					if ($db->num_rows($query) == 0) {

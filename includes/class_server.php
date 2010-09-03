@@ -102,8 +102,8 @@ class server extends Model {
 			} else {
 				require_once $link; # Get the server							
 				$serverphp = new $server_type($server_id);
-				$main->addlog("server::loadServer function. Loading $server_type ");
 				return $serverphp;
+				$main->addlog("server::loadServer Test connection failed $server_type ");
 			}
 		}
 		return false;
@@ -127,7 +127,8 @@ class server extends Model {
 				return false;	
 			} else {
 				require_once $link; # Get the server				
-				$serverphp = new $server_type($server_id);
+				$serverphp = new $server_type($server_id);				
+				$main->addlog("server::loadServer function. Loading $server_type ");
 				return $serverphp;
 			}
 		}
@@ -764,7 +765,7 @@ class server extends Model {
 	
 	public function	getAllServers() {
 		global $db, $main;	
-		$sql = "SELECT *  FROM `<PRE>servers`";
+		$sql = "SELECT *  FROM <PRE>servers";
 		$query = $db->query($sql);
 		$server_list = array();
 		if($db->num_rows($query) > 0) {

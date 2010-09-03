@@ -9,19 +9,40 @@
 class ispconfig extends Panel {
 		
 	public	$name = 'ISPConfig3';
-	public	$hash = false; # Password or Access Hash?	
-	private	$session_id;
+	public	$hash = false; # Password or Access Hash?
+	public  $status;	
+	private	$session_id;	
 	
+	public function __construct() {
+		parent::__construct();
+		$this->status = false;
+		if ($this->_testConnection()) {
+			$this->status = true;
+		}		
+	}
 	public function getSessionId() {
 		return	$this->session_id;
-	}
-			
-	public function testConnection() {		
+	}	
+	
+	public function _testConnection() {		
 		$soap_client = $this->load();
 		if ($soap_client && $this->getSessionId()) {
+			return true;
+		} else {
+			return false;
+		}				
+	}	
+			
+	public function testConnection() {
+		$result = $this->_testConnection();
+		if ($result) {
 			return 'Logged into ISPConfig3 Remote Server successfully. The SessionID is '.$this->getSessionId().'<br />';
 		} else {
-			return 'The Test Connection failed. Please check the host name parameters. You can also check the logs <a href="?page=logs">here</a>';
+			if ($this->status) {
+				return 'The Test Connection failed. Please check the host name parameters. <br />You can also check the logs <a href="?page=logs">here</a><br /> You should also check the Server id in ISPConfig';
+			} else {
+				return 'Seems that we can reach the host.<br />';
+			}
 		}				
 	}
 
@@ -29,33 +50,34 @@ class ispconfig extends Panel {
 		Stablished a SOAP connection
 	*/
 	public function load() {	
-		global $main;	
-		
-		$data = $this->serverDetails($this->getServerId());	
-				
-	//	$host_parts = parse_url($data['host']);
-		//$data['host']	= $host_parts['scheme'].$host_parts['host'].$host_parts['path'];
-		
-		//* The URI to the remoting interface. Please replace with the URI to your real server
-		$soap_location	= $data['host'].'/remote/index.php';
-		$soap_uri 		= $data['host'].'/remote/';
-		
-		// Create the SOAP Client
-		$client = new SoapClient(null, array('location' => $soap_location,'uri'=> $soap_uri));				
-		try {
-			//* Login to the remote server
-			if($session_id = $client->login($data['user'],$data['accesshash'])) {
-				if ($this->debug) {echo 'Logged into remote server successfully. The SessionID is '.$session_id.'<br />';}
-				$main->addLog("ispconfig::load Session id $session_id");				
-				$this->session_id = $session_id;	
-				return $client;
+		global $main;		
+		$data = $this->serverDetails($this->getServerId());
+		if (!empty($data) && is_array($data)) {				
+			//	$host_parts = parse_url($data['host']);
+			//$data['host']	= $host_parts['scheme'].$host_parts['host'].$host_parts['path'];
+			
+			//* The URI to the remoting interface. Please replace with the URI to your real server
+			$soap_location	= $data['host'].'/remote/index.php';
+			$soap_uri 		= $data['host'].'/remote/';
+			
+			// Create the SOAP Client
+			$client = new SoapClient(null, array('location' => $soap_location,'uri'=> $soap_uri));				
+			try {
+				//* Login to the remote server
+				if($session_id = $client->login($data['user'],$data['accesshash'])) {
+					if ($this->debug) {echo 'Logged into remote server successfully. The SessionID is '.$session_id.'<br />';}
+					$main->addLog("ispconfig::load Session id $session_id");				
+					$this->session_id = $session_id;	
+					return $client;
+				}
+			} catch (SoapFault $e) {
+				$main->addLog("ispconfig::load Soap error. Trying to load URL: $soap_location URI: $soap_uri ".$e->getMessage());
+				if ($this->debug) 			
+					//die('SOAP Error: '.$e->getMessage());
+				return false;
 			}
-		} catch (SoapFault $e) {
-			$main->addLog("ispconfig::load Soap error. Trying to load URL: $soap_location URI: $soap_uri ".$e->getMessage());
-			if ($this->debug) 			
-				//die('SOAP Error: '.$e->getMessage());
-			return false;
 		}
+		$main->addLog("ispconfig::load error seems that the server id is wrong");
 		return false;
 	}
 		
@@ -867,17 +889,21 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	}
 	
 	public function getServerStatus() {
-		$server_params['server_id'] 	= $this->getServerId();
-		$server_params['section'] 		= 'web';
-		
-		//Getting server info
-		$server_info = $this->remote('server_get',$server_params);
-		if (!empty($server_info)) {
-			$result = 'Server status ok';
-		} else {
-			$result = 'Server status failed. Probably is due the server id';
+		if ($this->status) {
+			//we should use only the load function
+			$server_params['server_id'] 	= $this->getServerId();
+			$server_params['section'] 		= 'web';
+			
+			//Getting server info
+			$server_info = $this->remote('server_get',$server_params);
+			if (!empty($server_info)) {
+				$result = true;
+			} else {
+				$result = false;
+			}
+			return $result;
 		}
-		return $result;
+		return false;		
 	}
 }
 
