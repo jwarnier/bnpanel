@@ -273,37 +273,41 @@ class page {
 				$package_info 	= $package->getPackage($order_info['pid']);		
 				$site_info = false;		
 				if (!empty($package_info)) {		
-					$serverphp		= $server->loadServer($package_info['server']); # Create server class
-					if ($serverphp != false) {
+					$serverphp		= $server->loadServer($package_info['server']); # Create server class					
+					if ($serverphp->status) {
 						$site_info 		= $serverphp->getSiteStatus($main->getvar['do']);
 						$user_status	= $serverphp->getUserStatus($main->getvar['do']);
-					}
-				}				
-				
-				if ($site_info != false) { 									
-					if($site_info['active'] == 'y') {	
-						$return_array['SITE_STATUS_CLASS'] = 'success';
-						$return_array['SITE_STATUS_INFO'] .= 'Status: Active <br />';
+						
+						if ($site_info != false) {								
+							if($site_info['active'] == 'y') {	
+								$return_array['SITE_STATUS_CLASS'] = 'success';
+								$return_array['SITE_STATUS_INFO'] .= 'Status: Active <br />';
+							} else {
+								$return_array['SITE_STATUS_CLASS'] = 'warning';
+								$return_array['SITE_STATUS_INFO'] .= 'Status: Inactive <br />';					
+							}
+							
+							$return_array['SITE_STATUS'] = '<strong>Site exists in Control Panel</strong><br />';					
+							$return_array['SITE_STATUS_INFO'] .= 'Registered Domain: '.$site_info['domain'].' <br /> Domain id: '.$site_info['domain_id'].' <br /> Document root: '.$site_info['document_root'];					
+							
+						} else {
+							$return_array['SITE_STATUS_CLASS'] = 'warning';
+							$return_array['SITE_STATUS'] = '<strong>Site doesn\'t exist in Control Panel</strong><br />';		
+							$return_array['SITE_STATUS'] .= 'The current order is not registered in the Control Panel Server. <br />To send this order to the Control Panel just change the status to Active';
+							$return_array['SITE_STATUS_INFO'] = '';
+						}	
+						
+						if ($user_status != false) {					
+							$return_array['SITE_STATUS_INFO'] .= '<br /><br /><b>Account Information</b><br /> User '.$order_info['username'].' registered in Control Panel #'.$user_status['client_id'];
+						} else {
+							$return_array['SITE_STATUS_INFO'] .= '<br /><br /><b>Account Information</b><br /> User '.$order_info['username'].' not registered in Control Panel';
+						}
 					} else {
 						$return_array['SITE_STATUS_CLASS'] = 'warning';
-						$return_array['SITE_STATUS_INFO'] .= 'Status: Inactive <br />';					
+						$return_array['SITE_STATUS'] = 'Cannot establish a connection with the Control Panel, please don\'t update the Order';
+						$return_array['SITE_STATUS_INFO'] = '';
 					}
-					
-					$return_array['SITE_STATUS'] = '<strong>Site exists in Control Panel</strong><br />';					
-					$return_array['SITE_STATUS_INFO'] .= 'Registered Domain: '.$site_info['domain'].' <br /> Domain id: '.$site_info['domain_id'].' <br /> Document root: '.$site_info['document_root'];					
-					
-				} else {
-					$return_array['SITE_STATUS_CLASS'] = 'warning';
-					$return_array['SITE_STATUS'] = '<strong>Site doesn\'t exist in Control Panel</strong><br />';		
-					$return_array['SITE_STATUS'] .= 'The current order is not registered in the Control Panel Server. <br />To send this order to the Control Panel just change the status to Active';
-					$return_array['SITE_STATUS_INFO'] = '';
-				}	
-				
-				if ($user_status != false) {					
-					$return_array['SITE_STATUS_INFO'] .= '<br /><br /><b>Account Information</b><br /> User '.$order_info['username'].' registered in Control Panel #'.$user_status['client_id'];
-				} else {
-					$return_array['SITE_STATUS_INFO'] .= '<br /><br /><b>Account Information</b><br /> User '.$order_info['username'].' not registered in Control Panel';
-				}
+				}				
 				$return_array['DOMAIN'] = $order_info['real_domain'];
 				
 				echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);			

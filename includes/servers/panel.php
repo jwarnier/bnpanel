@@ -32,15 +32,14 @@ abstract class Panel {
 	
 	public function serverDetails($server) {
 		global $db, $main;
-		$sql = "SELECT * FROM `<PRE>servers` WHERE `id` = '{$db->strip($server)}'";
-		$query = $db->query($sql);
-		if($db->num_rows($query) == 0) {
-			$array['Error'] = "That server doesn't exist!";
-			$array['Server ID'] = $server;
-			$main->error($array);
-			return;	
+		if (!empty($server)) {
+			$sql = "SELECT * FROM `<PRE>servers` WHERE `id` = '{$db->strip($server)}'";
+			$query = $db->query($sql);
+			if($db->num_rows($query) > 0) {
+				return $db->fetch_array($query, 'ASSOC');
+			}
 		} else {
-			return $db->fetch_array($query, 'ASSOC');
+			return false;
 		}
 	}
 	public  function setServerId($server_id) {

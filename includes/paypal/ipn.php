@@ -24,17 +24,22 @@ if(isset($main->getvar['do'])) {
 								
 		//we check if the site was not already sent
 		$serverphp = $server->loadServer($package_info['server']);
-		$site_status = $serverphp->getSiteStatus($order_id);
-		$result = true;
-		
-		if ($site_status == false) {
-			//Unsuspend order status + create web site 
-			$order->updateOrderStatus($order_id, ORDER_STATUS_ACTIVE);
-			$main->addLog('paypal::ipn updateOrderStatus to Active');
+		if ($serverphp->status) {
+			$site_status = $serverphp->getSiteStatus($order_id);
+			$result = true;		
+			if ($site_status == false) {
+				//Unsuspend order status + create web site 
+				$order->updateOrderStatus($order_id, ORDER_STATUS_ACTIVE);
+				$main->addLog('paypal::ipn updateOrderStatus to Active');
+			} else {
+				//The site already exist
+				$order->updateOrderStatus($order_id, ORDER_STATUS_FAILED);
+				$main->addLog('paypal::ipn updateOrderStatus to Fail');
+			}
 		} else {
-			//The site already exist
+			//Seems that the server is down!
 			$order->updateOrderStatus($order_id, ORDER_STATUS_FAILED);
-			$main->addLog('paypal::ipn updateOrderStatus to Fail');
+			$main->addLog('paypal::ipn updateOrderStatus to Fail seems that the Contro Panel is down');
 		}
 		
 		//Adding the transaction id (comes from a post of paypal)

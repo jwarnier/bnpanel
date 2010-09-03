@@ -101,9 +101,10 @@ class order extends model {
 		$package_info   = $package->getPackage($order_info['pid']);		
 		$serverphp		= $server->loadServer($package_info['server']); # Create server class		
 		$site_info = false;
-		if ($serverphp != false ) {				
+		if ($serverphp != false ) {					
 			$site_info 		= $serverphp->getSiteStatus($order_id);
-		}
+		}		
+		$return_value = false;
 		
 		//Email
 		$array['USERNAME']	= $user->formatUsername($user_info['firstname'], $user_info['lastname']);		
@@ -112,28 +113,40 @@ class order extends model {
 			switch($status) {
 				case ORDER_STATUS_ACTIVE:			
 					//Setting email
-					$send_email = false;					
-					if ($site_info != false) {
-						//Activating site
-						$result = $server->unsuspend($order_id);
-						if($result) { $send_email = true; }																	
-					} else {						
-						//Sent to CPanel/ISPConfig
-												
-						//1. We update the Order to active so the sendOrderToControlPanel could work
-						$params['status'] = ORDER_STATUS_ACTIVE;
-						$this->update($params);
-						
-						//2. We send a message to ISPConfig3 to create a site  
-						$result = $this->sendOrderToControlPanel($order_id);
-						
-						if ($result) {
-							$send_email = true;																	
-						} else {														
-							//3. If something goes wrong we change to Order to Failed						
-							$params['status'] = ORDER_STATUS_FAILED;
+					$send_email = false;				
+					if ($serverphp->status) {			
+						if ($site_info != false) {
+							//Activating site
+							$result = $server->unsuspend($order_id);							
+							if ($result) { 
+								$send_email = true;
+								$return_value = true;
+								$params['status'] = ORDER_STATUS_ACTIVE;								
+							} else {
+								$params['status'] = ORDER_STATUS_FAILED;
+							}
+							$this->update($params);																
+						} else {					
+							//Sent to CPanel/ISPConfig
+													
+							//1. We update the Order to active so the sendOrderToControlPanel could work
+							$params['status'] = ORDER_STATUS_ACTIVE;
 							$this->update($params);
-						}								
+							
+							//2. We send a message to ISPConfig3 to create a site  
+							$result = $this->sendOrderToControlPanel($order_id);
+							
+							if ($result) {
+								$return_value = true;
+								$send_email = true;																	
+							} else {														
+								//3. If something goes wrong we change to Order to Failed						
+								$params['status'] = ORDER_STATUS_FAILED;
+								$this->update($params);	
+							}								
+						}
+					} else {
+						$main->addlog('order::updateOrderStatus cannot update Order because the Control Panel is dead');
 					}
 					//4. We sent an email only if the order was correctly created 
 					if ($send_email) {
@@ -143,43 +156,59 @@ class order extends model {
 					}				
 					break;
 				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:
-					if ($site_info != false) {
-						//If site exists we sent an email and user the server->suspend		
-						$emailtemp 	= $db->emailTemplate('orders_waiting_admin');
-						$array['ORDER_ID'] 	= $order_id;					
-						$array['USER'] 		= $order_info['username'];
-						$array['PASS'] 		= $order_info['password'];
-						$array['EMAIL'] 	= $user_info['email'];					
-						$array['DOMAIN'] 	= $order_info['domain'];		
-						$result = $server->suspend($order_id);
-						if ($result)
-							$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+					if ($serverphp->status) {	
+						if ($site_info != false) {
+							//If site exists we sent an email and user the server->suspend		
+							$emailtemp 	= $db->emailTemplate('orders_waiting_admin');
+							$array['ORDER_ID'] 	= $order_id;					
+							$array['USER'] 		= $order_info['username'];
+							$array['PASS'] 		= $order_info['password'];
+							$array['EMAIL'] 	= $user_info['email'];					
+							$array['DOMAIN'] 	= $order_info['domain'];		
+							$result = $server->suspend($order_id);
+							if ($result) { 
+								$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);								
+							}
+						}						
+						$params['status'] = $status;
+						$this->update($params);
+						$return_value = true;
+					} else {
+						$main->addlog('order::updateOrderStatus cannot update order because the Control Panel is dead');
 					}
-					$params['status'] = $status;
-					$this->update($params);		
 					break;
-				case ORDER_STATUS_CANCELLED:					
-					if ($site_info != false) {
-						//If site exists we sent an email and user the server->suspend 
-						$emailtemp 	= $db->emailTemplate('orders_cancelled');
-						$array['ORDER_ID'] = $order_id;
-						$result = $server->suspend($order_id);
-						if ($result)
-							$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+				case ORDER_STATUS_CANCELLED:	
+					if ($serverphp->status) {			
+						if ($site_info != false) {
+							//If site exists we sent an email and user the server->suspend 
+							$emailtemp 	= $db->emailTemplate('orders_cancelled');
+							$array['ORDER_ID'] = $order_id;
+							$result = $server->suspend($order_id);
+							if ($result)
+								$email->send($user_info['email'], $emailtemp['subject'], $emailtemp['content'], $array);
+						}
+						$params['status'] = $status;
+						$this->update($params);
+						$return_value = true;
+					} else {
+						$main->addlog('order::updateOrderStatus cannot update order because the Control Panel is dead');
 					}
-					$params['status'] = $status;
-					$this->update($params);	
 					break;
 				case ORDER_STATUS_DELETED:				
 				case ORDER_STATUS_WAITING_USER_VALIDATION:
-					if ($site_info != false) { 		
-						//If site exists we sent an email and user the server->suspend we dont delete the Order in ISPConfig3					
-						$result = $server->suspend($order_id);
+					if ($serverphp->status) {				
+						if ($site_info != false) { 		
+							//If site exists we sent an email and user the server->suspend we dont delete the Order in ISPConfig3					
+							$result = $server->suspend($order_id);
+						}						
+						$params['status'] = $status;
+						$this->update($params);
+						$return_value = true;
 					}
-					$params['status'] = $status;
-					$this->update($params);
+					$main->addlog('order::updateOrderStatus cannot update order because the Control Panel is dead');
 					break;
 				case ORDER_STATUS_FAILED:
+					//No use of the control panel here
 					$params['status'] = $status;
 					$this->update($params);
 					break;
@@ -187,7 +216,7 @@ class order extends model {
 					break;
 			}			
 			$main->addLog("order::updateOrderStatus function called: $order_id changed to $status");
-			return true;
+			return $return_value;
 		}
 		return false;	
 	}	
