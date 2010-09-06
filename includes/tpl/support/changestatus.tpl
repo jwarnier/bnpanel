@@ -12,7 +12,9 @@ function status(id, status) {
         <table width="100%" border="0" cellspacing="2" cellpadding="0">
         <tr>
             <td width="25%">Status:</td>
-            <td><select name="status" id="status" onchange="status('%ID%', this.value)">%DROPDOWN%</select></td>
+            <td>
+            	%DROPDOWN%
+            </td>
             <td width="74%" id="statuschange"></td>
           </tr>
         </table>

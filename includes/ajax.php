@@ -633,10 +633,11 @@ class AJAX {
 	public function status() {
 		global $db, $main;
 		if ($main->getCurrentStaffId()) {
-			$id = intval($main->getvar['id']);
-			$status = $db->strip($main->getvar['status']);
-			$query = $db->query("UPDATE `<PRE>tickets` SET status = '{$status}' WHERE id = '{$id}'");
-			if($query) {
+			$id 	= intval($main->getvar['id']);
+			$status = intval($main->getvar['status']);
+			
+			$query = $db->query("UPDATE <PRE>tickets SET status = '$status' WHERE id = $id");
+			if ($query) {
 				echo "<img src=". URL ."themes/icons/accept.png>";
 			} else {
 				echo "<img src=". URL ."themes/icons/cross.png>";
