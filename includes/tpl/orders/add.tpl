@@ -1,6 +1,25 @@
 <script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
 
 <script type="text/javascript">
+
+jQuery.validator.addMethod("validateDomain", 
+		function(value, element) {
+			var domain = $("#domain").val();
+			var subdomain_id= $("#csub2").val();
+			if (subdomain_id == 'undefined') {
+				subdomain_id = 0;
+			}			
+			$.ajax({
+				url:"<AJAX>function=checkSubDomainExistsSimple&domain="+domain+"&subdomain_id="+subdomain_id,
+				async:false,
+				type: "GET",
+				success:  function(data) {
+					result = (data=='0') ? true : false;				
+				}
+			});
+			return result;			
+	});
+
 var wrong = '<img src="<URL>themes/icons/cross.png">';
 var right = '<img src="<URL>themes/icons/accept.png">';
 
@@ -87,7 +106,7 @@ function changeDomain() {
 					 	 domain_obj.selectedIndex = 0;		 
 					 	$('#domain_input').html('No subdomains available for the server related a this package');
 					 } else {
-						$('#domain_input').html(text + data); 
+						$('#domain_input').html(data + "<br />" +text ); 
 					 }
 				});
 			} else {

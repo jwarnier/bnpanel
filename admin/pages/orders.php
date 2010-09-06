@@ -39,6 +39,7 @@ class page {
 				    'rules' => array(
 				        'domain_type' 		=> 'required',				        
 				        'domain' 			=> 'required',
+				        'domain' 			=> array('required'=>true,'validateDomain'=>'error'),
 				        'billing_cycle_id' 	=> 'required',
 				        'package_id' 		=> 'required',
 				        'status' 			=> 'required',
@@ -46,9 +47,9 @@ class page {
 				        'username' 			=> 'required',
 				        'password' 			=> 'required'			            
 				     ),			    
-				    'messages' => array(
-				        //'domain' => array( 'required' => 'Domain is required'),			       
-				    )
+				     'messages' => array(			
+					    	'domain'=>array('required'=>'This field is required', 'validateDomain'=>'Domain already taken')		        			       
+					    )				    
 				);				
 				
 				if ($db->config('domain_options') == DOMAIN_OPTION_SUBDOMAIN)
@@ -57,9 +58,9 @@ class page {
 				$array['json_encode'] = json_encode($asOption);				
 				$oValidator = new Validator($asOption);				
 			
-				if ($_POST && $main->checkToken()) {					
+				if ($_POST && $main->checkToken()) {				
 					$result = $oValidator->validate($_POST);								
-					if (empty($result)) {				
+					if (empty($result)) {			
 						
 						//Creating an order		
 						$params['userid'] 		= $main->postvar['user_id'];						
@@ -166,7 +167,7 @@ class page {
 							$main->errors("Check domain");
 						}
 					} else {
-						//$main->errors("There was a problem!");
+						$main->errors("There was a problem in the Order form, please try again");
 					}																		
 				}
 				

@@ -1430,8 +1430,9 @@ class AJAX {
 	
 	public function checkSubDomainExistsSimple() {
 		global $main, $db, $package, $order;			
-		$final_domain  = $main->getvar['domain'];			
-		if ($order->domainExistInOrder($final_domain) ) {
+		$final_domain  = $main->getvar['domain'];
+		$subdomain_id  = $main->getvar['subdomain_id'];				
+		if ($order->domainExistInOrder($final_domain, $subdomain_id) ) {
 			echo 1;				
 		} else {
 			echo 0;	
