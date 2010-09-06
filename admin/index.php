@@ -274,9 +274,10 @@ if(!$_SESSION['logged']) {
 					$main->errors("Password reset, please check your email");
 					$array['PASS'] = $password;
 					$emaildata = $db->emailTemplate("areset");
-					$email->send($email2, $emaildata['subject'], $emaildata['content'], $array);
+					$email->send($staff_info['email'], $emaildata['subject'], $emaildata['content'], $array);
+					$main->generateToken();
 				} else {
-					$main->errors("That account doesn't exist!");
+					$main->errors("That account doesn't exist");
 				}
 			}
 		}
