@@ -61,13 +61,14 @@ function orderstepme(id, type) {
 	
 	if(document.getElementById("domain").value == "sub") {
 		document.getElementById("dom").style.display = 'none';
-		document.getElementById("sub").style.display = '';
+		document.getElementById("sub").style.display = '';		
 		$.get("<AJAX>function=sub&pack="+document.getElementById("package").value, function(data) {
 			document.getElementById("dropdownboxsub").innerHTML = data;
 		});
 	} else if(document.getElementById("domain").value == "dom") {
 		document.getElementById("sub").style.display = 'none';
-		document.getElementById("dom").style.display = '';
+		document.getElementById("dom").style.display = '';		
+		document.getElementById("sub3").style.display = 'none';
 	}	
 	$.get('<AJAX>function=orderForm&package='+ document.getElementById("package").value, function(stuff) {
 		$("#custom").html('<table width="100%" border="0" cellspacing="2" cellpadding="0" id="custom">'+stuff+'</table>');		
@@ -100,7 +101,7 @@ function showhide(hide, show) {
 		
 }
 
-function login() {	
+function login() {
 	var user = $("#user_login").val();
 	var pass = $("#pass_login").val();	
 	$.get("<AJAX>function=clientLogin&user="+user+"&pass="+pass, function(data) {
@@ -296,9 +297,9 @@ function nextstep() {
 						//Check if an invoice is generated
 						$.get("<AJAX>function=ispaid", function(invoice_id) {
 							if(invoice_id != "") {
-								window.location = "../client/?page=invoices&iid="+invoice_id;				
+								//window.location = "../client/?page=invoices&iid="+invoice_id;				
 							} else {
-								window.location = "../client/?page=invoices";
+								//window.location = "../client/?page=invoices";
 							}
 							
 						});
@@ -372,6 +373,24 @@ function showAddons(obj) {
 	$.get("<AJAX>function=getAddons&billing_id="+billing_id +"&package_id="+document.getElementById("package").value, function(data) {
 		document.getElementById("showaddons").innerHTML = data;
 	});															
+}
+
+function checkDomain() {
+	var domain = $("#cdom").val();
+	$.get("<AJAX>function=validateDomain&domain="+domain,  function(data) {
+		if (data == '1') {
+			$("#domain_result").html("<strong>Wrong domain format </strong> "+wrong);	
+		} else {	
+			$.get("<AJAX>function=checkSubDomainExistsSimple&domain="+domain+"&subdomain_id=0",  function(data2) {							
+				if (data2 == '1') {
+					$("#domain_result").html("<strong>Domain already exists</strong> "+wrong);	
+				} else {
+					$("#domain_result").html("<strong>Domain available</strong> "+right);
+				}
+			});
+			
+		}		
+	});
 }
 
 function checkSubdomain() {
@@ -625,13 +644,14 @@ function checkSubdomain() {
         	<table width="100%" border="0" cellspacing="2" cellpadding="0">
               <tr id="dom">
                 <td width="20%" id="domtitle">Domain:</td>
-                <td width="78%" id="domcontent">%DOMAIN%</td>
-                <td width="2%" align="left" id="domaincheck"><a title="Your domain, this must be in the format: <strong>example.com</strong>" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+                <td width="78%" id="domcontent">%DOMAIN% <span id="domain_result"></span></td>
+                <td width="2%" align="left" id="domaincheck">
+                	<a title="Your domain, this must be in the format: <strong>example.com</strong>" class="tooltip">
+                	<img src="<URL>themes/icons/information.png" /></a>
+                </td>
               </tr>
               
-              
-              <tr id="sub">
-              
+              <tr id="sub">              
                 <td width="20%" id="domtitle">Domain:</td>                
                 <td id="domcontent">
                 	<span id="dropdownboxsub"></span>                	
@@ -642,8 +662,8 @@ function checkSubdomain() {
                 	</a>
                 </td>                
               </tr>
-              
-			<tr id="sub">              
+ 
+			<tr id="sub3">              
                 <td width="20%" id="domtitle">Subdomain:</td>                
                 <td id="domcontent">
                 	<input name="csub" id="csub" type="text" maxlength="40" onkeyup="checkSubdomain();" />
@@ -654,7 +674,9 @@ function checkSubdomain() {
                 		<img src="<URL>themes/icons/information.png" />
                 	</a>
                 </td>                
-              </tr>              
+              </tr>
+       
+                          
             </table>
             
             <div id="custom">

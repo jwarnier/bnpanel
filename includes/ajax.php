@@ -1458,6 +1458,17 @@ class AJAX {
 		}		
 	}
 	
+	public function validateDomain() {
+		global $main;
+		$result = $main->validDomain($main->getvar['domain']);
+		if ($result) {
+			echo '0';
+		} else {
+			echo '1';
+		}		
+	}
+	
+	
 	public function clientLogin() {
 		global $main;
 		$user  = $main->getvar['user'];	

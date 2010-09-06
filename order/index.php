@@ -78,7 +78,7 @@ if($db->num_rows($packages2) == 0) {
 	$array['COUNTRY_SELECT'] = $main->countrySelect();			
 	$array['TOS'] = $db->config('tos');
 	$array['USER'] = "";
-	$array['DOMAIN'] = '<input name="cdom" id="cdom" type="text" maxlength="40" />';
+	$array['DOMAIN'] = '<input name="cdom" id="cdom" type="text" maxlength="40" onkeyup="checkDomain();"/>';
 	
 	if ($main->getCurrentUserId()) {
 		$array['LOGIN_TPL'] = '';
