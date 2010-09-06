@@ -115,19 +115,19 @@ class page {
 						if($main->postvar['newpass'] === $main->postvar['cpass']) {
 						$cmd = $user->changeClientPassword($data['id'], $main->postvar['newpass']);
 						if($cmd === true) {
-							$main->errors("Details updated!");
+							$main->errors("Details updated");
 						} else {
 							$main->errors((string)$cmd);						
 						}
 					} else {
-							$main->errors("Your passwords don't match!");						
+							$main->errors("Your passwords don't match");						
 						}
 					} else {
 						$main->errors("Your current password is incorrect.");					
 					}
 				} else {
 					$array['DISP'] = "<div style=\"display:none;\">";
-					$main->errors("Details updated!");					
+					$main->errors("Details updated");					
 				}
 				$main->redirect('?page=details&sub=view&msg=1');
 				

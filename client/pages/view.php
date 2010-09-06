@@ -37,7 +37,7 @@ class page {
 					if($main->postvar['newpass'] == $main->postvar['cpass']) {
 						$cmd = $user->changeClientPassword($data3['id'], $main->postvar['cpass']);
 						if($cmd === true) {
-							$main->errors("Details updated!");
+							$main->errors("Details updated");
 						}
 						else {
 							$main->errors((string)$cmd);

@@ -25,7 +25,7 @@ class page {
 		
 		$user_id = $main->getCurrentUserId();
 		switch($main->getvar['sub']) {
-			default:
+			case 'add':
 				if($_POST && $main->checkToken()) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n && $key != "admin") {
@@ -43,7 +43,7 @@ class page {
 						$ticket_params['userid'] 	= $user_id;
 						$ticket_id = $ticket->create($ticket_params);						
 						
-						$main->errors("Ticket has been added!");
+						$main->errors("Ticket has been added");
 						$template = $db->emailTemplate("new_ticket");
 						$array['TITLE'] = $main->postvar['title'];
 						$array['URGENCY'] = $main->postvar['urgency'];
@@ -55,13 +55,13 @@ class page {
 				}
 				echo $style->replaceVar("tpl/support/addticket.tpl", $array);
 				break;
-			
-			case "view":
+			default:
+			case 'view':
 				if(!$main->getvar['do'] && $main->checkToken()) {
 					$query = $db->query("SELECT * FROM <PRE>tickets WHERE userid = '{$user_id}' AND reply = '0'");
 					if(!$db->num_rows($query)) {
-						$style->showMessage('You currently have no tickets');						
-					} else {
+						$style->showMessage('No open tickets');						
+					} else {						
 						while($data = $db->fetch_array($query)) {
 							$array['TITLE'] = $data['title'];
 							$array['UPDATE'] = $ticket->lastUpdated($data['id']);
@@ -73,13 +73,12 @@ class page {
 				} else {
 					$query = $db->query("SELECT * FROM <PRE>tickets WHERE id = '{$main->getvar['do']}' OR ticketid = '{$main->getvar['do']}' ORDER BY time ASC");
 					if(!$db->num_rows($query)) {
-						echo "That ticket doesn't exist!";	
-					}
-					else {
+						echo "That ticket doesn't exist";	
+					} else {
 						if($_POST && $main->checkToken()) {
 							foreach($main->postvar as $key => $value) {
 								if($value == "" && !$n && $key != "admin") {
-									$main->errors("Please fill in all the fields!");
+									$main->errors("Please fill in all the fields");
 									$n++;
 								}
 							}
@@ -95,7 +94,7 @@ class page {
 								
 								$ticket->create($ticket_params);					
 								
-								$main->errors("Reply has been added!");
+								$main->errors("Reply has been added");
 								$data = $db->fetch_array($query);
 								$client = $db->client($user_id);
 								$template = $db->emailTemplate("new_response");
