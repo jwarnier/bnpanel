@@ -17,14 +17,9 @@
   </tr>
   <tr>
     <td valign="top">Urgency:</td>
-    <td><label>
-      <select name="urgency" id="urgency">
-        <option>Very High</option>
-        <option>High</option>
-        <option selected="selected">Medium</option>
-        <option>Low</option>
-      </select>
-    </label></td>
+    <td>    
+      %URGENCY%
+    </td>
     <td><a title="The urgency of your ticket. Is it very important and needs solving fast?" class="tooltip"><img src="<URL>themes/icons/information.png" alt="Info" /></a></td>
   </tr>
   <tr>

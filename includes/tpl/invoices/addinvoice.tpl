@@ -32,6 +32,10 @@
 		});
 	}
 </script>
+<div class="contextual">
+	<a href="?page=orders&sub=view&do=%ID%"> <img src="<URL>themes/icons/arrow_rotate_clockwise.png"> Return to Order</a> 
+</div>
+
 <h2>Add Invoice to Order #%ID%</h2>
 <ERRORS>
 <form class="content"  id="addinvoice" name="addinvoice" method="post" action="">

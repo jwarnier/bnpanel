@@ -22,6 +22,8 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db, $email, $ticket;
+		$ticket_urgency_list = $main->getTicketUrgencyList();
+		$ticket_status_list = $main->getTicketStatusList();
 		
 		$user_id = $main->getCurrentUserId();
 		switch($main->getvar['sub']) {
@@ -45,14 +47,15 @@ class page {
 						
 						$main->errors("Ticket has been added");
 						$template = $db->emailTemplate("new_ticket");
-						$array['TITLE'] = $main->postvar['title'];
-						$array['URGENCY'] = $main->postvar['urgency'];
-						$array['CONTENT'] = $main->postvar['content'];
+						$array['TITLE'] 	= $main->postvar['title'];
+						$array['URGENCY'] 	= $main->postvar['urgency'];
+						$array['CONTENT'] 	= $main->postvar['content'];
 						$array['ID'] = $ticket_id;
 						$email->staff($template['subject'], $template['content'], $array);
 						$main->redirect('?page=tickets&sub=view&msg=1');
 					}
 				}
+				$array['URGENCY'] = $main->createSelect('urgency', $main->getTicketUrgencyList());
 				echo $style->replaceVar("tpl/support/addticket.tpl", $array);
 				break;
 			default:
@@ -111,8 +114,10 @@ class page {
 						$array['NUMREPLIES'] = $db->num_rows($query) - 1;
 						$array['UPDATED'] = $ticket->lastUpdated($data['id']);
 						$array['ORIG'] = $ticket->showReply($data['id']);
-						$array['URGENCY'] = $data['urgency'];
-						$array['STATUS'] = $ticket->status($data['status']);
+						
+						$array['URGENCY'] = $ticket_urgency_list[$data['urgency']]['name'];
+						
+						$array['STATUS'] = $ticket_status_list[$data['status']];
 						
 						$n = 0;
 						$array['REPLIES'] = "";

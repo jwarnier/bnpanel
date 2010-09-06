@@ -1,3 +1,6 @@
+<div class="contextual">
+	<a href="?page=orders&sub=view&do=%ID%"> <img src="<URL>themes/icons/arrow_rotate_clockwise.png"> Return to Order</a> 
+</div>
 <h2>Change Password in Order #%ID%</h2>
 <ERRORS>
 <form class="content"  name="change_pass" method="post" action="">

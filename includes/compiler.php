@@ -54,6 +54,19 @@ define('USER_STATUS_WAITING_USER_VALIDATION', 	4); //before ORDER_STATUS_INACTIV
 //define(USER_STATUS_WAITING_PAYMENT, 			4); //should not be use is useless!! 
 define('USER_STATUS_DELETED', 					9); //cancelled deleted users
 
+
+//Tickets
+
+define('TICKET_URGENCY_VERY_HIGH', 				1); 
+define('TICKET_URGENCY_HIGH', 					2); 
+define('TICKET_URGENCY_MEDIUM', 				3); 
+define('TICKET_URGENCY_LOW', 					4); 
+
+define('TICKET_STATUS_OPEN', 					1); 
+define('TICKET_STATUS_ON_HOLD', 				2); 
+define('TICKET_STATUS_CLOSED', 					3); 
+
+
 //Used in admin/billing.php
 define('MAX_NUMBER_MONTHS',						48);
 
