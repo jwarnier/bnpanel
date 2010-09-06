@@ -100,6 +100,7 @@ class page {
 							$ticket_params['reply'] = 1;
 							$ticket_params['ticketid'] = $main->getvar['do'];
 							$ticket_params['staff'] = 1;
+							
 							$ticket->create($ticket_params);
 
 							$main->errors("Reply has been added!");
@@ -135,19 +136,8 @@ class page {
 					}
 
 					$array['ADDREPLY'] .= "<br /><b>Change Ticket Status</b>";
-					$values[] = array (
-						"Open",
-						1
-					);
-					$values[] = array (
-						"On Hold",
-						2
-					);
-					$values[] = array (
-						"Closed",
-						3
-					);
-					$array3['DROPDOWN'] = $main->dropdown("status", $values, $data['status'], 0);
+					$array3['DROPDOWN'] = $main->createSelect("status", $main->getTicketStatusList(), $data['status'], array('onchange'=>'status('.$data['id'].', this.value)'));
+					
 					$array3['ID'] = $data['id'];
 					$array['ADDREPLY'] .= $style->replaceVar("tpl/support/changestatus.tpl", $array3);
 
