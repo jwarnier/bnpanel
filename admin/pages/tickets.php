@@ -47,7 +47,7 @@ class page {
 					$array['STATUS'] = $ticket_status_list[$data['status']];
 					$array['URGCOLOR'] = $urg;
 					$array['ID'] = $data['id'];
-					$array['STATUS_ID'] = $data['status'];
+					$array['STATUS_IMG'] = $data['status'];
 					
 					echo $style->replaceVar("tpl/support/acpticketviewbox.tpl", $array);
 				}
@@ -71,7 +71,8 @@ class page {
 						$array['STATUS'] = $ticket_status_list[$data['status']];
 						$array['URGCOLOR'] = $urg;
 						$array['ID'] = $data['id'];
-						$array['STATUS_ID'] = $data['status'];
+						$array['STATUS_IMG'] = $data['status'];
+						
 						echo $style->replaceVar("tpl/support/acpticketviewbox.tpl", $array);
 					}
 				}

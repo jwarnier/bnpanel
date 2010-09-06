@@ -11,7 +11,7 @@ class email {
 	
 	public function __construct() { # When class is made, retrieves all details like sending method, details.
 		global $db, $main;
-		if(INSTALL == 1) {
+		if (INSTALL == 1) {
 			$this->method = $db->config("emailmethod");
 			$this->details['from'] = $db->config("emailfrom");
 			$query = $db->query("SELECT * FROM `<PRE>config` WHERE `name` LIKE 'smtp_%'");
