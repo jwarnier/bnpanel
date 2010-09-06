@@ -15,9 +15,9 @@ class ispconfig extends Panel {
 	public $_soap_client;
 	private	$session_id;	
 	
-	public function __construct() {
+	public function __construct($server_id = null) {
 		global $main;
-		parent::__construct();
+		parent::__construct($server_id);
 		$this->status = false;		
 		if ($this->_testConnection()) {			
 			$this->status = true;
@@ -66,6 +66,7 @@ class ispconfig extends Panel {
 			$main->addLog("ispconfig::load returning existent SOAP client");
 			return $this->_soap_client;
 		} else {
+			$main->addlog($this->getServerId());
 			$data = $this->serverDetails($this->getServerId());
 			if (!empty($data) && is_array($data)) {				
 				//	$host_parts = parse_url($data['host']);
