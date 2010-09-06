@@ -24,6 +24,9 @@
 		});
 	}
 </script>
+<div class="contextual">
+	<a href="?page=invoices&sub=view&do=%ID%"> <img src="<URL>themes/icons/arrow_rotate_clockwise.png"> Return to Invoice</a> 
+</div>
 <h2>Invoice #%ID%</h2>
 <ERRORS>
 

@@ -178,7 +178,7 @@ class page {
 			
 			case 'invoices':
 				if($main->getvar['do'] ) {
-					$return_array  		= $invoice->getAllInvoicesToArray($main->getvar['do']);					
+					$return_array  		= $invoice->getAllInvoicesToArray($main->getvar['do']);
 					$array['CONTENT'] 	=  $style->replaceVar("tpl/invoices/client-page.tpl", $return_array);
 					$array['BOX'] 		= "";										
 					$array['URL'] 		= URL;

@@ -14,7 +14,7 @@ class page {
 
 	public function __construct() { # When class is made, retrieves all details like sending method, details.		
 		$this->navtitle = "Tickets Menu";
-		$this->navlist[] = array (	"View Open Tickets","page_white_go.png","view");
+		$this->navlist[] = array ("View Open Tickets","page_white_go.png","view");
 		$this->navlist[] = array ("View All Tickets","page_white_go.png","all");
 	}
 
@@ -25,6 +25,10 @@ class page {
 	public function content() { # Displays the page 
 		global $main, $style, $db, $email, $ticket;
 		$main->getvar['do'] = intval($main->getvar['do']);
+		
+		$ticket_urgency_list = $main->getTicketUrgencyList();
+		$ticket_status_list = $main->getTicketStatusList();
+		
 
 		if ($main->getvar['sub'] == 'all') {
 
@@ -34,57 +38,40 @@ class page {
 			} else {
 				echo "<div style=\"display: none;\" id=\"nun-tickets\">You currently have no new tickets!</div>";
 				$num_rows = $db->num_rows($query);
-				echo $style->replaceVar("tpl/support/acpticketjs.tpl", array (
-					'NUM_TICKETS' => $num_rows
-				));
-				while ($data = $db->fetch_array($query)) {
-					if ($data['urgency'] == "Very High") {
-						$urg = " bgcolor=\"#FF4040\">";
-					}
-					elseif ($data['urgency'] == "High") {
-						$urg = " bgcolor=\"#FFB769\">";
-					}
-					elseif ($data['urgency'] == "Medium") {
-						$urg = " bgcolor=\"#FFF988\">";
-					} else {
-						$urg = "  bgcolor=\"#FFFACD\" >";
-					}
+				echo $style->replaceVar("tpl/support/acpticketjs.tpl", array ('NUM_TICKETS' => $num_rows));
+				while ($data = $db->fetch_array($query)) {					
+					$urg 					= $ticket_urgency_list[$data['urgency']]['color'];
+					$array['STATUS_TITLE'] 	= $ticket_status_list[$data['status']];					
 					$array['TITLE'] = $data['title'];
 					$array['UPDATE'] = $ticket->lastUpdated($data['id']);
-					$array['STATUS'] = $data['status'];
+					$array['STATUS'] = $ticket_status_list[$data['status']];
 					$array['URGCOLOR'] = $urg;
 					$array['ID'] = $data['id'];
+					$array['STATUS_ID'] = $data['status'];
+					
 					echo $style->replaceVar("tpl/support/acpticketviewbox.tpl", $array);
 				}
 			}
 		} else {
 			if (!$main->getvar['do']) {
-				$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `reply` = '0' AND `status` != '3' ORDER BY `time` DESC");
+				$query = $db->query("SELECT * FROM <PRE>tickets WHERE `reply` = '0' AND `status` != '3' ORDER BY `time` DESC");
 				if (!$db->num_rows($query)) {
-					echo 'You currently have no new tickets!';
+					echo 'No new tickets available';
 				} else {
 					echo "<div style=\"display: none;\" id=\"nun-tickets\">You currently have no new tickets!</div>";
 					$num_rows = $db->num_rows($query);
-					echo $style->replaceVar("tpl/support/acpticketjs.tpl", array (
-						'NUM_TICKETS' => $num_rows
-					));
+					echo $style->replaceVar("tpl/support/acpticketjs.tpl", array ('NUM_TICKETS' => $num_rows));
+					
 					while ($data = $db->fetch_array($query)) {
-						if ($data['urgency'] == "Very High") {
-							$urg = " bgcolor=\"#FF4040\">";
-						}
-						elseif ($data['urgency'] == "High") {
-							$urg = " bgcolor=\"#FFB769\">";
-						}
-						elseif ($data['urgency'] == "Medium") {
-							$urg = " bgcolor=\"#FFF988\">";
-						} else {
-							$urg = " bgcolor=\"#FFFACD\">";
-						}
+						$urg 					= $ticket_urgency_list[$data['urgency']]['color'];
+						$array['STATUS_TITLE'] 	= $ticket_status_list[$data['status']];
+							
 						$array['TITLE'] = $data['title'];
 						$array['UPDATE'] = $ticket->lastUpdated($data['id']);
-						$array['STATUS'] = $data['status'];
+						$array['STATUS'] = $ticket_status_list[$data['status']];
 						$array['URGCOLOR'] = $urg;
 						$array['ID'] = $data['id'];
+						$array['STATUS_ID'] = $data['status'];
 						echo $style->replaceVar("tpl/support/acpticketviewbox.tpl", $array);
 					}
 				}
@@ -132,8 +119,9 @@ class page {
 					$array['NUMREPLIES'] = $db->num_rows($query) - 1;
 					$array['UPDATED'] = $ticket->lastUpdated($data['id']);
 					$array['ORIG'] = $ticket->showReply($data['id']);
-					$array['URGENCY'] = $data['urgency'];
-					$array['STATUS'] = $ticket->status($data['status']);
+					$array['URGENCY'] = $ticket_urgency_list[$data['urgency']]['name'];
+					$array['STATUS'] = $ticket_status_list[$data['status']];
+					$array['STATUS_ID'] = $data['status'];
 
 					$array['REPLIES'] = "";
 					$n = 0;
