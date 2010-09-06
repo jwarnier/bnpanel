@@ -103,7 +103,7 @@ class server extends Model {
 				require_once $link; # Get the server							
 				$serverphp = new $server_type($server_id);
 				return $serverphp;
-				$main->addlog("server::loadServer Test connection failed $server_type ");
+				//$main->addlog("server::loadServer Test connection failed $server_type ");
 			}
 		}
 		return false;
