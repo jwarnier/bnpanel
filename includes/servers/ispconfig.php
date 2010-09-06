@@ -18,20 +18,24 @@ class ispconfig extends Panel {
 	public function __construct($server_id = null) {
 		global $main;
 		parent::__construct($server_id);
-		$this->status = false;		
-		if ($this->_testConnection()) {			
-			$this->status = true;
-			$main->addlog('ispconfig::construct testing connection ok');			
-		} else {
-			$main->addlog('ispconfig::construct testing connection failed');
-		}		
+		$this->status = false;
+		if (!empty($server_id)) {
+			if ($this->_testConnection()) {			
+				$this->status = true;
+				$main->addlog('ispconfig::construct testing connection ok');			
+			} else {
+				$main->addlog('ispconfig::construct testing connection failed');
+			}
+		}
+		$main->addlog('ispconfig::server id not provided');
 	}
 	
 	public function getSessionId() {
 		return	$this->session_id;
 	}	
 	
-	public function _testConnection() {		
+	public function _testConnection() {
+		global $main;			
 		$soap_client = $this->load();
 		if ($soap_client && $this->getSessionId()) {
 			return true;
@@ -66,7 +70,7 @@ class ispconfig extends Panel {
 			$main->addLog("ispconfig::load returning existent SOAP client");
 			return $this->_soap_client;
 		} else {
-			$main->addlog($this->getServerId());
+			//$main->addlog($this->getServerId());
 			$data = $this->serverDetails($this->getServerId());
 			if (!empty($data) && is_array($data)) {				
 				//	$host_parts = parse_url($data['host']);

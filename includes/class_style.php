@@ -75,6 +75,12 @@ class style {
 			preg_match_all("/_{.*?}/", $data, $output);
 			//preg_match_all("/_\(.*?\)/", $data, $output);			
 			
+			/**
+			 * 
+			 * @todo 
+			 * See this task  https://task.beeznest.net/issues/1464 for more information about the status of the translation package
+			 * 
+			 */
 			if ($generate_cache) {
 				$cache = '/var/www/bnpanel/locale/cache/'.basename($template).'.php';
 				$handle = fopen($cache,'w');
