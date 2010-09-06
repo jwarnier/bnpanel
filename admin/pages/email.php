@@ -44,7 +44,7 @@ class page {
 							   		content = '{$main->postvar['content']}'
 							   		WHERE id = '{$main->postvar['template']}'");
 							   		
-						$main->errors("Template edited!");
+						$main->errors("Template edited");
 						$main->generateToken();						
 					}
 				}
@@ -69,4 +69,3 @@ class page {
 		}
 	}
 }
-?>

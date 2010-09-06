@@ -8,7 +8,7 @@
             	<a href="?page=tickets&sub=view&do=%ID%">
             		<strong>%TITLE%</strong>
 				</a>
-            	<img title="%STATUS_TITLE%" src="<ICONDIR>%STATUS_ID%.png">
+            	<img title="%STATUS_TITLE%" src="<ICONDIR>%STATUS_IMG%.png">
             	<br />Last Updated: %UPDATE%
             </td>			            
             <td width="30" align="center" >            

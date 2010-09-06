@@ -195,7 +195,8 @@ class page {
 						global $email;
 						$user_info = $user->getUserById($main->getvar['do']);
 						$email->send($user_info['email'] ,$main->postvar['subject'], $main->postvar['content']);
-						$main->errors("Email sent!");
+						$main->errors("Email sent");
+						$main->generateToken(); // Allow resend an email
 					}
 					$array['BOX'] = "";
 					$array['CONTENT'] = $style->replaceVar("tpl/email/emailclient.tpl");
@@ -219,6 +220,7 @@ class page {
 								$main->errors((string)$command);
 							}
 						}
+						$main->generateToken(); // Allow resend an email
 					}
 					$array['ID'] 		= $main->getvar['do'];
 					$array['BOX'] = "";
