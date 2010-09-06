@@ -68,25 +68,32 @@ class style {
 			}
 			//Commented lines are the traduction like Chamilo
 			
-			//include '/var/www/bnpanel/locale/es_ES/LC_MESSAGES/main.php';					 
+			//include '/var/www/bnpanel/locale/es_ES/LC_MESSAGES/main.php';
+			
+			$generate_cache = false;					 
 		
 			preg_match_all("/_{.*?}/", $data, $output);
 			//preg_match_all("/_\(.*?\)/", $data, $output);			
 			
-			$cache = '/var/www/bnpanel/locale/cache/'.basename($template).'.php';
-			
-			$handle = fopen($cache,'w');
+			if ($generate_cache) {
+				$cache = '/var/www/bnpanel/locale/cache/'.basename($template).'.php';
+				$handle = fopen($cache,'w');
+			}
 						   		
-			if (!empty($output)) {				
+			if (!empty($output)) {	
 				foreach($output as $out) {
 					if (!empty($out)) {
-						fputs($handle,"<?php \n");
+						if ($generate_cache) {
+							fputs($handle,"<?php \n");
+						}
 						foreach($out as $item) {							
 							if (!empty($item)) {							
 								$item_original = $item;
 								$item = str_replace(array('_{','}'), '', $item);
-								$save = "gettext('$item');\n";								
-								fputs($handle, $save);								
+								$save = "gettext('$item');\n";
+								if ($generate_cache) {								
+									fputs($handle, $save);
+								}								
 								//$item = str_replace(array('_(',')'), '', $item);
 								//if (isset($$item)) {
 								if (isset($item)) {
@@ -96,11 +103,16 @@ class style {
 								}				
 							}
 						}
-						fputs($handle,'?>');
+						if ($generate_cache) {
+							fputs($handle,'?>');
+						}
 					}			
 				}
 			}			
-			fclose($handle) or die ("Error Closing File!");			
+			if ($generate_cache) {
+				fclose($handle) or die ("Error Closing File!");
+			}		
+			
 		}
 		//$data = $this->translateVar($array, $data);
 		return $data;
