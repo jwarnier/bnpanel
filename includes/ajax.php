@@ -1107,9 +1107,9 @@ class AJAX {
 		}
    }
    
-   function deleteTicket() {
-	   if ($main->getCurrentStaffId()) {         
-		   global $main, $db;
+	function deleteTicket() {
+		global $main, $db;
+	   if ($main->getCurrentStaffId()) {
 		   $tid = intval($main->getvar['ticket']);
 		   if($tid != "" && is_numeric($tid)) {
 			   $query = "DELETE FROM <PRE>tickets WHERE id = {$tid}";
