@@ -37,7 +37,10 @@ $(window).load(function () {
   
   <tr>
     <td valign="top">Type:</td>
-    <td><select name="type" id="type" onchange="serverchange(this.value)">%TYPE%</select> <a title="The Server Type. This is the Control Panel that your server is running.<br /><i>eg: cPanel/WHM</i>" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+    <td>
+    %TYPE%
+    
+    <a title="The Server Type. This is the Control Panel that your server is running.<br /><i>eg: cPanel/WHM</i>" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
   </tr>
   
   <tr>

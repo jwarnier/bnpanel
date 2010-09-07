@@ -55,7 +55,7 @@ $(window).load(function () {
   <tr>
     <td valign="top">Type:</td>
     <td>
-    <select name="type" id="type" onchange="serverchange(this.value)">%TYPE%</select>
+    %TYPE%
     <a title="The control panel that this server is running." class="tooltip">
     <img src="<URL>themes/icons/information.png" /></a>
     </td>

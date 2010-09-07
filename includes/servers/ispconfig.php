@@ -17,17 +17,21 @@ class ispconfig extends Panel {
 	
 	public function __construct($server_id = null) {
 		global $main;
-		parent::__construct($server_id);
-		$this->status = false;
-		if (!empty($server_id)) {
-			if ($this->_testConnection()) {			
-				$this->status = true;
-				$main->addlog('ispconfig::construct testing connection ok');			
+		//@todo fix me this is an ugly fix to avoid the useless calls in the ajax::editserverhash and ajax::serverhash
+		if ($server_id != '-1') {
+			parent::__construct($server_id);
+			$this->status = false;
+			if (!empty($server_id)) {
+				if ($this->_testConnection()) {			
+					$this->status = true;
+					$main->addlog('ispconfig::construct Testing connection ok');			
+				} else {
+					$main->addlog('ispconfig::construct Testing connection failed');
+				}
 			} else {
-				$main->addlog('ispconfig::construct testing connection failed');
+				$main->addlog('ispconfig::server id not provided');
 			}
 		}
-		$main->addlog('ispconfig::server id not provided');
 	}
 	
 	public function getSessionId() {
@@ -66,13 +70,12 @@ class ispconfig extends Panel {
 		global $main;		
 		$my_session_id = $this->getSessionId();
 		//Try to check if there is already a soap client available
-		if (isset($this->_soap_client) && !empty($this->_soap_client) && !empty($my_session_id)) {
-			$main->addLog("ispconfig::load returning existent SOAP client");
+		/*if (isset($this->_soap_client) && !empty($this->_soap_client) && !empty($my_session_id)) {
+			$main->addLog("ispconfig::load Returning SOAP client already set");
 			return $this->_soap_client;
-		} else {
-			//$main->addlog($this->getServerId());
+		} else {*/
 			$data = $this->serverDetails($this->getServerId());
-			if (!empty($data) && is_array($data)) {				
+			if (!empty($data) && is_array($data)) {			
 				//	$host_parts = parse_url($data['host']);
 				//$data['host']	= $host_parts['scheme'].$host_parts['host'].$host_parts['path'];
 				
@@ -88,6 +91,7 @@ class ispconfig extends Panel {
 						if ($this->debug) {echo 'Logged into remote server successfully. The SessionID is '.$session_id.'<br />';}
 						$main->addLog("ispconfig::load Session id $session_id");				
 						$this->session_id = $session_id;	
+						$this->_soap_client = $client;
 						return $client;
 					}
 				} catch (SoapFault $e) {
@@ -99,7 +103,7 @@ class ispconfig extends Panel {
 			}
 			$main->addLog("ispconfig::load error seems that the server id is wrong");
 			return false;
-		}
+		
 	}
 		
 	/**
@@ -271,7 +275,7 @@ class ispconfig extends Panel {
 					break;
 				}
 				if ($this->debug) { echo 'Result: '; var_dump($soap_result); echo '------------------>><br />';}
-				$main->addLog("Result of ispconfig:: $action - ".print_r($soap_result,1));
+				$main->addLog("Result of ispconfig:: $action : ".print_r($soap_result,1));
 				return $soap_result;	
 			} catch (SoapFault $e) {				
 				$main->addLog("ispconfig::remote Soap error: ".$e->getMessage());
@@ -915,7 +919,11 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 	}
 	
 	public function getServerStatus() {
+		global $main;
+		$main->addlog("ispconfig::getServerStatus");
 		if ($this->status) {
+			
+			$main->addlog("ispconfig::getServerStatus status = true");
 			//we should use only the load function
 			$server_params['server_id'] 	= $this->getServerId();
 			$server_params['section'] 		= 'web';
@@ -928,6 +936,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$result = false;
 			}
 			return $result;
+		} else {
+			$main->addlog("ispconfig::getServerStatus status = false");
 		}
 		return false;		
 	}

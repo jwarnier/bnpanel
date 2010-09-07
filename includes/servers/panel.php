@@ -33,12 +33,14 @@ abstract class Panel {
 	public function serverDetails($server) {
 		global $db, $main;
 		if (!empty($server)) {
-			$sql = "SELECT * FROM `<PRE>servers` WHERE `id` = '{$db->strip($server)}'";
+			$server = $db->strip($server);
+			$sql = "SELECT * FROM <PRE>servers WHERE id = $server";
 			$query = $db->query($sql);
 			if($db->num_rows($query) > 0) {
 				return $db->fetch_array($query, 'ASSOC');
 			}
 		} else {
+			$main->addlog('panel::serverDetails server id is not set');
 			return false;
 		}
 	}
