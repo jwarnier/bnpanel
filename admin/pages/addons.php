@@ -55,8 +55,7 @@ class page {
 							$main->postvar['status'] = ADDON_STATUS_ACTIVE;
 						} else {
 							$main->postvar['status'] = ADDON_STATUS_INACTIVE;
-						}
-  
+						}  
 					  	//Chamilo install
 						if ($main->postvar['mandatory'] == 'on') {
 							$main->postvar['mandatory'] = 1;
@@ -75,12 +74,14 @@ class page {
 						$product_id = $addon->create($main->postvar);					
 						$billing_list = $billing->getAllBillings();
 						$billing_cycle_result = '';			
-									
+						
 						foreach($billing_list as $billing_item) {
 							$variable_name = 'billing_cycle_'.$billing_item['id'];
-							if (isset($main->postvar[$variable_name])) {									
+							if (isset($main->postvar[$variable_name]) && !empty($main->postvar[$variable_name])) {								
 								$addon->createPackageAddons($billing_item['id'], $product_id, $main->postvar[$variable_name], BILLING_TYPE_ADDON);					
-							}													
+							} else {
+								$addon->createPackageAddons($billing_item['id'], $product_id, 0, BILLING_TYPE_ADDON);
+							}									
 						}
 						$main->errors('Addon has been added!');
 						$main->redirect('?page=addons&sub=edit&msg=1');
@@ -107,57 +108,56 @@ class page {
 					if($db->num_rows($query) == 0) {
 						echo "That Addon doesn't exist!";	
 					} else {
-						if($_POST && $main->checkToken()) {				
-												
-							if(!$n) {								
-									
-								if ($main->postvar['status'] == 'on') {
-									$main->postvar['status'] = ADDON_STATUS_ACTIVE;
-								} else {
-									$main->postvar['status'] = ADDON_STATUS_INACTIVE;
-								}
-															
-		  
-							  	//Chamilo install
-								if ($main->postvar['mandatory'] == 'on') {
-									$main->postvar['mandatory'] = 1;
-								} else {
-									$main->postvar['mandatory'] = 0;
-								}						
-								
-								
-								if ($main->postvar['install_package'] == 'on') {
-									$main->postvar['install_package'] = 1;
-								} else {
-									$main->postvar['install_package'] = 0;
-								}
-								
-								
-								//Editing addon											
-								$addon->edit($main->getvar['do'], $main->postvar);
-								
-								//-----Adding billing cycles 
-								
-								//Deleting all billing_products relationship							
-								$db->query("DELETE FROM `<PRE>billing_products` WHERE product_id = {$main->getvar['do']} AND type='".BILLING_TYPE_ADDON."' ");
-								   								
-								$billing_list = $billing->getAllBillingCycles();
-								
-								$product_id = $main->getvar['do'];
-								$billing_cycle_result = '';
-									
-								//Add new relations
-								foreach($billing_list as $data) {												
-									$variable_name = 'billing_cycle_'.$data['id'];								
-									if (isset($main->postvar[$variable_name]) && !empty($main->postvar[$variable_name]) ) {										
-										$addon->createPackageAddons($data['id'], $product_id, $main->postvar[$variable_name], BILLING_TYPE_ADDON);														
-									}
-								}						
-							
-								//-----Finish billing cycles						
-								$main->errors("Package #{$main->getvar['do']} has been edited!");
-								$main->redirect('?page=addons&sub=edit&msg=1');
+						if($_POST && $main->checkToken()) {
+							if ($main->postvar['status'] == 'on') {
+								$main->postvar['status'] = ADDON_STATUS_ACTIVE;
+							} else {
+								$main->postvar['status'] = ADDON_STATUS_INACTIVE;
 							}
+														
+	  
+						  	//Chamilo install
+							if ($main->postvar['mandatory'] == 'on') {
+								$main->postvar['mandatory'] = 1;
+							} else {
+								$main->postvar['mandatory'] = 0;
+							}						
+							
+							
+							if ($main->postvar['install_package'] == 'on') {
+								$main->postvar['install_package'] = 1;
+							} else {
+								$main->postvar['install_package'] = 0;
+							}
+							
+							
+							//Editing addon											
+							$addon->edit($main->getvar['do'], $main->postvar);
+							
+							//-----Adding billing cycles 
+							
+							//Deleting all billing_products relationship							
+							$db->query("DELETE FROM `<PRE>billing_products` WHERE product_id = {$main->getvar['do']} AND type='".BILLING_TYPE_ADDON."' ");
+							   								
+							$billing_list = $billing->getAllBillingCycles();
+							
+							$product_id = $main->getvar['do'];
+							$billing_cycle_result = '';
+								
+							//Add new relations
+							foreach($billing_list as $data) {												
+								$variable_name = 'billing_cycle_'.$data['id'];								
+								if (isset($main->postvar[$variable_name]) && !empty($main->postvar[$variable_name]) ) {										
+									$addon->createPackageAddons($data['id'], $product_id, $main->postvar[$variable_name], BILLING_TYPE_ADDON);														
+								} else {									
+									$addon->createPackageAddons($data['id'], $product_id, 0, BILLING_TYPE_ADDON);							
+								}
+							}						
+						
+							//-----Finish billing cycles						
+							$main->errors("Package #{$main->getvar['do']} has been edited!");
+							$main->redirect('?page=addons&sub=edit&msg=1');
+							
 						}
 						
 						$data = $db->fetch_array($query, 'ASSOC');

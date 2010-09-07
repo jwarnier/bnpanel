@@ -35,18 +35,17 @@ class addon extends model {
 	}
 	
 	public function createPackageAddons($billing_id, $product_id, $amount, $type) {
-		global $db,$billing;
+		global $main,$billing;
 		$billing_id = intval($billing_id);
 		$product_id = intval($product_id);
-		$amount = $db->strip($amount);
-		
+				
 		if (!in_array($type, array(BILLING_TYPE_ADDON, BILLING_TYPE_PACKAGE))) {
 			$type = 0;
 		}		
 		$params['billing_id'] 	= $billing_id;
 		$params['product_id'] 	= $product_id;
 		$params['amount']		= $amount;
-		$params['type'] 		= $type;
+		$params['type'] 		= $type;		
 		$billing->billing_products->save($params);
 	}
 	

@@ -1121,6 +1121,9 @@ class AJAX {
 	   }
    }
    
+   /**
+    * Get addons in the Order Form
+    */
    function getAddons() {
    		global $main, $db, $currency;
 		$billing_id = intval($main->getvar['billing_id']);			
@@ -1164,7 +1167,11 @@ class AJAX {
 					if ($db->num_rows($addon_result) > 0) {
 						$addon = $db->fetch_array($addon_result, 'ASSOC');
 						
-						$addon['amount'] = $currency->toCurrency($addon['amount']);
+						if (!empty($addon['amount']) && intval($addon['amount']) != 0 ) {
+							$addon['amount'] = $currency->toCurrency($addon['amount']);
+						} else {
+							$addon['amount'] = ' - ';
+						}
 					
 						//@todo setup feee per 	
 						//$setup_fee = '<b>Setup Fee:</b></td><td align="right">'.$addon['setup_fee'];
@@ -1223,7 +1230,7 @@ class AJAX {
 		$html = '';
 		$total = 0;
 		
-		$html  = '<fieldset  style="width: 98%;"> <legend><b>Summary</b></legend>';
+		$html  = '<fieldset  style="width: 98%;"><legend><b>Summary</b></legend>';
 		$html .= '<table width="100%" align="center" border="0" cellpadding="3" cellspacing="3">
 				        <tr>
 				            <td width="2%"></td>
@@ -1234,15 +1241,24 @@ class AJAX {
 				        </tr>';
 				        					        
 		while($data = $db->fetch_array($result,'ASSOC')) {
-			$amount_to_show  = $currency->toCurrency($data['amount']);			
+			
+			/*if (!empty($data['amount']) && intval($data['amount']) != 0 ) {
+				$amount_to_show  = $currency->toCurrency($data['amount']);
+			} else {
+				$amount_to_show  = ' - ';
+			}*/
+					
+			$amount_to_show  = $currency->toCurrency($data['amount']);
+			
+			
 	       	$html .= "<tr>
 	            <td></td>
 	            <td>{$data['name']}</td>
-	            <td>{$data['billing_name']} {$amount_to_show}</td>
+	            <td>{$data['billing_name']} </td>
 	            <td align=\"right\">{$amount_to_show}</td>
 	            <td></td>
 	        	</tr>";		        	
-	        	$total = $total + $data['amount'];
+	        $total = $total + $data['amount'];
 		}			
 		
 		if (!empty($new_addon_list) && !empty($main->getvar['billing_id'])) {
@@ -1251,11 +1267,19 @@ class AJAX {
 			$result = $db->query($sql); 
 		
 			while($data = $db->fetch_array($result)) {
-				$amount_to_show  = $currency->toCurrency($data['amount']);				
+				//$amount_to_show  = $currency->toCurrency($data['amount']);		
+				//$amount_to_show = '';	
+				
+				if (!empty($data['amount']) && intval($data['amount']) != 0 ) {
+					$amount_to_show = $currency->toCurrency($data['amount']);
+				} else {
+					$amount_to_show = ' - ';
+				}
+							
 		       	$html .= "<tr>
 		            <td></td>
 		            <td>{$data['name']}</td>
-		            <td>{$data['billing_name']} {$amount_to_show}</td>
+		            <td>{$data['billing_name']} </td>
 		            <td align=\"right\">{$amount_to_show}</td>
 		            <td></td>
 		        	</tr>";
