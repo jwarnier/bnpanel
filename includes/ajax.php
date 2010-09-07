@@ -652,7 +652,7 @@ class AJAX {
 			require_once LINK.'servers/panel.php';	
 			if (in_array($type, $server->getAvailablePanels())) {		
 				require_once LINK ."servers/". $type .".php";
-				$server = new $type;
+				$server = new $type(-1);
 				if($server->hash) {
 					echo 0;	
 				} else {
@@ -670,7 +670,7 @@ class AJAX {
 			require_once LINK.'servers/panel.php';
 			if (in_array($type, $server->getAvailablePanels())) {
 				require_once LINK."servers/". $type .".php";
-				$serverphp = new $type();
+				$serverphp = new $type(-1);
 				if($serverphp->hash) {
 					echo 0;	
 				} else {

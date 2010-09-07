@@ -16,7 +16,8 @@ class page {
 		$this->navlist[] = array("View All Servers", "server_go.png", "view");
 		$this->navlist[] = array("Add Server", "server_add.png", "add");
 				
-		//@todo this foreach for something lighter
+		//@todo change this and user a simple array 
+		/*
 		$files = $main->folderFiles(LINK."servers/");
 		require_once LINK.'servers/panel.php';
 		if(is_array($files) && count($files) > 0) {
@@ -29,7 +30,9 @@ class page {
 				}
 			}
 		}
-		$this->array_type = $values; 
+		$values = array('whm'=>'cPanel/WHM');
+		*/
+		$this->array_type = array('whm'=>'cPanel/WHM','da'=>'Direct Admin', 'ispconfig'=>'ISPConfig3', 'test'=>'Test'); 
 	}
 	
 	public function description() {
@@ -58,7 +61,8 @@ class page {
 					}
 				}
 				//$array['TYPE'] = $this->array_type;
-				$array['TYPE'] = $main->dropDown("type", $this->array_type, 0, 0);
+				//$array['TYPE'] = $main->dropDown("type", $this->array_type, 0, 0);
+				$array['TYPE'] = $main->createSelect("type", $this->array_type, '' ,array('onchange'=>'serverchange(this.value)'));
 				
 				echo $style->replaceVar("tpl/servers/addserver.tpl", $array);
 			break;
@@ -93,15 +97,16 @@ class page {
 						$array['HASH'] = $data['accesshash'];
 						$array['ID'] = $data['id'];
 										
-						$array['TYPE'] = $main->dropDown("type", $this->array_type, $data['type'], 0);
+						//$array['TYPE'] = $main->dropDown("type", $this->array_type, $data['type'], 0);
+						$array['TYPE'] = $main->createSelect("type", $this->array_type, $data['type'], array('onchange'=>'serverchange(this.value)'));
 						
-						global $server;						
-						$server_php = $server->loadServer($data['id']);
-						$server_status = $server_php->getServerStatus();
-			
+						global $server;				
+						$serverphp = $server->loadServer($data['id']);
+						$server_status = $serverphp->getServerStatus();
+					
 						//Testing connection						
-						$array['SERVER_STATUS'] = $server_php->testConnection();						
-						echo $style->replaceVar("tpl/servers/viewserver.tpl", $array);
+						$array['SERVER_STATUS'] = $serverphp->testConnection();						
+						echo $style->replaceVar("tpl/servers/viewserver.tpl", $array);						
 					}
 				} else {
 					//@todo replace this queries
