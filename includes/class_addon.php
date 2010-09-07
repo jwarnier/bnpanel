@@ -22,8 +22,6 @@ class addon extends model {
 	}	
 	
 	public function delete($id) {
-		global $db;
-		
 		$this->setId($id);
 		parent::delete();		
 		//Deleting relation between addons and packages
@@ -81,7 +79,7 @@ class addon extends model {
 	 * 
 	 */
 	public function showAllAddonsByBillingCycleAndPackage($billing_id, $package_id, $selected_addon_list = array(), $generate_checkboxes = true) {
-		global $db, $main,$currency;		
+		global $main,$currency;		
 		$values = $this->getAllAddonsByBillingCycleAndPackage($billing_id, $package_id);
 		$return_value = array();
 		$html = '';	
@@ -178,7 +176,7 @@ class addon extends model {
 	 */
 	
 	public function generateAddonFeeFromList($list_of_addons, $billing_id, $serialize = false) {
-		global $db, $currency;
+		global $currency;
 		$addon_fee = array();
 		$billing_id = intval($billing_id);
 		if (is_array($list_of_addons) && count($list_of_addons) > 0 ) {
@@ -200,7 +198,7 @@ class addon extends model {
 	 * Updates the order_addons table
 	 */
 	public function updateAddonOrders($list_of_addons_ids, $order_id) {
-		global $db, $order;
+		global $order;
 		$addon_fee = array();		
 		$order_id = intval($order_id);
 		
@@ -251,7 +249,7 @@ class addon extends model {
 	 * Generate addon checkboxes within a given list
 	 */
 	public function generateAddonCheckboxesWithList($values, $selected_values = array(), $billing_id = null) {
-		global $db, $main;
+		global $main;
 		$html = '';
 		foreach($values as $value ) {
 				$checked = false;
