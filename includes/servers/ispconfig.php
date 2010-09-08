@@ -454,6 +454,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				
 				$list_templates = $this->getAllPackageBackEnd();
 				
+				$main->addlog('ispconfig::signup using Package backend id '.$package_back_end_id);
+				
 				//Default values in case we don't find the template id 
 				$limit_package_web_quota 		= 10;
 				$limit_package_traffic_quota 	= 10;
@@ -477,6 +479,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				 	if (!empty($limit_package_web_quota)) {
 						$site_params['hd_quota'] = $limit_package_web_quota; //ISPCOnfig field
 				 	}
+				} else {
+					$site_params['hd_quota'] = $client_info['limit_web_quota'];
 				}
 	
 				
@@ -485,6 +489,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					 if (!empty($limit_package_traffic_quota)) {
 						$site_params['traffic_quota'] = $limit_package_traffic_quota; // ISPCOnfig field
 					 }
+				} else {
+					$site_params['traffic_quota'] = $client_info['limit_traffic_quota'];
 				}
 				
 				$main->addlog('ispconfig::signup using traffic quota '.$site_params['traffic_quota']);
