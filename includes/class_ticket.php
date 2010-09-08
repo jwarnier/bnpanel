@@ -8,10 +8,9 @@ if(THT != 1){die();}
 class ticket extends model {
 	
 	public $columns 	= array('id', 'title','content', 'urgency','time', 'reply', 'ticketid','staff','userid', 'status');
-	public $table_name 	= 'tickets';	
-	
-	public function __construct() { # When class is made, retrieves all details like sending method, details.
-	}
+	public $table_name 	= 'tickets';
+	public $_modelName 	= 'ticket';
+
 	
  	/** 
  	 * Creates a new ticket
@@ -43,18 +42,17 @@ class ticket extends model {
 		$main->addLog("ticket::delete #$id");				 
 		return true;
 	}
-	
-	
+		
 	public function showReply($id) { # Returns the HTML for a ticket box
 		global $db, $main, $style;
 		$id = intval($id);
-		$query = $db->query("SELECT * FROM `<PRE>tickets` WHERE `id` = '{$id}'");
+		$query = $db->query("SELECT * FROM <PRE>tickets WHERE `id` = '{$id}'");
 		$data = $db->fetch_array($query);
 		$array['AUTHOR'] = $this->determineAuthor($data['userid'], $data['staff']);
 		$array['CREATED'] = "Posted on: ". strftime("%D at %T", $data['time']);
 		$array['REPLY'] = $data['content'];
 		$array['TITLE'] = $data['title'];
-		$orig = $db->query("SELECT * FROM `<PRE>tickets` WHERE `id` = '{$data['ticketid']}'");
+		$orig = $db->query("SELECT * FROM <PRE>tickets WHERE `id` = '{$data['ticketid']}'");
 		$dataorig = $db->fetch_array($orig);
 		if($dataorig['userid'] == $data['userid']) {
 			$array['DETAILS'] = "Original Poster";	
