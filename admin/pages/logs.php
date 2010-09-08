@@ -33,6 +33,7 @@ class page {
 		echo '<div class="subborder">';		
 		echo '<form id="filter" name="filter" method="post" action="">';
 		
+		/*
 		$values = array(
 			'all' =>'ALL',
 			'Registered' =>'Registered',
@@ -42,21 +43,30 @@ class page {
 			'Cancelled' =>'Cancelled',
 			'Terminated' =>'Terminated',
 			'Password' =>'Password',
-			'Login' =>'lient Logins (Success/Fail)',
+			'Login' =>'Client Logins (Success/Fail)',
 			'Login successful' =>'Client Logins (Success)',
 			'Login failed' =>'Client Logins (Fail)',
 			'STAFF' =>'Staff Logins (Success/Fail)',
 			'STAFF LOGIN SUCCESSFUL' =>'Staff Logins (Success)',
 			'STAFF LOGIN FAILED' =>'Staff Logins (Fail)',			
 		);
+		*/
 		
-		echo $main->createSelect('show', $values, $show);
-				
-		echo '<input type="submit" name="filter" id="filter" value="Filter Log" />';
-			
-		echo '<input type="submit" name="clean" id="clean" value="Clean Logs" />';		
+		$values = array(
+			'all' 						=>'ALL',
+			'Login' 					=>'Client Logins (Success/Fail)',
+			'USER LOGIN SUCCESSFUL' 			=>'Client Logins (Success)',
+			'USER LOGIN FAILED' 				=>'Client Logins (Fail)',
+			'STAFF' 					=>'Staff Logins (Success/Fail)',
+			'STAFF LOGIN SUCCESSFUL' 	=>'Staff Logins (Success)',
+			'STAFF LOGIN FAILED' 		=>'Staff Logins (Fail)',			
+		);
 		
-		echo "</form>";
+		
+		echo $main->createSelect('show', $values, $show);				
+		echo '<input type="submit" name="filter" id="filter" value="Filter Log" />';			
+		echo '<input type="submit" name="clean" id="clean" value="Clean Logs" />';
+		echo '</form>';
 				
 		echo '<table width="100%" class="content_table" cellspacing="2" cellpadding="2"  ><tr bgcolor="#EEEEEE">';
 		echo "<th width=\"75\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Date</td>";
@@ -66,13 +76,11 @@ class page {
 		
 		
 		if (!($l)) {
-			$l = 50;
+			$l = 60;
 		}
 		if (!($p)) {
 			$p = 0;
 		}
-		
-	
 		
 		if ($show != 'all') {
 			$show  = $db->strip($show);
