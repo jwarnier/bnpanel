@@ -12,6 +12,8 @@
 		theme_advanced_toolbar_align : "left",		
 		theme_advanced_statusbar_location : "bottom",		
 		theme_advanced_resizing : true,
+		height:"400px",
+		width:"100%",
 	});
 	$(function() {
 		$("#addpackage").validate(%json_encode%);
