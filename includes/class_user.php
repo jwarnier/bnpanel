@@ -19,7 +19,7 @@ class user extends model {
 	 * @param	date	expiration date
 	 */
 	public function create($params, $clean_token = true) {
-		global $db, $main;		 
+		global $db, $main, $email;		 
 		//Password is the same, email and username is not empty		
 		if ($params['password'] == $params['confirmp']) {
 			if (!empty($params['user']) &&  !empty($params['email'])) {
@@ -29,8 +29,25 @@ class user extends model {
 					$params['password'] 	= md5(md5($params['password']).md5($params['salt']));
 					$params['ip'] 			= $main->removeXSS($_SERVER['REMOTE_ADDR']);
 					$user_id = $this->save($params);	    
-					$main->addLog("User created: $user_id");    	
-		      		return $user_id;
+					
+					$main->addLog("user:create #$user_id");
+					
+					if (!empty($user_id) && is_numeric($user_id)) {
+						
+						$user_info 		= $this->getUserById($user_id);		
+						$emaildata 		= $db->emailTemplate('user_new');	
+												
+						$replace_array['USERNAME'] 				=  $this->formatUsername($user_info['firstname'], $user_info['lastname']);
+						
+						$replace_array['COMPANY_NAME'] 			=  $db->config('name');
+						$replace_array['URL'] 					=  $db->config('url');
+						$replace_array['USER_LOGIN'] 			=  $user_info['user'];
+											
+						$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $replace_array);
+					  	
+		      			return $user_id;
+					}
+					return false;
 				} else {
 					//$array['Error'] = "That username already exist!";				
 					$main->errors( "That username already exist!");
