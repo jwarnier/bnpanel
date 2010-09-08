@@ -1,11 +1,19 @@
+<script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
 <script type="text/javascript">
-	tinyMCE.init({
+/*
+tinyMCE.init({
 	mode : "textareas",
 	skin : "o2k7",
 	width : "80%",
 	theme : "simple"
+	});*/
+
+	$(function() {		
+		$("#addticket").validate(%json_encode%);		
 	});
+	
 </script>
+
 <ERRORS>
 <form class="content" id="addticket" name="addticket" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">

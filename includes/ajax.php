@@ -638,9 +638,9 @@ class AJAX {
 			
 			$query = $db->query("UPDATE <PRE>tickets SET status = '$status' WHERE id = $id");
 			if ($query) {
-				echo "<img src=". URL ."themes/icons/accept.png>";
+				echo " <img src=". URL ."themes/icons/accept.png> Status saved  ";
 			} else {
-				echo "<img src=". URL ."themes/icons/cross.png>";
+				echo " <img src=". URL ."themes/icons/cross.png> There was a problem while saving the status";
 			}
 		}
 	}

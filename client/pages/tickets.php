@@ -22,20 +22,34 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db, $email, $ticket;
+		
+		require_once LINK.'validator.class.php';
+		
 		$ticket_urgency_list = $main->getTicketUrgencyList();
 		$ticket_status_list = $main->getTicketStatusList();
 		
 		$user_id = $main->getCurrentUserId();
 		switch($main->getvar['sub']) {
 			case 'add':
+			
+					 
+				$asOption = array(
+				    'rules' => array(
+				        'title' 		=> 'required',
+				        'urgency' 		=> 'required',
+				        'content'		=> 'required'			            
+				     ),			    
+				     'messages' => array(   			       
+					    )				    
+				);	
+				
+				$array['json_encode'] = json_encode($asOption);				
+				$oValidator = new Validator($asOption);		
+				
 				if($_POST && $main->checkToken()) {
-					foreach($main->postvar as $key => $value) {
-						if($value == "" && !$n && $key != "admin") {
-							$main->errors("Please fill in all the fields!");
-							$n++;
-						}
-					}
-					if(!$n) {
+					$result = $oValidator->validate($_POST);	
+										
+					if (empty($result)) {
 						$time = time();
 						
 						$ticket_params['title']		= $main->postvar['title'];
@@ -61,7 +75,7 @@ class page {
 			default:
 			case 'view':
 				if(!$main->getvar['do'] && $main->checkToken()) {
-					$query = $db->query("SELECT * FROM <PRE>tickets WHERE userid = '{$user_id}' AND reply = '0'");
+					$query = $db->query("SELECT * FROM <PRE>tickets WHERE userid = '{$user_id}' AND reply = '0' ORDER BY id DESC");
 					if(!$db->num_rows($query)) {
 						$style->showMessage('No open tickets');						
 					} else {						
@@ -74,18 +88,27 @@ class page {
 						}
 					}
 				} else {
+					
+					$asOption = array(
+					    'rules' => array(
+					        'title' 		=> 'required',					        
+					        'content'		=> 'required'			            
+					     ),			    
+					     'messages' => array(   			       
+						)				    
+					);	
+					
+					$array2['json_encode'] = json_encode($asOption);				
+					$oValidator = new Validator($asOption);		
+					
 					$query = $db->query("SELECT * FROM <PRE>tickets WHERE id = '{$main->getvar['do']}' OR ticketid = '{$main->getvar['do']}' ORDER BY time ASC");
 					if(!$db->num_rows($query)) {
 						echo "That ticket doesn't exist";	
 					} else {
 						if($_POST && $main->checkToken()) {
-							foreach($main->postvar as $key => $value) {
-								if($value == "" && !$n && $key != "admin") {
-									$main->errors("Please fill in all the fields");
-									$n++;
-								}
-							}
-							if(!$n) {
+								$result = $oValidator->validate($_POST);	
+										
+								if (empty($result)) {
 								$time = time();
 								
 								$ticket_params['title']		= $main->postvar['title'];
@@ -97,7 +120,7 @@ class page {
 								
 								$ticket->create($ticket_params);					
 								
-								$main->errors("Reply has been added");
+								$main->errors("Reply has been added",true);
 								$data = $db->fetch_array($query);
 								$client = $db->client($user_id);
 								$template = $db->emailTemplate("new_response");
@@ -105,7 +128,8 @@ class page {
 								$array['USER'] = $client['user'];
 								$array['CONTENT'] = $main->postvar['content'];
 								$email->staff($template['subject'], $template['content'], $array);
-								$main->redirect("?page=tickets&sub=view&do=". $main->getvar['do']);
+								
+								$main->redirect("?page=tickets&sub=view&msg=1&do=". $main->getvar['do']);
 							}
 						}
 						$data = $db->fetch_array($query);
@@ -113,7 +137,11 @@ class page {
 						$array['TIME'] = strftime("%D", $data['time']);
 						$array['NUMREPLIES'] = $db->num_rows($query) - 1;
 						$array['UPDATED'] = $ticket->lastUpdated($data['id']);
-						$array['ORIG'] = $ticket->showReply($data['id']);
+						//$array['ORIG'] = $ticket->showReply($data['id']);					
+					
+						$ticket_info = $ticket->find($data['id']);
+						$array['TITLE'] = $ticket_info->title;
+						$array['DESCRIPTION'] = $ticket_info->content;
 						
 						$array['URGENCY'] = $ticket_urgency_list[$data['urgency']]['name'];
 						
@@ -123,7 +151,7 @@ class page {
 						$array['REPLIES'] = "";
 						while($reply = $db->fetch_array($query)) {
 							if(!$n) {
-								$array['REPLIES'] .= "<br /><b>Replies</b>";
+								$array['REPLIES'] .= "<b>History</b>";
 							}
 							$array['REPLIES'] .= $ticket->showReply($reply['id']);
 							$n++;
