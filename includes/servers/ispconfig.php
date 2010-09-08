@@ -448,7 +448,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$site_params['system_user'] 	= 'web'.$website_id;					//This field will be overwritten by ISPconfig
 				$site_params['system_group'] 	= 'client'.$client_info['client_id'];	//This field will be overwritten by ISPconfig
 						
-				$site_params['client_group_id'] = $new_client_id + 1;	 //always will be this 	groupd id +1			
+				$site_params['client_group_id'] = $new_client_id + 1;	 //always will be this 	groupd id + 1			
 				$site_params['server_id'] 		= $this->getServerId();				
 		
 				
@@ -525,7 +525,8 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				
 				if ($result) {			
 					
-					//Adding the DNS record A	
+					//Adding the DNS record A
+						
 					$dns_a_params['server_id'] = $this->getServerId();
 					$dns_a_params['client_id'] = $new_client_id;
 					$dns_a_params['zone'] = '90';
@@ -537,6 +538,9 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					
 					$this->remote('dns_a_add', $dns_a_params);
 			
+					//@todo Adding MAIL and DNS Zone record. There are some hardcoded values
+					
+										
 					// ---- Setting up the mail domain
 					/*
 					$mail_domain_params['client_id'] 	= $new_client_id;					

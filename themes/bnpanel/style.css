@@ -80,6 +80,7 @@ h3 {
 	padding:0 5px;
 	height:39px;
 	display:block;
+	text-decoration:none;
 	
 	margin-right:10px;
 }
@@ -87,8 +88,7 @@ h3 {
 	vertical-align:middle;
 }
 #nav li a {
-	color:#fff;
-	
+	color:#fff;	
 	height:42px;
 }
 
@@ -102,13 +102,14 @@ h3 {
 }
 
 #nav li:hover {
-	text-decoration:underline;
+	text-decoration: none;
 	border-top:0px solid #006;
 	margin-top:0px;
 }
 #nav li.active {
 	border-top:0px solid #006;
 	margin-top:0px;
+	text-decoration:none;
 }
 
 #left {

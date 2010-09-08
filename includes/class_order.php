@@ -277,7 +277,7 @@ class order extends model {
 		$package_info 	= $package->getPackage($order_info['pid']);
 		$serverphp 		= $server->loadServer($package_info['server']); # Create server class
 		
-		if ($serverphp != false ) {
+		if ($serverphp->status) {
 			$result 	= $serverphp->signup($order_id);				
 			if ($result) {
 				$all_addons_info = $addon->getAllAddons();	
@@ -293,7 +293,9 @@ class order extends model {
 				}
 				return true;	
 			}
-		}		
+		} else {
+			$main->addlog('order::sendOrderToControlPanel failed status = false ');
+		}	
 		return false;		
 	}
 	
