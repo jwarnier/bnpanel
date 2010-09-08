@@ -582,7 +582,7 @@ class AJAX {
 			          </tr>';		        
 						
 				if($db->num_rows($query) == 0) {
-					echo "No clients found!";	
+					echo "No clients found";	
 				} else {					
 					while($data = $db->fetch_array($query)) {
 						if($n != $show) {
@@ -771,23 +771,12 @@ class AJAX {
         }*/
     }
     
-	//deprecated?
-    private function randomString($length = 8, $possible = '0123456789bcdfghjkmnpqrstvwxyz') {
-            $string = "";
-            $i = 0;
-            while($i < $length) {
-                $char = substr($possible, mt_rand(0, strlen($possible)-1), 1);
-                if(!strstr($salt, $char)) {
-                    $string .= $char;
-                    $i++;
-                }
-            }
-            return $string;
-    }
+
     
-	//deprecated?
+	//not supported
     function genkey() {
         global $main, $db;
+        /*
         if($_SESSION['logged'] and $main->getvar['do'] == "it") {
             $random = $this->randomString();
             $key = hash('sha512', $random);
@@ -797,11 +786,12 @@ class AJAX {
             echo "\n<br />";
             return true;
         }
+        */
     }
     
 	/**
 	 * 
-	 * Disable for security reasons
+	 * Disabled for security reasons
 	 * 	 
 	 */	 
     function editcss() {
@@ -825,7 +815,7 @@ class AJAX {
     
 	/**
 	 * 
-	 * Disable for security reasons
+	 * Disabled for security reasons
 	 * 	 
 	 */	 
     function edittpl() {
@@ -1110,16 +1100,16 @@ class AJAX {
    
 	function deleteTicket() {
 		global $main, $db;
-	   if ($main->getCurrentStaffId()) {
-		   $tid = intval($main->getvar['ticket']);
-		   if($tid != "" && is_numeric($tid)) {
-			   $query = "DELETE FROM <PRE>tickets WHERE id = {$tid}";
-			   $db->query($query);
-			   $query = "DELETE FROM <PRE>tickets WHERE ticketid = {$tid}";
-			   $db->query($query);
-		   }
-	   }
-   }
+		if ($main->getCurrentStaffId()) {
+			$tid = intval($main->getvar['ticket']);
+			if($tid != "" && is_numeric($tid)) {
+				$query = "DELETE FROM <PRE>tickets WHERE id = $tid";
+			    $db->query($query);
+			    $query = "DELETE FROM <PRE>tickets WHERE ticketid = $tid";
+			    $db->query($query);
+		    }
+	    }
+	}
    
    /**
     * Get addons in the Order Form
@@ -1248,8 +1238,7 @@ class AJAX {
 				$amount_to_show  = ' - ';
 			}*/
 					
-			$amount_to_show  = $currency->toCurrency($data['amount']);
-			
+			$amount_to_show  = $currency->toCurrency($data['amount']);			
 			
 	       	$html .= "<tr>
 	            <td></td>
@@ -1302,44 +1291,50 @@ class AJAX {
    
    function changeAddons() {
    		global $main, $db, $addon, $currency, $order;
-   		$package_id = $main->getvar['package_id'];
-		$order_id	= $main->getvar['order_id'];	  
-		 		
-   		$order_info = $order->getOrderInfo($order_id);	   		
-   		$billing_id = $order_info['billing_cycle_id'];
-   		
-   		$addon_list = $addon->getAddonsByPackage($package_id);
-   		
-   		foreach($addon_list as $addon_item) {
-			$checked = false;
-			if (isset($selected_values[$addon_item['id']])) {
-				$checked = true;
-			}	
-			$html .= $main->createCheckbox($addon_item['name'], 'addon_'.$addon_item['id'], $checked);					
-		}
-		echo $html;   		
+   		if ($main->getCurrentStaffId()) {   		
+	   		$package_id = $main->getvar['package_id'];
+			$order_id	= $main->getvar['order_id'];	  
+			 		
+	   		$order_info = $order->getOrderInfo($order_id);	   		
+	   		$billing_id = $order_info['billing_cycle_id'];
+	   		$html = '';
+	   		$addon_list = $addon->getAddonsByPackage($package_id);
+	   		if (is_array($addon_list) && count($addon_list) > 0 ) { 
+		   		foreach($addon_list as $addon_item) {
+					$checked = false;
+					if (isset($selected_values[$addon_item['id']])) {
+						$checked = true;
+					}	
+					$html .= $main->createCheckbox($addon_item['name'], 'addon_'.$addon_item['id'], $checked);					
+				}
+	   		}
+			echo $html;   		
+   		}
    }	   
    
    function loadaddons() {
    		global $main, $db, $addon, $currency, $order;
-   		
-   		$package_id = $main->getvar['package_id'];
-		$billing_id	= $main->getvar['billing_id'];
-		$order_id	= $main->getvar['order_id'];
-		$action		= $main->getvar['action'];
-		
-		$addon_selected_list = array();
-		if (!empty($order_id)) {
-			$order_info = $order->getOrderInfo($order_id);
-			$addon_selected_list = $order_info['addons'];
-		}
-		if ($action == 'add') {
-			$generate_checbox = true;
-		} else {
-			$generate_checbox = false;
-		}				
-		$result = $addon->showAllAddonsByBillingCycleAndPackage($billing_id, $package_id, array_flip($addon_selected_list),$generate_checbox);
-		echo $result['html'];			
+   		if ($main->getCurrentStaffId()) {  
+	   		$package_id = $main->getvar['package_id'];
+			$billing_id	= $main->getvar['billing_id'];
+			$order_id	= $main->getvar['order_id'];
+			$action		= $main->getvar['action'];
+			
+			$addon_selected_list = array();
+			if (!empty($order_id)) {
+				$order_info = $order->getOrderInfo($order_id);
+				$addon_selected_list = $order_info['addons'];
+			}
+			if ($action == 'add') {
+				$generate_checkbox = true;
+			} else {
+				$generate_checkbox = false;
+			}				
+			$result = $addon->showAllAddonsByBillingCycleAndPackage($billing_id, $package_id, array_flip($addon_selected_list),$generate_checkbox);
+			if (!empty($result) && isset($result['html'])) {
+				echo $result['html'];
+			}
+   		}	
    }
    
    
@@ -1464,6 +1459,7 @@ class AJAX {
 		}			
 		return;
 	}
+	
 	public function usernameExists() {
 		global $user, $main;		
 		$user_info = $user->getUserByUserName($main->getvar['user']);			
@@ -1509,7 +1505,7 @@ class AJAX {
 		global $main;
 		$user_info = $main->getCurrentUserInfo();		
 		if (!empty($user_info)) {
-			echo 'Signed in as <a href="'.URL.'client">'.$user_info['user'].'</a> | <a href="'.URL.'client/?page=logout">Logout</a>';
+			echo 'Logged in as <a href="'.URL.'client">'.$user_info['user'].'</a> | <a href="'.URL.'client/?page=logout">Logout</a>';
 		} else {
 			echo 'Log in to your account';
 		}		
@@ -1523,8 +1519,7 @@ if(isset($_GET['function']) && !empty($_GET['function'])) {
 	if (SERVER_STATUS == 'test') {
 		//If this is a server test we set this to true to easy debug
 		$is_xml_request = true;
-	}
-	
+	}	
 	if ($is_xml_request) {
 		$ajax = new AJAX();
 		if (method_exists($ajax, $_GET['function'])) {
