@@ -2,6 +2,7 @@
 	<div class="table">
     	<div class="cat">
         <span class="cat_title">%NAME%</span>
+        <span style="float:right">%EDIT_LINK%</span>
         </div>
         <div class="text">
         <table width="100%" border="0" cellspacing="2" cellpadding="0">

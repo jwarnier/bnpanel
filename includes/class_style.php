@@ -190,4 +190,15 @@ class style {
     	}    	
     	return $html;
     }
+    
+    public function returnIcon($icon_name) {
+    	if (!empty($icon_name)) {
+    		$icon_file = URL.'themes/icons/'.$icon_name;    		
+    		return '<img src="'.$icon_file.'">';
+		}
+    }
+    
+    public function showIcon($icon_name) {
+    	echo $this->returnIcon($icon_name);
+    } 
 }

@@ -48,7 +48,7 @@ if (!empty($user_info)) {
 }
 
 if($db->num_rows($packages2) == 0) {
-	echo $main->table("No packages", '<div class="warning">There are no available Packages!</div>');
+	echo $main->table("No packages", '<div class="warning">There are no available Packages</div>');
 } else {	
 	while($data = $db->fetch_array($packages2, 'ASSOC')) {
 		if(!$n) {
@@ -58,6 +58,12 @@ if($db->num_rows($packages2) == 0) {
 		$array2['DESCRIPTION'] 	= $data['description'];
 		$array2['ID']			= $data['id'];
 		$array2['PACKAGE_TYPE']	= $data['type'];
+		
+		if ($main->getCurrentStaffId()) {
+			$array2['EDIT_LINK'] = '<a href="'.URL.'admin/?page=packages&sub=edit&do='.$data['id'].'" />'.$style->returnIcon('pencil.png').'<a/>';
+		} else {
+			$array2['EDIT_LINK'] = '';
+		}  
 		
 		$array['PACKAGES'] 	   .= $style->replaceVar("tpl/orderform/orderpackages.tpl", $array2);	
 		$n++;
