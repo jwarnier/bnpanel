@@ -115,7 +115,8 @@ class ispconfig extends Panel {
 	private function remote($action, $params = array()) {
 		global $main;
 		
-		$main->addLog('ispconfig::remote action called:' . $action);
+		$main->addLog('ispconfig::remote action called: ' . $action);
+		$main->addLog('ispconfig::remote action params: ' . print_r($params,1));
 		$soap_client = $this->load();	
 			
 		$result = array();
@@ -278,7 +279,7 @@ class ispconfig extends Panel {
 				$main->addLog("Result of ispconfig:: $action : ".print_r($soap_result,1));
 				return $soap_result;	
 			} catch (SoapFault $e) {				
-				$main->addLog("ispconfig::remote Soap error: ".$e->getMessage());
+				$main->addLog("ispconfig::remote <strong>Soap error:</strong> ".$e->getMessage());
 				$result['error']=1;
 				$result['text'] = $e->getMessage();
 				return $result;
@@ -457,23 +458,37 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 				$limit_package_web_quota 		= 10;
 				$limit_package_traffic_quota 	= 10;
 				
-				foreach($list_templates as $template) {
-					if ($template['template_id'] == $package_back_end_id) {
-						$limit_package_web_quota 	 = $template['limit_web_quota'];
-						$limit_package_traffic_quota = $template['limit_traffic_quota'];
-						break;						
+				//Set the defaults 
+				$site_params['hd_quota'] 		= $limit_package_web_quota;
+				$site_params['traffic_quota'] 	= $limit_package_traffic_quota;
+				
+				if (is_array($list_templates)) {
+					foreach($list_templates as $template) {
+						if ($template['template_id'] == $package_back_end_id) {
+							$limit_package_web_quota 	 = $template['limit_web_quota'];
+							$limit_package_traffic_quota = $template['limit_traffic_quota'];
+							break;						
+						}
 					}
-				}				
-	
+				}
+				
 				if (empty($client_info['limit_web_quota'])) {
 				 	//Not 0 values otherwise the script will not work
-					$site_params['hd_quota'] = $limit_package_web_quota; //ISPCOnfig field
+				 	if (!empty($limit_package_web_quota)) {
+						$site_params['hd_quota'] = $limit_package_web_quota; //ISPCOnfig field
+				 	}
 				}
 	
-				if (empty($client_info['site_infolimit_traffic_quota'])) {
+				
+				if (empty($client_info['limit_traffic_quota'])) {
 					 //Not 0 values otherwise the script will not work
-					$site_params['traffic_quota'] = $limit_package_traffic_quota; // ISPCOnfig field
+					 if (!empty($limit_package_traffic_quota)) {
+						$site_params['traffic_quota'] = $limit_package_traffic_quota; // ISPCOnfig field
+					 }
 				}
+				
+				$main->addlog('ispconfig::signup using traffic quota '.$site_params['traffic_quota']);
+				$main->addlog('ispconfig::signup using hd quota '.$site_params['hd_quota']);
 	
 				//Hardcoded values
 				$site_params['allow_override'] 	= 'All';
@@ -513,6 +528,7 @@ username 	password 	language 	usertheme 	template_master 	template_additional 	c
 					$dns_a_params['data'] = '217.112.190.149';
 					$dns_a_params['ttl'] = '86400';
 					$dns_a_params['active'] = 'Y';
+					
 					$this->remote('dns_a_add', $dns_a_params);
 			
 					// ---- Setting up the mail domain
