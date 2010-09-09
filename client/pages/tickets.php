@@ -31,8 +31,6 @@ class page {
 		$user_id = $main->getCurrentUserId();
 		switch($main->getvar['sub']) {
 			case 'add':
-			
-					 
 				$asOption = array(
 				    'rules' => array(
 				        'title' 		=> 'required',
@@ -59,7 +57,7 @@ class page {
 						$ticket_params['userid'] 	= $user_id;
 						$ticket_id = $ticket->create($ticket_params);						
 						
-						$main->errors("Ticket has been added");
+						$main->errors(_('Ticket has been added'), true);
 						$template = $db->emailTemplate("new_ticket");
 						$array['TITLE'] 	= $main->postvar['title'];
 						$array['URGENCY'] 	= $main->postvar['urgency'];
@@ -74,11 +72,13 @@ class page {
 				break;
 			default:
 			case 'view':
+				
 				if(!$main->getvar['do'] && $main->checkToken()) {
 					$query = $db->query("SELECT * FROM <PRE>tickets WHERE userid = '{$user_id}' AND reply = '0' ORDER BY id DESC");
 					if(!$db->num_rows($query)) {
 						$style->showMessage('No open tickets');						
-					} else {						
+					} else {	
+						echo '<ERRORS>'; 					
 						while($data = $db->fetch_array($query)) {
 							$array['TITLE'] = $data['title'];
 							$array['UPDATE'] = $ticket->lastUpdated($data['id']);
@@ -87,8 +87,7 @@ class page {
 							echo $style->replaceVar("tpl/support/ticketviewbox.tpl", $array);
 						}
 					}
-				} else {
-					
+				} else {					
 					$asOption = array(
 					    'rules' => array(
 					        'title' 		=> 'required',					        
@@ -106,9 +105,9 @@ class page {
 						echo "That ticket doesn't exist";	
 					} else {
 						if($_POST && $main->checkToken()) {
-								$result = $oValidator->validate($_POST);	
+							$result = $oValidator->validate($_POST);	
 										
-								if (empty($result)) {
+							if (empty($result)) {
 								$time = time();
 								
 								$ticket_params['title']		= $main->postvar['title'];
@@ -120,7 +119,7 @@ class page {
 								
 								$ticket->create($ticket_params);					
 								
-								$main->errors("Reply has been added",true);
+								$main->errors(_("Reply has been added"),true);
 								$data = $db->fetch_array($query);
 								$client = $db->client($user_id);
 								$template = $db->emailTemplate("new_response");

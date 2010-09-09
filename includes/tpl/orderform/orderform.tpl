@@ -444,16 +444,16 @@ function checkSubdomain() {
         </table>
     </div>    
     <div class="table" id="2" style="display:none">
-        <div class="cat"><span class="cat_title">Select a billing cycle</span></div>
+        <div class="cat"><span class="cat_title">_{Select a billing cycle}</span></div>
         <div class="text">
         	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
                 <td colspan="2">
                 	<div class="subborder">
                 		<div class="sub" id="description">
-                		Payment cycles                			
+                		_{Payment cycles}                			
 	              			<select name="billing_id" id="billing_id" onchange="showAddons(this)" >
-	              			<option value="0" selected="selected">Select a billing cycle</option>         		
+	              			<option value="0" selected="selected">_{Select a billing cycle}</option>         		
 	                     		%BILLING_CYCLE%
 	                    	</select>
               		  </div>
@@ -630,7 +630,7 @@ function checkSubdomain() {
            </td>
            <td>
            <div class="big_title">
-				<a onclick="showLogin();" href="#">Log in to your account</a>
+				<a onclick="showLogin();" href="#">_{Log in to your account}</a>
 			</div>				
            %LOGIN_TPL%           
            </td>
@@ -693,9 +693,9 @@ function checkSubdomain() {
     <table width="100%" border="0" cellspacing="2" cellpadding="0" id="steps" style="display:none;">
       <tr>
         <td width="33%" align="center">
-        	<input type="button" name="back" id="back" value="Previous Step" onclick="previousstep()" disabled="disabled" /></td>
+        	<input type="button" name="back" id="back" value="_{Previous Step}" onclick="previousstep()" disabled="disabled" /></td>
         <td width="33%" align="center" id="verify">&nbsp;</td>
-        <td width="33%" align="center"><input type="button" name="next" id="next" value="Next Step" onclick="nextstep()" ondblclick="return false" /></td>
+        <td width="33%" align="center"><input type="button" name="next" id="next" value="_{Next Step}" onclick="nextstep()" ondblclick="return false" /></td>
       </tr>
     </table>
 </form>

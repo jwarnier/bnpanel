@@ -193,9 +193,9 @@ if(!$_SESSION['clogged']) {
 		if(!$db->config("cenabled")) {
 			define("SUB", "Disabled");
 			define("INFO", SUB);
-			echo '<div align="center">'.$main->table("Client Area - Disabled", $db->config("cmessage"), "300px").'</div>';
+			echo '<div align="center">'.$main->table(gettext("Client Area - Disabled"), $db->config("cmessage"), "300px").'</div>';
 		} else {
-			echo '<div align="center">'.$main->table("Client Area - Login", $style->replaceVar("tpl/login/clogin.tpl", $array), "300px").'</div>';
+			echo '<div align="center">'.$main->table(gettext("Client Area - Login"), $style->replaceVar("tpl/login/clogin.tpl", $array), "300px").'</div>';
 		}
 		echo $style->get("footer.tpl");
 	}
@@ -204,7 +204,7 @@ if(!$_SESSION['clogged']) {
 		$main->getvar['page'] = "home";
 	} elseif($main->getvar['page'] == 'logout') {	
 		$referer = basename($_SERVER['HTTP_REFERER']);		
-		$main->logout();
+		$main->logout('client');
 		if ($referer == 'order') {
 			$main->redirect(URL.'/order');
 		} else {

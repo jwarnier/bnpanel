@@ -1505,9 +1505,9 @@ class AJAX {
 		global $main;
 		$user_info = $main->getCurrentUserInfo();		
 		if (!empty($user_info)) {
-			echo 'Logged in as <a href="'.URL.'client">'.$user_info['user'].'</a> | <a href="'.URL.'client/?page=logout">Logout</a>';
+			echo _('Logged in as').'<a href="'.URL.'client">'.$user_info['user'].'</a> | <a href="'.URL.'client/?page=logout">'._('Logout').'</a>';
 		} else {
-			echo 'Log in to your account';
+			echo _('Log in to your account');
 		}		
 	}
 		

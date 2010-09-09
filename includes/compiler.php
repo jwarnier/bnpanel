@@ -155,6 +155,7 @@ if (SERVER_STATUS == 'test') {
 
 $includePath = dirname(__FILE__);
 define('LINK', $includePath.'/');
+define('MAIN', dirname($includePath).'/');
 
 #Stop the output
 ob_start();

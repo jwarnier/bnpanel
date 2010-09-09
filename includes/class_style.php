@@ -68,22 +68,23 @@ class style {
 			}
 			//Commented lines are the traduction like Chamilo
 			
-			//include '/var/www/bnpanel/locale/es_ES/LC_MESSAGES/main.php';
-			
-			$generate_cache = false;					 
-		
+			//include '/var/www/bnpanel/locale/es_ES/LC_MESSAGES/main.php';			
+			$generate_cache = false;					 		
 			preg_match_all("/_{.*?}/", $data, $output);
-			//preg_match_all("/_\(.*?\)/", $data, $output);			
-			
+			//preg_match_all("/_\(.*?\)/", $data, $output);				
 			/**
 			 * 
 			 * @todo 
 			 * See this task  https://task.beeznest.net/issues/1464 for more information about the status of the translation package
 			 * 
-			 */
+			 */			 
 			if ($generate_cache) {
-				$cache = '/var/www/bnpanel/locale/cache/'.basename($template).'.php';
-				$handle = fopen($cache,'w');
+				if (is_dir(MAIN.'locale/cache') && is_writable(MAIN.'locale/cache')) {		
+					$cache = MAIN.'locale/cache/'.basename($template).'.php';
+					$handle = fopen($cache,'w');
+				} else {
+					$generate_cache = false;
+				}
 			}
 						   		
 			if (!empty($output)) {	
@@ -103,7 +104,8 @@ class style {
 								//$item = str_replace(array('_(',')'), '', $item);
 								//if (isset($$item)) {
 								if (isset($item)) {
-									$item_to_prereg = preg_quote($item);			
+									$item_to_prereg = preg_quote($item);
+									//This is the piece of code that do the replace to use gettext			
 									$data = preg_replace("/_\{$item_to_prereg\}/si", gettext($item), $data);
 									//$data = preg_replace("/_\($item\)/si", gettext($item), $data);
 								}				
@@ -117,17 +119,9 @@ class style {
 			}			
 			if ($generate_cache) {
 				fclose($handle) or die ("Error Closing File!");
-			}		
-			
+			}			
 		}
-		//$data = $this->translateVar($array, $data);
 		return $data;
-	}
-	
-
-	
-	public function translateVar($array, $data) {
-	
 	}
 
 	public function javascript() { # Returns the HTML code for the header that includes all the JS in the javascript folder
@@ -136,8 +130,7 @@ class style {
 		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/jquery-ui.js'></script>\n";
 		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/misc.js'></script>\n";
 		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/slide.js'></script>\n";
-		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/ajax.js'></script>\n";
-		
+		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/ajax.js'></script>\n";		
 		/*if ($handle = opendir($folder)) { # Open the folder
 			while (false !== ($file = readdir($handle))) { # Read the files
 				if($file != "." && $file != ".." && $file != "jquery.js" && $file != "simpletip.js") { # Check aren't these names
