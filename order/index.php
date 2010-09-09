@@ -64,7 +64,7 @@ if($db->num_rows($packages2) == 0) {
 		} else {
 			$array2['EDIT_LINK'] = '';
 		}
-		$array2['EDIT_LINK'] = '';
+		
 		$array['PACKAGES'] 	   .= $style->replaceVar("tpl/orderform/orderpackages.tpl", $array2);	
 		$n++;
 		if($n == 1) {
