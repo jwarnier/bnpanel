@@ -3,7 +3,7 @@
 /**
 			
 	@author 	Julio Montoya <gugli100@gmail.com> BeezNest 2010
-	@package	tht.addons	
+	@package	bnpanel.addons	
 */
 
 //Check if called by script

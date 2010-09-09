@@ -2,7 +2,7 @@
 /* For licensing terms, see /license.txt */
 
 /**
-	ISPConfig Plugin for BNPanel (THT)
+	ISPConfig Plugin for BNPanel
 	@author Julio Montoya <gugli100@gmail.com> BeezNest	2010
 */
 

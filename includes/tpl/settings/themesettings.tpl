@@ -4,7 +4,7 @@
   <tr>
     <td width="20%">Default Theme:</td>
     <td>
-      %THEME%    <a title="The default theme to use in the main THT User-Interface." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+      %THEME%    <a title="The default theme to use in the main BNPanel User-Interface." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>
   <tr>
