@@ -108,13 +108,13 @@ class AJAX {
 	 * @todo this function should be moved to a includes/install.lib.php file 
 	 */
 	private function installsql($data, $pre, $con = 0) {
-		global $style, $db;
+		global $main, $style, $db;
 		
 		$conf_file = LINK."conf.inc.php";		
 		if (file_exists($conf_file) && is_writable($conf_file)) {
 			
 			$array['PRE'] = $pre;
-			$array['API-KEY'] = hash('sha512', $this->randomString());
+			$array['API-KEY'] = hash('sha512', $main->randomString());
 			$sContents = $style->replaceVar($data, $array);
 			
 			// replace slash quotes so they don't get in the way during parse
