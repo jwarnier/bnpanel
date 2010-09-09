@@ -685,13 +685,17 @@ class AJAX {
 	function massemail() {
 		global $main, $email, $db;		
 		if ($main->getCurrentStaffId()) {			
-			$subject = $main->getvar['subject'];
-			$msg = $main->getvar['msg'];
-			$query = $db->query("SELECT * FROM <PRE>users");
-			while($client = $db->fetch_array($query)) {
-				$email->send($client['email'], $subject, $msg);	
-			}
-			echo 1;
+			$subject 	= $main->getvar['subject'];
+			$msg 		= $main->getvar['msg'];
+			if (!empty($subject) && !empty($msg)) {
+				$query = $db->query("SELECT * FROM <PRE>users");
+				while($client = $db->fetch_array($query)) {
+					$email->send($client['email'], $subject, $msg);	
+				}
+				echo 1;
+			} else {
+				echo 0;
+			}		
 		}
 	}
 	
