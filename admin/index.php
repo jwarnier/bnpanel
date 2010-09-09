@@ -302,13 +302,12 @@ if(!$_SESSION['logged']) {
 		echo '<div align="center">'.$main->table("Admin Area - Login", $style->replaceVar("tpl/login/alogin.tpl", $array), "300px").'</div>';
 		echo $style->get("footer.tpl");
 	}
-} elseif($_SESSION['logged']) {
-	
+} elseif($_SESSION['logged']) {	
 	//Ok user is already in 
 	if(!$main->getvar['page']) {
 		$main->getvar['page'] = "home";
 	} elseif($main->getvar['page'] == "logout") {
-		$main->logout('client');		
+		$main->logout('admin');		
 		$main->redirect("?page=home");
 	}	
 	$content = acp();
