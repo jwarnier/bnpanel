@@ -27,8 +27,14 @@ function editme(id) {
 	tinyMCE.init({
 	mode : "textareas",
 	skin : "o2k7",
-	theme : "simple",
-	width : "75%"
+	theme : "advanced",
+	
+	theme_advanced_toolbar_location : "top",		
+	theme_advanced_toolbar_align : "left",		
+	theme_advanced_statusbar_location : "bottom",		
+	theme_advanced_resizing : true,
+	height:"300px",
+	width:"100%",
 	});
 </script>
 <ERRORS>
