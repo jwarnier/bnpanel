@@ -104,6 +104,10 @@ class page {
 				$result_max = $db->query($count_sql);		
 				$count = $db->fetch_array($result_max);			
 				$count = $count['count'];
+				$invoice_status = $main->getInvoiceStatusList();
+				
+				$return_array['STATUS_FILTER'] = $main->createSelect('status_id', $invoice_status);
+				
 				if (!empty($count)) {
 					$quantity = ceil($count / $per_page);							
 					$return_array['COUNT'] = $quantity;

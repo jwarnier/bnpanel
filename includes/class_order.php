@@ -368,7 +368,7 @@ class order extends model {
 	 * @return	array 
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
 	 */	 
-	public function getAllOrdersToArray($user_id = 0, $page = 0) {
+	public function getAllOrdersToArray($user_id = 0, $page = 0, $status_id = 0) {
 		global $main, $db, $style, $currency, $package, $billing, $addon, $user;
 		
 		$limit = '';
@@ -379,13 +379,18 @@ class order extends model {
 			$page = intval($page);
 			$start = ($page-1)*$per_page;	
 			$limit = " LIMIT $start, $per_page";
-		}		
+		}
+		$status_where = '';
+		if (!empty($status_id)) {
+			$status_id = intval($status_id);
+			$status_where = " AND status = $status_id";
+		}
 		$user_id = intval($user_id);
 		
 		if (empty($user_id)) {
-			$sql =  "SELECT * FROM ".$this->getTableName()." WHERE status <> '".ORDER_STATUS_DELETED."' ORDER BY id DESC  $limit ";	
+			$sql =  "SELECT * FROM ".$this->getTableName()." WHERE status <> '".ORDER_STATUS_DELETED."' $status_where ORDER BY id DESC  $limit ";	
 		} else {			
-			$sql = "SELECT * FROM ".$this->getTableName()."  WHERE status <> '".ORDER_STATUS_DELETED."' AND userid = '".$user_id."' ORDER BY id DESC $limit ";
+			$sql = "SELECT * FROM ".$this->getTableName()."  WHERE status <> '".ORDER_STATUS_DELETED."' $status_where AND userid = '".$user_id."' ORDER BY id DESC $limit ";
 		}	
 		
 		$result_order  = $db->query($sql);

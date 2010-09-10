@@ -1,20 +1,23 @@
 <script type="text/javascript" src="<URL>includes/javascript/jpaginate/jquery.paginate.js"></script>
 <link rel="stylesheet" href="<URL>includes/javascript/jpaginate/css/style.css" type="text/css" />
 <script type="text/javascript">
+var pageNum = 0;
+var status_id = 0;
 
-$(document).ready(function() {
-	
-	//Display Loading Image
-	function Display_Load() {
-    	$("#pagination_loading").fadeIn(900,0);
-		$("#pagination_loading").html("<img src='<URL>themes/icons/ajax-loader2.gif' />");
-	}
-	
-	//Hide Loading Image
-	function Hide_Load() {
-		$("#pagination_loading").fadeOut('slow');
-	};
-	
+//Hide Loading Image
+function Hide_Load() {
+	$("#pagination_loading").fadeOut('slow');
+};
+
+
+//Display Loading Image
+function Display_Load() {
+	$("#pagination_loading").fadeIn(900,0);
+	$("#pagination_loading").html("<img src='<URL>themes/icons/ajax-loader2.gif' />");
+}
+
+$(document).ready(function() {	
+
 	Display_Load();
 	
 	$("#tbody").load("<AJAX>function=getInvoices&page=1", Hide_Load());
@@ -33,15 +36,28 @@ $(document).ready(function() {
 		images					: false,
 		mouse					: 'press',
 		onChange     			: 	function(page) {
-										var pageNum = page;
+										pageNum = page;
 										Display_Load();
-										$("#tbody").load("<AJAX>function=getInvoices&page=" + pageNum, Hide_Load());
+										$("#tbody").load("<AJAX>function=getInvoices&page=" + pageNum+"&status="+status_id, Hide_Load());
 									}
 	 });	
 });
+
+function filter() {
+	status_id = $("#status_id").val();
+	$("#tbody").load("<AJAX>function=getInvoices&page=" + pageNum +"&status="+status_id, Hide_Load());
+}
+
 </script>
 <p>From here you can see all invoices in your BNPanel installation.</p>
+
+%STATUS_FILTER%
+<a  href="#" onclick="filter();">Apply</a>
+
+
 <ERRORS>
+
+
 <div id="pagination_loading" ></div>
 <table  class="content_table"   width="100%" border="0" cellspacing="3" cellpadding="0">
 	<thead>
