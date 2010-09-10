@@ -441,6 +441,10 @@ class page {
 				$count = $db->fetch_array($result_max);
 				$count = $count['count'];
 				
+				$order_status = $main->getOrderStatusList();
+				$return_array['STATUS_FILTER'] = $main->createSelect('status_id', $order_status);
+				
+				
 				if (!empty($count)) {	
 					$quantity = ceil($count / $per_page);
 					$return_array['COUNT'] = $quantity;				

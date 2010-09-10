@@ -1416,8 +1416,9 @@ class AJAX {
    function getOrders() {
    		global	$main, $order;
    		if ($main->getCurrentStaffId()) {
-   			$page = $main->getvar['page'];	   			   		
-			$array = $order->getAllOrdersToArray('', $page);
+   			$page = $main->getvar['page'];
+   			$status_id = $main->getvar['status'];   		
+			$array = $order->getAllOrdersToArray('', $page, $status_id);
 			echo $array['list'];
    		}
    }
@@ -1425,8 +1426,9 @@ class AJAX {
    function getInvoices() {
    		global	$main, $invoice;
    		if ($main->getCurrentStaffId()) {
-	   		$page = $main->getvar['page'];	   			   		
-			$array = $invoice->getAllInvoicesToArray('', $page);
+	   		$page = $main->getvar['page'];
+	   		$status_id = $main->getvar['status'];	 	   			   		
+			$array = $invoice->getAllInvoicesToArray('', $page, $status_id);
 			echo $array['list'];
    		}
    }

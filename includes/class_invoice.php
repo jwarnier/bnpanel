@@ -196,7 +196,7 @@ class invoice extends model {
 	 * @return	array 
 	 * @author Julio Montoya <gugli100@gmail.com> BeezNest
 	 */	 
-	public function getAllInvoicesToArray($user_id = 0 , $page = 0) {
+	public function getAllInvoicesToArray($user_id = 0 , $page = 0, $status_id = 0) {
 		global $main, $db, $style,$currency, $order, $package, $billing, $addon, $user;
 		
 		$limit = '';
@@ -204,11 +204,17 @@ class invoice extends model {
 			$page = 0;
 		}
 		
+		if (empty($status_id)){
+			$status_id = 0;
+		} else {
+			$status_id = intval($status_id);
+		}
+		
 		if (empty($user_id)) {
-			$invoice_list	=$this->getAllInvoices('', $page);  
+			$invoice_list	=$this->getAllInvoices('', $page, $status_id);  
 		} else {
 			$user_id = intval($user_id);
-			$invoice_list	=$this->getAllInvoices($user_id, $page);  
+			$invoice_list	=$this->getAllInvoices($user_id, $page, $status_id);  
 		}	
 		
 		$result['list'] = '';
@@ -311,21 +317,31 @@ class invoice extends model {
 		return $result;		
 	}
 	
-	public function getAllInvoices($user_id = '', $page = 0) {
+	public function getAllInvoices($user_id = '', $page = 0, $status_id = 0) {
 		global $db;
-		$status = intval($status);
+		$user_where = '';
 		if (!empty($user_id)) {
 			$user_id 	= intval($user_id);
 			$user_where = " AND uid = $user_id ";
 		}
+		
+		$status_where = '';
+		if (!empty($status_id)) {
+			$status_id 	= intval($status_id);
+			$status_where = " AND status = $status_id ";
+		}
+		
 		$limit = '';
 		if (!empty($page)) {
 			$page = intval($page);
 			$per_page = intval($db->config('rows_per_page'));
 			$start = ($page-1)*$per_page;
+			if ($start < 0) {
+				$start = 0;
+			}
 			$limit = "LIMIT $start , $per_page";
 		}		
-		$sql = "SELECT * FROM ".$this->getTableName()." WHERE status <> '".INVOICE_STATUS_DELETED."' $user_where ORDER BY id DESC $limit  ";
+		$sql = "SELECT * FROM ".$this->getTableName()." WHERE status <> '".INVOICE_STATUS_DELETED."' $user_where $status_where ORDER BY id DESC $limit  ";
 		$result = $db->query($sql);
 		$invoice_list = array();
 		if($db->num_rows($result) >  0) {
