@@ -94,7 +94,7 @@ class page {
 			case DOMAIN_OPTION_BOTH:	
 			case DOMAIN_OPTION_SUBDOMAIN:
 			if (empty($subdomain_list)) {				
-				$todo_content = $style->returnMessage('You need to Add subdomains <a href="?page=sub&sub=add">here</a>. Due your current <a href="?page=settings&sub=paths">Subdomain options.</a> The Order Form will not work.', 'warning');					
+				$todo_content = $style->returnMessage(_('You need to Add subdomains <a href="?page=sub&sub=add">here</a>. Due your current <a href="?page=settings&sub=paths">Subdomain options.</a> Otherwise the Order Form will not work.'), 'warning');					
 			}
 			break;
 			case DOMAIN_OPTION_DOMAIN:
@@ -103,7 +103,7 @@ class page {
 		$todo_content .= $install_check.$conf_check;
 		
 		if (SERVER_STATUS == 'test') {
-			$todo_content .= $style->returnMessage('Your Server is in Test Mode, you can manually change <a href="?page=settings&sub=paths">here</a>', 'warning');
+			$todo_content .= $style->returnMessage(_('Your Server is in Test Mode, you can manually change <a href="?page=settings&sub=paths">here</a>'), 'warning');
 		}
 		
 		echo $content;		
@@ -111,14 +111,13 @@ class page {
 			echo $main->table('Admin TODO List', $todo_content, 'auto', 'auto');
 		}		
 		
-		
 		echo $main->table('Admin Notepad', $content_notepad, 'auto', 'auto');
 		
 		//Temporary code just to see the latest commit
 		if (SERVER_STATUS == 'test') {
 			$output = array();		
 			exec('hg heads', $output);
-			if (isset($output)) {
+			if (isset($output) && is_array($output)) {
 				$html .= '<h4>';
 				$html .= $output['0'];
 				$html .= '<br />';
