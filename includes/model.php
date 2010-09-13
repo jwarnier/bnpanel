@@ -679,10 +679,9 @@ class model {
 		//echo $sql; '<br />';
 		$db->query($sql);
 		$insert_id = $db->insert_id();
-		if (SERVER_STATUS == 'test') {
-       		global $main;
-       		$main->addlog($sql);
-       	}       	
+		global $main;
+       	$main->addlog($sql);
+       	       	
 		return $insert_id;
 	}
 	
@@ -699,10 +698,10 @@ class model {
         		"SET ".join(', ', $this->getAvailableAttributesQuoted($attributes)) ." ".
         		"WHERE id ='".$this->getId()."'";
        	$db->query($sql);
-       	if (SERVER_STATUS == 'test') {
-       		global $main;
-       		$main->addlog($sql);
-       	}
+       	
+       	global $main;
+       	$main->addlog($sql);
+       	
        	return true;
 	}
 	
@@ -715,10 +714,8 @@ class model {
 		$sql = "DELETE FROM ".$this->getTableName()." ".        		
 	           "WHERE ".$this->getPrimaryKey()." ='".$this->getId()."'";
 	    $db->query($sql);
-	    if (SERVER_STATUS == 'test') {
-       		global $main;
-       		$main->addlog($sql);
-       	}
+	    global $main;
+       	$main->addlog($sql);       	
 	}
 
 	
