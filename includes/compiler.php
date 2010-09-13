@@ -4,13 +4,7 @@
 #Define the main THT
 define('THT', 1);
 
-//Server status
-//@todo this variable should be in the DB
-define('SERVER_STATUS', 						'test'); // test or production
-
-if (SERVER_STATUS == 'test') {
-	error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
-} 
+//Defining constants @todo should me moved in other file
 
 //Billing types
 define('BILLING_TYPE_ADDON', 					'addon');
@@ -56,7 +50,6 @@ define('USER_STATUS_DELETED', 					9); //cancelled deleted users
 
 
 //Tickets
-
 define('TICKET_URGENCY_VERY_HIGH', 				1); 
 define('TICKET_URGENCY_HIGH', 					2); 
 define('TICKET_URGENCY_MEDIUM', 				3); 
@@ -66,26 +59,35 @@ define('TICKET_STATUS_OPEN', 					1);
 define('TICKET_STATUS_ON_HOLD', 				2); 
 define('TICKET_STATUS_CLOSED', 					3); 
 
-
 //Used in admin/billing.php
 define('MAX_NUMBER_MONTHS',						48);
 
+//Start us up
+if (CRON != 1) {
+	session_start();	
+}
+
+//Defining paths
+$includePath = dirname(__FILE__);
+define('LINK', $includePath.'/');
+define('MAIN', dirname($includePath).'/');
+
 /**
  * 
- * Experimental translation BNPanel feature using getext
+ * Experimental translation feature for BNPanel 
  * 
- * Please install this in Ubuntu
+ * Using gettext with BNPanel
+ * 
+ * Install this in Ubuntu
  * 
  * sudo locale-gen es_ES
- * 
  * sudo apt-get install php-gettext
  * 
  * Install Spanish locale: $ sudo locale-gen es_ES
  * Install English locale: $ sudo locale-gen en_GB
  * 
  * In Debian check this file More info: http://algorytmy.pl/doc/php/ref.gettext.php
- * vim /etc/locale.gen
- * 
+ * vim /etc/locale.gen 
  *  
  * Translate po files using this GUI 
  * sudo apt-get install poedit 
@@ -102,11 +104,6 @@ define('MAX_NUMBER_MONTHS',						48);
  * http://mel.melaxis.com/devblog/2005/08/06/localizing-php-web-sites-using-gettext/
  *  
  */
-
-//Start us up
-if (CRON != 1) {
-	session_start();	
-}
 
 if (empty($_GET['l'])) {
 	if(isset($_SESSION['locale'])) {
@@ -135,10 +132,10 @@ switch ($locale) {
 $domain = 'default';
 putenv("LC_ALL=$locale");
 setlocale(LC_ALL,$locale);
-bindtextdomain($domain, "/var/www/bnpanel/locale");
-bind_textdomain_codeset($domain, "UTF-8");
-textdomain($domain);
 
+bindtextdomain($domain, MAIN.'locale'); // /var/www/bnpanel/locale
+bind_textdomain_codeset($domain, 'UTF-8');
+textdomain($domain);
 /*
 putenv("LC_ALL=$locale");
 putenv("LANG=$locale"); 
@@ -146,28 +143,14 @@ setlocale(LC_ALL, $locale);
 setlocale(LC_MESSAGES, $locale);
 */
 
-
-#Page generated
-if (SERVER_STATUS == 'test') {
-	$starttime = explode(' ', microtime());
-	$starttime = $starttime[1] + $starttime[0];
-}
-
-$includePath = dirname(__FILE__);
-define('LINK', $includePath.'/');
-define('MAIN', dirname($includePath).'/');
-
-#Stop the output
+//Stop the output
 ob_start();
 
-#Check for Dependencies
+//Check for Dependencies
 $d = checkForDependencies();
 if($d !== true) {
 	die((string)$d);
 }
-
-#Check PHP Version
-$version = explode(".", phpversion());
 
 //Grab DB First
 require LINK."/class_db.php"; # Get the file
@@ -182,7 +165,17 @@ if ($sql['install']) {
 	define("INSTALL", 1);
 	$db = new db(); # Create the class	
 	global $db; # Globalise it
-	$db->getSystemConfigList();	
+	$db->getSystemConfigList();
+	
+	define('SERVER_STATUS', $db->config('server_status')); # Set the default theme		
+}
+
+
+#Page generated
+if (SERVER_STATUS == 'test') {
+	error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);	
+	$starttime = explode(' ', microtime());
+	$starttime = $starttime[1] + $starttime[0];
 }
 
 $folder = LINK;
@@ -201,6 +194,7 @@ if (isset($main) && !empty($main)) {
 if ($main->checkUserAgent() == false) {
 	$main->logout();
 }
+
 function __autoload($class_name) {
 	$class_name = strtolower($class_name);
     require_once LINK.'class_'.$class_name . '.php';
@@ -213,6 +207,7 @@ foreach($available_classes as $class_item) {
 }
 
 if(INSTALL == 1) {
+	
 	define("THEME", $db->config("theme")); # Set the default theme
 	define("URL", 	$db->config("url")); # Sets the URL THT is located at
 	define("NAME", 	$db->config("name")); # Sets the name of the website

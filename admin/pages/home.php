@@ -103,7 +103,7 @@ class page {
 		$todo_content .= $install_check.$conf_check;
 		
 		if (SERVER_STATUS == 'test') {
-			$todo_content .= $style->returnMessage('Your Server is in Test Mode, you can manually change in the includes/compiler.php file', 'warning');
+			$todo_content .= $style->returnMessage('Your Server is in Test Mode, you can manually change <a href="?page=settings&sub=paths">here</a>', 'warning');
 		}
 		
 		echo $content;		
