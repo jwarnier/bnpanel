@@ -111,15 +111,16 @@ INSERT INTO `%PRE%clientnav` (`visual`, `icon`, `link`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `%PRE%config` (
-  `name` varchar(50) NOT NULL,
-  `value` text NOT NULL
+  id int NOT NULL auto_increment,
+  name varchar(50) NOT NULL,
+  value text NOT NULL
 );
 
 --
 -- Dumping data for table `%PRE%config`
 --
 
-INSERT INTO `%PRE%config` (`name`, `value`) VALUES
+INSERT INTO `%PRE%config` (name, value) VALUES
 ('url', 'http://bnpanel.com/'),
 ('version', '1.3'),
 ('smtp_user', 'user'),
@@ -156,7 +157,9 @@ INSERT INTO `%PRE%config` (`name`, `value`) VALUES
 ('ui-theme', 'cupertino'),
 ('rows_per_page', '20'),
 ('paypal_mode', '0'),
-('domain_options', '2'); -- 1 only domains, 2 only subdomains, 3 both 
+('domain_options', '2'),  -- 1 only domains, 2 only subdomains, 3 both
+('server_status', 'test');  -- 'test'  or 'production' 
+
 
 
 -- --------------------------------------------------------

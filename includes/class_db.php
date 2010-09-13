@@ -184,7 +184,7 @@ class db {
 		if (empty($force)) {
 			$force = false;
 		}	
-		if (!isset($_SESSION['config']) || $force == true) {				
+		if (!isset($_SESSION['config']) || $force == true) {
 			$query = $this->query("SELECT * FROM <PRE>config");				
 			if ($this->num_rows($query) > 0) {
 				$list = $this->store_result($query);

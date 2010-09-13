@@ -43,7 +43,18 @@
       %DOMAIN_OPTIONS%
       <a title="Allow the registration of Domains, Subdomains or Both" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
-  </tr>  
+  </tr>
+  
+  
+    <tr>
+    <td width="20%">Server Status</td>
+    <td>
+      %SERVER_STATUS%
+      <a title="Server status" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+    </td>
+  </tr>
+  
+  
   <tr>
     <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Edit Settings" /></td>
   </tr>

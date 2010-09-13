@@ -18,8 +18,7 @@ class page {
 		$this->navlist[] = array("Terms of Service", 		"application_edit.png", "tos");
 		$this->navlist[] = array("Client Area", 			"user_go.png", "client");
 		$this->navlist[] = array("Support Area", 			"help.png", "support");
-		$this->navlist[] = array("Paid Configuration",		"coins.png", "paid_configuration");
-		
+		$this->navlist[] = array("Paid Configuration",		"coins.png", "paid_configuration");		
 	}
 	
 	public function description() {
@@ -47,9 +46,10 @@ class page {
 				$array['NAME'] 			= $db->config('name');
 				$array['URL'] 			= $db->config('url');
 				$array['ROWS_PER_PAGE'] = $db->config('rows_per_page');
+				$server_status = $db->config('server_status');
 				$array['RECURL'] 		= $main->removeXSS($_SERVER['HTTP_HOST']);
 				
-				//$array['SITE_EMAIL'] 	= $db->config('site_email');
+
 				
 				$domain_option_id = $db->config('domain_options');
 				$domain_values = array(DOMAIN_OPTION_DOMAIN=>'Only Domains', DOMAIN_OPTION_SUBDOMAIN=>'Only Subdomains', DOMAIN_OPTION_BOTH=>'Both');
@@ -58,8 +58,12 @@ class page {
 				$values[] = array("Admin Area", "admin");
 				$values[] = array("Order Form", "order");
 				$values[] = array("Client Area", "client");
-				$array['DROPDOWN'] = $main->dropDown("default", $values, $db->config("default"));
-				echo $style->replaceVar("tpl/settings/pathsettings.tpl", $array);
+				$array['DROPDOWN'] = $main->dropDown("default", $values, $db->config('default'));
+				
+				$values = array('test'=>_('Test'), 'production'=>_('Production'));
+				$array['SERVER_STATUS'] = $main->createSelect('server_status', $values, $server_status);
+								
+				echo $style->replaceVar("tpl/settings/general.tpl", $array);
 				break;
 				
 			case 'security': #security settings
