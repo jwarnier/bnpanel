@@ -173,7 +173,7 @@ if ($sql['install']) {
 
 #Page generated
 if (SERVER_STATUS == 'test') {
-	error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);	
+	@error_reporting(E_ALL);	
 	$starttime = explode(' ', microtime());
 	$starttime = $starttime[1] + $starttime[0];
 }
