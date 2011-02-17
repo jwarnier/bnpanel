@@ -66,11 +66,15 @@ if (INSTALL == 1) {
 			}
 		}
 	}	
-	$array3['NAV'] = $navbits;
-	$navigation = $style->replaceVar("tpl/menu/top_main.tpl", $array3);
+	if (!empty($navbits)) {
+	    $array3['NAV'] = $navbits;
+	}
+	$navigation = $style->replaceVar("tpl/menu/top_main.tpl", $array3);    
 }
 
 global $main;
+$current_token = $main->getToken();
+$data = preg_replace("/<AJAX>/si", URL."includes/ajax.php?_get_token=".$current_token."&", $data);
 
 $data = preg_replace("/<THT TITLE>/si", NAME . " :: " . PAGE . " - " . SUB, $data);
 $data = preg_replace("/<NAME>/si", NAME, $data);
@@ -78,8 +82,7 @@ $data = preg_replace("/<CSS>/si", $this->css(), $data);
 $data = preg_replace("/<JAVASCRIPT>/si", $this->javascript(), $data);
 $data = preg_replace("/<MENU>/si", $navigation, $data);
 $data = preg_replace("/<URL>/si", URL, $data);
-$current_token = $main->getToken();
-$data = preg_replace("/<AJAX>/si", URL."includes/ajax.php?_get_token=".$current_token."&", $data);
+
 $data = preg_replace("/<IMG>/si", URL . "themes/". THEME ."/images/", $data);
 $data = preg_replace("/<ICONDIR>/si", URL . "themes/icons/", $data);
 $data = preg_replace("/<PAGEGEN>/si", $pagegen, $data); #Page Generation Time
@@ -88,4 +91,4 @@ $error_messages = $main->errors();
 if (!empty($error_messages)) {
 	$data = preg_replace("/<ERRORS>/si", '<div class="info">'.$error_messages.'</div><div style="clear:both"></div>', $data);	
 }
-$data = preg_replace("/%INFO%/si", INFO, $data);
+//$data = preg_replace("/%INFO%/si", INFO, $data);

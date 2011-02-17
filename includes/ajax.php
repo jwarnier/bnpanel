@@ -212,41 +212,32 @@ class AJAX {
 		}
 	}
 	
-	public function installfinal() {
-		global $db, $main;
-		$conf_file = LINK."conf.inc.php";		
-		if (file_exists($conf_file) && is_writable($conf_file)) {			
-			$query = $db->query("SELECT * FROM <PRE>staff");			
-			if($db->num_rows($query) == 0) {
-				foreach($main->getvar as $key => $value) {
-					if(!$value) {
-						$n++;	
-					}
-				}
-				if ($main->checkToken(false)) {
-					if(!$n) {				
-						$db->updateConfig('url', 		$main->getvar['url']);
-						$db->updateConfig('name', 		$main->getvar['site_name']);
-						$db->updateConfig('emailfrom', 	$main->getvar['site_email']);
-						
-						$salt = md5(rand(0,99999));
-						$password = md5(md5($main->getvar['pass']).md5($salt));
-						$main->getvar['user']	=	$db->strip($main->getvar['user']);
-						$main->getvar['email'] 	=	$db->strip($main->getvar['email']);
-						$main->getvar['name'] 	=	$db->strip($main->getvar['name']);
-						 
-						$db->query("INSERT INTO <PRE>staff (user, email, password, salt, name) VALUES(
-								  '{$main->getvar['user']}',
-								  '{$main->getvar['email']}',
-								  '{$password}',
-								  '{$salt}',
-								  '{$main->getvar['name']}')");
-						echo 1;
-					} else {
-						echo 0;	
-					}
-				}
-			}
+	public function installfinal() {	    
+		global $db, $main;		
+		$conf_file = LINK."conf.inc.php";				
+		if (file_exists($conf_file) && is_writable($conf_file)) {
+		    
+			if ($main->checkToken(false)) {							
+					$db->updateConfig('url', 		$main->getvar['url']);
+					$db->updateConfig('name', 		$main->getvar['site_name']);
+					$db->updateConfig('emailfrom', 	$main->getvar['site_email']);
+					
+					$salt = md5(rand(0,99999));
+					$password = md5(md5($main->getvar['pass']).md5($salt));
+					$main->getvar['user']	=	$db->strip($main->getvar['user']);
+					$main->getvar['email'] 	=	$db->strip($main->getvar['email']);
+					$main->getvar['name'] 	=	$db->strip($main->getvar['name']);
+					 
+					$db->query("INSERT INTO <PRE>staff (user, email, password, salt, name) VALUES(
+							  '{$main->getvar['user']}',
+							  '{$main->getvar['email']}',
+							  '{$password}',
+							  '{$salt}',
+							  '{$main->getvar['name']}')");
+				echo 1;
+			} else {
+			    echo 0;	
+		    }
 		}
 	}
 	
@@ -1528,13 +1519,13 @@ if(isset($_GET['function']) && !empty($_GET['function'])) {
 	}	
 	if ($is_xml_request) {
 		$ajax = new AJAX();
-		if (method_exists($ajax, $_GET['function'])) {
+		if (method_exists($ajax, $_GET['function'])) {		    
 			if (INSTALL == 1) {
 				//Protecting AJAX calls now we need a token set in variables.php
 				if ($main->checkToken(false)) {
 					$ajax->{$_GET['function']}();
 				}
-			} else {
+			} else { 
 				$ajax->{$_GET['function']}();
 			}		
 		}

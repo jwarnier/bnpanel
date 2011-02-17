@@ -214,11 +214,11 @@ if(INSTALL == 1) {
 	
 	$load_post = false;
 	
-	if($_POST) {	
+	if ($_POST) {	
 		$load_post = true;			
 	}
 	
-	if (!$is_ajax_load) {	
+	if (!isset($is_ajax_load)) {	
 		if (!$load_post) {
 			$token =  $main->generateToken();
 			//var_dump('load_post->'.$token);
@@ -230,6 +230,7 @@ if(INSTALL == 1) {
 			$token = md5(uniqid(rand(),TRUE));
 		}
 	}
+	
 	//Converts all POSTS into variable - DB Friendly.
 	foreach($_POST as $key => $value) {
 		$main->postvar[$key] = $value;
@@ -250,7 +251,6 @@ if(INSTALL == 1) {
 		}				
 	}
 	$main->getvar['_get_token'] = $main->getToken();
-
 } else {
 	define("THEME", 'bnpanel'); # Set the default theme
 	define("NAME", 	'BNPanel'); # Sets the name of the website

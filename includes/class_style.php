@@ -126,7 +126,7 @@ class style {
 
 	public function javascript() { # Returns the HTML code for the header that includes all the JS in the javascript folder
 		$folder = LINK ."javascript/";
-		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/jquery.js'></script>\n";
+		$html = "<script type=\"text/javascript\" src='".URL."includes/javascript/jquery.js'></script>\n";
 		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/jquery-ui.js'></script>\n";
 		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/misc.js'></script>\n";
 		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/slide.js'></script>\n";
