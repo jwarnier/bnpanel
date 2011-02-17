@@ -112,7 +112,7 @@ class model {
     public function newRecord($attributes) {
         $this->_newRecord = true;
 
-        if(AK_ACTIVE_RECORD_SKIP_SETTING_ACTIVE_RECORD_DEFAULTS && empty($attributes)){
+        if(empty($attributes)){
             return;
         }
 
