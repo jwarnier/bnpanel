@@ -18,7 +18,7 @@ class db {
 		} else {
 			$this->db = @mysql_select_db($this->sql['db'], $this->con); # Select the mySQL DB			
 			if(!$this->db) {
-				die("Fatal: Couldn't select the database, check your db setting!");
+				die("Fatal: Couldn't select the database, check your db setting in includes/conf.inc.php  !");
 			} else {
 				$this->prefix = $this->sql['pre'];
 			}

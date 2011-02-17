@@ -3,9 +3,6 @@
 #Include the compiler, creates everything
 require 'includes/compiler.php';
 
-
-
-
 #Retrieve default page and redirect to it
 $page = $db->config('default');
 if($page != "") {

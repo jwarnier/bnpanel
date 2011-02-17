@@ -78,6 +78,8 @@ if(!file_exists($link)) {
 if($disable) {
 	echo '<script type="text/javascript">$(function(){$(".twobutton").attr("disabled", "true");$("#method").attr("disabled", "true");});</script>';
 }
+$token =  $main->generateToken();
+
 $array['GENERATED_URL'] 	= generateSiteUrl();
 $array['SITE_NAME'] 		= 'BNPanel';
 $array['SITE_EMAIL'] 		= 'example@example.com';
