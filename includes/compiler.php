@@ -296,7 +296,7 @@ function checkForDependencies() {
 		die("PHP Version 5 or over is required! You're currently running: " . phpversion());
 	}
 	if(!function_exists("curl_init")) {
-		$needed[] = "cURL";
+		$needed[] = "cURL (sudo apt-get install php5-curl in Debian base machines) ";
 	}
 	if(!function_exists("mysql_connect")) {
 		$needed[] = "MySQL";
