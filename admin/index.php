@@ -1,11 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-$mtime = microtime();
-$mtime = explode(" ",$mtime);
-$mtime = $mtime[1] + $mtime[0];
-$starttime = $mtime;
-
 require_once '../includes/compiler.php';
 
 //THT Variables
