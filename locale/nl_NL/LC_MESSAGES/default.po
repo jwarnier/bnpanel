@@ -1,0 +1,61 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: BNPanel\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-08-30 19:21+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Martijn Terwoert <info@smarty.nl>\n"
+"Language-Team: BeezNest <julio.montoya@beeznest.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Dutch\n"
+"X-Poedit-Country: NEDERLAND\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: /var/www/bnpanel\n"
+
+#: /var/www/bnpanel/admin/pages/orders.php:21
+msgid "<strong>Managing Orders</strong><br />Welcome to the Invoice Management Area. Here you can add, edit and delete Invoices. <br />To get started, choose a link from the sidebar's SubMenu."
+msgstr "<strong>Beheer Orders</strong><br />Welkom to the Invoice Management Area. Here you can add, edit and delete Invoices. <br />To get started, choose a link from the sidebar's SubMenu."
+
+#: /var/www/bnpanel/locale/cache/clogin.tpl.php:2
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+#: /var/www/bnpanel/locale/cache/clogin.tpl.php:3
+msgid "Password"
+msgstr "Wachtwoord"
+
+#: /var/www/bnpanel/locale/cache/clogin.tpl.php:4
+msgid "Login"
+msgstr "Inloggen"
+
+#: /var/www/bnpanel/locale/cache/clogin.tpl.php:5
+msgid "Lost your password?"
+msgstr "Wachtwoord verloren?"
+
+#: /var/www/bnpanel/locale/cache/orderpackages.tpl.php:2
+msgid "Order"
+msgstr "Bestel"
+
+#: /var/www/bnpanel/locale/cache/orderpackages.tpl.php:3
+msgid "Payment cycles"
+msgstr "Betalings periode"
+
+#: /var/www/bnpanel/locale/cache/orderpackages.tpl.php:3
+msgid "Select a billing cycle"
+msgstr "Selecteer een betalings cyclus"
+
+#: /var/www/bnpanel/locale/cache/orderpackages.tpl.php:3
+msgid "Previous Step"
+msgstr "Vorige Stap"
+
+#: /var/www/bnpanel/locale/cache/orderpackages.tpl.php:3
+msgid "Next Step"
+msgstr "Volgende Stap"
+
+#: /var/www/bnpanel/locale/cache/orderpackages.tpl.php:3
+msgid "Pay now"
+msgstr "Afrekenen"
+
