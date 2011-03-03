@@ -31,9 +31,11 @@
                 <a href="?page=tickets">Answer Tickets</a><br />
                 <a href="?page=lof">Look & Feel</a><br />
                 <!-- <a href="?page=type&type=p2h&sub=forums">P2H Forums</a><br /> -->
-                <a href="?page=type&type=paid&sub=paid">Configure Paid</a><br />
+                <a href="?page=settings&sub=paid_configuration">Configure Paid</a><br />
                 <a href="?page=kb">Knowledge Base</a><br />
                 <!-- <a href="?page=import">Import Clients</a>  -->
+				<br />
+				<br />
             </div>
         </div>
         </td>

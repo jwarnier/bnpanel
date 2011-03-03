@@ -174,13 +174,38 @@ h3 {
 	color:#333;
 	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
 }
-.footer, .footer a{
-	text-align:center;
-	color:#333;
+
+#bnp_footer {
+	clear: both;
+	padding: 8px 8px 15px 8px;
+	color: #606060;
+	width:75%;
+	margin:auto auto;
 	font-size:11px;
 	font-family:"Arial", Helvetica, sans-serif;
 	margin-bottom:10px;
 }
+#bnp_footer p {
+	float: right;
+}
+#bnp_footer a {
+	color: #606060;
+}
+.footer_info, 
+.footer_info a{
+   background: #E2E2E2;
+   -moz-border-radius: 5px;
+   -webkit-border-radius: 5px;
+   color: #000;
+   height: 20px;
+   padding-left: 2px;
+   padding-right: 2px;
+   padding-top: 3px;
+   padding-bottom:3px;
+   text-decoration: none;
+   margin-top:10px;
+}
+
 .errors {
 	color:#F00;
 }
