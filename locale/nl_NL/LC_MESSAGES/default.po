@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BNPanel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-30 19:21+0100\n"
+"POT-Creation-Date: 2011-02-28 16:58+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martijn Terwoert <info@smarty.nl>\n"
 "Language-Team: BeezNest <julio.montoya@beeznest.com>\n"
@@ -10,52 +10,99 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: Dutch\n"
-"X-Poedit-Country: NEDERLAND\n"
+"X-Poedit-Country: NETHERLANDS\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-Basepath: .\n"
-"X-Poedit-SearchPath-0: /var/www/bnpanel\n"
+"X-Poedit-SearchPath-0: C:\\Documents and Settings\\Administrator\\bnpanel\n"
 
-#: /var/www/bnpanel/admin/pages/orders.php:21
+#: C:\Documents
+#: and Settings\Administrator\bnpanel/admin/pages/home.php:97
+msgid "You need to Add subdomains <a href=\"?page=sub&sub=add\">here</a>. Due your current <a href=\"?page=settings&sub=paths\">Subdomain options.</a> Otherwise the Order Form will not work."
+msgstr "Je zal subdomeinen <a href=\"?page=sub&sub=add\">hier</a> moeten toevoegen. Door je huidige <a href=\"?page=settings&sub=paths\">Subdomein instellingen.</a> Anders zal het Order Form niet werken."
+
+#: C:\Documents
+#: and Settings\Administrator\bnpanel/admin/pages/home.php:106
+msgid "Your Server is in Test Mode, you can manually change <a href=\"?page=settings&sub=paths\">here</a>"
+msgstr "De Server is in Test Mode, je kan dat <a href=\"?page=settings&sub=paths\">hier</a> veranderen."
+
+#: C:\Documents
+#: and Settings\Administrator\bnpanel/admin/pages/orders.php:21
 msgid "<strong>Managing Orders</strong><br />Welcome to the Invoice Management Area. Here you can add, edit and delete Invoices. <br />To get started, choose a link from the sidebar's SubMenu."
-msgstr "<strong>Beheer Orders</strong><br />Welkom to the Invoice Management Area. Here you can add, edit and delete Invoices. <br />To get started, choose a link from the sidebar's SubMenu."
+msgstr "<strong>Beheer Orders</strong><br />Welkom in het Invoice Beheer Gedeelte. Hier kan je de Invoices, toevoegen, bewerken en wissen. <br />Om te beginnen, kies een link uit het zijbalk's SubMenu."
 
-#: /var/www/bnpanel/locale/cache/clogin.tpl.php:2
+#: C:\Documents
+#: and Settings\Administrator\bnpanel/admin/pages/settings.php:63
+msgid "Test"
+msgstr "Test"
+
+#: C:\Documents
+#: and Settings\Administrator\bnpanel/admin/pages/settings.php:63
+msgid "Production"
+msgstr "Productie"
+
+#: C:\Documents
+#: and Settings\Administrator\bnpanel/client/index.php:196
+msgid "Client Area - Disabled"
+msgstr "Klanten - Uitgeschakeld"
+
+#: C:\Documents
+#: and Settings\Administrator\bnpanel/client/index.php:198
+msgid "Client Area - Login"
+msgstr "Klanten - Inloggen"
+
+#: C:\Documents
+#: and Settings\Administrator\bnpanel/client/pages/tickets.php:60
+msgid "Ticket has been added"
+msgstr "Ticket is toegevoegd"
+
+#: C:\Documents
+#: and
+#: Settings\Administrator\bnpanel/client/pages/tickets.php:122
+msgid "Reply has been added"
+msgstr "Antwoord is toegevoegd"
+
+#: C:\Documents
+#: and Settings\Administrator\bnpanel/includes/ajax.php:1505
+msgid "Logged in as"
+msgstr "Ingelogd als"
+
+#: C:\Documents
+#: and Settings\Administrator\bnpanel/includes/ajax.php:1505
+msgid "Logout"
+msgstr "Uitloggen"
+
+#: C:\Documents
+#: and Settings\Administrator\bnpanel/includes/ajax.php:1507
+msgid "Log in to your account"
+msgstr "Inloggen"
+
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-#: /var/www/bnpanel/locale/cache/clogin.tpl.php:3
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: /var/www/bnpanel/locale/cache/clogin.tpl.php:4
 msgid "Login"
 msgstr "Inloggen"
 
-#: /var/www/bnpanel/locale/cache/clogin.tpl.php:5
 msgid "Lost your password?"
 msgstr "Wachtwoord verloren?"
 
-#: /var/www/bnpanel/locale/cache/orderpackages.tpl.php:2
 msgid "Order"
 msgstr "Bestel"
 
-#: /var/www/bnpanel/locale/cache/orderpackages.tpl.php:3
 msgid "Payment cycles"
 msgstr "Betalings periode"
 
-#: /var/www/bnpanel/locale/cache/orderpackages.tpl.php:3
 msgid "Select a billing cycle"
 msgstr "Selecteer een betalings cyclus"
 
-#: /var/www/bnpanel/locale/cache/orderpackages.tpl.php:3
 msgid "Previous Step"
 msgstr "Vorige Stap"
 
-#: /var/www/bnpanel/locale/cache/orderpackages.tpl.php:3
 msgid "Next Step"
 msgstr "Volgende Stap"
 
-#: /var/www/bnpanel/locale/cache/orderpackages.tpl.php:3
 msgid "Pay now"
 msgstr "Afrekenen"
 
