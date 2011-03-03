@@ -1,6 +1,12 @@
 <?php
 /* For licensing terms, see /license.txt */
 
+# Start timer for Page Generated in: xxx seconds
+$mtime = microtime();
+$mtime = explode(" ",$mtime);
+$mtime = $mtime[1] + $mtime[0];
+$starttime = $mtime;
+
 #Define the main THT
 define('THT', 1);
 
@@ -112,7 +118,7 @@ if (empty($_GET['l'])) {
 		$locale = 'en';
 	}
 } else {
-	if (in_array($_GET['l'], array('es', 'en'))) {
+	if (in_array($_GET['l'], array('nl', 'es', 'en'))) {
 		$locale = $_GET['l'];		
 	} else {
 		$locale = 'en';
@@ -120,6 +126,9 @@ if (empty($_GET['l'])) {
 }
 $_SESSION['locale'] = $locale;
 switch ($locale) {
+	case 'nl':
+		$locale = 'nl_NL.UTF-8';	
+	break;
 	case 'es':
 		$locale = 'es_ES.UTF-8';	
 	break;
