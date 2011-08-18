@@ -9,8 +9,6 @@ class paid {
 	public $clientBox = false; # Show a box in client cp?
     public $name = "Paid"; # Human readable name of the package.
 
-        # As Jonny would say... Start the mo trunkin functions #
-
         public function __construct() { # Assign stuff to variables on creation
 			global $main, $db, $invoice,$billing;
 			//$this->acpNav[] = array("Paid Configuration", "paid", "coins.png", "Paid Configuration");

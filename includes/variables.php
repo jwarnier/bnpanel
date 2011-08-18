@@ -64,6 +64,7 @@ if (INSTALL == 1) {
 		}
 	}	
 	$array3 = array();
+	$array3['NAV'] = null;
 	if (!empty($navbits)) {
 	    $array3['NAV'] = $navbits;
 	}
