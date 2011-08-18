@@ -15,8 +15,10 @@ class page {
 	
 	public function content() {
 		global $style, $db, $main, $order;
-
-		switch($main->getvar['sub']) {							
+		
+		$action = isset($main->getvar['sub']) ? $main->getvar['sub'] : 'all';
+		
+		switch($action) {							
 			case 'view':				
 				if(isset($main->getvar['do'])) {					
 					$return_array = $order->getOrder($main->getvar['do'], true);	

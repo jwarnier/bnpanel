@@ -6,10 +6,10 @@ class page {
 		global $style, $db, $main, $user;
 		
 		$data = $user->getUserById($main->getCurrentUserId());
-		
+				
 		$array['USER']		= $data['user'];
 		$array['EMAIL'] 	= $data['email'];
-		$array['DOMAIN'] 	= $data['domain'];
+		//$array['DOMAIN'] 	= $data['domain'];
 		$array['FIRSTNAME'] = $data['firstname'];
 		$array['LASTNAME']	= $data['lastname'];
 		$array['COMPANY']	= $data['company'];
@@ -22,7 +22,7 @@ class page {
 		$array['COUNTRY'] 	= strtolower($data['country']);
 		$array['PHONE'] 	= $data['phone'];
 		
-		if ($main->getvar['sub'] != 'edit') {			
+		if (isset($main->getvar['sub']) && $main->getvar['sub'] != 'edit') {			
 			echo $style->replaceVar("tpl/user/client_view.tpl", $array);
 		} else {
 

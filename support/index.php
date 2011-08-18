@@ -5,7 +5,7 @@ require '../includes/compiler.php';
 define("PAGE", "Support Area");
 ob_start();
 
-if(!$main->getvar['page']) { 
+if(!isset($main->getvar['page'])) { 
 	$main->getvar['page'] = 'kb';
 }
 
@@ -19,7 +19,7 @@ $header = 'Home';
 $link = 'pages/home.php';	
 
 if (isset($support_item) && !empty($support_item)) {		
-	$header = $client_item['visual'];		
+	$header = $support_item['visual'];		
 	$link = "pages/". $support_item['link'] .".php";
 	$header = $support_item['visual'];
 }	
@@ -39,7 +39,7 @@ if($db->config("senabled") == 0) {
 				$content->content();
 				$html = ob_get_contents(); # Retrieve the HTML
 				ob_clean(); # Flush the HTML
-			} elseif($content->navlist) {
+			} elseif(isset($content->navlist)) {
 				$html = $content->description();
 			} else {
 				ob_start();

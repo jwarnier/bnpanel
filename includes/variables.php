@@ -73,7 +73,11 @@ if (INSTALL == 1) {
 global $main;
 $current_token = $main->getToken();
 $data = preg_replace("/<AJAX>/si", URL."includes/ajax.php?_get_token=".$current_token."&", $data);
-$data = preg_replace("/<APP TITLE>/si", NAME . " :: " . PAGE . " - " . SUB, $data);
+$sub = '';
+if (defined('SUB')) {	
+	$sub = ' - '.SUB;
+}
+$data = preg_replace("/<APP TITLE>/si", NAME . " :: " . PAGE.$sub, $data);
 $data = preg_replace("/<NAME>/si", NAME, $data);
 $data = preg_replace("/<CSS>/si", $this->css(), $data);
 $data = preg_replace("/<JAVASCRIPT>/si", $this->javascript(), $data);

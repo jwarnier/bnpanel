@@ -294,7 +294,7 @@ if (!isset($_GET['msg'])) {
 }
 
 //If payment..
-if (FOLDER == "client" && isset($main->getvar['page']) && $main->getvar['page'] == 'invoices' && $main->getvar['iid'] && $_SESSION['clogged'] == 1) {
+if (FOLDER == "client" && isset($main->getvar['page']) && $main->getvar['page'] == 'invoices' && isset($main->getvar['iid']) && $_SESSION['clogged'] == 1) {
 	if ($main->checkToken(false)) {
 		$invoice->pay($main->getvar['iid'], 'client/index.php?page=invoices');
 	}

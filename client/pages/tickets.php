@@ -26,7 +26,9 @@ class page {
 		$ticket_status_list = $main->getTicketStatusList();
 		
 		$user_id = $main->getCurrentUserId();
-		switch($main->getvar['sub']) {
+		$action = isset($main->getvar['sub']) ? $main->getvar['sub'] : 'view';
+		
+		switch($action) {
 			case 'add':
 				$asOption = array(
 				    'rules' => array(
@@ -68,9 +70,8 @@ class page {
 				echo $style->replaceVar("tpl/support/addticket.tpl", $array);
 				break;
 			default:
-			case 'view':
-				
-				if(!$main->getvar['do'] && $main->checkToken()) {
+			case 'view':				
+				if(!isset($main->getvar['do']) && $main->checkToken()) {
 					$query = $db->query("SELECT * FROM <PRE>tickets WHERE userid = '{$user_id}' AND reply = '0' ORDER BY id DESC");
 					if(!$db->num_rows($query)) {
 						$style->showMessage('No open tickets');						

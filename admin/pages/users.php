@@ -18,7 +18,8 @@ class page {
 	public function description() {
 		global $db, $main;
 		$query = $db->query("SELECT * FROM `<PRE>users` ORDER BY `signup` DESC");
-		if($db->num_rows($query) != 0) {
+		$newest = '';
+		if ($db->num_rows($query) != 0) {
 			$data = $db->fetch_array($query);
 			$newest = $main->sub("Latest Signup:", $data['user']);
 		}
@@ -119,7 +120,7 @@ class page {
 			break;
 			
 			case 'search':
-				if($main->getvar['do'] ) {			
+				if(isset($main->getvar['do'])) {			
 							
 					$client = $user->getUserById($main->getvar['do']);					
 					$array2['DATE'] 	= strftime("%D", $client['signup']);

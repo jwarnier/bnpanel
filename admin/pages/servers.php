@@ -113,7 +113,7 @@ class page {
 					if($db->num_rows($query) == 0) {
 						$style->showMessage('There are no Servers');						
 					} else {
-						
+						$n = 0;
 						while($data = $db->fetch_array($query)) {
 							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=servers&sub=view&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=servers&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 							if($n) {
