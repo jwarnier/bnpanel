@@ -17,7 +17,7 @@ class style {
 
 	private function getFile($name, $prepare = 1, $override = 0) { # Returns the content of a file		
 		$link = LINK ."../themes/". THEME . "/" . $name;
-		if(!file_exists($link) || $override != 0) {
+		if (!file_exists($link) || $override != 0) {
 			$link = LINK . $name;
 		}
 		if(!file_exists($link) && INSTALL) {
@@ -56,12 +56,18 @@ class style {
 		return $css;
 	}
 
-	public function replaceVar($template, $array = 0, $style = 0) { #Fetches a template then replaces all the variables in it with that key
+	public function replaceVar($template, $array = array(), $style = 0) { #Fetches a template then replaces all the variables in it with that key
+		$debug = false;
+		if ($template == 'tpl/admin/content.tpl') {
+			$debug = true;
+		}
 		$data = $this->getFile($template, 0, $style);
-		if($array) {
-			foreach($array as $key => $value) {		
-				$data = preg_replace("/%". $key ."%/si", $value, $data);
-			}
+		
+		if (!empty($array)) {
+			foreach($array as $key => $value) {				
+				$data = preg_replace("/%". $key ."%/si", $value, $data);				
+			}	
+			
 			//Commented lines are the traduction like Chamilo
 			
 			//include '/var/www/bnpanel/locale/es_ES/LC_MESSAGES/main.php';			
@@ -83,7 +89,7 @@ class style {
 				}
 			}
 						   		
-			if (!empty($output)) {	
+			if (!empty($output)) {
 				foreach($output as $out) {
 					if (!empty($out)) {
 						if ($generate_cache) {
@@ -117,6 +123,7 @@ class style {
 				fclose($handle) or die ("Error Closing File!");
 			}			
 		}
+		
 		return $data;
 	}
 

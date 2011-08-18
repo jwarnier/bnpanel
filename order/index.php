@@ -139,7 +139,7 @@ if($db->num_rows($packages2) == 0) {
 	$array['DOMAIN_CONFIGURATION'] = $domain_options;
 	
 	//Determine what to show in Client box
-	if(!$_SESSION['clogged']) {
+	if(!isset($_SESSION['clogged'])) {
 		$content = $style->replaceVar("tpl/login/clogin.tpl");
 	} else {		
 		$user_id = $main->getCurrentUserId();
