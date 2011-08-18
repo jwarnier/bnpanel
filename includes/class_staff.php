@@ -1,11 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-//Check if called by script
-if(THT != 1){
-	die();
-}
-
 class staff extends model {
 	
 	public $columns 	= array('id', 'user','email', 'password','salt', 'name', 'perms');

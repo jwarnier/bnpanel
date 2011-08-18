@@ -1,8 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-//Check if called by script
-if(THT != 1){die();}
 exit; //disabled for security reasons
 class page {
 			 	
@@ -92,7 +90,7 @@ class page {
 		      unset($filetochangeOpen);
 		      unset($slash);
               if ($_POST['edit'] && $main->checkToken()) {
-	              $slash = stripslashes(str_replace("&lt;THT TITLE&gt;", "<THT TITLE>", $_POST['edit'])); # Yay, strip it
+	              $slash = stripslashes(str_replace("&lt;APP TITLE&gt;", "<APP TITLE>", $_POST['edit'])); # Yay, strip it
 	              $slash = str_replace("&lt;JAVASCRIPT&gt;", "<JAVASCRIPT>", $slash); #jav
 	              $slash = str_replace("&lt;CSS&gt;", "<CSS>", $slash); #css
 	              $slash = str_replace("&lt;ICONDIR&gt;", "<ICONDIR>", $slash); #icondir
@@ -104,7 +102,7 @@ class page {
 	              $filetochangeOpen = fopen($filetochange,"r+");
 	              fputs($filetochangeOpen,$slash);
 	              fclose($filetochangeOpen) or die ("Error Closing File!");
-	              $contheader = str_replace("<THT TITLE>", "&lt;THT TITLE&gt;", file_get_contents($filetochange));
+	              $contheader = str_replace("<APP TITLE>", "&lt;APP TITLE&gt;", file_get_contents($filetochange));
 	              $contheader = str_replace("<JAVASCRIPT>", "&lt;JAVASCRIPT&gt;", $contheader);
 	              $contheader = str_replace("<CSS>", "&lt;CSS&gt;", $contheader);
 	              $contheader = str_replace("<IMG>", "&lt;IMG&gt;", $contheader);
@@ -117,7 +115,7 @@ class page {
 	              echo $style->replaceVar('tpl/headedit.tpl', $css);
 		      } else {
 	              $filetochange = LINK."../themes/".$db->config('theme')."/header.tpl";
-	              $contheader = str_replace("<THT TITLE>", "&lt;THT TITLE&gt;", file_get_contents($filetochange));
+	              $contheader = str_replace("<APP TITLE>", "&lt;APP TITLE&gt;", file_get_contents($filetochange));
 	              $contheader = str_replace("<JAVASCRIPT>", "&lt;JAVASCRIPT&gt;", $contheader);
 	              $contheader = str_replace("<CSS>", "&lt;CSS&gt;", $contheader);
 	              $contheader = str_replace("<IMG>", "&lt;IMG&gt;", $contheader);

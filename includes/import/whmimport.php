@@ -1,8 +1,6 @@
 <?php
 //Disabling this feature 
 exit;
-//Check if called by script
-if(THT != 1){die();}
 
 class whmimport {
 	
@@ -79,4 +77,3 @@ class whmimport {
 		}
 	}
 }
-?>

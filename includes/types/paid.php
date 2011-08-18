@@ -1,9 +1,5 @@
 <?php
 /* For licensing terms, see /license.txt */
-
-//Check if called by script
-if(THT != 1){die();}
-
 class paid {
 	
     public $acpForm = array(), $orderForm = array(), $acpNav = array(), $acpSubNav = array(); # The HTML Forms arrays
@@ -109,4 +105,3 @@ class paid {
 		
 	}
 }
-?>

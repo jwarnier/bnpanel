@@ -1,9 +1,8 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-//Check if called by script
-if(THT != 1){die();}
-
+$navigation = $pagegen = $version = '';
+ 
 if (INSTALL == 1) {
 	//Define global, as we are going to pull up things from db
 	global $db, $starttime, $style, $main; 
@@ -40,20 +39,18 @@ if (INSTALL == 1) {
 	 
 	if($db->config("show_version_id") == 1){
 	 	$version = $db->config("version");
-	} else{
-		$version = '';
 	}
 
 	if (FOLDER != 'install') {
 		$array = array();
 		$navigation_list = $main->getMainNavigation();		
-		
+		$navbits = '';
 		foreach($navigation_list as $nav_item) {			
 			if(!$db->config("show_acp_menu") && $nav_item['link'] == 'admin') {
 				continue;
 			} else {
 				$array['ID'] = "nav_". $nav_item['link'];
-				if(PAGE == $nav_item['visual']) {
+				if (PAGE == $nav_item['visual']) {
 					$array['ACTIVE'] = ' class="active" ';
 				}
 				else {
@@ -66,6 +63,7 @@ if (INSTALL == 1) {
 			}
 		}
 	}	
+	$array3 = array();
 	if (!empty($navbits)) {
 	    $array3['NAV'] = $navbits;
 	}
@@ -75,8 +73,7 @@ if (INSTALL == 1) {
 global $main;
 $current_token = $main->getToken();
 $data = preg_replace("/<AJAX>/si", URL."includes/ajax.php?_get_token=".$current_token."&", $data);
-
-$data = preg_replace("/<THT TITLE>/si", NAME . " :: " . PAGE . " - " . SUB, $data);
+$data = preg_replace("/<APP TITLE>/si", NAME . " :: " . PAGE . " - " . SUB, $data);
 $data = preg_replace("/<NAME>/si", NAME, $data);
 $data = preg_replace("/<CSS>/si", $this->css(), $data);
 $data = preg_replace("/<JAVASCRIPT>/si", $this->javascript(), $data);

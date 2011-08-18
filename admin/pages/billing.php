@@ -5,8 +5,6 @@
  * @author 	Julio Montoya <gugli100@gmail.com>	BeezNest 2010	
  */
 
-if(THT != 1){die();}
-
 class page {
 	
 	public $navtitle;

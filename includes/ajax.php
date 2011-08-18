@@ -191,11 +191,12 @@ class AJAX {
 			$aSql = array_filter($aSql);
 			
 			$n = 0;
+			$errors = array();
+			
 			foreach($aSql as $sSql) {
 				if($con) {
 					$query = mysql_query($sSql, $con);
-				}
-				else {
+				} else {
 					$query = $db->query($sSql);	
 				}
 				if(!$query) {
@@ -217,23 +218,23 @@ class AJAX {
 		$conf_file = LINK."conf.inc.php";				
 		if (file_exists($conf_file) && is_writable($conf_file)) {
 		    
-			if ($main->checkToken(false)) {							
-					$db->updateConfig('url', 		$main->getvar['url']);
-					$db->updateConfig('name', 		$main->getvar['site_name']);
-					$db->updateConfig('emailfrom', 	$main->getvar['site_email']);
-					
-					$salt = md5(rand(0,99999));
-					$password = md5(md5($main->getvar['pass']).md5($salt));
-					$main->getvar['user']	=	$db->strip($main->getvar['user']);
-					$main->getvar['email'] 	=	$db->strip($main->getvar['email']);
-					$main->getvar['name'] 	=	$db->strip($main->getvar['name']);
-					 
-					$db->query("INSERT INTO <PRE>staff (user, email, password, salt, name) VALUES(
-							  '{$main->getvar['user']}',
-							  '{$main->getvar['email']}',
-							  '{$password}',
-							  '{$salt}',
-							  '{$main->getvar['name']}')");
+			if ($main->checkToken(false)) {
+				$db->updateConfig('url', 		$main->getvar['url']);
+				$db->updateConfig('name', 		$main->getvar['site_name']);
+				$db->updateConfig('emailfrom', 	$main->getvar['site_email']);
+				
+				$salt = md5(rand(0,99999));
+				$password = md5(md5($main->getvar['pass']).md5($salt));
+				$main->getvar['user']	=	$db->strip($main->getvar['user']);
+				$main->getvar['email'] 	=	$db->strip($main->getvar['email']);
+				$main->getvar['name'] 	=	$db->strip($main->getvar['name']);
+				 
+				$db->query("INSERT INTO <PRE>staff (user, email, password, salt, name) VALUES(
+						  '{$main->getvar['user']}',
+						  '{$main->getvar['email']}',
+						  '{$password}',
+						  '{$salt}',
+						  '{$main->getvar['name']}')");
 				echo 1;
 			} else {
 			    echo 0;	
@@ -843,7 +844,7 @@ class AJAX {
                         //$slash = str_replace("&lt;COPYRIGHT&gt;", "<COPYRIGHT>", $slash);
                     }
                 }
-                $slash = stripslashes(str_replace("&lt;THT TITLE&gt;", "<THT TITLE>", $slash)); # Yay, strip it
+                $slash = stripslashes(str_replace("&lt;APP TITLE&gt;", "<APP TITLE>", $slash)); # Yay, strip it
                 $slash = str_replace("&lt;JAVASCRIPT&gt;", "<JAVASCRIPT>", $slash); #jav
                 $slash = str_replace("&lt;CSS&gt;", "<CSS>", $slash); #css
                 $slash = str_replace("&lt;ICONDIR&gt;", "<ICONDIR>", $slash); #icondir

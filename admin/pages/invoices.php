@@ -8,8 +8,6 @@
  *  
  */
 
-if(THT != 1){die();}
-
 class page {
 	
 	public function __construct() {

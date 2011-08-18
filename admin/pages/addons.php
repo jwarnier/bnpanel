@@ -6,9 +6,6 @@
 	@package	bnpanel.addons	
 */
 
-//Check if called by script
-if(THT != 1){die();}
-
 class page {
 	
 	public $navtitle;

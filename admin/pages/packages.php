@@ -6,12 +6,8 @@
 	@package	Admin Area - Packages
 	@author 	Jonny H
 	@author 	Julio Montoya <gugli100@gmail.com> BeezNest 2010 Addon feature implemented 
-	@package	tht.packages	
+	@package	bnpanel.packages	
 */
-
-//Check if called by script
-if(THT != 1){die();}
-
 class page {
 	
 	public $navtitle;

@@ -21,7 +21,7 @@ $(document).ready(function() {
 </script>
 <strong>Editing your Header Template</strong><br />
 <p>Want to edit your style in an web based interface? Here it is!<br /><br />
-<em>Variables:</em><br /> &lt;THT TITLE&gt; tag shows the Title Content.<br />
+<em>Variables:</em><br /> &lt;APP TITLE&gt; tag shows the Title Content.<br />
 &lt;JAVASCRIPT&gt; links to all Javascript Scripts in this page<br />
 &lt;CSS&gt; links to the CSS Content along with the style tag<br />
 &lt;IMG&gt; links to the /images folder of your Styles Directory<br />

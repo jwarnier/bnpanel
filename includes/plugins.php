@@ -2,11 +2,6 @@
 
 define(SEPARATOR, '/');
 
-//Check if called by script
-if(THT != 1){
-//	die();
-}
-
 function parse_info_file($filename) {
   $info = array();
   $constants = get_defined_constants();

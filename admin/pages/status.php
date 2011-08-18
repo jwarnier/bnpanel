@@ -1,8 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-if(THT != 1){die();}
-
 class page {
 			 	
 	public $navtitle;

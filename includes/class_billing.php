@@ -1,9 +1,5 @@
 <?php
-
-//Check if called by script
-if(THT != 1){
-	die();
-}
+/* For licensing terms, see /license.txt */
 
 class billing extends model {
 	

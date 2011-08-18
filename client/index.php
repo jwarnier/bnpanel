@@ -3,7 +3,6 @@
 
 require '../includes/compiler.php';
 
-//THT Variables
 define("PAGE", "Client Area");
 
 //Main ACP Function - Creates the ACP basically
@@ -146,8 +145,8 @@ function client() {
 }
 
 global $user;
-if(!$_SESSION['clogged']) {	
-	if($main->getvar['page'] == 'forgotpass') {		
+if (!isset($_SESSION['clogged'])) {	
+	if (isset($main->getvar['page']) && $main->getvar['page'] == 'forgotpass') {		
 		define("SUB", "Reset Password");
 		define("INFO", SUB);
 		echo $style->get("header.tpl");		

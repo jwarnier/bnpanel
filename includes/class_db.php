@@ -1,9 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-//Check if called by script
-if(THT != 1){die();}
-
 //Create the class
 class db {
 	private $sql = array(), $con, $prefix, $db; #Variables, only accesible in class
@@ -13,7 +10,7 @@ class db {
 		include LINK.'conf.inc.php'; # Get the config
 		$this->sql = $sql; # Assign the settings to DB Class
 		$this->con = @mysql_connect($this->sql['host'], $this->sql['user'], $this->sql['pass']); #Connect to SQL		
-		if(!$this->con) { # If SQL didn't connect
+		if (!$this->con) { # If SQL didn't connect
 			die("Fatal: Coudn't connect to mySQL, please check your details!");
 		} else {
 			$this->db = @mysql_select_db($this->sql['db'], $this->con); # Select the mySQL DB			
@@ -149,7 +146,7 @@ class db {
 				if(is_array($v)) {
 					$array[$k] = $this->strip($v);
 				} else {
-					if(get_magic_quotes_gpc()) { # Check if Magic Quotes are on
+					if (get_magic_quotes_gpc()) { # Check if Magic Quotes are on
 						  $v = stripslashes($v); 
 					}
 					if(function_exists("mysql_real_escape_string")) { # Does mysql real escape string exist?
@@ -163,7 +160,7 @@ class db {
 			}
 			return $array;
 		} else {
-			if(get_magic_quotes_gpc()) { # Check if Magic Quotes are on
+			if (get_magic_quotes_gpc()) { # Check if Magic Quotes are on
 				  $value = stripslashes($value); 
 			}
 			if(function_exists("mysql_real_escape_string")) { # Does mysql real escape string exist?

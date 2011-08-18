@@ -1,10 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-
-//Check if called by script
-if(THT != 1){die();}
-
 class ticket extends model {
 	
 	public $columns 	= array('id', 'title','content', 'urgency','time', 'reply', 'ticketid','staff','userid', 'status');

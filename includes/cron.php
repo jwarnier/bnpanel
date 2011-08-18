@@ -4,8 +4,6 @@
 define("CRON", 1);
 require "compiler.php";
 	
-
-
 #Stop the output
 ob_start(); # Damn, I swear I use too much of these. Their like crack. So fuckin addictive.
 
