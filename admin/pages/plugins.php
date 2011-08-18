@@ -4,11 +4,9 @@
 	BNPanel
 		
 	@author 	Julio Montoya <gugli100@gmail.com> BeezNest 2010
-	@package	tht.plugins	
+	@package	bnpanel.plugins	
 */
 
-//Check if called by script
-if(THT != 1){die();}
 exit;
 require_once LINK.'plugins.php';
 
@@ -26,4 +24,3 @@ class page {
 	public function content() { # Displays the page 
 	}
 }
-?>

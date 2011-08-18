@@ -1,14 +1,4 @@
 <?php
-//////////////////////////////
-// The Hosting Tool
-// Free - THT Type
-// By Jonny H
-// Released under the GNU-GPL
-//////////////////////////////
-
-//Check if called by script
-if(THT != 1){die();}
-
 //Create the class
 class free {
 	

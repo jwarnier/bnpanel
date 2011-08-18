@@ -1,14 +1,11 @@
 <?php
 /* For licensing terms, see /license.txt */
-//Check if called by script
-if(THT != 1){die();}
 
 class page {
 	
 	public $navtitle;
 	public $navlist = array();	
-	public $array_type = null;
-	
+	public $array_type = null;	
 							
 	public function __construct() {
 		global $main, $server;

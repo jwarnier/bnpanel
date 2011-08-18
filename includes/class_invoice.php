@@ -1,11 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-//Check if called by script
-if(THT != 1){
-	die();
-}
-
 class invoice extends model {
 	
 	public $columns 	= array('id', 'uid','amount', 'is_paid','created', 'due', 'is_suspended', 'notes', 'uniqueid', 'addon_fee', 'status', 'transaction_id');	

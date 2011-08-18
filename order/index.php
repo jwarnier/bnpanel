@@ -20,7 +20,7 @@ if($db->config('general') == 0) {
 	$maincontent = $main->table("Signups Closed", $db->config("message"));
 } elseif(!$main->checkIP($_SERVER['REMOTE_ADDR']) && !$db->config('multiple')) {
 	$maincontent = $main->table("IP Already Exists!", "Your IP already exists in the database!");
-} elseif($_SESSION['clogged'] && $db->config('multiple') != 1) {
+} elseif(isset($_SESSION['clogged']) && $_SESSION['clogged'] && $db->config('multiple') != 1) {
 	$maincontent = $main->table("Unable to sign-up!", "One package per account!");
 } else {
 	$_SESSION['orderform'] = true;	
@@ -29,10 +29,10 @@ if($db->config('general') == 0) {
 global $billing;
 echo '<div id="ajaxwrapper">'; #Ajax wrapper, for steps
 
-$main->getvar['id'] = intval($main->getvar['id']);
+$main->getvar['id'] = isset($main->getvar['id']) ? intval($main->getvar['id']) : null;
 
 //Get all packages
-if(!$main->getvar['id']) {
+if (!$main->getvar['id']) {
 	$packages2 = $db->query("SELECT * FROM <PRE>packages WHERE is_hidden = 0 AND is_disabled = 0 ORDER BY `order` ASC"); 
 } else {
 	$packages2 = $db->query("SELECT * FROM <PRE>packages WHERE is_disabled = 0 AND id = '{$main->getvar['id']}'");

@@ -3,7 +3,6 @@
 
 require_once '../includes/compiler.php';
 
-//THT Variables
 define("PAGE", "Admin Area");
 
 /**
@@ -94,7 +93,7 @@ function acp() {
 	} else {	
 		//If deleting something
 		//&& $main->linkAdminMenuExists($main->getvar['page']) == true
-		if(preg_match("/[\.*]/", $main->getvar['page']) == 0  ) {			
+		if (preg_match("/[\.*]/", $main->getvar['page']) == 0  ) {			
 			require $link;
 			$content = new page();
 		
@@ -132,7 +131,7 @@ function acp() {
 				$sidebar_link =  "tpl/menu/submenu_main.tpl";							
 			}
 			
-			if ($content->navtitle) {
+			if (isset($content->navtitle) && $content->navtitle) {
 				$subnav = $content->navtitle;				
 				foreach($content->navlist as $key => $value) {
 					$array2['IMGURL'] = $value[1];
@@ -143,7 +142,7 @@ function acp() {
 				$subsidebar = $style->replaceVar($sidebar_link, $array3);
 			}
 			
-			if($main->getvar['sub'] && $admin_nave_item['link'] != "type") {
+			if (isset($main->getvar['sub']) && $main->getvar['sub'] && $admin_nave_item['link'] != "type") {
 				if(is_array($content->navlist)) {
 					foreach($content->navlist as $key => $value) {
 						if($value[2] == $main->getvar['sub']) {
@@ -159,13 +158,13 @@ function acp() {
 				}
 			}		
 			
-			if($main->getvar['sub'] == 'delete' && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {				
+			if (isset($main->getvar['sub']) && $main->getvar['sub'] == 'delete' && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {				
 				foreach($main->postvar as $key => $value) {
 					$array['HIDDEN'] .= '<input name="'.$key.'" type="hidden" value="'.$value.'" />';
 				}								
 				$array['HIDDEN'] .= " ";				
 				$html = $style->replaceVar("tpl/warning.tpl", $array);				
-			} elseif($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
+			} elseif(isset($main->getvar['sub']) && $main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
 				if($main->postvar['yes']) {	
 					foreach($main->getvar as $key => $value) {
 					  if($i) {
@@ -202,7 +201,7 @@ function acp() {
 					
 					$html = ob_get_contents(); # Retrieve the HTML
 					ob_clean(); # Flush the HTML
-				} elseif($content->navlist) {
+				} elseif(isset($content->navlist) && $content->navlist) {
 					$description = $content->description();
 					if (!empty($description)) {
 						$html .= $description; # First, we gotta get the page description.
@@ -299,7 +298,7 @@ if(!$_SESSION['logged']) {
 	}
 } elseif($_SESSION['logged']) {	
 	//Ok user is already in 
-	if(!$main->getvar['page']) {
+	if(!isset($main->getvar['page'])) {
 		$main->getvar['page'] = "home";
 	} elseif($main->getvar['page'] == "logout") {
 		$main->logout('admin');		

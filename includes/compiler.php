@@ -7,11 +7,6 @@ $mtime = explode(" ",$mtime);
 $mtime = $mtime[1] + $mtime[0];
 $starttime = $mtime;
 
-#Define the main THT
-define('THT', 1);
-
-//Defining constants @todo should me moved in other file
-
 //Billing types
 define('BILLING_TYPE_ADDON', 					'addon');
 define('BILLING_TYPE_PACKAGE', 					'package');
@@ -69,9 +64,9 @@ define('TICKET_STATUS_CLOSED', 					3);
 define('MAX_NUMBER_MONTHS',						48);
 
 //Start us up
-if (CRON != 1) {
-	session_start();	
-}
+//if (CRON != 1) {
+session_start();	
+//}
 
 //Defining paths
 $includePath = dirname(__FILE__);
@@ -162,21 +157,25 @@ if($d !== true) {
 }
 
 //Grab DB First
-require LINK."/class_db.php"; # Get the file
-if (file_exists(LINK."/conf.inc.php")) {
-	require LINK."/conf.inc.php"; # Get the config
+require LINK."class_db.php"; # Get the file
+if (file_exists(LINK."conf.inc.php")) {
+	require LINK."conf.inc.php"; # Get the config
 	define("NOCONFIG", false);
 } else {
 	define("NOCONFIG", true);
 }
 
-if ($sql['install']) {
-	define("INSTALL", 1);
-	$db = new db(); # Create the class	
-	global $db; # Globalise it
+if (isset($sql) && $sql['install']) {	
+	define('INSTALL', 1);	
+	$db = new db(); 	
+	global $db;
 	$db->getSystemConfigList();
 	
-	define('SERVER_STATUS', $db->config('server_status')); # Set the default theme		
+	define('SERVER_STATUS', $db->config('server_status')); # Set the default theme	
+} else {
+	//Default constants
+	define('SERVER_STATUS',	'test');
+	define("INSTALL", 0);
 }
 
 
@@ -187,16 +186,12 @@ if (SERVER_STATUS == 'test') {
 	$starttime = $starttime[1] + $starttime[0];
 }
 
-$folder = LINK;
-require_once LINK.'/model.php'; # Get the file
-require LINK.'/class_main.php'; # Get the file
+require_once LINK.'model.php'; # Get the file
+require_once LINK.'class_main.php'; # Get the file
 			
 $main = new main(); # Create the class
 if (isset($main) && !empty($main)) {
 	global $main;		
-} else {
-	//$main->redirect('install');
-	//echo 'Something is wrong';
 }
 
 //Improve security to avoid double agents with the same session, avoiding session hijacking
@@ -204,6 +199,7 @@ if ($main->checkUserAgent() == false) {
 	$main->logout();
 }
 
+/* Autoload classes */
 function __autoload($class_name) {
 	$class_name = strtolower($class_name);
     require_once LINK.'class_'.$class_name . '.php';
@@ -215,39 +211,40 @@ foreach($available_classes as $class_item) {
 	global ${$class_item};		
 }
 
-if(INSTALL == 1) {
-	
-	define("THEME", $db->config("theme")); # Set the default theme
-	define("URL", 	$db->config("url")); # Sets the URL THT is located at
-	define("NAME", 	$db->config("name")); # Sets the name of the website
-	
-	$load_post = false;
-	
-	if ($_POST) {	
-		$load_post = true;			
+
+// Setting GETs and POSTss 
+
+$load_post = false;
+
+if ($_POST) {
+	$load_post = true;
+}
+
+if (!isset($is_ajax_load)) {
+	if (!$load_post) {
+		$token =  $main->generateToken();
+		//var_dump('load_post->'.$token);
 	}
-	
-	if (!isset($is_ajax_load)) {	
-		if (!$load_post) {
-			$token =  $main->generateToken();
-			//var_dump('load_post->'.$token);
-		}
+} else {
+	if ($main->isValidMd5($_GET['_get_token'])) {
+		$token =  $_GET['_get_token'];
 	} else {
-		if ($main->isValidMd5($_GET['_get_token'])) {
-			$token =  $_GET['_get_token'];
-		} else {
-			$token = md5(uniqid(rand(),TRUE));
-		}
+		$token = md5(uniqid(rand(),TRUE));
 	}
-	
-	//Converts all POSTS into variable - DB Friendly.
+}
+
+//Converts all POSTS into variable - DB Friendly.
+if (isset($_POST)) {
 	foreach($_POST as $key => $value) {
 		$main->postvar[$key] = $value;
 	}
-	$main->postvar['_post_token'] =	$main->getToken();
-	//var_dump('postvar->'.$main->postvar['_post_token']);
-	
-	//Converts all GET into variable - DB Friendly.
+}
+
+$main->postvar['_post_token'] =	$main->getToken();
+//var_dump('postvar->'.$main->postvar['_post_token']);
+
+//Converts all GET into variable - DB Friendly.
+if (isset($_GET)) {
 	foreach($_GET as $key => $value) {
 		switch ($key) {
 			case 'do':
@@ -255,13 +252,21 @@ if(INSTALL == 1) {
 				$main->getvar[$key] = intval($value);
 				break;
 			default:
-				$main->getvar[$key] = $db->strip($value);
-				break;
-		}				
+				$main->getvar[$key] = $value;
+			break;
+		}
 	}
-	$main->getvar['_get_token'] = $main->getToken();
+}
+$main->getvar['_get_token'] = $main->getToken();
+
+if (INSTALL == 1) {	
+	define("THEME", $db->config("theme")); # Set the default theme
+	define("URL", 	$db->config("url")); # Sets the URL THT is located at	
+	define("NAME", 	$db->config("name")); # Sets the name of the website	
 } else {
+	
 	define("THEME", 'bnpanel'); # Set the default theme
+	define("URL", "../"); # Set url to blank
 	define("NAME", 	'BNPanel'); # Sets the name of the website
 }
 	
@@ -271,7 +276,7 @@ $position 	= strrpos($path,'/') + 1;
 $folder 	= substr($path, $position);	
 define("FOLDER", $folder); # Add current folder name to global
 
-if(FOLDER != "install" && FOLDER != "includes" && INSTALL != 1) { # Are we installing?	
+if (FOLDER != "install" && FOLDER != "includes" && INSTALL != 1) { # Are we installing?	
 	//Lets just redirect to the installer, shall we?	
 	if ($path == '/') {
 		$installURL = $path . "install";
@@ -289,7 +294,7 @@ if (!isset($_GET['msg'])) {
 }
 
 //If payment..
-if(FOLDER == "client" && $main->getvar['page'] == 'invoices' && $main->getvar['iid'] && $_SESSION['clogged'] == 1) {
+if (FOLDER == "client" && isset($main->getvar['page']) && $main->getvar['page'] == 'invoices' && $main->getvar['iid'] && $_SESSION['clogged'] == 1) {
 	if ($main->checkToken(false)) {
 		$invoice->pay($main->getvar['iid'], 'client/index.php?page=invoices');
 	}

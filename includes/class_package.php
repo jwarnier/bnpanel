@@ -1,11 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-//Check if called by script
-if(THT != 1){
-	die();
-}
-
 class package extends model {
 	
 	public $columns 	= array('id', 'name','backend', 'description','type', 'server', 'admin','reseller','additional', 'order', 'is_hidden', 'is_disabled');	

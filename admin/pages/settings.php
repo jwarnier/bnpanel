@@ -1,9 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-//Check if called by script
-if(THT != 1){die();}
-
 class page {
 	
 	public $navtitle;
@@ -23,7 +20,7 @@ class page {
 	
 	public function description() {
 		return "<strong>System Settings</strong><br />
-		This is where you control the main THT Functions. Change the Titles and Paths, work on the signup form,
+		This is where you control the main BNPanel Functions. Change the Titles and Paths, work on the signup form,
 		edit the TOS, change the Look &amp; Feel...<br />
 		To get started, choose a link from the sidebar's SubMenu.";	
 	}

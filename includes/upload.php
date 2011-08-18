@@ -7,7 +7,6 @@ Upload Your Theme (themename.zip): <input name="zip" type="file" /><input type="
 * By: TheRaptor -> http://ismyforum.info 
 */ 
 exit; //disabled for security reasons
-if(THT != 1){die();}
 if(!$_SESSION['logged']){die();}
 
 //check if file is uploaded

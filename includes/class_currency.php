@@ -1,10 +1,5 @@
 <?php
 
-
-if(THT != 1){
-	die();
-}
-
 class currency {
 	
 	public function save($array) {		

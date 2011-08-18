@@ -6,7 +6,6 @@ exit;
 define("LINK", "../includes/");
 include(LINK ."compiler.php");
 
-//THT Variables
 define("PAGE", "Confirm");
 
 global $main, $server, $style;

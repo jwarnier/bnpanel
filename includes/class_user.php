@@ -1,11 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-//Check if called by script
-if(THT != 1){
-	die();
-}
-
 class user extends model {
 		
 	public $columns 	= array('id', 'user','email', 'password','salt', 'signup', 'ip', 'firstname', 'lastname', 'company', 'vatid', 'fiscalid', 'address', 'city', 'zip', 'state', 'country', 'phone', 'status');

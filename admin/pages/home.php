@@ -1,9 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-//Check if called by script
-if(THT != 1){die();}
-
 class page {
 	
 	/*public function curl_get_content($url="http://thehostingtool.com/updates/version.txt"){  
@@ -117,6 +114,7 @@ class page {
 		if (SERVER_STATUS == 'test') {
 			$output = array();		
 			exec('hg heads', $output);
+			$html = '';
 			if (isset($output) && is_array($output)) {
 				$html .= '<h4>';
 				$html .= $output['0'];

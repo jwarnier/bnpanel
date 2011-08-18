@@ -1,7 +1,5 @@
 <?php
 /* For licensing terms, see /license.txt */
-//Check if called by script
-if(THT != 1){die();}
 
 class page {
 	
@@ -128,7 +126,7 @@ class page {
 		      unset($filetochangeOpen);
 		      unset($slash);
               $filetochange = LINK."../themes/".$db->config('theme')."/header.tpl";
-              $contheader = str_replace("<THT TITLE>", "&lt;BNP TITLE&gt;", file_get_contents($filetochange));
+              $contheader = str_replace("<APP TITLE>", "&lt;BNP TITLE&gt;", file_get_contents($filetochange));
               $contheader = str_replace("<JAVASCRIPT>", "&lt;JAVASCRIPT&gt;", $contheader);
               $contheader = str_replace("<CSS>", "&lt;CSS&gt;", $contheader);
               $contheader = str_replace("<IMG>", "&lt;IMG&gt;", $contheader);

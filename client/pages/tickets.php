@@ -1,9 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-//Check if called by script
-if(THT != 1){die();}
-
 class page {
 	
 	public $navtitle;

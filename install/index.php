@@ -12,7 +12,7 @@
  * the document root. This file must be called directly and
  * directly only.
 */
-if(strtoupper(substr(PHP_OS, 0, 3)) === "WIN") {
+if (strtoupper(substr(PHP_OS, 0, 3)) === "WIN") {
 	$file = str_replace("\\", "/", __FILE__);
 	$prepend = "/";
 } else {
@@ -48,34 +48,38 @@ function generateSiteUrl() {
 define("CVER", "1.3");
 define("NVER", "1.3");
 
-require_once '../includes/compiler.php'; # Get compiler
+require '../includes/compiler.php'; # Get compiler
 
-define("THEME", 'bnpanel'); # Set the theme
-define("URL", "../"); # Set url to blank
-define("NAME", "BNPanel");
+
 define("PAGE", "Install");
 define("SUB", "Choose Method");
 
-$array['VERSION'] = NVER;
-$array['ANYTHING'] = "";
-$link = LINK."conf.inc.php";
+$array['VERSION'] 	= NVER;
+$array['ANYTHING'] 	= "";
+
 $disable = false;
 echo $style->get("header.tpl");
-$values=array('install'=>'Install');
-if(INSTALL == 1) {
+$values = array('install'=>'Install');
+if (INSTALL == 1) {
 	$main->errors('The system has already been installed. If you want to re-install you should delete the conf.inc.php file. If you want to update just continue this procedure.');
-	$values=array('upgrade'=>'Upgrade');
+	$values = array('upgrade'=>'Upgrade');
 }
-	
-if(!file_exists($link)) {
-	$array["ANYTHING"] = "Your $link file doesn't exist! Please create it!";
+
+global $db;
+if (isset($db)) {
+	$db->getSystemConfigList(true);
+}
+
+$link = LINK."conf.inc.php";	
+if (!file_exists($link)) {
+	$array["ANYTHING"] = "Your $link file doesn't exist. Please create it.";
 	$disable = true;
 } elseif(!is_writable($link)) {
-	$array['ANYTHING'] = "Your $link isn't writeable! Please CHMOD it to 666!";
+	$array['ANYTHING'] = "Your $link isn't writeable! Please CHMOD it to 666.";
 	$disable = true;
 }
 
-if($disable) {
+if ($disable) {
 	echo '<script type="text/javascript">$(function(){$(".twobutton").attr("disabled", "true");$("#method").attr("disabled", "true");});</script>';
 }
 $token =  $main->generateToken();
@@ -85,6 +89,5 @@ $array['SITE_NAME'] 		= 'BNPanel';
 $array['SITE_EMAIL'] 		= 'example@example.com';
 $array['INSTALL_OPTIONS'] 	= $main->createSelect('method', $values);
 echo $style->replaceVar("tpl/install/install.tpl", $array);
-
 echo $style->get("footer.tpl");
 require LINK."output.php"; #Output it

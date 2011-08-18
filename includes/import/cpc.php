@@ -3,9 +3,6 @@
 //Disabling this feature 
 exit;
 
-//Check if called by script
-if(THT != 1){die();}
-
 class cpc {
 	
 	public $name = "cP Creator";
@@ -173,4 +170,3 @@ class cpc {
 		}
 	}
 }
-?>

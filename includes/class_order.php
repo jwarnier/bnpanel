@@ -1,11 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-//Check if called by script
-if (THT != 1) {
-	die();
-}
-
 class order extends model {
 	
 	public $columns 	= array('id', 'userid','username', 'password','domain','pid', 'signup', 'status', 'additional', 'billing_cycle_id','subdomain_id');	
