@@ -49,8 +49,10 @@ if (!empty($user_info)) {
 if($db->num_rows($packages2) == 0) {
 	echo $main->table("No packages", '<div class="warning">There are no available Packages</div>');
 } else {	
-	while($data = $db->fetch_array($packages2, 'ASSOC')) {
-		if(!$n) {
+	$n = 0;
+	$array['PACKAGES'] = null;
+	while ($data = $db->fetch_array($packages2, 'ASSOC')) {
+		if (!$n) {
 			$array['PACKAGES'] .= "<tr>";	
 		}
 		$array2['NAME'] 		= $data['name'];
@@ -146,7 +148,7 @@ if($db->num_rows($packages2) == 0) {
 		$content = $style->replaceVar("tpl/user/cdetails.tpl", $array);
 	}
 	
-	if(!$maincontent) {
+	if(!isset($maincontent)) {
 		$maincontent = $style->replaceVar("tpl/orderform/orderform.tpl", $array);
 	}
 	echo '<div>';

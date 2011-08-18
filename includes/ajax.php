@@ -576,7 +576,8 @@ class AJAX {
 				if($db->num_rows($query) == 0) {
 					echo "No clients found";	
 				} else {					
-					while($data = $db->fetch_array($query)) {
+					$n = 0;
+					while($data = $db->fetch_array($query)) {						
 						if($n != $show) {
 							//$client = $db->client($data['userid']);
 							$array['ID']	= $data['id'];

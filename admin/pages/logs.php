@@ -1,27 +1,32 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-
-define("PAGE", "Logs");
 class page {	
 	public function content() { # Displays the page 
 		global $style, $db, $main;		
 
-		$l = intval($main->getvar['l']);		
-		$p = intval($main->getvar['p']);	
+		$l = isset($main->getvar['l']) ? intval($main->getvar['l']) : null;		
+		$p = isset($main->getvar['p']) ? intval($main->getvar['p']) : 0;
 			
-		$show_values = array('all','Approved','Unsuspended','Registered', 'Package created','Approved', 'Declined',
-				'Suspended', 'Cancelled', 'Terminated','cPanel password', 'Login','Login successful', 'Login failed','STAFF', 'STAFF LOGIN SUCCESSFUL','STAFF LOGIN FAILED');
+		$show_values = array('all',
+							'Approved','Unsuspended','Registered', 'Package created','Approved', 'Declined',
+							'Suspended', 
+							'Cancelled', 
+							'Terminated',
+							'cPanel password', 
+							'Login',
+							'Login successful', 
+							'Login failed',
+							'STAFF', 
+							'STAFF LOGIN SUCCESSFUL',
+							'STAFF LOGIN FAILED'
+						);
 			
-		if (!$main->postvar['show']) {
-			if (in_array($main->getvar['show'], $show_values)) {
-				$show = $main->getvar['show'];
-			} else {
-				$show = "all";	
+		$show = "all";		
+		if (isset($main->postvar['show'])) {
+			if (in_array($main->postvar['show'], $show_values)) {
+				$show = $main->postvar['show'];
 			}
-		} else {
-			$show = $main->postvar['show'];
-			$p = 0;
 		}
 		
 		if (isset($main->postvar['clean'])) {
@@ -53,8 +58,8 @@ class page {
 		$values = array(
 			'all' 						=>'ALL',
 			'Login' 					=>'Client Logins (Success/Fail)',
-			'USER LOGIN SUCCESSFUL' 			=>'Client Logins (Success)',
-			'USER LOGIN FAILED' 				=>'Client Logins (Fail)',
+			'USER LOGIN SUCCESSFUL' 	=>'Client Logins (Success)',
+			'USER LOGIN FAILED' 		=>'Client Logins (Fail)',
 			'STAFF' 					=>'Staff Logins (Success/Fail)',
 			'STAFF LOGIN SUCCESSFUL' 	=>'Staff Logins (Success)',
 			'STAFF LOGIN FAILED' 		=>'Staff Logins (Fail)',			
@@ -107,7 +112,7 @@ class page {
 		if ($db->num_rows($query) == 0) {
 			$style->showMessage("No logs found.");
 		} else {
-			if ($show != all) {
+			if ($show != 'all') {
 				$sql = "SELECT * FROM `<PRE>logs` WHERE `message` LIKE '$show%' ORDER BY `id` DESC LIMIT $p, $l";			
 			} else {
 				$sql = "SELECT * FROM `<PRE>logs` ORDER BY `id` DESC LIMIT $p, $l";

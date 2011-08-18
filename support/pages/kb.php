@@ -1,17 +1,15 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-class page {
-	
+class page {	
 	public function content() { # Displays the page 
 		global $main, $style, $db, $email;
 		
-		$main->getvar['cat'] = intval($main->getvar['cat']);
+		$main->getvar['cat'] = isset($main->getvar['cat']) ? intval($main->getvar['cat']) : null;
 		$query = $db->query("SELECT * FROM `<PRE>cats`");
 		if(!$db->num_rows($query)) {
 			echo "There are no Knowledge Base Categories/Articles!";	
-		}
-		else {
+		} else {
 			if($main->getvar['cat']) {
 				
 				$cat = $db->query("SELECT * FROM <PRE>cats WHERE id = '{$main->getvar['cat']}'");

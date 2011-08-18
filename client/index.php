@@ -30,7 +30,8 @@ function client() {
 			$content = new page();
 			// Main Side Bar HTML
 			$nav = "Sidebar";			
-			
+			$array = array();
+			$array['LINKS'] = null;
 			foreach($client_navigation as $row) {	
 				if ($row['link'] == 'delete' && !$db->config('delacc')) {
 					continue;
@@ -52,8 +53,10 @@ function client() {
 			
 			//Page Sidebar
 			
-			if($content->navtitle) {
-				$subnav = $content->navtitle;				
+			if (isset($content->navtitle)) {
+				$subnav = $content->navtitle;
+				$array3 = array();
+				$array3['LINKS'] = null;
 				foreach($content->navlist as $key => $value) {
 					$array2['IMGURL'] = $value[1];
 					$array2['LINK'] = "?page=".$client_item['link']."&sub=".$value[2];
@@ -63,14 +66,14 @@ function client() {
 				$subsidebar = $style->replaceVar("tpl/menu/submenu_main.tpl", $array3);
 			}
 			
-			if($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {
+			if (isset($main->getvar['sub']) && $main->getvar['sub'] == "delete" && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {
 				foreach($main->postvar as $key => $value) {
 					$array['HIDDEN'] .= '<input name="'.$key.'" type="hidden" value="'.$value.'" />';
 				}
 				$array['HIDDEN'] .= " ";
 				$html = $style->replaceVar("tpl/warning.tpl", $array);	
 				
-			} elseif($main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
+			} elseif(isset($main->getvar['sub']) && $main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
 				if($main->postvar['yes']) {
 					foreach($main->getvar as $key => $value) {
 					  if($i) {
@@ -93,8 +96,7 @@ function client() {
 					$content->content();
 					$html = ob_get_contents(); # Retrieve the HTML
 					ob_clean(); # Flush the HTML
-				}
-				elseif($content->navlist) {
+				} elseif(isset($content->navlist)) {
 					//$html = "Select a sub-page from the sidebar.";
 					ob_start();
 					$content->content();
@@ -113,7 +115,7 @@ function client() {
 		}
 	}
 	
-	if($main->getvar['sub'] && $main->getvar['page'] != "type") {
+	if (isset($main->getvar['sub']) && $main->getvar['sub'] && $main->getvar['page'] != "type") {
 		if (is_array($content->navlist))
 		foreach($content->navlist as $key => $value) {
 			if($value[2] == $main->getvar['sub']) {
@@ -128,7 +130,7 @@ function client() {
 	
 	echo '<div id="left">';
 	echo $main->table($nav, $sidebar);
-	if($content->navtitle) {
+	if (isset($content->navtitle)) {
 		echo "<br />";
 		echo $main->table($subnav, $subsidebar);
 	}
@@ -199,7 +201,7 @@ if (!isset($_SESSION['clogged'])) {
 		echo $style->get("footer.tpl");
 	}
 } elseif($_SESSION['clogged']) {
-	if(!$main->getvar['page']) {
+	if(!isset($main->getvar['page'])) {
 		$main->getvar['page'] = "home";
 	} elseif($main->getvar['page'] == 'logout') {	
 		$referer = basename($_SERVER['HTTP_REFERER']);		

@@ -131,15 +131,20 @@ function acp() {
 				$sidebar_link =  "tpl/menu/submenu_main.tpl";							
 			}
 			
+			$subsidebar = '';
 			if (isset($content->navtitle) && $content->navtitle) {
-				$subnav = $content->navtitle;				
-				foreach($content->navlist as $key => $value) {
-					$array2['IMGURL'] = $value[1];
-					$array2['LINK'] = "?page=".$admin_nave_item['link']."&sub=".$value[2];
-					$array2['VISUAL'] = $value[0];
-					$array3['LINKS'] .= $style->replaceVar($sidebar_link_link, $array2);
+				$subnav = $content->navtitle;
+				if (isset($content->navlist)) {
+					$array3 = array();
+					$array3['LINKS'] = null;
+					foreach($content->navlist as $key => $value) {
+						$array2['IMGURL'] = $value[1];
+						$array2['LINK'] = "?page=".$admin_nave_item['link']."&sub=".$value[2];
+						$array2['VISUAL'] = $value[0];
+						$array3['LINKS'] .= $style->replaceVar($sidebar_link_link, $array2);
+					}					
+					$subsidebar = $style->replaceVar($sidebar_link, $array3);
 				}
-				$subsidebar = $style->replaceVar($sidebar_link, $array3);
 			}
 			
 			if (isset($main->getvar['sub']) && $main->getvar['sub'] && $admin_nave_item['link'] != "type") {
@@ -181,7 +186,8 @@ function acp() {
 					$main->done();	
 				}
 			} else {
-				if(isset($main->getvar['sub'])) {
+				$html = '';
+				if (isset($main->getvar['sub'])) {
 					ob_start();
 					
 					/** 
@@ -208,7 +214,7 @@ function acp() {
                     	$html .= "<br /><br />"; # Break it up
 					}
                     // Now we should prepend some stuff here
-                    $subsidebar2 .= "<strong>Page Submenu</strong><div class='break'></div>";
+                    $subsidebar2 = "<strong>Page Submenu</strong><div class='break'></div>";
                     $subsidebar2 .= $subsidebar;
                     // Done, now output it in a sub() table
                     $html .= $main->sub($subsidebar2, NULL); # Initial implementation, add the SubSidebar(var) into the description, basically append it 
@@ -226,8 +232,8 @@ function acp() {
 	}
 	
 	$staffuser = $db->staff($main->getCurrentStaffId());
-	define("SUB", $header);
-	define("INFO", '<b>Welcome back, '. strip_tags($staffuser['name']) .'</b><br />'. SUB);	
+	
+	define("INFO", '<b>Welcome back, '. strip_tags($staffuser['name']) .'</b><br />');	
 
 	echo '<div id="left">';	
 		echo $main->table($nav, $sidebar);
@@ -248,7 +254,7 @@ function acp() {
 }
 
 //If user is NOT log in 
-if(!$_SESSION['logged']) {
+if (!isset($_SESSION['logged'])) {
 	if ($main->getvar['page'] == "forgotpass") {
 		define("SUB", "Reset Password");
 		define("INFO", SUB);
