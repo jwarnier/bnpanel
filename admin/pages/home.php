@@ -21,7 +21,8 @@ class page {
     } */
     
 	public function content() { 
-		global $db,$main, $style, $page;	
+		global $db, $main, $style, $page;	
+		
 				
 		//$current_version = rtrim($this->curl_get_content('http://thehostingtool.com/updates/version.txt')); #Clears the end whitespace. ARGHHH
 		$current_version = '1.3';
@@ -30,24 +31,23 @@ class page {
 		$install_check 		= $main->checkDir(LINK ."../install/");
 		$conf_check 		= $main->checkFilePermission(LINK ."conf.inc.php");
 		
-		if($current_version == $running_version){
+		if ($current_version == $running_version){
 			$updatemsg = "<span style='color:green'>Up-To-Date</span>";
 			$upgrademsg = "";
-		}
-		elseif($current_version > $running_version){
+		} elseif($current_version > $running_version){
 			$updatemsg = "<span style='color:red'>Upgrade Avaliable</span>";
 		    $upgrademsg = "<div class='warn'><img src='../themes/icons/error.png' alt='' /> There is a new version v$current_version avaliable! Please download and upgrade!</div>";
-		}
-		elseif($current_version < $running_version){
+		} elseif($current_version < $running_version){
 			$updatemsg = "<span style='color:green'>Dev Area Mode</span>";
 			$upgrademsg = "";
-		}
-		else{
+		} else {
 			$updatemsg = "<span style='color:green'>Up-To-Date</span>";
 			$upgrademsg = "";
 		}
+		
 		unset($current_version);
 		unset($running_version);
+		
 		$stats['VERSION'] 	= $db->config('version');
 		$stats['THEME'] 	= $db->config('theme');
 		$stats['CENABLED'] 	= $main->cleaninteger($db->config('cenabled'));
@@ -59,15 +59,15 @@ class page {
 		$stats['MULTI'] 	= $main->cleaninteger($db->config('multiple'));
 		$stats['UPDATE'] 	= $updatemsg;
 		$stats['UPG_BOX']	= $upgrademsg;
-		$stats_box = $style->replaceVar('tpl/dashboard/stats.tpl', $stats);
+		$stats_box 			= $style->replaceVar('tpl/dashboard/stats.tpl', $stats);
 		
-		$cron ='<a href="'.$db->config('url').'includes/cron.php" target="_blank">Run cron here</a>';
+		$cron = '<a href="'.$db->config('url').'includes/cron.php" target="_blank">Run cron here</a>';
 		
 		$content = '<strong>Welcome to your Admin Dashboard!</strong><br />Welcome to the dashboard of your Admin Control Panel. In this area you can do the tasks that you need to complete such as manage servers, create packages, manage users.<br />
 					Here, you can also change the look and feel of your BNPanel Installation. If you require any help, be sure to ask at the <a href="http://www.beeznest.com" title="BNPanel Community is the official stop for BNPanel Support, Modules, Developer Center and more! Visit our growing community now!" class="tooltip">BNPanel Community</a>' .
-					'<br />'.$stats_box.$cron.'<br /></div></div>';	
+					'<br />'.$stats_box.$cron.'<br />';	
 		
-		if($_POST) {
+		if ($_POST) {
 			foreach($main->postvar as $key => $value) {
 				if($value == "" && !$n) {
 					$main->errors("Please fill in all the fields!");
@@ -90,9 +90,9 @@ class page {
 		switch($db->config('domain_options')) {
 			case DOMAIN_OPTION_BOTH:	
 			case DOMAIN_OPTION_SUBDOMAIN:
-			if (empty($subdomain_list)) {				
-				$todo_content = $style->returnMessage(_('You need to Add subdomains <a href="?page=sub&sub=add">here</a>. Due your current <a href="?page=settings&sub=paths">Subdomain options.</a> Otherwise the Order Form will not work.'), 'warning');					
-			}
+				if (empty($subdomain_list)) {				
+					$todo_content = $style->returnMessage(_('You need to Add subdomains <a href="?page=sub&sub=add">here</a>. Due your current <a href="?page=settings&sub=paths">Subdomain options.</a> Otherwise the Order Form will not work.'), 'warning');					
+				}
 			break;
 			case DOMAIN_OPTION_DOMAIN:
 			break;								
@@ -103,12 +103,18 @@ class page {
 			$todo_content .= $style->returnMessage(_('Your Server is in Test Mode, you can manually change <a href="?page=settings&sub=paths">here</a>'), 'warning');
 		}
 		
-		echo $content;		
-		if (!empty($todo_content)) {
+		// Todo/warning content	
+		if (!empty($todo_content)) {			
 			echo $main->table('Admin TODO List', $todo_content, 'auto', 'auto');
-		}		
-		
+		}
+				
+		// Welcome message		
+		echo $main->table('Welcome', $content, 'auto', 'auto');		
+
+		//Notepad?
 		echo $main->table('Admin Notepad', $content_notepad, 'auto', 'auto');
+		
+		//Lates commit?
 		
 		//Temporary code just to see the latest commit
 		if (SERVER_STATUS == 'test') {
@@ -127,8 +133,8 @@ class page {
 			echo $main->table('Test Server ', $style->returnMessage($html), 'auto', 'auto');
 		}
 		
-		/*
-		
+		//RSS
+		/*		
 		require_once(LINK.'rss/rss_fetch.inc');
 		$url = "http://thehostingtool.com/forum/syndication.php?fid=2&limit=3";
 		$rss = fetch_rss($url);

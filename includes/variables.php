@@ -5,14 +5,14 @@ $navigation = $pagegen = $version = '';
  
 if (INSTALL == 1) {
 	//Define global, as we are going to pull up things from db
-	global $db, $starttime, $style, $main; 
+	global $db, $starttime, $style, $main;
+	
 	if ($db->config("show_page_gentime") == 1) {
 		$mtime = explode(' ', microtime());
 		$totaltime = $mtime[0] + $mtime[1] - $starttime;
 		$gentime = substr($totaltime, 0, 5);
 		$array['PAGEGEN'] = $gentime;
-		$array['IP'] = getenv('REMOTE_ADDR');
-		global $style;
+		$array['IP'] = getenv('REMOTE_ADDR');		
 		$pagegen .= $style->replaceVar('tpl/footergen.tpl', $array);
 		if($db->config("show_footer")) {
 			if(ini_get('safe_mode') or
@@ -33,11 +33,9 @@ if (INSTALL == 1) {
 			$array['TITLE'] = $style->replaceVar('tpl/aserverstatus.tpl',$array2);
 			$pagegen .= $style->replaceVar('tpl/footerdebug.tpl',$array);
 		}
-	} else {
-		$pagegen = '';
 	}
 	 
-	if($db->config("show_version_id") == 1){
+	if ($db->config("show_version_id") == 1) {
 	 	$version = $db->config("version");
 	}
 
@@ -73,12 +71,11 @@ if (INSTALL == 1) {
 
 global $main;
 $current_token = $main->getToken();
+
 $data = preg_replace("/<AJAX>/si", URL."includes/ajax.php?_get_token=".$current_token."&", $data);
-$sub = '';
-if (defined('SUB')) {	
-	$sub = ' - '.SUB;
-}
-$data = preg_replace("/<APP TITLE>/si", NAME . " :: " . PAGE.$sub, $data);
+
+$sub = defined('SUB') ? ' - '.SUB : '';
+$data = preg_replace("/<APP TITLE>/si", NAME . " - " . PAGE.$sub, $data);
 $data = preg_replace("/<NAME>/si", NAME, $data);
 $data = preg_replace("/<CSS>/si", $this->css(), $data);
 $data = preg_replace("/<JAVASCRIPT>/si", $this->javascript(), $data);

@@ -46,7 +46,7 @@ function acp() {
 	global $main, $db, $style, $type, $email, $user;
 	ob_start(); # Stop the output buffer
 	
-	if(!$main->getvar['page']) { 
+	if (!isset($main->getvar['page'])) { 
 		$main->getvar['page'] = 'home';
 	}
 	
@@ -55,25 +55,28 @@ function acp() {
 	
 	if (isset($admin_navigation[$main->getvar['page']]) && !empty($admin_navigation[$main->getvar['page']])) {
 		$admin_nave_item = $admin_navigation[$main->getvar['page']];
-	}	
-	
-	$link 	= 'pages/home.php';
-	$header = 'Home';
-	
-	if (isset($admin_nave_item) && !empty($admin_nave_item)) {		
-		$header = $admin_nave_item['visual'];
-		$link = 'pages/'. $admin_nave_item['link'].'.php';
 	}
+		
+	$link 	= 'pages/home.php';
+	$header = null;
+	
+	if (isset($admin_nave_item) && !empty($admin_nave_item)) {
+		if ($admin_nave_item['link'] != 'home') {
+			$header = $admin_nave_item['visual'];
+		}		
+		$link 	= 'pages/'. $admin_nave_item['link'].'.php';
+	}
+	
 	
 	// Left menu
 	$nav = "Sidebar Menu";
 	$array['LINKS'] = '';
 	foreach ($admin_navigation as $row) {
 		if ($main->checkPerms($row['link'])) {
-			$array_item['IMGURL'] = $row['icon'];
-			$array_item['LINK'] = "?page=".$row['link'];
-			$array_item['VISUAL'] = $row['visual'];
-			$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array_item);
+			$array_item['IMGURL'] 	= $row['icon'];
+			$array_item['LINK'] 	= "?page=".$row['link'];
+			$array_item['VISUAL']	= $row['visual'];
+			$array['LINKS'] 	   .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array_item);
 		}
 	}
 	//Adding the logout link
@@ -85,7 +88,7 @@ function acp() {
 	$sidebar = $style->replaceVar("tpl/menu/leftmenu_main.tpl", $array);	
 
 	$user_permission = true;
-	if(!file_exists($link)) {	
+	if (!file_exists($link)) {	
 		$html = "<strong>Fatal Error:</strong> Seems like the .php is non existant. Is it deleted?";	
 	} elseif(!$main->checkPerms($admin_nave_item['link'])) {
 		$user_permission = false;		
@@ -124,11 +127,11 @@ function acp() {
 			//Page Sidebar
 			
 			$sidebar_link_link 	= "tpl/menu/leftmenu_link.tpl";
-			$sidebar_link 		=  "tpl/menu/leftmenu_main.tpl";	
+			$sidebar_link 		= "tpl/menu/leftmenu_main.tpl";	
 				
 			if (isset($main->getvar['sub'])) {
-				$sidebar_link_link = "tpl/menu/submenu_link.tpl";
-				$sidebar_link =  "tpl/menu/submenu_main.tpl";							
+				$sidebar_link_link 	= "tpl/menu/submenu_link.tpl";
+				$sidebar_link 		= "tpl/menu/submenu_main.tpl";							
 			}
 			
 			$subsidebar = '';
@@ -147,11 +150,11 @@ function acp() {
 				}
 			}
 			
-			if (isset($main->getvar['sub']) && $main->getvar['sub'] && $admin_nave_item['link'] != "type") {
-				if(is_array($content->navlist)) {
+			if (isset($main->getvar['sub']) && $main->getvar['sub'] && $admin_nave_item['link'] != "type") {				
+				if (is_array($content->navlist)) {
 					foreach($content->navlist as $key => $value) {
 						if($value[2] == $main->getvar['sub']) {
-							if(!$value[0]) {
+							if (!$value[0]) {
 								define("SUB", $admin_nave_item['link']);	
 								$header = $admin_nave_item['link'];
 							} else {
@@ -235,32 +238,30 @@ function acp() {
 	
 	define("INFO", '<b>Welcome back, '. strip_tags($staffuser['name']) .'</b><br />');	
 
-	echo '<div id="left">';	
-		echo $main->table($nav, $sidebar);
-	echo '</div>';	
-	echo '<div id="right">';	
-		if (isset($main->getvar['sub'])) {
-			if($content->navtitle) {				
-				echo $main->table($subnav, $subsidebar);
-			}
-		}			
-	echo $main->table($header, $html);
-	echo '</div>';
+	$data['LEFT_COLUMN']  = $main->table($nav, $sidebar);
+	$data['RIGHT_COLUMN'] = '';
+	if (isset($main->getvar['sub'])) {
+		if ($content->navtitle) {
+			$data['RIGHT_COLUMN'] = $main->table($subnav, $subsidebar);
+		}
+	}
 	
-	$data = ob_get_contents(); # Retrieve the HTML
-	ob_clean(); # Flush the HTML
-	
+	if (isset($header)) {
+		$data['RIGHT_COLUMN'] .= $main->table($header, $html);
+	} else {
+		$data['RIGHT_COLUMN'] .= $html;
+	}
 	return $data; # Return the HTML
 }
 
 //If user is NOT log in 
 if (!isset($_SESSION['logged'])) {
-	if ($main->getvar['page'] == "forgotpass") {
+	if (isset($main->getvar['page']) && $main->getvar['page'] == "forgotpass") {
 		define("SUB", "Reset Password");
 		define("INFO", SUB);
 		echo $style->get("header.tpl");
-		
-		if($_POST && $main->checkToken()) {
+		$array = array();
+		if ($_POST && $main->checkToken()) {
 			if (!empty($main->postvar['user']) && !empty($main->postvar['email']) ) {
 				$username 		= $main->postvar['user'];
 				$useremail		= $main->postvar['email'];			
@@ -287,7 +288,7 @@ if (!isset($_SESSION['logged'])) {
 		define("SUB", "Login");
 		define("INFO", " ");
 		
-		if($_POST) { # If user submitts form
+		if ($_POST) { # If user submitts form
 			if ($main->checkToken()) {
 				if($main->staffLogin($main->postvar['user'], $main->postvar['pass'])) {
 					$main->redirect("?page=home");	
@@ -302,33 +303,21 @@ if (!isset($_SESSION['logged'])) {
 		echo '<div align="center">'.$main->table("Admin Area - Login", $style->replaceVar("tpl/login/alogin.tpl", $array), "300px").'</div>';
 		echo $style->get("footer.tpl");
 	}
-} elseif($_SESSION['logged']) {	
+} elseif(isset($_SESSION['logged'])) {	
 	//Ok user is already in 
 	if(!isset($main->getvar['page'])) {
 		$main->getvar['page'] = "home";
 	} elseif($main->getvar['page'] == "logout") {
 		$main->logout('admin');		
 		$main->redirect("?page=home");
-	}	
+	}
+		
 	$content = acp();
-
 	echo $style->get("header.tpl");
-	echo $content;
+	echo $style->replaceVar("tpl/admin/content.tpl", $content);
+			
 	echo $style->get("footer.tpl");
 }
 
-//End the sctipt
+//End the script
 require_once LINK ."output.php";
-
-//Memory usage
-if (SERVER_STATUS == 'test') {
-	echo ('MemoryUsage').': '.number_format((memory_get_usage()/1048576), 3, '.', '') .'Mb' ;
-	echo '<br />';
-	echo ('MemoryUsagePeak').': '.number_format((memory_get_peak_usage()/1048576), 3, '.', '').'Mb';
-	$mtime = microtime();
-	$mtime = explode(" ",$mtime);
-	$mtime = $mtime[1] + $mtime[0];
-	$endtime = $mtime;
-	$totaltime = ($endtime - $starttime);
-	echo '<br />'.$totaltime = number_format(($totaltime), 4, '.', '');
-}
