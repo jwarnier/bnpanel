@@ -41,7 +41,7 @@ if (!$main->getvar['id']) {
 $user_info = $main->getCurrentUserInfo();
 
 if (!empty($user_info)) {
-	$array['WELCOME_MESSAGE'] = 'Signed in as <a href="/client">'.$user_info['user'].'</a> | <a href="/client/?page=logout">Logout</a>';	
+	$array['WELCOME_MESSAGE'] = 'Signed in as <a href="'.URL.'client">'.$user_info['user'].'</a> | <a href="'.URL.'client/?page=logout">Logout</a>';	
 } else {
 	$array['WELCOME_MESSAGE'] = '<a href="#" onclick="showLogin();">Log in to your account</a>';
 }
