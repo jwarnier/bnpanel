@@ -77,13 +77,13 @@ class type {
 	public function orderForm($type) { # Returns the html of a custom form
 		global $style;
 		
-		if(!$this->classes[$type]) {
+		if(!isset($this->classes[$type])) {
 			$type = $this->createType($type);
 		} else {
 			$type = $this->classes[$type];	
 		}		
 		
-		if($type->orderForm) {
+		if (isset($type->orderForm)) {
 			foreach($type->orderForm as $key => $value) {
 				$array['NAME'] = $value[0] .":";
 				$array['FORM'] = $value[1];

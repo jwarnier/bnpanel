@@ -58,8 +58,8 @@ function orderstepme(id, type) {
 	pid = id;
 	document.getElementById("package").value = id;
 	document.getElementById("order"+id).disabled = true;
-	
-	if(document.getElementById("domain").value == "sub") {
+	if (document.getElementById("domain")) 
+	if (document.getElementById("domain").value == "sub") {
 		document.getElementById("dom").style.display = 'none';
 		document.getElementById("sub").style.display = '';		
 		$.get("<AJAX>function=sub&pack="+document.getElementById("package").value, function(data) {
@@ -69,7 +69,8 @@ function orderstepme(id, type) {
 		document.getElementById("sub").style.display = 'none';
 		document.getElementById("dom").style.display = '';		
 		document.getElementById("sub3").style.display = 'none';
-	}	
+	}
+	
 	$.get('<AJAX>function=orderForm&package='+ document.getElementById("package").value, function(stuff) {
 		$("#custom").html('<table width="100%" border="0" cellspacing="2" cellpadding="0" id="custom">'+stuff+'</table>');		
 	});

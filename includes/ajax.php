@@ -95,7 +95,7 @@ class AJAX {
 			if (!$this->writeconfig($sql['host'], $sql['user'], $sql['pass'], $sql['db'], $sql['pre'], "true")) {
 				echo '<div class="errors">There was a problem re-writing to the config!</div>';	
 			}					
-			if ($errors['n']) {
+			if (isset($errors['n'])) {
 				echo "<strong>SQL Queries (Broke):</strong><br />";
 				foreach($errors['errors'] as $value) {
 					echo $value."<br />";	

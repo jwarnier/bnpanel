@@ -1,7 +1,6 @@
 <div id="navigation">
     <ul>
-    	%NAV%
-    	
+    	%NAV%    	
     	<li>
     		<img src="../themes/flags/gb.gif" alt="en" /> <a href="?l=en">English</a>
     	</li> 
