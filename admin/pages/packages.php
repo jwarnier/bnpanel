@@ -249,9 +249,17 @@ class page {
 							$array['ADDITIONAL'] .='';
 						} 
 						$additional = explode(",", $package_info['additional']);
-						foreach($additional as $key => $value) {
-							$me = explode("=", $value);
-							$cform[$me[0]] = $me[1];
+						$cform = array();
+						
+						if (!empty($additional)) {
+							foreach($additional as $key => $value) {
+								if (!empty($value)) {
+									$me = explode("=", $value);
+									if (!empty($me)) {									
+										$cform[$me[0]] = $me[1];
+									}
+								}
+							}
 						}
 						global $type;
 						$array['FORM'] = $type->acpPedit($package_info['type'], $cform);
@@ -276,7 +284,7 @@ class page {
 						
 						$serverphp = $server->loadServer($package_info['server']);
 					
-						if ($serverphp->status) {	
+						if (isset($serverphp->status)) {	
 							//Getting all client templates in ISPConfig
 							$package_list = $serverphp->getAllPackageBackEnd();
 							if (!empty($package_list)) {

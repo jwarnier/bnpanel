@@ -1,6 +1,6 @@
 <div class="span4 columns">
     <div class="title">
-        <h2>%NAME%</h2>
+        <h3>%NAME%</h3>
         <span style="float:right">%EDIT_LINK%</span>
     </div>
     <div class="description">                

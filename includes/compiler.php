@@ -246,9 +246,14 @@ $main->postvar['_post_token'] =	$main->getToken();
 //Converts all GET into variable - DB Friendly.
 if (isset($_GET)) {
 	foreach($_GET as $key => $value) {
+		//All parameters with the _id sufix are considered as int
+		if (strpos($key, '_id')) {
+			$main->getvar[$key] = intval($value);
+			continue;
+		}
 		switch ($key) {
 			case 'do':
-			case 'id':
+			case 'id':						
 				$main->getvar[$key] = intval($value);
 				break;
 			default:

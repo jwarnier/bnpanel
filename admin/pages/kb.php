@@ -25,9 +25,8 @@ class page {
 	public function content() { # Displays the page 
 		global $main, $style, $db;
 		switch($main->getvar['sub']) {
-			case "cat":
-			
-				if($_POST['add'] && $main->checkToken(false)) {
+			case "cat":			
+				if (isset($_POST['add']) && $main->checkToken(false)) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n && $key != "admin") {
 							$main->errors("Please fill in all the fields!");
@@ -44,7 +43,7 @@ class page {
 						$main->errors("Category Added!");
 					}
 				}
-				if($_POST['edit'] && $main->checkToken(false)) {
+				if (isset($_POST['edit']) && $main->checkToken(false)) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n && $key != "admin") {
 							$main->errors("Please fill in all the fields!");
@@ -60,8 +59,8 @@ class page {
 						$db->query("UPDATE <PRE>cats SET name = '{$main->postvar['editname']}', `description` = '{$main->postvar['editdescription']}' WHERE id = '{$main->postvar['id']}'");
 						$main->errors("Category Edited!");
 					}
-				}
-				if($main->getvar['del'] && $main->checkToken(false)) {
+				} 
+				if( isset($main->getvar['del']) && $main->checkToken(false)) {
 					$main->getvar['del'] = intval($main->getvar['del']);
 					$db->query("DELETE FROM <PRE>cats WHERE id = {$main->getvar['del']}");
 					$main->errors("Category Deleted!");					

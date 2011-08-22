@@ -270,9 +270,8 @@ class order extends model {
 		$main->addlog('order::sendOrderToControlPanel Order #'.$order_id);
 		$order_info		= $this->getOrderInfo($order_id);
 		$package_info 	= $package->getPackage($order_info['pid']);
-		$serverphp 		= $server->loadServer($package_info['server']); # Create server class
-		
-		if ($serverphp->status) {
+		$serverphp 		= $server->loadServer($package_info['server']); # Create server class		
+		if (isset($serverphp) && $serverphp->status) {
 			$result 	= $serverphp->signup($order_id);				
 			if ($result) {
 				$all_addons_info = $addon->getAllAddons();	
@@ -393,9 +392,11 @@ class order extends model {
 		$result['list'] = '';
 		
 		//Package info
-		$package_list		= $package->getAllPackages();				
+		$package_list		= $package->getAllPackages();		
+				
 		//Billing cycles
-		$billing_cycle_list = $billing->getAllBillingCycles();				
+		$billing_cycle_list = $billing->getAllBillingCycles(BILLING_CYCLE_STATUS_ACTIVE, true);	
+					
 		//Selecting addons
 		$addons_list 		= $addon->getAllAddons();		
 		$total_amount = 0;                
@@ -441,25 +442,41 @@ class order extends model {
 			
 			$sql = "SELECT addon_id, amount  FROM `<PRE>order_addons` upa INNER JOIN `<PRE>billing_products` bp ON(addon_id=product_id)
 						 WHERE type='addon' AND billing_id = $billing_cycle_id AND `order_id` = ".$order_item['id'];
-			$query_addon 	= $db->query($sql);			
+			$query_addon 	= $db->query($sql);
+			$addon_fee_string = '';
 			while($addon_info = $db->fetch_array($query_addon)){				
-				$addon_fee_string.= $addons_list[$addon_info['addon_id']]['name'].' - '.$addon_info['amount'].'<br />';
-				$total_amount = $total_amount + $addon_info['amount'];	
+				$addon_fee_string .= $addons_list[$addon_info['addon_id']]['name'].' - '.$addon_info['amount'].'<br />';
+				$total_amount      = $total_amount + $addon_info['amount'];	
 			}
 				
-			$array['addon_fee'] = $addon_fee_string;			
-			$total_amount = $total_amount + $array['amount'];			
+			$array['addon_fee'] = $addon_fee_string;		
+			if (isset($array['amount']) && !empty($array['amount'])) {	
+				$total_amount = $total_amount + $array['amount'];
+			}			
 			
 			//Get the amount info
 			$array['AMOUNT'] = $currency->toCurrency($total_amount);			
 
 			//Paid configuration links
-			$array['paid'] = ($array["is_paid"] == 1 ? "<span style='color:green'>Already Paid</span>" :
-														"<span style='color:red'>Unpaid</span>");
-			$array['due'] =  ($array["is_paid"] == 1 ? '<span style="color:green">'.$array['due'].'</span>' :  '<span style="color:red">'.$array['due'].'</span>');
+			
+			$array['due'] = isset($array['due']) ? $array['due'] : null;
+			
+			if (isset($array["is_paid"]) && $array["is_paid"] == 1) {
+				$array['paid'] = '<span style="color:green">Already Paid</span>';
+				if (!empty($array['due'])) {
+					$array['paid'] = '<span style="color:green">'.$array['due'].'</span>';
+				}
+			} else {
+				$array['paid'] = '<span style="color:red">Already Unpaid</span>';
+				if (!empty($array['due'])) {
+					$array['paid'] = '<span style="color:red">'.$array['due'].'</span>';
+				}
+			}
+			
 			
 			$array['PACKAGE']		 = $package_list[$package_id]['name'];
 			$array['billing_cycle']  = $billing_cycle_list[$billing_cycle_id]['name'];
+			
 			if (empty($user_id)) {
 				$array['EDIT']  	= '<a href="index.php?page=orders&sub=edit&do='.$order_item['id'].'"><img src="../themes/icons/pencil.png" title="Edit" alt="Edit" /></a>';			
 				$array['DELETE']  	= '<a href="index.php?page=orders&sub=delete&do='.$order_item['id'].'"><img src="../themes/icons/delete.png" title="Delete"  alt="Delete" /></a>';
@@ -535,23 +552,31 @@ class order extends model {
 			
 			$array['ADDON'] = $result['html'];
 						 				
-			$total = $total + $result['total'];
+			if (isset($result['total']) && !empty($result['total'])) {
+				$total = $total + $result['total'];
+			}
 
 			//Package info
 			$package_list		 = $package->getAllPackages();
 		
-			$package_with_amount = $package->getAllPackagesByBillingCycle($billing_cycle_id);				
-			
-			$total = $total + $package_with_amount[$package_id]['amount'];
+			$package_with_amount = $package->getAllPackagesByBillingCycle($billing_cycle_id);
+							
+			if (isset($package_with_amount[$package_id]['amount']) && !empty($package_with_amount[$package_id]['amount'])) {
+				$total = $total + $package_with_amount[$package_id]['amount'];
+			}
 			
 			if($read_only == true) {		
 				$array['PACKAGES'] 		 = $package_list[$package_id]['name'];
 				$array['PACKAGE_AMOUNT'] = $currency->toCurrency($package_with_amount[$package_id]['amount']);									
 			} else {
 				foreach($package_list as $package_item) {
-					$package_list[$package_item['id']] = $package_item['name'].' - '.$currency->toCurrency($package_with_amount[$package_item['id']]['amount']);									
+					$currency_value = '';
+					if (isset($package_with_amount[$package_item['id']])) {
+						$currency_value = ' - '.$currency->toCurrency($package_with_amount[$package_item['id']]['amount']);
+					}
+					$package_list[$package_item['id']] = $package_item['name'].$currency_value;
+														
 				}				
-				//$array['PACKAGES'] = $main->createSelect('package_id', $package_list, $package_id, array('onchange'=>'loadAddons(this);'));
 				$array['PACKAGES'] 		 = $package_list[$package_id];				
 			}		
 			
