@@ -424,27 +424,24 @@ function checkSubdomain() {
 		}
 	} else {
 		$("#subdomain_result").html("<strong>Select a domain first</strong> "+wrong);
-	}
-			
+	}			
 }
-
 </script>
-<div class="box">
 
-	<span id="welcome" class="welcome">
-	%WELCOME_MESSAGE%
-	</span>
-	<div style="clear:both"></div>
+
+
+
 	
 <form action="" method="post" name="order" id="order">	
 	<div id="1">
-    	<input name="package" id="package" type="hidden" value="" /> 
+    	<input name="package" id="package" type="hidden" value="" />    	 
 		%DOMAIN_CONFIGURATION%              
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-          %PACKAGES%          
-        </table>
-    </div>    
-    <div class="table" id="2" style="display:none">
+        <div class="row show-grid">
+        %PACKAGES%
+        </div>
+    </div>
+    
+    <div id="2" class="table" style="display:none">
         <div class="cat"><span class="cat_title">_{Select a billing cycle}</span></div>
         <div class="text">
         	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
@@ -454,9 +451,9 @@ function checkSubdomain() {
                 		<div class="sub" id="description">
                 		_{Payment cycles}                			
 	              			<select name="billing_id" id="billing_id" onchange="showAddons(this)" >
-	              			<option value="0" selected="selected">_{Select a billing cycle}</option>         		
-	                     		%BILLING_CYCLE%
-	                    	</select>
+    	              			<option value="0" selected="selected">_{Select a billing cycle}</option>         		
+    	                     		%BILLING_CYCLE%
+    	                    	</select>
               		  </div>
               		  <div id="showaddons"></div>
                     </div>
@@ -464,7 +461,8 @@ function checkSubdomain() {
               </tr>
             </table>
         </div>
-    </div>    
+    </div>
+    
     <!-- cambios por julio  resumen --> 
     <div class="table" id="3" style="display:none">
         <div class="cat"><span class="cat_title">Summary</span></div>
@@ -691,13 +689,17 @@ function checkSubdomain() {
             </div>
         </div>
     </div>
-    <table width="100%" border="0" cellspacing="2" cellpadding="0" id="steps" style="display:none;">
-      <tr>
-        <td width="33%" align="center">
-        	<input type="button" name="back" id="back" value="_{Previous Step}" onclick="previousstep()" disabled="disabled" /></td>
-        <td width="33%" align="center" id="verify">&nbsp;</td>
-        <td width="33%" align="center"><input type="button" name="next" id="next" value="_{Next Step}" onclick="nextstep()" ondblclick="return false" /></td>
-      </tr>
-    </table>
+    
+    
+    
+    <div id="steps" class="row show-grid" style="display:none;" >
+    <div id="verify" class="container"></div>
+    
+        <div class="span4 columns">
+        	<input type="button" name="back" id="back" value="_{Previous Step}" onclick="previousstep()" disabled="disabled" class="btn" />
+        </div>
+        <div class="span4 columns offset6">  
+            <input type="button" name="next" id="next" value="_{Next Step}" onclick="nextstep()" ondblclick="return false" class="btn primary"  />
+        </div>  
+    </div>    
 </form>
-</div>

@@ -12,7 +12,7 @@
 	<input type="password" name="pass" id="pass_login" tabindex="2" size="20" />
 </p>
 <p class="submit">
-	<input type="submit" name="clogin" id="clogin" value="_{Login}" tabindex="3" />
+	<input type="submit" name="clogin" id="clogin" value="_{Login}" tabindex="3"  class="btn primary" />
 </p>
 </form>
 <p id="navi">

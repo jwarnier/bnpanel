@@ -67,7 +67,6 @@ function acp() {
 		$link 	= 'pages/'. $admin_nave_item['link'].'.php';
 	}
 	
-	
 	// Left menu
 	$nav = "Sidebar Menu";
 	$array['LINKS'] = '';
@@ -76,6 +75,13 @@ function acp() {
 			$array_item['IMGURL'] 	= $row['icon'];
 			$array_item['LINK'] 	= "?page=".$row['link'];
 			$array_item['VISUAL']	= $row['visual'];
+			
+			/*if ($row['link'] == $admin_nave_item['link']) {
+				$array_item['ACTIVE'] 	= 'active';
+			} else {
+				$array_item['ACTIVE'] 	=	 ' ';
+			}*/
+
 			$array['LINKS'] 	   .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array_item);
 		}
 	}
@@ -139,17 +145,24 @@ function acp() {
 				$subnav = $content->navtitle;
 				if (isset($content->navlist)) {
 					$array3 = array();
-					$array3['LINKS'] = null;
+					$array3['LINKS'] = null;					
 					foreach($content->navlist as $key => $value) {
+												
 						$array2['IMGURL'] = $value[1];
 						$array2['LINK'] = "?page=".$admin_nave_item['link']."&sub=".$value[2];
 						$array2['VISUAL'] = $value[0];
-						$array3['LINKS'] .= $style->replaceVar($sidebar_link_link, $array2);
+						
+						if (isset($main->getvar['sub']) && $value[2] == $main->getvar['sub']) {
+							$array2['ACTIVE'] 	= 'active';
+						} else {
+							$array2['ACTIVE'] 	= '';
+						}						
+						$array3['LINKS'] .= $style->replaceVar($sidebar_link_link, $array2);						
 					}					
 					$subsidebar = $style->replaceVar($sidebar_link, $array3);
 				}
 			}
-			
+						
 			if (isset($main->getvar['sub']) && $main->getvar['sub'] && $admin_nave_item['link'] != "type") {				
 				if (is_array($content->navlist)) {
 					foreach($content->navlist as $key => $value) {
@@ -242,7 +255,9 @@ function acp() {
 	$data['RIGHT_COLUMN'] = '';
 	if (isset($main->getvar['sub'])) {
 		if ($content->navtitle) {
-			$data['RIGHT_COLUMN'] = $main->table($subnav, $subsidebar);
+			//$data['RIGHT_COLUMN'] = $main->table($subnav, $subsidebar); //sub title and content
+			
+			$data['RIGHT_COLUMN'] = $subsidebar;
 		}
 	}
 	
@@ -259,7 +274,7 @@ if (!isset($_SESSION['logged'])) {
 	if (isset($main->getvar['page']) && $main->getvar['page'] == "forgotpass") {
 		define("SUB", "Reset Password");
 		define("INFO", SUB);
-		echo $style->get("header.tpl");
+	
 		$array = array();
 		if ($_POST && $main->checkToken()) {
 			if (!empty($main->postvar['user']) && !empty($main->postvar['email']) ) {
@@ -282,8 +297,11 @@ if (!isset($_SESSION['logged'])) {
 				}
 			}
 		}
-		echo '<div align="center">'.$main->table("Admin Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';		
-		echo $style->get("footer.tpl");
+		$content['CONTENT'] =  '<div align="center">'.$main->table("Admin Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';
+		echo $style->get("tpl/layout/admin/header.tpl");
+		echo $style->replaceVar("tpl/layout/client/content.tpl", $content);
+		echo $style->get("tpl/layout/admin/footer.tpl");
+		
 	} else { 
 		define("SUB", "Login");
 		define("INFO", " ");
@@ -298,10 +316,12 @@ if (!isset($_SESSION['logged'])) {
 				}
 			}
 		}	
-		echo $style->get("header.tpl");
-		$array[] = "";
-		echo '<div align="center">'.$main->table("Admin Area - Login", $style->replaceVar("tpl/login/alogin.tpl", $array), "300px").'</div>';
-		echo $style->get("footer.tpl");
+		
+		$content['CONTENT'] =  '<div align="center">'.$main->table("Admin Area - Login", $style->replaceVar("tpl/login/alogin.tpl", array()), "300px").'</div>';
+		
+		echo $style->get("tpl/layout/admin/header.tpl");
+		echo $style->replaceVar("tpl/layout/client/content.tpl", $content);	
+		
 	}
 } elseif(isset($_SESSION['logged'])) {	
 	//Ok user is already in 
@@ -313,11 +333,11 @@ if (!isset($_SESSION['logged'])) {
 	}
 		
 	$content = acp();
-	echo $style->get("header.tpl");
-	echo $style->replaceVar("tpl/admin/content.tpl", $content);
-			
-	echo $style->get("footer.tpl");
+	echo $style->get("tpl/layout/admin/header.tpl");
+	echo $style->replaceVar("tpl/layout/admin/content.tpl", $content);
 }
+
+echo $style->get("tpl/layout/admin/footer.tpl");
 
 //End the script
 require_once LINK ."output.php";

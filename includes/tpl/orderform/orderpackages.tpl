@@ -1,24 +1,14 @@
-<td width="49%" valign="top">	
-	<div class="table">
-    	<div class="cat">
-        <span class="cat_title">%NAME%</span>
+<div class="span4 columns">
+    <div class="title">
+        <h2>%NAME%</h2>
         <span style="float:right">%EDIT_LINK%</span>
-        </div>
-        <div class="text">
-        <table width="100%" border="0" cellspacing="2" cellpadding="0">
-          <tr>
-            <td>
-            	<div class="subborder">
-            		<div class="sub">%DESCRIPTION%</div>            		
-            	</div>
-            </td>
-          </tr>
-          <tr>
-            <td align="right">
-            	<input name="order" id="order%ID%" type="button" value="_{Order}" onclick="orderstepme('%ID%', '%PACKAGE_TYPE%')" />
-            </td>
-          </tr>
-        </table>
-        </div>
     </div>
-</td>
+    <div class="description">                
+        %DESCRIPTION%
+        <div class="button">
+            <input name="order" id="order%ID%" type="button" value="_{Order}" onclick="orderstepme('%ID%', '%PACKAGE_TYPE%')" class="btn primary" />
+        </div>
+    
+    </div>
+
+</div>

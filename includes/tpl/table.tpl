@@ -3,9 +3,7 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td>
-           <span class="cat_title">
-          	%HEADER%
-           </span>
+           <span class="cat_title">%HEADER%</span>
           </td>
           <td align="right">
           	<a href="Javascript: tblshowhide('%ID%', 'img%ID%', '<URL>')" class="expand">
@@ -16,5 +14,5 @@
       </table>
     </div>
     <div class="text" id="%ID%">%CONTENT%</div>
-    <div class="catend"> <!-- no content here --></div>
+    <div class="catend"><!-- no content here --></div>
 </div>
