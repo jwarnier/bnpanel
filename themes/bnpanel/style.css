@@ -55,3 +55,9 @@
     color: #FFFFFF;
     font-weight: bold;
 }
+
+
+.alert-message.warning {
+	 color: #444 !important;
+	 text-shadow: none;
+}
