@@ -61,3 +61,13 @@
 	 color: #444 !important;
 	 text-shadow: none;
 }
+
+
+.package {
+	float:left;
+}
+.package .description {
+	min-height: 50px;
+	float:left;
+	width:100%;
+}

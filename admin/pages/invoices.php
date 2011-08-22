@@ -27,50 +27,40 @@ class page {
 		switch($main->getvar['sub']) {					
 			case 'add':
 				echo $style->replaceVar("tpl/invoices/addinvoice.tpl");
-			break;
+				break;
 			case 'edit':
-				if(isset($main->getvar['do'])) {
+				if (isset($main->getvar['do'])) {
 					$query = $db->query("SELECT * FROM <PRE>invoices WHERE id = '{$main->getvar['do']}'");
-					if($db->num_rows($query) == 0) {
+					if ($db->num_rows($query) == 0) {
 						echo "That invoice doesn't exist!";	
 					} else {						
-						if($_POST && $main->checkToken()) {
-							foreach($main->postvar as $key => $value) {
-								//if($value == "" && !$n && $key != "admin") {
-								
-								/*if($value == "" && !$n && $key != "admin" && substr($key,0,13) != "billing_cycle"  && substr($key,0,5) != "addon" ) {
-									$main->errors("Please fill in all the fields!");
-									$n++;
-								}*/
+						if($_POST && $main->checkToken()) {							
+											
+							if ($main->postvar['status'] == INVOICE_STATUS_PAID) {
+								$invoice->set_paid($main->getvar['do']);
+							} else {
+								$invoice->set_unpaid($main->getvar['do']);
 							}							
-							if(!$n) {
-								
-								if ($main->postvar['status'] == INVOICE_STATUS_PAID) {
-									$invoice->set_paid($main->getvar['do']);
-								} else {
-									$invoice->set_unpaid($main->getvar['do']);
-								}
-								
-								$addong_list = $addon->getAllAddonsByBillingId($main->postvar['billing_id']);
-								
-								$new_addon_list = array();																
-								foreach($addong_list as $addon_id=>$addon_amount) {																								
-									$variable_name = 'addon_'.$addon_id;
-									//var_dump($variable_name);
-									if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
-										$new_addon_list[$addon_id] = $main->postvar[$variable_name];				
-									}															
-								}
-																	
-								$new_addon_list_serialized = $addon->generateAddonFeeFromList($new_addon_list, $main->postvar['billing_id'], true);								
-								$main->postvar['due'] 		= strtotime($main->postvar['due']);
-								$main->postvar['addon_fee'] = $new_addon_list_serialized;
-								//Editing the invoice
-								
-								$invoice->edit($main->getvar['do'], $main->postvar);
-								$main->errors('Invoice has been edited!');
-								$main->redirect('?page=invoices&sub=view&msg=1&do='.$main->getvar['do']);
+							$addong_list = $addon->getAllAddonsByBillingId($main->postvar['billing_id']);
+							
+							$new_addon_list = array();																
+							foreach($addong_list as $addon_id=>$addon_amount) {																								
+								$variable_name = 'addon_'.$addon_id;
+								//var_dump($variable_name);
+								if (isset($main->postvar[$variable_name]) && ! empty($main->postvar[$variable_name]) ) {										
+									$new_addon_list[$addon_id] = $main->postvar[$variable_name];				
+								}															
 							}
+																
+							$new_addon_list_serialized = $addon->generateAddonFeeFromList($new_addon_list, $main->postvar['billing_id'], true);								
+							$main->postvar['due'] 		= strtotime($main->postvar['due']);
+							$main->postvar['addon_fee'] = $new_addon_list_serialized;
+							//Editing the invoice
+							
+							$invoice->edit($main->getvar['do'], $main->postvar);
+							$main->errors('Invoice has been edited!');
+							$main->redirect('?page=invoices&sub=view&msg=1&do='.$main->getvar['do']);
+							
 						}						
 					}					
 					$return_array = $invoice->getInvoice($main->getvar['do']);
@@ -78,13 +68,13 @@ class page {
 					$return_array['DUE'] = substr($return_array['DUE'], 0, 10);					
 					echo $style->replaceVar("tpl/invoices/editinvoice.tpl", $return_array);
 				}
-			break;			
+				break;			
 			case 'view':				
 				if(isset($main->getvar['do'])) {					
 					$return_array = $invoice->getInvoice($main->getvar['do'], true);									
 					echo $style->replaceVar("tpl/invoices/view-admin.tpl", $return_array);					
 				}
-			break;
+				break;
 			case 'delete':			
 				if (isset($main->getvar['do'])) { 
 					$invoice->delete($main->getvar['do']);					
@@ -114,7 +104,7 @@ class page {
 					$main->errors('No invoices available, you should create an Order first <a href="?page=orders&sub=add">here</a>');
 					echo '<ERRORS>';
 				}								
-			break;			
+				break;			
 		}
 	}
 }

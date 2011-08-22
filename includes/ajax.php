@@ -1439,8 +1439,8 @@ class AJAX {
    function getInvoices() {
    		global	$main, $invoice;
    		if ($main->getCurrentStaffId()) {
-	   		$page = $main->getvar['page'];
-	   		$status_id = $main->getvar['status'];	 	   			   		
+	   		$page 		= isset($main->getvar['page'])   ? $main->getvar['page'] : null;
+   			$status_id 	= isset($main->getvar['status']) ? $main->getvar['status'] : null;      			   		
 			$array = $invoice->getAllInvoicesToArray('', $page, $status_id);
 			echo $array['list'];
    		}

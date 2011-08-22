@@ -481,31 +481,21 @@ function checkSubdomain() {
         </div>
     </div>   
     <div class="table" id="4" style="display:none">
-        <div class="cat"><span class="cat_title">Terms of Service</span></div>
-        <div class="text">
-        	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
-              <tr>
-                <td colspan="2">
-                	<div class="subborder">
-                		<div class="sub" id="description">
-                		%TOS%
-                		</div>
-                    </div>
-				</td>
-              </tr>
-              <tr>
-                <td width="330">
-                	<label for="agree">
-               			<input name="agree" id="agree" type="checkbox" value="1" /> Do you agree to the <NAME> Terms of Service?
-                	</label>
-                </td>
-                <td><a title="The Terms of Service is the set of rules you abide by. These must be agreed to." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-              </tr>
-            </table>
+        <h2>Terms of Service</h2>
+        <div class="container">
+            %TOS%
         </div>
+         <div class="container">
+       	<label for="agree">
+       	    <input name="agree" id="agree" type="checkbox" value="1" />
+       	    <span>Do you agree to the <APP_NAME> Terms of Service?</span>            
+        </label>
+        </div>
+        <a title="The Terms of Service is the set of rules you abide by. These must be agreed to." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+        
     </div>    
 	<div class="table" id="5" style="display:none">
-        <div class="cat"><span class="cat_title">Client Account</span></div>
+        <h2>Client Account</h2>
         <div class="text">        
         	<table  class="data_table">
         	<tr>

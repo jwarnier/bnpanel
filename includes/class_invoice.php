@@ -12,11 +12,15 @@ class invoice extends model {
 	 * @param	float	amount
 	 * @param	date	expiration date
 	 */
-	public function create($params) {
+	public function create($params) {		
 		global $main, $db, $user, $email, $order;
+		
 		$params['created'] = date('Y-m-d h:i:s');
+		
 		$invoice_id = $this->save($params);
-		$order_id 	= intval($params['order_id']);		
+		
+		$order_id 	= intval($params['order_id']);
+		
 		if (!empty($invoice_id) && is_numeric($invoice_id )) {
 			$main->addLog("invoice::create $invoice_id");
 			
@@ -51,10 +55,11 @@ class invoice extends model {
 			$replace_array['INVOICE_SUMMARY'] 		=  $invoice_summary;
 			$replace_array['COMPANY_NAME'] 			=  $db->config('name');
 			$replace_array['URL'] 					=  $db->config('url');
-			$replace_array['USER_LOGIN'] 			=  $user_info['user'];					
+			$replace_array['USER_LOGIN'] 			=  $user_info['user'];
+							
 			$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $replace_array);
-			return	$invoice_id;
-		
+			
+			return	$invoice_id;		
 		}
 		return false;		
 	}

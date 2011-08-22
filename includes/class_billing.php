@@ -60,7 +60,7 @@ class billing extends model {
 			}								
 		}
 		if ($add_none_value) {
-			//$billing_list['-1'] = array('id' => '-1', 'name'=>'None');
+			$billing_list['-1'] = array('id' => '-1', 'name'=>'None');
 		}
 		return $billing_list; 		
 	}
