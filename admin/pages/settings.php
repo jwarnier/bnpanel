@@ -8,14 +8,14 @@ class page {
 							
 	public function __construct() {
 		$this->navtitle = "General Settings Sub Menu";
-		$this->navlist[] = array("General Configuration", 	"world.png", "paths");
-		$this->navlist[] = array("Email Configuration", 	"email.png", "email");
-		$this->navlist[] = array("Security Settings", 		"lock.png", "security");
+		$this->navlist[] = array("General", 	"world.png", "paths");
+		$this->navlist[] = array("Email", 	"email.png", "email");
+		$this->navlist[] = array("Security", 		"lock.png", "security");
 		$this->navlist[] = array("Signup Form", 			"user_red.png", "signup");
-		$this->navlist[] = array("Terms of Service", 		"application_edit.png", "tos");
+		$this->navlist[] = array("TOS", 		"application_edit.png", "tos");
 		$this->navlist[] = array("Client Area", 			"user_go.png", "client");
-		$this->navlist[] = array("Support Area", 			"help.png", "support");
-		$this->navlist[] = array("Paid Configuration",		"coins.png", "paid_configuration");		
+		$this->navlist[] = array("Support", 			"help.png", "support");
+		$this->navlist[] = array("Payment",		"coins.png", "paid_configuration");		
 	}
 	
 	public function description() {

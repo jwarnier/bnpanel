@@ -1,14 +1,19 @@
-<div id="navigation">
-    <ul>
-    	%NAV%    	
-    	<li>
-    		<img src="../themes/flags/gb.gif" alt="en" /> <a href="?l=en">English</a>
-    	</li>    	
-    	<li>    		
-    		<img src="../themes/flags/es.gif" alt="es" /> <a href="?l=es">Spanish</a>
-    	</li>
-    	<li>    		
-    		<img src="../themes/flags/nl.gif" alt="nl" /> <a href="?l=nl">Nederlands</a>
-    	</li>    	   	
-    </ul>
+<div class="topbar">
+    <div class="fill">
+        <div class="container">
+            <h3><a href="<URL>"><APP_NAME></a></h3>
+            <ul>
+            	%NAV%    	
+            	<li>
+            		<a href="?l=en"><img src="../themes/flags/gb.gif" alt="en" /></a>
+            	</li>    	
+            	<li>    		
+            		<a href="?l=es"><img src="../themes/flags/es.gif" alt="es" /> </a>
+            	</li>
+            	<li>    		
+            		<a href="?l=nl"><img src="../themes/flags/nl.gif" alt="nl" /> </a>
+            	</li>    	   	
+            </ul>
+        </div>
+    </div>
 </div>

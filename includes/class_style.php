@@ -20,11 +20,11 @@ class style {
 		if (!file_exists($link) || $override != 0) {
 			$link = LINK . $name;
 		}
-		if(!file_exists($link) && INSTALL) {
+		if (!file_exists($link) && INSTALL) {
 			$error['Error'] = "File doesn't exist!";
 			$error['Path'] = $link;			
 		} else {
-			if($prepare) {
+			if ($prepare) {
 				return $this->prepare(file_get_contents($link));
 			} else {
 				return file_get_contents($link);
@@ -45,22 +45,48 @@ class style {
 	public function get($template) { # Fetch a template
 		return $this->getFile($template);
 	}
+	
+	public function show_logo() {
+		$link = URL."themes/". THEME . "/images/logo.png";
+		return '<img src="'.$link.'" />';
+	}
+	
+	public function show_login_link() {
+		global $main;
+		$user_info = $main->getCurrentUserInfo();
+		
+		$link = '';
+		if (!empty($user_info)) {
+			$link = 'Signed in as <a href="'.URL.'client">'.$user_info['user'].'</a> | <a href="'.URL.'client/?page=logout">Logout</a>';
+		} else {
+			$link = '<a href="#" onclick="showLogin();">Log in to your account</a>';
+		}		
+		return $link;
+	}
+	
 
 	public function css() { # Fetches the CSS and prepares it
         global $db;                
 		$link = URL."themes/". THEME . "/style.css";
-		$css = '<link rel="stylesheet" type="text/css" href="'.$link.'"/>';        
-		if(FOLDER != "install" && FOLDER != "includes") {
+		
+		//Including 960 css		
+		/*$css  = '<link rel="stylesheet" href="'.URL.'includes/css/960/reset.css" type="text/css" />';
+		$css .= '<link rel="stylesheet" href="'.URL.'includes/css/960/text.css" type="text/css" />';
+		$css .= '<link rel="stylesheet" href="'.URL.'includes/css/960/960_12_col.css" type="text/css" />';
+		*/
+		//Including bootstrap
+		$css = '<link rel="stylesheet" href="'.URL.'includes/css/bootstrap/bootstrap-1.0.0.css" type="text/css" />';
+				
+		$css .= '<link rel="stylesheet" type="text/css" href="'.$link.'"/>';
+		
+		
+		if (FOLDER != "install" && FOLDER != "includes") {
 	        $css .= '<link rel="stylesheet" href="'.URL.'includes/css/'.$db->config('ui-theme').'/jquery-ui.css" type="text/css" />';
 		}
 		return $css;
 	}
 
 	public function replaceVar($template, $array = array(), $style = 0) { #Fetches a template then replaces all the variables in it with that key
-		$debug = false;
-		if ($template == 'tpl/admin/content.tpl') {
-			$debug = true;
-		}
 		$data = $this->getFile($template, 0, $style);
 		
 		if (!empty($array)) {
@@ -174,7 +200,7 @@ class style {
     		if ($type == 'error') {
     			$type = 'error_message';
     		}
-    		$html = '<div class="'.$type.'">';    		
+    		$html = '<div class="alert-message '.$type.'">';    		
     		if ($allow_html) {   		
     			$html .= $message;
     		} else {

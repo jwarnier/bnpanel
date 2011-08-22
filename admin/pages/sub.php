@@ -25,9 +25,10 @@ class page {
 		switch($main->getvar['sub']) {
 			default:
 				if($_POST) {
-					if($main->checkToken()) {
+					if ($main->checkToken()) { 
+						$n = null;
 						foreach($main->postvar as $key => $value) {
-							if($value == "" && !$n) {
+							if ($value == "" && !$n) {
 								$style->showMessage("Please fill in all the fields!");
 								$n++;
 							}
@@ -108,8 +109,7 @@ class page {
 					echo "<ERRORS>";
 					if($db->num_rows($query) == 0) {
 						$style->showMessage("There are no Subdomains available!");	
-					} else {
-						
+					} else {						
 						while($data = $db->fetch_array($query)) {
 							echo $main->sub("<strong>".$data['subdomain']."</strong>", '<a href="?page=sub&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=sub&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 						}

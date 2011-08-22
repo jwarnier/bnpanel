@@ -25,13 +25,14 @@ function client() {
 		$html = "Seems like the .php is non existant. Is it deleted?";	
 	} else {
 		//If deleting something
-		if(preg_match("/[\.*]/", $main->getvar['page']) == 0) {
+		if (preg_match("/[\.*]/", $main->getvar['page']) == 0) {
 			require $link;
 			$content = new page();
 			// Main Side Bar HTML
 			$nav = "Sidebar";			
 			$array = array();
 			$array['LINKS'] = null;
+			
 			foreach($client_navigation as $row) {	
 				if ($row['link'] == 'delete' && !$db->config('delacc')) {
 					continue;
@@ -39,6 +40,7 @@ function client() {
 				$array2['IMGURL'] = $row['icon'];
 				$array2['LINK'] = "?page=".$row['link'];
 				$array2['VISUAL'] = $row['visual'];
+				$array2['ACTIVE'] = 'active';
 				$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array2);			
 			}
 			
@@ -147,12 +149,13 @@ function client() {
 }
 
 global $user;
+
+
 if (!isset($_SESSION['clogged'])) {	
 	if (isset($main->getvar['page']) && $main->getvar['page'] == 'forgotpass') {		
 		define("SUB", "Reset Password");
-		define("INFO", SUB);
-		echo $style->get("header.tpl");		
-		if($_POST && $main->checkToken()) {
+		define("INFO", SUB);		
+		if ($_POST && $main->checkToken()) {
 			if (!empty($main->postvar['user']) && !empty($main->postvar['email']) ) {		
 				$username 		= $main->postvar['user'];
 				$useremail		= $main->postvar['email'];
@@ -176,8 +179,12 @@ if (!isset($_SESSION['clogged'])) {
 		}
 		$main->generateToken();		
 				
-		echo '<div align="center">'.$main->table("Client Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';		
-		echo $style->get("footer.tpl");
+		$content = '<div align="center">'.$main->table("Client Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';		
+				
+		echo $style->get("tpl/layout/client/header.tpl");
+		echo $style->replaceVar("tpl/layout/client/content.tpl", array('CONTENT' => $content));
+		echo $style->get("tpl/layout/client/footer.tpl");		
+		
 	} else {
 		define("SUB", "Login");
 		define("INFO", " ");		
@@ -186,19 +193,21 @@ if (!isset($_SESSION['clogged'])) {
 				$main->redirect("?page=home");	
 			} else {
 				$main->generateToken();
-			}
-		
+			}		
 		}	
-		echo $style->get("header.tpl");
+		
 		$array[] = "";
 		if(!$db->config("cenabled")) {
 			define("SUB", "Disabled");
 			define("INFO", SUB);
-			echo '<div align="center">'.$main->table(gettext("Client Area - Disabled"), $db->config("cmessage"), "300px").'</div>';
+			$content = '<div class="center">'.$main->table(gettext("Client Area - Disabled"), $db->config("cmessage"), "300px").'</div>';
 		} else {
-			echo '<div align="center">'.$main->table(gettext("Client Area - Login"), $style->replaceVar("tpl/login/clogin.tpl", $array), "300px").'</div>';
+			$content = '<div align="center">'.$main->table(gettext("Client Area - Login"), $style->replaceVar("tpl/login/clogin.tpl", $array), "300px").'</div>';
 		}
-		echo $style->get("footer.tpl");
+		
+		echo $style->get("tpl/layout/client/header.tpl");
+		echo $style->replaceVar("tpl/layout/client/content.tpl", array('CONTENT' => $content));
+		echo $style->get("tpl/layout/client/footer.tpl"); #Output Footer
 	}
 } elseif($_SESSION['clogged']) {
 	if(!isset($main->getvar['page'])) {
@@ -212,16 +221,18 @@ if (!isset($_SESSION['clogged'])) {
 			$main->redirect('?page=home');
 		}		
 	}
-	if(!$db->config("cenabled")) {
+	
+	if (!$db->config("cenabled")) {
 		define("SUB", "Disabled");
 		define("INFO", SUB);
 		$content = '<div align="center">'.$main->table("Client Area - Disabled", $db->config("cmessage"), "300px").'</div>';
 	} else {
 		$content = client();
 	}
-	echo $style->get("header.tpl");
-	echo $content;
-	echo $style->get("footer.tpl");
+	
+	echo $style->get("tpl/layout/client/header.tpl");
+	echo $style->replaceVar("tpl/layout/client/content.tpl", array('CONTENT' => $content));
+	echo $style->get("tpl/layout/client/footer.tpl");
 }
 //End the sctipt
 require LINK .'output.php';

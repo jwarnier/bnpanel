@@ -14,7 +14,7 @@ if (INSTALL == 1) {
 		$array['PAGEGEN'] = $gentime;
 		$array['IP'] = getenv('REMOTE_ADDR');		
 		$pagegen .= $style->replaceVar('tpl/footergen.tpl', $array);
-		if($db->config("show_footer")) {
+		if ($db->config("show_footer")) {
 			if(ini_get('safe_mode') or
 			strpos(ini_get('disable_functions'), 'shell_exec') != false or
 			stristr(PHP_OS, 'Win')) {
@@ -66,7 +66,9 @@ if (INSTALL == 1) {
 	if (!empty($navbits)) {
 	    $array3['NAV'] = $navbits;
 	}
-	$navigation = $style->replaceVar("tpl/menu/top_main.tpl", $array3);    
+	$navigation = $style->replaceVar("tpl/menu/top_main.tpl", $array3);
+	$navigation = preg_replace("/<APP_NAME>/si", NAME, $navigation);
+	
 }
 
 global $main;
@@ -75,19 +77,26 @@ $current_token = $main->getToken();
 $data = preg_replace("/<AJAX>/si", URL."includes/ajax.php?_get_token=".$current_token."&", $data);
 
 $sub = defined('SUB') ? ' - '.SUB : '';
-$data = preg_replace("/<APP TITLE>/si", NAME . " - " . PAGE.$sub, $data);
-$data = preg_replace("/<NAME>/si", NAME, $data);
+$data = preg_replace("/<APP_TITLE>/si", NAME . " - " . PAGE.$sub, $data);
+$data = preg_replace("/<APP_NAME>/si", NAME, $data);
 $data = preg_replace("/<CSS>/si", $this->css(), $data);
 $data = preg_replace("/<JAVASCRIPT>/si", $this->javascript(), $data);
+
 $data = preg_replace("/<MENU>/si", $navigation, $data);
+
 $data = preg_replace("/<URL>/si", URL, $data);
+
+$data = preg_replace("/<LOGO>/si", $this->show_logo(), $data);
+$data = preg_replace("/<LOGIN>/si", $this->show_login_link(), $data);
+
 
 $data = preg_replace("/<IMG>/si", URL . "themes/". THEME ."/images/", $data);
 $data = preg_replace("/<ICONDIR>/si", URL . "themes/icons/", $data);
 $data = preg_replace("/<PAGEGEN>/si", $pagegen, $data); #Page Generation Time
-$data = preg_replace("/<COPYRIGHT>/si", '<div id="footer">Powered by <a href="http://www.beeznest.com" target="_blank">BNPanel</a> '. $version .'</div>', $data);
+$data = preg_replace("/<COPYRIGHT>/si", 'Powered by <a href="http://www.beeznest.com" target="_blank">BNPanel</a> '. $version, $data);
 $error_messages = $main->errors();
+
 if (!empty($error_messages)) {
-	$data = preg_replace("/<ERRORS>/si", '<div class="info">'.$error_messages.'</div><div style="clear:both"></div>', $data);	
+	$data = preg_replace("/<ERRORS>/si", '<div class="alert-message info">'.$error_messages.'</div><div style="clear:both"></div>', $data);	
 }
 //$data = preg_replace("/%INFO%/si", INFO, $data);

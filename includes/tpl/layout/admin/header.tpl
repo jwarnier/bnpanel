@@ -2,15 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><APP TITLE></title>
+<title><APP_TITLE></title>
 <JAVASCRIPT>
 <CSS>
 </head>
 <body>
-<div id="wrapper">
-        <div class="header">
-            <div class="logo"></div>
-        </div>
-        <div id="nav">
-            <MENU>
-        </div> 
+
