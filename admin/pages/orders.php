@@ -167,8 +167,9 @@ class page {
 				$array['CREATED_AT'] 	= date('Y-m-d');
 				$billing_list = $billing->getAllBillingCycles();
 				$new_billing_list = array();
-				foreach($billing_list as $billing_item) {
-					$new_billing_list[$billing_item['id']] =$billing_item['name']; 
+				//$new_billing_list[-1] = 'None';
+				foreach ($billing_list as $billing_item) {
+					$new_billing_list[$billing_item['id']] = $billing_item['name']; 
 				}
 				$array['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, '', array('onchange'=>'loadPackages(this);', 'class'=>'required'));				
 				$array['PACKAGES'] 		= '-';
@@ -271,7 +272,7 @@ class page {
 				$site_info = false;		
 				if (!empty($package_info)) {		
 					$serverphp		= $server->loadServer($package_info['server']); # Create server class					
-					if ($serverphp->status) {
+					if (isset($serverphp->status)) {
 						$site_info 		= $serverphp->getSiteStatus($main->getvar['do']);
 						$user_status	= $serverphp->getUserStatus($main->getvar['do']);
 						
@@ -375,7 +376,7 @@ class page {
 						$return_array['USER'] 			= $user->formatUsername($user_info['firstname'], $user_info['lastname']);
 						$return_array['REAL_DOMAIN'] 	= $order_info['real_domain'];					
 						$billing_info 					= $billing->getBilling($billing_id);
-						$return_array['BILLING_CYCLES'] = $billing_info ['name'];
+						$return_array['BILLING_CYCLES'] = $billing_info['name'];
 						$return_array['BILLING_ID'] 	= $billing_id;
 						
 						$addon_list = $addon->getAddonsByPackage($billing_id);

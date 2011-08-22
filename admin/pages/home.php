@@ -63,7 +63,7 @@ class page {
 		
 		$cron = '<a href="'.$db->config('url').'includes/cron.php" target="_blank">Run cron here</a>';
 		
-		$content = '<strong>Welcome to your Admin Dashboard!</strong><br />Welcome to the dashboard of your Admin Control Panel. In this area you can do the tasks that you need to complete such as manage servers, create packages, manage users.<br />
+		$content = '<h2>Welcome to your Admin Dashboard!</h2>Welcome to the dashboard of your Admin Control Panel. In this area you can do the tasks that you need to complete such as manage servers, create packages, manage users.<br />
 					Here, you can also change the look and feel of your BNPanel Installation. If you require any help, be sure to ask at the <a href="http://www.beeznest.com" title="BNPanel Community is the official stop for BNPanel Support, Modules, Developer Center and more! Visit our growing community now!" class="tooltip">BNPanel Community</a>' .
 					'<br />'.$stats_box.$cron.'<br />';	
 		
@@ -87,15 +87,17 @@ class page {
 		
 		$subdomain_list = $main->getSubDomains();
 		
-		switch($db->config('domain_options')) {
+		$todo_content = '';
+		
+		switch ($db->config('domain_options')) {
 			case DOMAIN_OPTION_BOTH:	
 			case DOMAIN_OPTION_SUBDOMAIN:
 				if (empty($subdomain_list)) {				
 					$todo_content = $style->returnMessage(_('You need to Add subdomains <a href="?page=sub&sub=add">here</a>. Due your current <a href="?page=settings&sub=paths">Subdomain options.</a> Otherwise the Order Form will not work.'), 'warning');					
 				}
-			break;
+				break;
 			case DOMAIN_OPTION_DOMAIN:
-			break;								
+				break;								
 		}		
 		$todo_content .= $install_check.$conf_check;
 		

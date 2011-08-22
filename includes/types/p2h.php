@@ -27,6 +27,7 @@ class p2h {
 		$this->orderForm[] = array("Forum Username", '<input name="type_fuser" type="text" id="type_fuser" />', 'fuser');
 		$this->orderForm[] = array("Forum Password", '<input name="type_fpass" type="password" id="type_fpass" />', 'fpass');
 		$query = $db->query("SELECT * FROM `<PRE>config` WHERE `name` LIKE 'p2hforum;:;%'");
+		$values = array();
 		while($data = $db->fetch_array($query)) {
 			$content = explode(";:;", $data['name']);
 			if($fname != $content[2]) {
@@ -246,18 +247,21 @@ class p2h {
 					}
 				}
 			}
-		}
-		if($dbcheck == 1) {
-			if(date("m") == 12) {
-				$checkmonth = "0";
+		} 
+		
+		if (isset($dbcheck)) {
+			if ($dbcheck == 1) {		
+				if (date("m") == 12) {
+					$checkmonth = "0";
+				} else {
+					$checkmonth = date("m");
+				}
+				$db->updateConfig("p2hcheck", $checkmonth);
+			} elseif($dbcheck == 2) {
+				$db->updateConfig("p2hcheck", $checkdate[0].":1");
 			}
-			else {
-				$checkmonth = date("m");
-			}
-			$db->updateConfig("p2hcheck", $checkmonth);
-		}
-		elseif($dbcheck == 2) {
-			$db->updateConfig("p2hcheck", $checkdate[0].":1");
+		} else {
+			$checkmonth = date("m");
 		}
 	}
 

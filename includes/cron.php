@@ -13,13 +13,13 @@ $classes = $type->classes; #Because I'm a tad lazy, I set the types to a shorter
 #Scans through each type
 foreach($classes as $key => $value) {
 	#Has the type got a cron?
-	if($classes[$key]->cron) {
+	if (isset($classes[$key]->cron)) {
 		#Well run it then...
 		$classes[$key]->cron();	
 	}
 }
 
-#1.2 Run the Paid CronJob. 
+//1.2 Run the Paid CronJob. 
 $invoice->cron();
 
 //1.3 Maintenance cron jobs

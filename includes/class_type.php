@@ -212,13 +212,14 @@ class type {
 	
 	public function acpPedit($type, $values) { # Returns the
 		global $style;
-		if(!$this->classes[$type]) {
+	
+		if (!isset($this->classes[$type])) {
 			$type = $this->createType($type);
-		}
-		else {
+		} else {
 			$type = $this->classes[$type];	
 		}
-		if($type->acpForm) {
+		
+		if (isset($type->acpForm)) {
 			foreach($type->acpForm as $key => $value) {
 				$array['NAME'] = $value[0] .":";
 				$shit = explode("/>", $value[1]);
@@ -263,5 +264,3 @@ class type {
 		}
 	}
 }
-//End Type
-?>

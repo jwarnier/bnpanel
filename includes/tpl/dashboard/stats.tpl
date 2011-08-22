@@ -1,5 +1,4 @@
-<br />
-<strong>Your BNPanel Installation Statistics</strong>
+<h3>Your BNPanel Installation Statistics</h3>
 <p>Here you can see what is happening in your BNPanel Installation. You can also access to some quick links here.</p><br />
 <table style="border: 0;" width="100%">
 <tr>

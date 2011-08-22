@@ -446,7 +446,7 @@ class AJAX {
 	
 	public function domaincheck() {
 		global $main;
-		if(!$main->getvar['domain']) {
+		if (!isset($main->getvar['domain'])) {
 		   echo 0;
 		} else {
 			$data = explode(".", $main->getvar['domain']);
@@ -1312,9 +1312,9 @@ class AJAX {
    function loadaddons() {
    		global $main, $db, $addon, $currency, $order;
    		if ($main->getCurrentStaffId()) {  
-	   		$package_id = $main->getvar['package_id'];
-			$billing_id	= $main->getvar['billing_id'];
-			$order_id	= $main->getvar['order_id'];
+	   		$package_id = $main->get_var('package_id');
+			$billing_id	= $main->get_var('billing_id');
+			$order_id	= $main->get_var('order_id');
 			$action		= $main->getvar['action'];
 			
 			$addon_selected_list = array();
@@ -1353,23 +1353,43 @@ class AJAX {
    function loadpackages() {
    		global $main, $db, $addon, $currency, $order, $package;
    		if ($main->getCurrentStaffId()) {	   		
-	   		$billing_id = intval($main->getvar['billing_id']);
-	   		$order_id	= intval($main->getvar['order_id']);   		
-	   		$action	= $main->getvar['action'];
+	   		$billing_id = $main->get_var('billing_id');
+	   		$order_id	= $main->get_var('order_id');   		
+	   		$action		= $main->getvar['action'];
 	   		
 			$order_info = $order->getOrderInfo($order_id);
+			$package_id = 0;
+			
+			if (!empty($order_info)) {
+				$package_id = $order_info['pid'];
+			}
 			
 			$packages = $package->getAllPackagesByBillingCycle($billing_id);
+			
 					
-	   		$package_list = array();
-	   		
+	   		$package_list = array();	   		
 			foreach($packages as $package) {
 				$package_list[$package['id']] = $package['name'].' - '.$currency->toCurrency($package['amount']);				
 			}
+			
+			//Adding free packages
+			
+			$free_packages = $package->getAllPackages();
+			if ($billing_id == -1) {
+				$package_list = array();
+				if (!empty($free_packages )) {
+					foreach($free_packages as $final_free_packages) {
+						if ($final_free_packages['type'] == 'free')
+							$package_list[$final_free_packages['id']] = $final_free_packages;
+					}
+				}
+			}
+			
+			
 			if ($action == 'add') {	
-				echo $main->createSelect('package_id', $package_list, $order_info['pid'], array('onchange'=>'loadAddons(this);', 'class'=>'required'));
+				echo $main->createSelect('package_id', $package_list, $package_id, array('onchange'=>'loadAddons(this);', 'class'=>'required'));
 			} elseif ($action == 'edit') {
-				echo $package_list[$order_info['pid']];	
+				echo $package_list[$package_id];	
 			}
    		}
    }
@@ -1409,8 +1429,8 @@ class AJAX {
    function getOrders() {
    		global	$main, $order;
    		if ($main->getCurrentStaffId()) {
-   			$page = $main->getvar['page'];
-   			$status_id = $main->getvar['status'];   		
+   			$page 		= isset($main->getvar['page'])   ? $main->getvar['page'] : null;
+   			$status_id 	= isset($main->getvar['status']) ? $main->getvar['status'] : null;   		
 			$array = $order->getAllOrdersToArray('', $page, $status_id);
 			echo $array['list'];
    		}

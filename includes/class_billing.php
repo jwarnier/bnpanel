@@ -46,18 +46,21 @@ class billing extends model {
 		return $billing_cycle_result;
 	}
 	
-	public function getAllBillingCycles($status = BILLING_CYCLE_STATUS_ACTIVE) {
+	public function getAllBillingCycles($status = BILLING_CYCLE_STATUS_ACTIVE, $add_none_value = false) {
 		global $db;
 		if (!in_array($status, array(BILLING_CYCLE_STATUS_ACTIVE, BILLING_CYCLE_STATUS_INACTIVE))) {
 			$status = BILLING_CYCLE_STATUS_ACTIVE;
 		}		
 		$query = $db->query("SELECT * FROM ".$this->getTableName()." WHERE status = ".$status);
 		$billing_list = array();				
-		if($db->num_rows($query) > 0) {											
+		if ($db->num_rows($query) > 0) {											
 			$billing_cycle_result = '';
 			while($data = $db->fetch_array($query)) {		
 				$billing_list[$data['id']] = $data;
 			}								
+		}
+		if ($add_none_value) {
+			//$billing_list['-1'] = array('id' => '-1', 'name'=>'None');
 		}
 		return $billing_list; 		
 	}
