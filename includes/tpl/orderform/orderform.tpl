@@ -512,115 +512,153 @@ function checkSubdomain() {
         	<td>
         	
         	<fieldset>
-        	<legend>
-        		User information
-        	</legend>
-        	<table class="data_table" border="0" cellspacing="2" cellpadding="0" align="center" style="width: 400px;">
-              <tr>
-                <td>Username:</td>
-                <td><input type="text" name="username" id="username" maxlength="20" /></td>
-                <td align="left"><a title="The username is your unique identity to your account. Please keep it between 8 and 20." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td align="left" id="usercheck">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>Password:</td>
-                <td><input type="password" name="password" id="password" maxlength="40" onchange="check('pass', this.value+':'+document.getElementById('confirmp').value)"/></td>
-                <td rowspan="2" align="left" valign="middle"><a title="Your password is your own personal key that allows only you to log you into your account." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td rowspan="2" align="left" valign="middle" id="passcheck">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>Confirm Password:</td>
-                <td><input type="password" name="confirmp" id="confirmp" maxlength="40" onchange="check('pass', this.value+':'+document.getElementById('password').value)"/></td>
-              </tr>
-              <tr>
-                <td>Email:</td>
-                <td><input type="text" name="email" id="email" onchange="check('email', this.value)" /></td>
-                <td align="left"><a title="Your email is your own address where all <NAME> emails will be sent to. Make sure this is valid." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="emailcheck" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>First Name:</td>
-                <td><input type="text" name="firstname" id="firstname" maxlength="40" onchange="check('firstname', this.value)" /></td>
-                <td align="left"><a title="Your first name." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="firstnamecheck" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>Last Name:</td>
-                <td><input type="text" name="lastname" id="lastname" maxlength="40" onchange="check('lastname', this.value)" /></td>
-                <td align="left"><a title="Your last name." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="lastnamecheck" align="left">&nbsp;</td>
-              </tr>
-              
-   
-              <tr>
-                <td>Address:</td>
-                <td><input type="text" name="address" id="address" onchange="check('address', this.value)" /></td>
-                <td align="left"><a title="Your personal address." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="addresscheck" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>City:</td>
-                <td><input type="text" name="city" id="city" onchange="check('city', this.value)" /></td>
-                <td align="left"><a title="Your city. Letters only." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="citycheck" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>State:</td>
-                <td><input type="text" name="state" id="state" onchange="check('state', this.value)" /></td>
-                <td align="left"><a title="Your state. Letters only." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="statecheck" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>Zip Code:</td>
-                <td><input type="text" name="zip" id="zip" onchange="check('zip', this.value)" /></td>
-                <td align="left"><a title="Your zip/postal code. Numbers only." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="zipcheck" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>Country:</td>
-                <td>%COUNTRY_SELECT%</td>
-                <td align="left"><a title="Your country." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="countrycheck" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>Phone Number:</td>
-                <td><input type="text" name="phone" id="phone" onchange="check('phone', this.value)" /></td>
-                <td align="left"><a title="Your personal phone number. Numbers and dashes only." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="phonecheck" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td><img src="<URL>includes/captcha_image.php"></td>
-                <td><input type="text" name="human" id="human" onchange="check('human', this.value)" /></td>
-                <td align="left"><a title="Answer the question to prove you are not a bot." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="humancheck" align="left">&nbsp;</td>
-              </tr>
-            </table>
+        	<legend>User information</legend>
+        	
+        	<div class="clearfix">
+        	   <label>Username</label>
+        	   <div class="input">
+        	       <input type="text" name="username" id="username" maxlength="20" />
+        	       <span id="usercheck"> </span>
+        	       <span class="help-block">The username is your unique identity to your account. Please keep it between 8 and 20.</span>
+        	   </div>        	   
+        	</div>
+        	
+        	<div class="clearfix">
+               <label>Password</label>
+               <div class="input">
+                   <input type="password" name="password" id="password" maxlength="40" onchange="check('pass', this.value+':'+document.getElementById('confirmp').value)"/>
+                   <span id="passcheck"> </span>
+                   <span class="help-block">Your password is your own personal key that allows only you to log you into your account.</span>
+               </div>              
+            </div>
+            
+            <div class="clearfix">
+               <label>Confirm Password</label>
+               <div class="input">
+                   <input type="password" name="confirmp" id="confirmp" maxlength="40" onchange="check('pass', this.value+':'+document.getElementById('password').value)"/>
+               </div>              
+            </div>
+            
+            <div class="clearfix">
+               <label>Email</label>
+               <div class="input">
+                   <input type="text" name="email" id="email" onchange="check('email', this.value)" />
+                   <span id="emailcheck"> </span>
+                   <span class="help-block">Your email is your own address where all <NAME> emails will be sent to. Make sure this is valid.</span>
+               </div>              
+            </div>
+            
+             <div class="clearfix">
+               <label>First Name</label>
+               <div class="input">
+                   <input type="text" name="firstname" id="firstname" maxlength="40" onchange="check('firstname', this.value)" />
+                   <span id="firstnamecheck"> </span>                   
+               </div>              
+            </div>
+            
+            
+            <div class="clearfix">
+               <label>Last Name</label>
+               <div class="input">
+                   <input type="text" name="lastname" id="lastname" maxlength="40" onchange="check('lastname', this.value)" />
+                   <span id="lastnamecheck"> </span>                   
+               </div>              
+            </div>
+            
+            <div class="clearfix">
+               <label>Address</label>
+               <div class="input">
+                   <input type="text" name="address" id="address" onchange="check('address', this.value)" />
+                   <span id="addresscheck"> </span>
+               </div>              
+            </div>
+            
+            
+             <div class="clearfix">
+               <label>City</label>
+               <div class="input">
+                   <input type="text" name="city" id="city" onchange="check('city', this.value)" />
+                   <span id="citycheck"> </span>
+                   <span class="help-block">Letters only.</span>
+               </div>              
+            </div>
+            
+             <div class="clearfix">
+               <label>State</label>
+               <div class="input">
+                   <input type="text" name="state" id="state" onchange="check('state', this.value)" />
+                   <span id="statecheck"> </span>
+                   <span class="help-block">Letters only.</span>
+               </div>              
+            </div>
+            
+            <div class="clearfix">
+               <label>Zip Code</label>
+               <div class="input">
+                   <input type="text" name="zip" id="zip" onchange="check('zip', this.value)" />
+                   <span id="zipcheck"> </span>
+                   <span class="help-block">Numbers only.</span>
+               </div>              
+            </div>
+            
+             <div class="clearfix">
+               <label>Country</label>
+               <div class="input">
+                   %COUNTRY_SELECT%
+                   <span id="countrycheck"> </span>             
+               </div>              
+            </div>
+            
+            <div class="clearfix">
+               <label>Phone Number</label>
+               <div class="input">
+                   <input type="text" name="phone" id="phone" onchange="check('phone', this.value)" />
+                   <span id="phonecheck"> </span>
+                   <span class="help-block">Your personal phone number. Numbers and dashes only.</span>
+               </div>              
+            </div>
+            
+            <div class="clearfix">
+               <label>Are you a human?</label>
+                <img src="<URL>includes/captcha_image.php">
+               <div class="input">
+                  <input type="text" name="human" id="human" onchange="check('human', this.value)" />
+                   <span id="humancheck"> </span>
+                   <span class="help-block">Answer the question to prove you are not a bot.</span>
+               </div>              
+            </div>
+ 
 			</fieldset>
-			<br />
+			
             <fieldset>
-            <legend>
-        		Company information (Optional)
-        	</legend>
-            <table class="data_table" border="0" cellspacing="2" cellpadding="0" align="center" style="width: 400px;">
-              <tr>
-                <td>Company:</td>
-                <td><input type="text" name="company" id="company" onchange="check('company', this.value)" /></td>
-                <td align="left"><a title="Your company name" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="companynamecheck" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>Tax ID (VAT):</td>
-                <td><input type="text" name="vatid" id="vatid" onchange="check('vatid', this.value)" /></td>
-                <td align="left"><a title="Company Tax registration number (VAT ID)" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="vatid" align="left">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>SSN/Fiscal ID</td>
-                <td><input type="text" name="fiscalid" id="fiscalid" onchange="check('fiscalid', this.value)" /></td>
-                <td align="left"><a title="Your SSN or Fiscal ID" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-                <td id="fiscalid" align="left">&nbsp;</td>
-               </tr>
-            </table>
+            <legend>Company information (Optional)</legend>
+            
+                <div class="clearfix">
+                   <label>Company</label>                    
+                   <div class="input">
+                      <input type="text" name="company" id="company" onchange="check('company', this.value)" />
+                      <span id="companynamecheck"> </span>
+                      <span class="help-block">Answer the question to prove you are not a bot.</span>
+                   </div>              
+                </div>
+                
+                 <div class="clearfix">
+                   <label>Tax ID (VAT)</label>                    
+                   <div class="input">
+                      <input type="text" name="vatid" id="vatid" onchange="check('vatid', this.value)" />
+                      <span id="vatid"> </span>
+                      <span class="help-block">Company Tax registration number (VAT ID)</span>
+                   </div>              
+                </div>
+                
+                 <div class="clearfix">
+                   <label>SSN/Fiscal ID</label>                    
+                   <div class="input">
+                      <input type="text" name="fiscalid" id="fiscalid" onchange="check('fiscalid', this.value)" />
+                      <span id="fiscalid"> </span>
+                      <span class="help-block">Your SSN or Fiscal ID</span>
+                   </div>              
+                </div>       
            </fieldset>   
            
            </td>
@@ -691,15 +729,13 @@ function checkSubdomain() {
     </div>
     
     
+    <div id="verify" class="container" ></div>
     
     <div id="steps" class="row show-grid" style="display:none;" >
-    <div id="verify" class="container"></div>
-    
-        <div class="span4 columns">
-        	<input type="button" name="back" id="back" value="_{Previous Step}" onclick="previousstep()" disabled="disabled" class="btn" />
+        <div class="actions">            
+            <input type="button" name="next" id="next" value="_{Continue}" onclick="nextstep()" ondblclick="return false;" class="btn large primary "  />                    
+            <input type="button" name="back" id="back" value="_{Previous Step}" onclick="previousstep()" disabled="disabled" class="btn small" />
+                          
         </div>
-        <div class="span4 columns offset6">  
-            <input type="button" name="next" id="next" value="_{Next Step}" onclick="nextstep()" ondblclick="return false" class="btn primary"  />
-        </div>  
-    </div>    
+    </div>     
 </form>
