@@ -11,7 +11,7 @@ class page {
 	}
 	
 	public function description() {
-		return _("<strong>Managing Orders</strong><br />Welcome to the Invoice Management Area. Here you can add, edit and delete Invoices. <br />To get started, choose a link from the sidebar's SubMenu.");	
+		return _("<h2>Managing Orders</h2>Welcome to the Invoice Management Area. Here you can add, edit and delete Invoices. <br />To get started, choose a link from the sidebar's SubMenu.");	
 	}
 		
 	public function content() {		
@@ -45,8 +45,9 @@ class page {
 					    )				    
 				);				
 				
-				if ($db->config('domain_options') == DOMAIN_OPTION_SUBDOMAIN)
+				if ($db->config('domain_options') == DOMAIN_OPTION_SUBDOMAIN) {
 					$asOption['rules']['csub2'] = 'required';
+				}
 				
 				$array['json_encode'] = json_encode($asOption);				
 				$oValidator = new Validator($asOption);				
@@ -64,7 +65,7 @@ class page {
 						
 						$url_parts = $main->parseUrl($params['domain']);
 												
-						$subdomain_id = 0;
+						$subdomain_id   = 0;
 						$package_data	= $package->getPackage($params['pid']);
 						$domain_correct = true;
 						
@@ -137,7 +138,9 @@ class page {
 								$invoice_params['notes'] 	= 'Invoice created automatically';
 								$invoice_params['addon_fee']= $addon_serialized;
 								$invoice_params['status'] 	= INVOICE_STATUS_WAITING_PAYMENT;
-								$invoice_params['order_id'] = $order_id;										
+								$invoice_params['order_id'] = $order_id;
+												
+								//Invoice creation						
 								$invoice_id = $invoice->create($invoice_params);
 								
 								if (is_numeric($invoice_id)) {
