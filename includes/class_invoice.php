@@ -12,7 +12,7 @@ class invoice extends model {
 	 * @param	float	amount
 	 * @param	date	expiration date
 	 */
-	public function create($params) {		
+	public function create($params) {
 		global $main, $db, $user, $email, $order;
 		
 		$params['created'] = date('Y-m-d h:i:s');
@@ -21,7 +21,7 @@ class invoice extends model {
 		
 		$order_id 	= intval($params['order_id']);
 		
-		if (!empty($invoice_id) && is_numeric($invoice_id )) {
+		if (!empty($invoice_id) && is_numeric($invoice_id)) {
 			$main->addLog("invoice::create $invoice_id");
 			
 			if (!empty($order_id)) {
@@ -59,6 +59,9 @@ class invoice extends model {
 							
 			$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $replace_array);
 			
+			
+			$this->loadHook(__FUNCTION__, $invoice_info);
+			
 			return	$invoice_id;		
 		}
 		return false;		
@@ -75,6 +78,7 @@ class invoice extends model {
 		$this->setId($id);
 		$this->update($params);
 		$main->addLog("invoice::edit #$id updated");	
+		$this->loadHook(__FUNCTION__, $params);
 	}
 	
 	/**
@@ -162,7 +166,7 @@ class invoice extends model {
 			}
 			$total_amount = $total_amount + $array['amount']; 
 			$array['total_amount'] = $total_amount;		
-		}		
+		}			
 		return $array;
 	}
 	
@@ -319,6 +323,7 @@ class invoice extends model {
 	
 	public function getAllInvoices($user_id = '', $page = 0, $status_id = 0) {
 		global $db;
+		
 		$user_where = '';
 		if (!empty($user_id)) {
 			$user_id 	= intval($user_id);
@@ -366,7 +371,7 @@ class invoice extends model {
 			echo "That invoice doesn't exist!";	
 		} else {			
 			$total = 0;			
-			$invoice_info 		= $db->fetch_array($query, 'ASSOC');			
+			$invoice_info 		= $db->fetch_array($query, 'ASSOC');		
 			$array['ID'] 		= $invoice_info['id'];
 			$user_id 			= $invoice_info['uid'];
 			$total				= $total + $invoice_info['amount'];
@@ -388,8 +393,7 @@ class invoice extends model {
 			$array['DUE'] 		= date('Y-m-d', $invoice_info['due']);
 		
 			$addon_selected_list = array();
-						
-			if (!empty($invoice_info['addon_fee'])) {				
+			if (!empty($invoice_info['addon_fee'])) {		
 				/**
 				 * Addon_fee structure
 				 * array
@@ -399,7 +403,7 @@ class invoice extends model {
 					      'billing_id'  => string '3' 
 					      'amount'		=> string '10.600000'
 				 */
-				 //see also addon::generate function 
+				 //see also addon::generate function
 				$invoice_info['addon_fee'] = unserialize($invoice_info['addon_fee']);
 				
 				if (is_array($invoice_info['addon_fee']) && !empty($invoice_info['addon_fee'])) {							

@@ -849,5 +849,25 @@ class model {
 		//Only accept values with something there		
 		$filtered_params = array_diff($filtered_params, array(''));
 		return $filtered_params;
+	}
+	
+	public function loadHook($function_name, $object) {
+		global $main;
+		$class_name = get_class($this);	// i.e invoice		
+		$classes = $main->loadHookFiles($class_name);		
+		if (isset($classes) && !empty($classes)) {
+			foreach ($classes as $class) {
+				if (class_exists($class)) {				
+					$class_obj = new $class($object);
+					if (isset($class_obj)) {
+						$class_methods = get_class_methods($class);						
+						if (in_array($function_name, $class_methods)) {							
+							$class_obj->$function_name();
+						}
+					}
+				}
+			}
+			
+		}
 	}	
 }

@@ -57,9 +57,9 @@ class style {
 		
 		$link = '';
 		if (!empty($user_info)) {
-			$link = 'Signed in as <a href="'.URL.'client">'.$user_info['user'].'</a> | <a href="'.URL.'client/?page=logout">Logout</a>';
+			$link = '<li><a href="'.URL.'client">'.$user_info['user'].'</a></li><li><a href="'.URL.'client/?page=logout">Logout</a></li>';
 		} else {
-			$link = '<a href="#" onclick="showLogin();">Log in to your account</a>';
+			$link = '<li><a href="#" onclick="showLogin();">Sign in</a></li>';
 		}		
 		return $link;
 	}

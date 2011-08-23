@@ -1,5 +1,4 @@
 <MENU>
-
 <div id="masthead">
     <div class="inner">
         <div class="container">
