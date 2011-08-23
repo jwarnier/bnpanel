@@ -85,10 +85,10 @@ $array['SITE_NAME'] 		= 'BNPanel';
 $array['SITE_EMAIL'] 		= 'example@example.com';
 $array['INSTALL_OPTIONS'] 	= $main->createSelect('method', $values);
 
-echo $style->get("tpl/layout/admin/header.tpl");
+echo $style->get("tpl/layout/two-col/header.tpl");
 if ($disable) {
 	echo '<script type="text/javascript">$(function(){$(".twobutton").attr("disabled", "true");$("#method").attr("disabled", "true");});</script>';
 }
 echo $style->replaceVar("tpl/install/install.tpl", $array);
-echo $style->get("tpl/layout/admin/footer.tpl");
+echo $style->get("tpl/layout/two-col/footer.tpl");
 require LINK."output.php"; #Output it

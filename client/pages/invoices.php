@@ -62,12 +62,16 @@ class page {
 					foreach($invoice_list as $invoice_item) {
 								
 						$total_amount = 0;				
-						$array['id'] = $invoice_item['id'];
-						$order_id = $invoice->getOrderByInvoiceId($invoice_item['id']);
-						$order_info = $order->getOrderInfo($order_id);
+						$array['id'] 	= $invoice_item['id'];
+						$order_id 		= $invoice->getOrderByInvoiceId($invoice_item['id']);
+						$order_info 	= $order->getOrderInfo($order_id);
 						
-						//Getting the domain info					
-						$array['domain'] 	= $order_info['real_domain'];
+						
+						//Getting the domain info
+						$array['domain'] = null;
+						if (!empty($order_info)) {			
+							$array['domain'] 	= $order_info['real_domain'];
+						}
 											
 						$array['due'] = date('Y-m-d', $invoice_item['due']);
 						
@@ -96,6 +100,7 @@ class page {
 								$array['pay']=  '-';
 								//$array['due']=  '<span>'.$array['due'].'</span>';
 						}
+						
 						$package_id 	  = $invoice_item['pid'];
 						$billing_cycle_id = $invoice_item['billing_cycle_id'];
 						

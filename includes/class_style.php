@@ -53,9 +53,10 @@ class style {
 	
 	public function show_login_link() {
 		global $main;
-		if ($main->getCurrentStaffId()) {
+		if (FOLDER == 'admin') {
 			return '';
-		}
+		}		
+		
 		$user_info = $main->getCurrentUserInfo();
 		$link = '';
 		if (INSTALL) {

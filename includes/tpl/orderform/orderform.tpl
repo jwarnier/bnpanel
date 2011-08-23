@@ -29,17 +29,17 @@ document.onkeypress = stopRKey;
 function check(name, value) {
 	$("#"+name+"check").html(loading);
 	document.getElementById("next").disabled = true;
-	window.setTimeout(function() {
-		$.get("<AJAX>function="+name+"check&THT=1&"+name+"="+value, function(data) {
-			if(data == "1") {
-				$("#"+name+"check").html(right);
-			}
-			else {
-				$("#"+name+"check").html(wrong);
-			}													
-			document.getElementById("next").disabled = false;
-		});
-	},500);
+	
+	$.get("<AJAX>function="+name+"check&"+name+"="+value, function(data) {
+		if(data == "1") {
+			$("#"+name+"check").html(right);
+		}
+		else {
+			$("#"+name+"check").html(wrong);
+		}													
+		document.getElementById("next").disabled = false;
+	});
+	
 }
 
 
@@ -71,21 +71,16 @@ function orderstepme(id, type) {
 	step = step + 1;
 }
 
-function showhide(hide, show) {	
-	/*$("#next").hide();
-	$("#back").hide();*/
+function showhide(hide, show) {
 	document.getElementById("next").disabled = true;
-	document.getElementById("back").disabled = true;
+	document.getElementById("back").disabled = true;	
 	document.getElementById("verify").innerHTML = "";
 	
 	$("#"+hide).fadeOut(speed, function() {
-		$("#steps").fadeIn(speed);
-		//$("#next").fadeIn(speed);
-		//$("#back").fadeIn(speed);
+		$("#steps").fadeIn(speed);	
 		$("#"+show).fadeIn(speed, function() {
 			document.getElementById("next").disabled = false;
-			document.getElementById("back").disabled = false;
-			
+			document.getElementById("back").disabled = false;			
 		});
      });
 		
@@ -136,7 +131,7 @@ function nextstep() {
 					document.getElementById("show_summary").innerHTML = data;
 				});				
 			} else  {
-				$("#verify").html("<strong>You must select a Billing Cycle</strong> "+wrong);
+				$("#verify").html("<div class='alert-message info'>You must select a Billing Cycle</div>");
 			}
 		break;		
 		
@@ -161,7 +156,7 @@ function nextstep() {
 					}
 				});
 			} else {
-				$("#verify").html("<strong>You must agree the Terms of Service</strong> "+wrong);
+				$("#verify").html("<div class='alert-message info'>You must agree the Terms of Service</div>");
 			}			
 			break;			
 		case 5:					
@@ -174,10 +169,10 @@ function nextstep() {
 						showhide(step, step + 1)
 						step = step + 1;						
 					} else {
-						$("#verify").html("<strong>You must fill all the fields</strong> "+wrong);
+						$("#verify").html("<div class='alert-message info'>You must fill all the fields</div> "+wrong);
 					}	
 				} else {
-					$("#verify").html("<strong>You must fill all the fields</strong> "+wrong);
+					$("#verify").html("<div class='alert-message info'>You must fill all the fields</div> "+wrong);
 				}													
 			});
 			
@@ -287,6 +282,7 @@ function final(hide, show) {
 		$("#"+show).fadeIn(speed);
      });
 }
+
 function previousstep() {
 	//alert(step);
 	
@@ -393,12 +389,9 @@ function checkSubdomain() {
 }
 </script>
 
-
-
-
 	
 <form action="" method="post" name="order" id="order">	
-	<div id="1">
+	<div id="1" class="section">
     	<input name="package" id="package" type="hidden" value="" />    	 
 		%DOMAIN_CONFIGURATION%              
         <div class="row show-grid">
@@ -406,52 +399,39 @@ function checkSubdomain() {
         </div>
     </div>
     
-    <div id="2" class="table" style="display:none">
+    <div id="2" class="section" style="display:none">
         <div class="page-header">
             <h2>_{Select a billing cycle}</h2>
+        </div>        
+        <div class="row">
+            <div class="sub" id="description">
+                _{Payment cycles}                			
+      			<select name="billing_id" id="billing_id" onchange="showAddons(this)" >
+          			<option value="0" selected="selected">_{Select a billing cycle}</option>         		
+                 		%BILLING_CYCLE%
+                	</select>
+            </div>              		
         </div>
         
-        <div class="text">
-        	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
-              <tr>
-                <td colspan="2">
-                	<div class="subborder">
-                		<div class="sub" id="description">
-                		_{Payment cycles}                			
-	              			<select name="billing_id" id="billing_id" onchange="showAddons(this)" >
-    	              			<option value="0" selected="selected">_{Select a billing cycle}</option>         		
-    	                     		%BILLING_CYCLE%
-    	                    	</select>
-              		  </div>
-              		  <div id="showaddons"></div>
-                    </div>
-				</td>
-              </tr>
-            </table>
+        <div class="row">
+            <div id="showaddons"></div>
         </div>
+        
     </div>
-    
-    <!-- cambios por julio  resumen --> 
-    <div class="table" id="3" style="display:none">
+
+    <div id="3" class="section" style="display:none">
         <div class="page-header">
             <h2>Summary</h2>
         </div>
         
-        <div class="text">
-        	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
-              <tr>
-                <td colspan="2">
-                	<div class="subborder">
-                		<div class="sub" id="description">
-							<div id="show_summary"></div>					       
-					   	</div>
-              		</div>
-				</td>
-              </tr>
-            </table>
+        <div class="row">
+            <div class="sub" id="description">
+                <div id="show_summary"></div>
+            </div>			
         </div>
     </div>   
-    <div class="table" id="4" style="display:none">        
+    
+    <div id="4"  class="section" style="display:none">        
         <div class="page-header">
             <h2>Terms of Service</h2>
         </div>
@@ -468,12 +448,12 @@ function checkSubdomain() {
         <a title="The Terms of Service is the set of rules you abide by. These must be agreed to." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
         
     </div>    
-	<div class="table" id="5" style="display:none">
+	<div id="5" class="section" style="display:none">
         <div class="page-header">
             <h2>Account Information</h2>
         </div>
         
-        <div class="text">
+        <div class="row">
             
             <div class="page-header">        
         	<h3>Already a registered?</h3>
@@ -637,11 +617,12 @@ function checkSubdomain() {
            </fieldset>
         </div>
     </div>
-    <div class="table" id="6" style="display:none">        
+    
+    <div id="6" class="section"  style="display:none">        
         <div class="page-header">
             <h2>Hosting Account</h2>
         </div>        
-        <div class="text">
+        <div class="row">
         	<table width="100%" border="0" cellspacing="2" cellpadding="0">
               <tr id="dom">
                 <td width="20%" id="domtitle">Domain:</td>
@@ -675,23 +656,18 @@ function checkSubdomain() {
                 		<img src="<URL>themes/icons/information.png" />
                 	</a>
                 </td>                
-              </tr>
-       
-                          
+              </tr>       
             </table>
             
-            <div id="custom">
-            </div>
+            <div id="custom"></div>
         </div>
     </div>
-    <div class="table" id="7" style="display:none">        
+    <div class="row" id="7" style="display:none">        
         <div class="page-header">
             <h2>Setting your account</h2>
-        </div>  
-        
-        <div class="text" id="creation">
-        	<div id="finished">
-            </div>
+        </div>          
+        <div class="row" id="creation">
+        	<div id="finished"></div>
         </div>
     </div>
     
