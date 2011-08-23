@@ -14,7 +14,8 @@ class db {
 			die("Fatal: Coudn't connect to mySQL, please check your details!");
 		} else {
 			$this->db = @mysql_select_db($this->sql['db'], $this->con); # Select the mySQL DB			
-			if(!$this->db) {
+			if (!$this->db) {
+				//@todo show a nicer msg
 				die("Fatal: Couldn't select the database, check your db setting in includes/conf.inc.php  !");
 			} else {
 				$this->prefix = $this->sql['pre'];

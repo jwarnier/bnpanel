@@ -128,6 +128,25 @@ $(window).load(function () {
 	next();
 });
 </script>
+<MENU>
+<div id="masthead">
+    <div class="inner">
+        <div class="container">
+            <h1>BNPanel 1.0</h1>
+                <p class="lead">
+                    BNPanel supports hosting plans, hosting addons, customers, servers, tickets, paid hosting, cPanel and ISPConfig 3 integration, multi language support and more. 
+                    <br>
+                    It includes base CSS and HTML for typography, forms, buttons, tables, grids, navigation, and more.
+                    <br>
+                </p>
+                <p>
+                    <strong></strong>
+                </p>
+        </div>
+    </div>
+</div>
+<div class="container">
+
 <ERRORS>
 <form id="install" name="install" method="post" action="">
 
@@ -167,9 +186,10 @@ $(window).load(function () {
                     </td>
                   </tr>
                   <tr>
-                    <td colspan="3" align="center"><label>
-                      <input type="button" name="2" id="2" class="twobutton" value="Next Step" onclick="change()" />
-                    </label></td>
+                    <td colspan="3" align="center">
+                            <input type="button" name="2" id="2" class="btn primary" value="Next Step" onclick="change()" />                            
+                      
+                    </td>
                     </tr>
                 </table>
                 <input name="step" id="step" type="hidden" value="2" />
@@ -213,7 +233,7 @@ $(window).load(function () {
                   </tr>
                   <tr>
                     <td colspan="2" align="center"><label>
-                      <input type="button" name="3" id="button3" value="Next Step" onclick="change()" />
+                      <input type="button" name="3" id="button3" class="btn primary" value="Next Step" onclick="change()" />
                     </label></td>
                     </tr>
                 </table>
@@ -283,7 +303,7 @@ $(window).load(function () {
               </tr>
               <tr>
                 <td colspan="2" align="center"><label>
-                  <input type="button" name="button5" id="button5" value="Next Step" onclick="change()" />
+                  <input type="button" name="button5" class="btn primary" id="button5" value="Next Step" onclick="change()" />
                   </label></td>
               </tr>
             </table>
@@ -297,3 +317,5 @@ $(window).load(function () {
   </tr>
 </table>
 </form>
+
+</div>

@@ -7,4 +7,46 @@
 <CSS>
 </head>
 <body>
+<script type="text/javascript">
 
+$(document).ready(function() {
+    //Modal login options see http://jqueryui.com/demos/dialog/#animated for more information
+    $('#login_form').dialog({
+        autoOpen:   false, //Avoid dialog problem
+        modal:      true,
+        draggable:  false,
+        resizable:  false,
+        height:     'auto',
+        position:   'center'
+            
+    });   
+});
+   
+function loginUser() {
+    var user = $("#user_login").val();
+    var pass = $("#pass_login").val();  
+    $.get("<AJAX>function=clientLogin&user="+user+"&pass="+pass, function(data) {
+        if (data != '') {
+            if (data == 1) {
+                if (step == '5') {                  
+                    showhide(step, step + 1)
+                    step = step + 1;                        
+                }
+                $.get("<AJAX>function=getNavigation", function(data2) {
+                    $("#welcome").html(data2);  
+                });         
+                $("#login_form").dialog('close');           
+            } else {
+                alert('Please, try again');
+            }
+        }       
+    });     
+}
+
+function showLogin() {  
+    $("#login_form").dialog('open');
+}
+
+</script>
+
+<LOGIN_TPL>

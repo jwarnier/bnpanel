@@ -20,7 +20,7 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === "WIN") {
 	$prepend = "";
 }
 $compare = explode($_SERVER["DOCUMENT_ROOT"], $file);
-if($prepend . $compare[1] !== $_SERVER["PHP_SELF"]) {
+if ($prepend . $compare[1] !== $_SERVER["PHP_SELF"]) {
 	//die("You can only run the install from the <em>".__FILE__."</em> file.");
 }
 
@@ -58,7 +58,7 @@ $array['VERSION'] 	= NVER;
 $array['ANYTHING'] 	= "";
 
 $disable = false;
-echo $style->get("header.tpl");
+
 $values = array('install'=>'Install');
 if (INSTALL == 1) {
 	$main->errors('The system has already been installed. If you want to re-install you should delete the conf.inc.php file. If you want to update just continue this procedure.');
@@ -78,16 +78,17 @@ if (!file_exists($link)) {
 	$array['ANYTHING'] = "Your $link isn't writeable! Please CHMOD it to 666.";
 	$disable = true;
 }
-
-if ($disable) {
-	echo '<script type="text/javascript">$(function(){$(".twobutton").attr("disabled", "true");$("#method").attr("disabled", "true");});</script>';
-}
 $token =  $main->generateToken();
 
 $array['GENERATED_URL'] 	= generateSiteUrl();
 $array['SITE_NAME'] 		= 'BNPanel';
 $array['SITE_EMAIL'] 		= 'example@example.com';
 $array['INSTALL_OPTIONS'] 	= $main->createSelect('method', $values);
+
+echo $style->get("tpl/layout/admin/header.tpl");
+if ($disable) {
+	echo '<script type="text/javascript">$(function(){$(".twobutton").attr("disabled", "true");$("#method").attr("disabled", "true");});</script>';
+}
 echo $style->replaceVar("tpl/install/install.tpl", $array);
-echo $style->get("footer.tpl");
+echo $style->get("tpl/layout/admin/footer.tpl");
 require LINK."output.php"; #Output it
