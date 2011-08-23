@@ -1,5 +1,5 @@
 <div class="subborder" id="ticket-%ID%">	
-    	<table class="content_table" width="100%" border="0" cellspacing="0" cellpadding="0">
+    	<table class="common-table" width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr bgcolor="%URGCOLOR%">
           	<td width="5px">
           		<a href="?page=tickets&sub=view&do=%ID%">#%ID%</a>

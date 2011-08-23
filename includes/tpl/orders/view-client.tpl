@@ -1,6 +1,9 @@
+<div class="page-header">
 <h2>Order #%ID%</h2>
+</div>
+
 <ERRORS>
-<table class="content" width="100%" border="0" cellspacing="2" cellpadding="0"> 
+<table class="common-table zebra-striped"> 
      <tr>
     <td class="label">User:</td>
     <td>    

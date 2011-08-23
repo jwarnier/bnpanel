@@ -566,7 +566,7 @@ class AJAX {
 				$query = $db->query($sql);
 				$rownum = $db->num_rows($query);
 				
-				echo '<table class="content_table" width="100%" border="0" cellpadding="0" cellspacing="2">
+				echo '<table class="common-table" width="100%" border="0" cellpadding="0" cellspacing="2">
 			          <tr>
 			            <th width="250px">User</th>
 			            <th width="250px">Status</th>

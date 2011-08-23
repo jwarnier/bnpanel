@@ -71,7 +71,7 @@ class page {
 		echo '<input type="submit" name="clean" id="clean" value="Clean Logs" />';
 		echo '</form>';
 				
-		echo '<table width="100%" class="content_table" cellspacing="2" cellpadding="2"  ><tr bgcolor="#EEEEEE">';
+		echo '<table class="common-table zebra-striped"><tr bgcolor="#EEEEEE">';
 		echo "<th width=\"75\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Date</td>";
 		echo "<th width=\"60\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Time</td>";
 		echo "<th width=\"75\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Username</td>"; 

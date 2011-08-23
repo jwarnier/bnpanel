@@ -61,7 +61,7 @@ function filter() {
 
 
 <div id="pagination_loading" ></div>
-<table class="content_table"  width="100%" border="0" cellspacing="3" cellpadding="0">
+<table class="common-table"  width="100%" border="0" cellspacing="3" cellpadding="0">
 	<thead>
 		<tr> 
 	        <th width="30px"><div align="left"><b>&nbsp;No.</b></div></td>
