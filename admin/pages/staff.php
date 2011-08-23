@@ -166,7 +166,8 @@ class page {
 						$array['PAGES'] = '<table width="100%" border="0" cellspacing="0" cellpadding="1">';
 						
 						foreach( $admin_navigation as $data2) {
-							if(in_array($data2['link'], $perm_list)) {
+							$string = '';
+							if (in_array($data2['link'], $perm_list)) {
 								$string = 'checked="checked"';	
 							}
 							$array['PAGES'] .= '<tr><td width="30%" align="left">'.$data2['visual'].':</td><td><input name="pages_'.$data2['link'].'" id="pages_'.$data2['link'].'" type="checkbox" value="1" '.$string.'/></td></tr>';

@@ -8,7 +8,9 @@ class billing extends model {
 	public $_modelName = 'billing';
 	
 	// products = addons or packages
-	public $has_many	= array('products'=> array('table_name'=>'billing_products', 'columns'=>array('billing_id', 'product_id', 'amount','type')));
+	public $has_many	= array('products'=> array('table_name'	=> 'billing_products', 
+												   'columns'	=> array('billing_id', 'product_id', 'amount','type'))
+						   		);
 	
 	
 	public function create($params) { 
@@ -75,8 +77,7 @@ class billing extends model {
 		$sql 	= "SELECT * FROM ".$this->getTableName()." WHERE status = ".$status;
 		$query 	= $db->query($sql);	
 		$result = $db->store_result($query, 'ASSOC');
-		return $result;
-		
+		return $result;		
 	}
 	
 	public function getBilling($id) {

@@ -27,6 +27,7 @@ class page {
 		global $main, $style, $billing;
 		
 		if($_POST && $main->checkToken()) {
+			$n = 0;
 			foreach($main->postvar as $key => $value) {
 				if($value == "" && !$n && $key != "admin") {
 					$main->errors("Please fill in all the fields!");
@@ -34,6 +35,7 @@ class page {
 				}
 			}
 			if(!$n) {
+				$additional = '';
 				foreach($main->postvar as $key => $value) {
 					if($key != "name" && $key != "number_months") {
 						if($n) {
@@ -44,11 +46,14 @@ class page {
 					}
 				}
 				
-				if ($main->postvar['status'] == 'on') {							
+				if ($main->post_variable('status') == 'on') {						
 					$main->postvar['status'] = BILLING_CYCLE_STATUS_ACTIVE;
 				} else {
 					$main->postvar['status'] = BILLING_CYCLE_STATUS_INACTIVE;
-				}												
+				}
+				
+				//$billing_list = $billing->getAllBillings();
+																							
 				$billing->create($main->postvar);					
 				$main->errors("Billing cycle has been added!");
 				$main->redirect('?page=billing&sub=listing&msg=1');

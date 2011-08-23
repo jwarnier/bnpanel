@@ -17,7 +17,7 @@ theme : "advanced",
 </script>
 <ERRORS>
 
-<div class="%BACKEND_MESSAGE_CLASS%">
+<div class="alert-message %BACKEND_MESSAGE_CLASS%">
 %BACKEND_MESSAGE%
 </div>
 
@@ -29,6 +29,22 @@ theme : "advanced",
       <input name="name" type="text" id="name" value="%NAME%" /><a title="The package name" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>
+  
+  <tr>
+    <td valign="top">Type:</td>
+    <td>
+    %TYPE% <a title="The type of package" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+    </td>
+  </tr>
+  
+   <tr>
+    <td valign="top">Server:</td>
+    <td>
+    %SERVER% <a title="The Server where the package is located at." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+    </td>
+  </tr>
+  
+  
   <tr>
     <td width="20%">Backend:</td>
     <td>
@@ -40,18 +56,8 @@ theme : "advanced",
     <td><textarea name="description" id="description" cols="45" rows="5">%DESCRIPTION%</textarea></td>
   </tr>
   
-  <tr>
-    <td valign="top">Type:</td>
-    <td>
-    %TYPE% <a title="The type of package" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
-    </td>
-  </tr>
-  <tr>
-    <td valign="top">Server:</td>
-    <td>
-    %SERVER% <a title="The Server where the package is located at." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
-    </td>
-  </tr>
+  
+ 
   <tr>
     <td valign="top">Admin Validation:</td>
     <td>

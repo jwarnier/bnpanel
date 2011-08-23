@@ -1312,9 +1312,9 @@ class AJAX {
    function loadaddons() {
    		global $main, $db, $addon, $currency, $order;
    		if ($main->getCurrentStaffId()) {  
-	   		$package_id = $main->get_var('package_id');
-			$billing_id	= $main->get_var('billing_id');
-			$order_id	= $main->get_var('order_id');
+	   		$package_id = $main->get_variable('package_id');
+			$billing_id	= $main->get_variable('billing_id');
+			$order_id	= $main->get_variable('order_id');
 			$action		= $main->getvar['action'];
 			
 			$addon_selected_list = array();
@@ -1353,8 +1353,8 @@ class AJAX {
    function loadpackages() {
    		global $main, $db, $addon, $currency, $order, $package;
    		if ($main->getCurrentStaffId()) {	   		
-	   		$billing_id = $main->get_var('billing_id');
-	   		$order_id	= $main->get_var('order_id');   		
+	   		$billing_id = $main->get_variable('billing_id');
+	   		$order_id	= $main->get_variable('order_id');   		
 	   		$action		= $main->getvar['action'];
 	   		
 			$order_info = $order->getOrderInfo($order_id);
@@ -1373,7 +1373,7 @@ class AJAX {
 			}
 			
 			//Adding free packages
-			
+			/*
 			$free_packages = $package->getAllPackages();
 			if ($billing_id == -1) {
 				$package_list = array();
@@ -1383,7 +1383,7 @@ class AJAX {
 							$package_list[$final_free_packages['id']] = $final_free_packages;
 					}
 				}
-			}
+			}*/
 			
 			
 			if ($action == 'add') {	
@@ -1524,12 +1524,11 @@ class AJAX {
 		global $main;
 		$user_info = $main->getCurrentUserInfo();		
 		if (!empty($user_info)) {
-			echo _('Logged in as').'<a href="'.URL.'client">'.$user_info['user'].'</a> | <a href="'.URL.'client/?page=logout">'._('Logout').'</a>';
+			echo '<li><a href="'.URL.'client">'.$user_info['user'].'</a></li> <li><a href="'.URL.'client/?page=logout">'._('Logout').'</a></li>';
 		} else {
-			echo _('Log in to your account');
+			echo _('Sign in');
 		}		
-	}
-		
+	}		
 }
 
 if(isset($_GET['function']) && !empty($_GET['function'])) {

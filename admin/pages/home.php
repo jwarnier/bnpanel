@@ -1,8 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
-
-class page {
-	
+class page {	
 	/*public function curl_get_content($url="http://thehostingtool.com/updates/version.txt"){  
          $ch = curl_init();
          curl_setopt($ch,CURLOPT_URL, $url);
@@ -21,7 +19,7 @@ class page {
     } */
     
 	public function content() { 
-		global $db, $main, $style, $page;	
+		global $db, $main, $style, $page, $server, $package;	
 		
 				
 		//$current_version = rtrim($this->curl_get_content('http://thehostingtool.com/updates/version.txt')); #Clears the end whitespace. ARGHHH
@@ -87,13 +85,24 @@ class page {
 		
 		$subdomain_list = $main->getSubDomains();
 		
+		$server_list = $server->getAllServers();
+		
 		$todo_content = '';
+		
+		if (empty($server_list)) {
+			$todo_content = $style->returnMessage(_('You need to create a Server <a href="?page=servers&sub=add">here</a>.'), 'warning');			
+		}
+		
+		$package_list = $package->getAllPackages();
+		if (empty($package_list)) {
+			$todo_content .= $style->returnMessage(_('You need to create a Package <a href="?page=packages&sub=add">here</a>.'), 'warning');
+		}		
 		
 		switch ($db->config('domain_options')) {
 			case DOMAIN_OPTION_BOTH:	
 			case DOMAIN_OPTION_SUBDOMAIN:
 				if (empty($subdomain_list)) {				
-					$todo_content = $style->returnMessage(_('You need to Add subdomains <a href="?page=sub&sub=add">here</a>. Due your current <a href="?page=settings&sub=paths">Subdomain options.</a> Otherwise the Order Form will not work.'), 'warning');					
+					$todo_content .= $style->returnMessage(_('You need to Add subdomains <a href="?page=sub&sub=add">here</a>. Due your current <a href="?page=settings&sub=paths">Subdomain options.</a> Otherwise the Order Form will not work.'), 'warning');					
 				}
 				break;
 			case DOMAIN_OPTION_DOMAIN:

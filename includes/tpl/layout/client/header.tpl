@@ -28,10 +28,10 @@ function loginUser() {
     $.get("<AJAX>function=clientLogin&user="+user+"&pass="+pass, function(data) {
         if (data != '') {
             if (data == 1) {
-                if (step == '5') {                  
+                /*if (step == '5') {                  
                     showhide(step, step + 1)
                     step = step + 1;                        
-                }
+                }*/
                 $.get("<AJAX>function=getNavigation", function(data2) {
                     $("#welcome").html(data2);  
                 });         

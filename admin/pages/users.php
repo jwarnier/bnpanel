@@ -126,7 +126,7 @@ class page {
 					$array2['DATE'] 	= strftime("%D", $client['signup']);
 					$array2['EMAIL'] 	= $client['email'];
 					$array2['USER'] 	= $client['user'];
-					$array2['DOMAIN'] 	= $client['domain'];
+//					$array2['DOMAIN'] 	= $client['domain'];
 					$array2['CLIENTIP'] = $client['ip'];
 					$array2['FIRSTNAME']= $client['firstname'];
 					$array2['LASTNAME'] = $client['lastname'];

@@ -1,3 +1,13 @@
+body {
+    background-color: #FFFFFF;
+    position: relative;
+}
+
+section {
+    padding-top: 60px;
+}
+
+
 #masthead {
     margin-top: 40px;
 }
@@ -62,21 +72,16 @@
     font-weight: bold;
 }
 
-
 .alert-message.warning {
 	 color: #444 !important;
 	 text-shadow: none;
 }
 
-
 .package {
 	float:left;
-	
-	
-	
 }
 .package .description {
-	min-height: 50px;
+	min-height: 100px;
 	float:left;
 	width:100%;
 }

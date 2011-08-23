@@ -16,7 +16,7 @@ class page {
 	public function __construct() {
 		$this->navtitle = "Packages Sub Menu";
 		$this->navlist[] = array("View all Packages", "package_add.png", "view");
-		$this->navlist[] = array("Add Packages", "add.png", "add");
+		$this->navlist[] = array("Add Package", "add.png", "add");
 		
 	}
 	
@@ -28,8 +28,7 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db, $billing, $package,$addon, $server;
-		require_once LINK.'validator.class.php';
-		
+		require_once LINK.'validator.class.php';		
 		
 		switch($main->getvar['sub']) {
 			default:								
@@ -49,8 +48,8 @@ class page {
 				$result = $oValidator->validate($_POST);
 				
 				if (empty($result))				
-				if($_POST && $main->checkToken()) {					
-					
+				if ($_POST && $main->checkToken()) {					
+					$n = 0; 
 					$exist_billing_cycle = false;
 					foreach($main->postvar as $key => $value) {						
 						if ($main->postvar['type'] == 'paid' && $exist_billing_cycle == false) {
@@ -65,14 +64,14 @@ class page {
 					}	
 						
 					if(!$n) {
-						$package_params['name'] 		= $main->postvar['name'];
-						$package_params['backend'] 		= $main->postvar['backend'];
-						$package_params['description'] 	= $main->postvar['description'];
-						$package_params['type'] 		= $main->postvar['type'];
-						$package_params['server'] 		= $main->postvar['server'];
-						$package_params['admin'] 		= $main->postvar['admin'];
-						$package_params['is_hidden'] 	= $main->postvar['hidden'];
-						$package_params['is_disabled'] 	= $main->postvar['disabled'];
+						$package_params['name'] 		= $main->post_variable('name');
+						$package_params['backend'] 		= $main->post_variable('backend');
+						$package_params['description'] 	= $main->post_variable('description');
+						$package_params['type'] 		= $main->post_variable('type');
+						$package_params['server'] 		= $main->post_variable('server');
+						$package_params['admin'] 		= $main->post_variable('admin');
+						$package_params['is_hidden'] 	= $main->post_variable('hidden');
+						$package_params['is_disabled'] 	= $main->post_variable('disabled');
 						//$package_params['additional']	= $additional;
 						$package_params['reseller'] 	= $main->postvar['reseller'];						
 						$product_id  = $package->create($package_params);
@@ -86,10 +85,11 @@ class page {
 								$params['product_id'] 	= $product_id;
 								$params['amount']		= $main->postvar[$variable_name];
 								$params['type'] 		= BILLING_TYPE_PACKAGE;
+								
 								$billing->billing_products->save($params);																	
 							}
 						}
-
+						
 						$query = $db->query("SELECT * FROM `<PRE>addons` WHERE status = ".ADDON_STATUS_ACTIVE);
 						
 						if($db->num_rows($query) > 0) {
@@ -320,7 +320,7 @@ class page {
 					echo "<ERRORS>";
 					
 					if ($db->num_rows($query) == 0) {
-						$style->showMessage('There are no packages to edit', 'warning');						
+						$style->showMessage('There are no packages', 'warning');						
 					} else {						
 						while($data = $db->fetch_array($query)) {
 							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=packages&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=packages&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');							

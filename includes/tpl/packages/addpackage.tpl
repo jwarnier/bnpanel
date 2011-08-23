@@ -29,16 +29,6 @@
     </td>
   </tr>
   <tr>
-    <td width="20%">Backend:</td>
-    <td>
-      <input name="backend" type="text" id="backend" /><a title="The <b>backend</b> name of your package. This is the name of the package shown in your WebHost Manager. DO NOT USE SPACES!" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
-    </td>
-  </tr>
-  <tr>
-    <td valign="top">Description:</td>
-    <td><textarea name="description" id="description" cols="45" rows="5"></textarea></td>
-  </tr>
-  <tr>
     <td valign="top">Type:</td>
     <td>
     <select name="type" id="type" onchange="ajaxSlide('customform','<AJAX>function=acpPadd&type='+ this.value)">
@@ -48,14 +38,23 @@
     </select><a title="The type of your package. You can choose between <em>free</em>, <em>post2host</em> and <em>paid</em>." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>
+  
   <tr>
     <td valign="top">Server:</td>
     <td>
     %SERVER% <a title="The Server which the package is located at." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+    </td>    
+  </tr>  
+  <tr>
+    <td width="20%">Backend:</td>
+    <td>
+      <input name="backend" type="text" id="backend" /><a title="The <b>backend</b> name of your package. This is the name of the package shown in your WebHost Manager. DO NOT USE SPACES!" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
     </td>
   </tr>
-   
-  
+  <tr>
+    <td valign="top">Description:</td>
+    <td><textarea name="description" id="description" cols="45" rows="5"></textarea></td>
+  </tr>  
   <tr>
     <td valign="top">Admin Validation:</td>
     <td>

@@ -178,14 +178,16 @@ function acp() {
 					}
 				}
 			}		
-			
-			if (isset($main->getvar['sub']) && $main->getvar['sub'] == 'delete' && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {				
-				foreach($main->postvar as $key => $value) {
-					$array['HIDDEN'] .= '<input name="'.$key.'" type="hidden" value="'.$value.'" />';
-				}								
+			$array['HIDDEN'] = '';
+			if (isset($main->getvar['sub']) && $main->getvar['sub'] == 'delete' && isset($main->getvar['do']) && !$_POST && !isset($main->getvar['confirm'])) {
+				if (!empty($main->postvar)) {				
+					foreach($main->postvar as $key => $value) {
+						$array['HIDDEN'] .= '<input name="'.$key.'" type="hidden" value="'.$value.'" />';
+					}					
+				}			
 				$array['HIDDEN'] .= " ";				
 				$html = $style->replaceVar("tpl/warning.tpl", $array);				
-			} elseif(isset($main->getvar['sub']) && $main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
+			} elseif(isset($main->getvar['sub']) && $main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !isset($main->getvar['confirm'])) {
 				if($main->postvar['yes']) {	
 					foreach($main->getvar as $key => $value) {
 					  if($i) {
@@ -254,7 +256,7 @@ function acp() {
 	$data['LEFT_COLUMN']  = $main->table($nav, $sidebar);
 	$data['RIGHT_COLUMN'] = '';
 	if (isset($main->getvar['sub'])) {
-		if ($content->navtitle) {		
+		if (isset($content->navtitle)) {		
 			$data['RIGHT_COLUMN'] = $subsidebar;
 		}
 	}
