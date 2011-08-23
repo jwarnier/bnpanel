@@ -15,19 +15,24 @@ function client() {
 	}
 	$client_navigation = $main->getClientNavigation();
 	$client_item = $client_navigation[$main->getvar['page']];
+	
 	$header = 'Home';
-	$link = 'pages/home.php';	
+	$link = 'pages/home.php';
+	
+	
 	if (isset($client_item) && !empty($client_item)) {		
 		$header = $client_item['visual'];		
 		$link = "pages/". $client_item['link'] .".php";
 	}	
-	if(!file_exists($link)) {
+	if (!file_exists($link)) {
 		$html = "Seems like the .php is non existant. Is it deleted?";	
 	} else {
 		//If deleting something
-		if (preg_match("/[\.*]/", $main->getvar['page']) == 0) {
+		if (preg_match("/[\.*]/", $main->getvar['page']) == 0) {			
 			require $link;
+			
 			$content = new page();
+						
 			// Main Side Bar HTML
 			$nav = "Sidebar";			
 			$array = array();
@@ -65,7 +70,8 @@ function client() {
 					$array2['VISUAL'] = $value[0];
 					$array3['LINKS'] .= $style->replaceVar("tpl/menu/submenu_link.tpl", $array2);
 				}
-				$subsidebar = $style->replaceVar("tpl/menu/submenu_main.tpl", $array3);
+				$subsidebar = $style->replaceVar("tpl/menu/submenu_main.tpl", $array3);			
+				
 			}
 			
 			if (isset($main->getvar['sub']) && $main->getvar['sub'] == "delete" && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {
@@ -126,25 +132,17 @@ function client() {
 			}
 		}
 	}
+	//
 	$staffuser = $db->client($main->getCurrentUserId());
-	define("SUB", $header);
-	define("INFO", '<b>Welcome back, '. $staffuser['user'] .'</b><br />'. SUB);
+		
+	$data['LEFT_COLUMN'] = $main->table($nav, $sidebar);	
 	
-	echo '<div id="left">';
-	echo $main->table($nav, $sidebar);
+	$data['RIGHT_COLUMN'] = $main->table($header, $html);
+	
 	if (isset($content->navtitle)) {
-		echo "<br />";
-		echo $main->table($subnav, $subsidebar);
+		$data['RIGHT_COLUMN'] .= $main->table($subnav, $subsidebar);
 	}
-	echo '</div>';
-	
-	echo '<div id="right">';
-	echo $main->table($header, $html);
-	echo '</div>';
-	
-	$data = ob_get_contents(); # Retrieve the HTML
-	ob_clean(); # Flush the HTML
-	
+		
 	return $data; # Return the HTML
 }
 
@@ -181,9 +179,8 @@ if (!isset($_SESSION['clogged'])) {
 				
 		$content = '<div align="center">'.$main->table("Client Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';		
 				
-		echo $style->get("tpl/layout/client/header.tpl");
-		echo $style->replaceVar("tpl/layout/client/content.tpl", array('CONTENT' => $content));
-		echo $style->get("tpl/layout/client/footer.tpl");		
+		echo $style->get("tpl/layout/one-col/header.tpl");
+		echo $style->replaceVar("tpl/layout/one-col/content.tpl", array('CONTENT' => $content));				
 		
 	} else {
 		define("SUB", "Login");
@@ -205,9 +202,8 @@ if (!isset($_SESSION['clogged'])) {
 			$content = '<div align="center">'.$main->table(gettext("Client Area - Login"), $style->replaceVar("tpl/login/clogin.tpl", $array), "300px").'</div>';
 		}
 		
-		echo $style->get("tpl/layout/client/header.tpl");
-		echo $style->replaceVar("tpl/layout/client/content.tpl", array('CONTENT' => $content));
-		echo $style->get("tpl/layout/client/footer.tpl"); #Output Footer
+		echo $style->get("tpl/layout/one-col/header.tpl");
+		echo $style->replaceVar("tpl/layout/one-col/content.tpl", array('CONTENT' => $content));		
 	}
 } elseif($_SESSION['clogged']) {
 	if(!isset($main->getvar['page'])) {
@@ -222,17 +218,20 @@ if (!isset($_SESSION['clogged'])) {
 		}		
 	}
 	
+	echo $style->get("tpl/layout/two-col/header.tpl");
+	
 	if (!$db->config("cenabled")) {
 		define("SUB", "Disabled");
 		define("INFO", SUB);
 		$content = '<div align="center">'.$main->table("Client Area - Disabled", $db->config("cmessage"), "300px").'</div>';
-	} else {
+		echo $style->replaceVar("tpl/layout/one-col/content.tpl", $content);
+	} else {		
 		$content = client();
+		echo $style->replaceVar("tpl/layout/two-col/content.tpl", $content);
 	}
-	
-	echo $style->get("tpl/layout/client/header.tpl");
-	echo $style->replaceVar("tpl/layout/client/content.tpl", array('CONTENT' => $content));
-	echo $style->get("tpl/layout/client/footer.tpl");
+		
 }
+
+echo $style->get("tpl/layout/one-col/footer.tpl"); #Output Footer
 //End the sctipt
 require LINK .'output.php';

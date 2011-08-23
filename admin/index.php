@@ -188,7 +188,7 @@ function acp() {
 				$array['HIDDEN'] .= " ";				
 				$html = $style->replaceVar("tpl/warning.tpl", $array);				
 			} elseif(isset($main->getvar['sub']) && $main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !isset($main->getvar['confirm'])) {
-				if($main->postvar['yes']) {	
+				if ($main->postvar['yes']) {	
 					foreach($main->getvar as $key => $value) {
 					  if($i) {
 						  $i = "&";	
@@ -298,9 +298,9 @@ if (!isset($_SESSION['logged'])) {
 			}
 		}
 		$content['CONTENT'] =  '<div align="center">'.$main->table("Admin Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';
-		echo $style->get("tpl/layout/admin/header.tpl");
-		echo $style->replaceVar("tpl/layout/admin/content.tpl", $content);
-		echo $style->get("tpl/layout/admin/footer.tpl");
+		echo $style->get("tpl/layout/one-col/header.tpl");
+		echo $style->replaceVar("tpl/layout/one-col/content.tpl", $content);
+		echo $style->get("tpl/layout/one-col/footer.tpl");
 		
 	} else { 
 		define("SUB", "Login");
@@ -319,8 +319,8 @@ if (!isset($_SESSION['logged'])) {
 		
 		$content['CONTENT'] =  '<div align="center">'.$main->table("Admin Area - Login", $style->replaceVar("tpl/login/alogin.tpl", array()), "300px").'</div>';
 		
-		echo $style->get("tpl/layout/admin/header.tpl");		
-		echo $style->replaceVar("tpl/layout/client/content.tpl", $content);	
+		echo $style->get("tpl/layout/one-col/header.tpl");		
+		echo $style->replaceVar("tpl/layout/one-col/content.tpl", $content);	
 		
 	}
 } elseif(isset($_SESSION['logged'])) {	
@@ -333,11 +333,11 @@ if (!isset($_SESSION['logged'])) {
 	}
 		
 	$content = acp();
-	echo $style->get("tpl/layout/admin/header.tpl");
-	echo $style->replaceVar("tpl/layout/admin/content.tpl", $content);
+	echo $style->get("tpl/layout/two-col/header.tpl");
+	echo $style->replaceVar("tpl/layout/two-col/content.tpl", $content);
 }
 
-echo $style->get("tpl/layout/admin/footer.tpl");
+echo $style->get("tpl/layout/two-col/footer.tpl");
 
 //End the script
 require_once LINK ."output.php";

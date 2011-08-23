@@ -25,9 +25,7 @@ class page {
 		if (isset($main->getvar['sub']) && $main->getvar['sub'] != 'edit') {			
 			echo $style->replaceVar("tpl/user/client_view.tpl", $array);
 		} else {
-
-			$array['DISP'] 		= "<div>";
-			
+			$array['DISP'] 		= "<div>";			
 			if($_POST && $main->checkToken(true)) {
 				$main->generateToken();
 				if(!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i',$main->postvar['email'])) {

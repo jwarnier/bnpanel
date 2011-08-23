@@ -61,9 +61,9 @@ echo '</div>';
 $data = ob_get_contents();
 ob_end_clean();
 
-echo $style->get("tpl/layout/client/header.tpl");
-echo $style->replaceVar("tpl/layout/client/content.tpl", array('CONTENT' => $data)); 
-echo $style->get("tpl/layout/client/footer.tpl"); #Output Footer
+echo $style->get("tpl/layout/one-col/header.tpl");
+echo $style->replaceVar("tpl/layout/one-col/content.tpl", array('CONTENT' => $data)); 
+echo $style->get("tpl/layout/one-col/footer.tpl"); #Output Footer
 
 //Output
 require LINK ."output.php";

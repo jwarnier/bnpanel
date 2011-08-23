@@ -81,7 +81,7 @@ class type {
 		} else {
 			$type = $this->classes[$type];	
 		}		
-		
+		$html = '';
 		if (isset($type->orderForm)) {
 			foreach($type->orderForm as $key => $value) {
 				$array['NAME'] = $value[0] .":";

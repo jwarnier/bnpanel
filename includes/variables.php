@@ -76,8 +76,6 @@ $tpl = "tpl/menu/top_main.tpl";
 $navigation = $style->replaceVar($tpl, $array3);
 $navigation = preg_replace("/<APP_NAME>/si", NAME, $navigation);
 
-
-
 if ($main->getCurrentUserId()) {	
 } else {	
 	$data = preg_replace("/<LOGIN_TPL>/si",'<div id="login_form" title="Login">'.$style->replaceVar("tpl/login/login_widget.tpl", array()).'</div>', $data);

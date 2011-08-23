@@ -85,3 +85,13 @@ section {
 	float:left;
 	width:100%;
 }
+
+
+.section {
+    padding-top: 60px;
+    display: block;
+}
+
+header, section, footer, article, aside {
+    display: block;
+}

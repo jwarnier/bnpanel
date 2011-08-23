@@ -221,10 +221,10 @@ class invoice extends model {
 		}
 		
 		if (empty($user_id)) {
-			$invoice_list	=$this->getAllInvoices('', $page, $status_id);  
+			$invoice_list	= $this->getAllInvoices('', $page, $status_id);  
 		} else {
 			$user_id = intval($user_id);
-			$invoice_list	=$this->getAllInvoices($user_id, $page, $status_id);  
+			$invoice_list	= $this->getAllInvoices($user_id, $page, $status_id);  
 		}	
 		
 		$result['list'] = '';

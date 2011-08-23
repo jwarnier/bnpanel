@@ -1118,7 +1118,7 @@ class AJAX {
    		
    		if(!empty($billing_id) && !empty($package_id)) {
    		
-	   		$html = '<fieldset style="width: 98%;"><legend><b>Package Order</b></legend><table width="100%" >';
+	   		$html = '<div class="page-header"><h2>Package Order</h2></div><table width="100%" >';
 	   		
 	   		$sql = "SELECT a.name, amount, bc.name  as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 					ON (bc.id = b.billing_id) WHERE a.id = $package_id AND bc.id = $billing_id  AND b.type = '".BILLING_TYPE_PACKAGE."' ";
@@ -1145,7 +1145,7 @@ class AJAX {
 	   		if ($db->num_rows($result) > 0) {
 	   			$info_exist = false;
 		   		$html .= '<fieldset style="width:98%;"><legend><b>Order Add-Ons</b></legend>';
-		   		$html .= '<table width="100%" >';
+		   		$html .= '<table class="common-table" >';
 		   		
 		   		while($data = $db->fetch_array($result,'ASSOC')) {		   			
 		   			$sql = "SELECT a.name, a.mandatory, description, setup_fee, bc.name as billing_name, b.amount FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
@@ -1176,7 +1176,7 @@ class AJAX {
 						$info_exist = true;
 					}
 		   		}
-		   		$html .='</table></fieldset>';
+		   		$html .='</table>';
 		   		$html .='<input type="hidden" name="billing_id" value="'.$billing_id.'">';
 	   		}
 			if ($package_billing_info_exist) {
@@ -1217,26 +1217,17 @@ class AJAX {
 		$html = '';
 		$total = 0;
 		
-		$html  = '<fieldset  style="width: 98%;"><legend><b>Summary</b></legend>';
-		$html .= '<table width="100%" align="center" border="0" cellpadding="3" cellspacing="3">
+		$html = '<table class="common-table" width="100%">
 				        <tr>
-				            <td width="2%"></td>
-				            <td width="28%"><b>Items in basket</b></td>
-				            <td width="50%"><b>Description</b></td>
-				            <td width="18%" align="right"><b>Cost</b></td>
-				            <td width="2%"></td>
+				            <th width="2%"></th>
+				            <th width="28%"><b>Items in basket</b></th>
+				            <th width="50%"><b>Description</b></th>
+				            <th width="18%" align="right"><b>Cost</b></th>
+				            <th width="2%"></th>
 				        </tr>';
 				        					        
-		while($data = $db->fetch_array($result,'ASSOC')) {
-			
-			/*if (!empty($data['amount']) && intval($data['amount']) != 0 ) {
-				$amount_to_show  = $currency->toCurrency($data['amount']);
-			} else {
-				$amount_to_show  = ' - ';
-			}*/
-					
-			$amount_to_show  = $currency->toCurrency($data['amount']);			
-			
+		while($data = $db->fetch_array($result,'ASSOC')) {	
+			$amount_to_show  = $currency->toCurrency($data['amount']);
 	       	$html .= "<tr>
 	            <td></td>
 	            <td>{$data['name']}</td>
@@ -1281,8 +1272,7 @@ class AJAX {
 		            <td align="right"><p class="price">'.$total_to_show.'</p></td>
 		            <td></td>
 		        </tr>';
-		$html .='</table>';
-		$html .='</fieldset>';	  	        
+		$html .='</table>';			  	        
 		echo $html;
    }
    

@@ -267,8 +267,7 @@ if (INSTALL == 1) {
 	define("THEME", $db->config("theme")); # Set the default theme
 	define("URL", 	$db->config("url")); # Sets the URL THT is located at	
 	define("NAME", 	$db->config("name")); # Sets the name of the website	
-} else {
-	
+} else {	
 	define("THEME", 'bnpanel'); # Set the default theme
 	define("URL", "../"); # Set url to blank
 	define("NAME", 	'BNPanel'); # Sets the name of the website
