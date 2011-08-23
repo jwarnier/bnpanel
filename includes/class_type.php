@@ -6,19 +6,18 @@ class type {
 	
 	public $classes = array(); # All the classes here when createAll called
 	
-	# Start the functions #
-	
 	public function acpPadd($type) { # Returns the html of a custom form
 	
 		global $style;
 		$type_value = $type;
-		if(!$this->classes[$type]) {
+		if(!isset($this->classes[$type])) {
 			$type = $this->createType($type);
 		} else {
 			$type = $this->classes[$type];	
 		}
+		$html = '';
 		
-		if($type->acpForm) {
+		if ($type->acpForm) {
 	        $html .= $style->javascript();
 	        $html .= '<script type="text/javascript">
 	        var gi = 0;
@@ -218,13 +217,16 @@ class type {
 		} else {
 			$type = $this->classes[$type];	
 		}
-		
+		$html = '';
 		if (isset($type->acpForm)) {
-			foreach($type->acpForm as $key => $value) {
-				$array['NAME'] = $value[0] .":";
-				$shit = explode("/>", $value[1]);
-				$default = ' value="'.$values[$value[2]].'" />'; 
-				$array['FORM'] = $shit[0]. $default;
+			foreach($type->acpForm as $key => $value) {				
+				$array['NAME'] 	= $value[0] .":";
+				$shit 			= explode("/>", $value[1]);
+				$default = '';
+				if (!empty($value[2])) {
+					$default 		= ' value="'.$values[$value[2]].'" />';
+				} 
+				$array['FORM'] 	= $shit[0]. $default;
 				$html .= $style->replaceVar("tpl/acptypeform.tpl", $array);
 			}
 			return $html;

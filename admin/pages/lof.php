@@ -105,6 +105,7 @@ class page {
 			case "navedit"; # Navbar Editor - Not Yet Finished
                 echo $style->replaceVar("tpl/navedit/top.tpl");
                 $query = $db->query("SELECT * FROM `<pre>navbar` ORDER BY `order` ASC");
+                $array['LINKS'] = '';
                 while($data = $db->fetch_array($query)) {
                         $array2['ID'] = $data['id'];
                         $array2['NAME'] = $data['visual'];

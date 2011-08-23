@@ -241,7 +241,6 @@ if (isset($_POST)) {
 }
 
 $main->postvar['_post_token'] =	$main->getToken();
-//var_dump('postvar->'.$main->postvar['_post_token']);
 
 //Converts all GET into variable - DB Friendly.
 if (isset($_GET)) {
@@ -303,7 +302,7 @@ if (FOLDER == "client" && isset($main->getvar['page']) && $main->getvar['page'] 
 	if ($main->checkToken(false)) {
 		$invoice->pay($main->getvar['iid'], 'client/index.php?page=invoices');
 	}
-	echo 'You made it this far.. something went wrong.';
+	//echo 'You made it this far.. something went wrong.';
 }
 
 function checkForDependencies() {

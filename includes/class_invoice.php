@@ -7,6 +7,10 @@ class invoice extends model {
 	public $table_name 	= 'invoices';	
 	//public $_modelName 	= 'invoice';
 	
+	function __construct() {
+		
+	}
+	
 	/**
 	 * @param 	int		User id
 	 * @param	float	amount
@@ -25,8 +29,8 @@ class invoice extends model {
 			$main->addLog("invoice::create $invoice_id");
 			
 			if (!empty($order_id)) {
-				$params['order_id'] = $order_id;
-				$params['invoice_id'] = $invoice_id;
+				$params['order_id'] 	= $order_id;
+				$params['invoice_id'] 	= $invoice_id;
 				$order->order_invoices->save($params);
 			}			
 			
@@ -60,7 +64,6 @@ class invoice extends model {
 			$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $replace_array);
 			
 			
-			$this->loadHook(__FUNCTION__, $invoice_info);
 			
 			return	$invoice_id;		
 		}
@@ -89,52 +92,53 @@ class invoice extends model {
 		global $db, $main, $order;
 		require_once "paypal/paypal.class.php";
 		$paypal 		= new paypal_class();
-		$invoice_info 	= $this->getInvoiceInfo($invoice_id);
+		$invoice_info 	= $this->getInvoiceInfo($invoice_id);		
 		$user_id 		= $main->getCurrentUserId();		
 		$order_id 		= $this->getOrderByInvoiceId($invoice_id);
 		$order_info		= $order->getOrderInfo($order_id);
-		
-		if ($user_id == $invoice_info['uid']) {
-			
-			if ($db->config('paypal_mode') == PAYPAL_STATUS_LIVE) {
-				$paypal->paypal_url = 'https://www.paypal.com/cgi-bin/webscr';				
+		if (!empty($invoice_info)) {
+			if ($user_id == $invoice_info['uid']) {
+				
+				if ($db->config('paypal_mode') == PAYPAL_STATUS_LIVE) {
+					$paypal->paypal_url = 'https://www.paypal.com/cgi-bin/webscr';				
+				} else {
+					$paypal->paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+				}
+				//More infor for paypal variables : https://www.paypal.com/cgi-bin/webscr?cmd=p/pdn/howto_checkout-outside
+				
+				$paypal->add_field('business', 			$db->config('paypalemail'));
+				
+				// Will only work if Auto Return is set in the Paypal account  								
+				$paypal->add_field('return', 			urlencode($db->config('url')."client/index.php?page=invoices&sub=view&p=success&do=$invoice_id")); // Paypal Sucess
+				
+				$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=view&p=cancel&do=".$invoice_id)); // Paypal Cancel 
+				
+				$paypal->add_field('notify_url',  		urlencode($db->config('url')."includes/paypal/ipn.php?do=".$invoice_id)); // IPN
+				
+				$paypal->add_field('item_name', 		$db->config('name').' - '.$order_info['real_domain'].' Invoice id: '.$invoice_id);
+				$paypal->add_field('invoice', 			$invoice_id); //When trying to buy something with the same Invoice id Paypal will send a message that the invoice was already done 
+				$paypal->add_field('no_note', 			0);			
+				$paypal->add_field('no_shipping', 		1);
+				
+				$paypal->add_field('continue_button_text', 'Continue >>');
+				$paypal->add_field('cbt', 'Continue >>');			
+				
+				$paypal->add_field('background_color', ''); //""=white 1=black
+				$paypal->add_field('display_shipping_address', '1'); //""=yes 1=no
+				$paypal->add_field('display_comment', '1'); //""=yes 1=no
+							
+				//Image is 150*50px otherwise the image will not work
+				//@todo add a new paypal parameter to the URL image 
+				//$paypal->add_field('image_url', 		'http://demo.contidos.cblue.be/logo-beez.png');			
+	
+				$paypal->add_field('amount', 			$invoice_info['total_amount']);
+				$paypal->add_field('currency_code', 	$db->config('currency'));
+				
+				$main->addLog("invoice::pay Invoice #$invoice_id Order #$order_id Total amount: {$invoice_info['total_amount']}");
+				$paypal->submit_paypal_post(); // submit the fields to paypal
 			} else {
-				$paypal->paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+				echo "You don't seem to be the person who owns that invoice!";	
 			}
-			//More infor for paypal variables : https://www.paypal.com/cgi-bin/webscr?cmd=p/pdn/howto_checkout-outside
-			
-			$paypal->add_field('business', 			$db->config('paypalemail'));
-			
-			// Will only work if Auto Return is set in the Paypal account  								
-			$paypal->add_field('return', 			urlencode($db->config('url')."client/index.php?page=invoices&sub=view&p=success&do=$invoice_id")); // Paypal Sucess
-			
-			$paypal->add_field('cancel_return', 	urlencode($db->config('url')."client/index.php?page=invoices&sub=view&p=cancel&do=".$invoice_id)); // Paypal Cancel 
-			
-			$paypal->add_field('notify_url',  		urlencode($db->config('url')."includes/paypal/ipn.php?do=".$invoice_id)); // IPN
-			
-			$paypal->add_field('item_name', 		$db->config('name').' - '.$order_info['real_domain'].' Invoice id: '.$invoice_id);
-			$paypal->add_field('invoice', 			$invoice_id); //When trying to buy something with the same Invoice id Paypal will send a message that the invoice was already done 
-			$paypal->add_field('no_note', 			0);			
-			$paypal->add_field('no_shipping', 		1);
-			
-			$paypal->add_field('continue_button_text', 'Continue >>');
-			$paypal->add_field('cbt', 'Continue >>');			
-			
-			$paypal->add_field('background_color', ''); //""=white 1=black
-			$paypal->add_field('display_shipping_address', '1'); //""=yes 1=no
-			$paypal->add_field('display_comment', '1'); //""=yes 1=no
-						
-			//Image is 150*50px otherwise the image will not work
-			//@todo add a new paypal parameter to the URL image 
-			//$paypal->add_field('image_url', 		'http://demo.contidos.cblue.be/logo-beez.png');			
-
-			$paypal->add_field('amount', 			$invoice_info['total_amount']);
-			$paypal->add_field('currency_code', 	$db->config('currency'));
-			
-			$main->addLog("invoice::pay Invoice #$invoice_id Order #$order_id Total amount: {$invoice_info['total_amount']}");
-			$paypal->submit_paypal_post(); // submit the fields to paypal
-		} else {
-			echo "You don't seem to be the person who owns that invoice!";	
 		}
 	}
 	
@@ -154,7 +158,8 @@ class invoice extends model {
 			$total_amount = 0;			
 			//Getting addon information
 			if (!empty($array['addon_fee'])) {
-				//the addon_fee is a serialize string			
+				//the addon_fee is a serialize string
+				
 				$array['addon_fee'] = unserialize($array['addon_fee']);
 				if (is_array($array['addon_fee']) && count($array['addon_fee']) > 0) {		
 					foreach($array['addon_fee'] as $addon) {					
@@ -166,7 +171,8 @@ class invoice extends model {
 			}
 			$total_amount = $total_amount + $array['amount']; 
 			$array['total_amount'] = $total_amount;		
-		}			
+		}
+		$this->loadHook(__FUNCTION__, null);
 		return $array;
 	}
 	

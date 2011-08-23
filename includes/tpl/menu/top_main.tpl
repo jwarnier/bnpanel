@@ -16,11 +16,7 @@
             	</li>    	   	
             </ul>            
             <ul class="nav secondary-nav">
-                <li class="menu">
-                    <div class="login-link">            
-                        <span id="welcome" class="welcome"><LOGIN></span>
-                    </div>          
-                </li>
+                <span id="welcome" class="welcome"><LOGIN></span>
             </ul>            
         </div>
     </div>

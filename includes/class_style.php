@@ -200,20 +200,19 @@ class style {
     
     public function returnMessage($message, $type = 'info', $allow_html = true) {
     	global $main;
-    	if (!empty($type) && in_array($type, array('info', 'warning', 'error', 'success'))) {
-    		if ($type == 'error') {
-    			$type = 'error_message';
-    		}
-    		$html = '<div class="alert-message '.$type.'">';    		
-    		if ($allow_html) {   		
-    			$html .= $message;
-    		} else {
-    			$html .= $main->removeXSS($message);    			
-    		}
-    		$html .= '</div>';    		
-    	} else {
-    		$type = 'info';
-    	}    	
+    	if (!in_array($type, array('info', 'warning', 'error', 'success'))) {    		
+			$type = 'info';
+		}
+    	if ($type == 'error') {
+    		$type = 'error_message';
+		}
+    	$html = '<div class="alert-message '.$type.'">';    		
+		if ($allow_html) {   		
+    		$html .= $message;
+   		} else {
+   			$html .= $main->removeXSS($message);    			
+   		}
+   		$html .= '</div>';    	
     	return $html;
     }
     

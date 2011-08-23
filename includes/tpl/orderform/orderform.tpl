@@ -473,12 +473,20 @@ function checkSubdomain() {
             <h2>Account Information</h2>
         </div>
         
-        <div class="text">        
-        	<table class="data_table">
-        	<tr>
-        	<td>
-        	
+        <div class="text">
+            
+            <div class="page-header">        
+        	<h3>Already a registered?</h3>
+        	</div>
+            <a onclick="showLogin();" href="#">_{Log in to your account}</a>
+               
+            <div class="page-header">        
+            <h3>New users</h3>
+            </div>
+            
         	<fieldset>
+        	
+            
         	<legend>Contact Info</legend>
         	
         	<div class="clearfix">
@@ -626,19 +634,7 @@ function checkSubdomain() {
                       <span class="help-block">Your SSN or Fiscal ID</span>
                    </div>              
                 </div>       
-           </fieldset>   
-           
-           </td>
-           <td width="50px" align="center">
-           Or
-           </td>
-           <td>
-           <div class="big_title">
-				<a onclick="showLogin();" href="#">_{Log in to your account}</a>
-			</div>  
-           </td>
-           </tr> 
-           </table>            
+           </fieldset>
         </div>
     </div>
     <div class="table" id="6" style="display:none">        
