@@ -529,9 +529,9 @@ CREATE TABLE `%PRE%billing_cycles` (
   number_months int NOT NULL,
   name varchar(255) NOT NULL,
   status int NOT NULL,
-  PRIMARY KEY (id),
-  UNIQUE KEY cycle_month (number_months,name)
+  PRIMARY KEY (id)  
 );
+-- UNIQUE KEY cycle_month (number_months,name)
 
 
 INSERT INTO `%PRE%billing_cycles` (number_months, name, status) VALUES
