@@ -15,22 +15,19 @@ if (INSTALL == 1) {
 		$array['IP'] = getenv('REMOTE_ADDR');		
 		$pagegen .= $style->replaceVar('tpl/footergen.tpl', $array);
 		if ($db->config("show_footer")) {
-			if(ini_get('safe_mode') or
-			strpos(ini_get('disable_functions'), 'shell_exec') != false or
-			stristr(PHP_OS, 'Win')) {
+			if(ini_get('safe_mode') or strpos(ini_get('disable_functions'), 'shell_exec') != false or stristr(PHP_OS, 'Win')) {
 				$version[0] = "N/A";
-			}
-			else {
+			} else {
 				$output = shell_exec('mysql -V');
 				preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', $output, $version);
 			}
 			global $style;
-			$array2['OS'] = PHP_OS;
-			$array2['SOFTWARE'] = $main->removeXSS($_SERVER["SERVER_SOFTWARE"]);
-			$array2['PHP_VERSION'] = phpversion();
-			$array2['MYSQL_VERSION'] = $version[0];
-			$array2["SERVER"] = $main->removeXSS($_SERVER["HTTP_HOST"]);
-			$array['TITLE'] = $style->replaceVar('tpl/aserverstatus.tpl',$array2);
+			$array2['OS'] 				= PHP_OS;
+			$array2['SOFTWARE'] 		= $main->removeXSS($_SERVER["SERVER_SOFTWARE"]);
+			$array2['PHP_VERSION'] 		= phpversion();
+			$array2['MYSQL_VERSION'] 	= $version[0];
+			$array2["SERVER"] 			= $main->removeXSS($_SERVER["HTTP_HOST"]);
+			$array['TITLE'] 			= $style->replaceVar('tpl/aserverstatus.tpl',$array2);
 			$pagegen .= $style->replaceVar('tpl/footerdebug.tpl',$array);
 		}
 	}
@@ -43,21 +40,22 @@ if (INSTALL == 1) {
 		$array = array();
 		$navigation_list = $main->getMainNavigation();		
 		$navbits = '';
-		foreach($navigation_list as $nav_item) {			
+		foreach ($navigation_list as $nav_item) {			
 			if(!$db->config("show_acp_menu") && $nav_item['link'] == 'admin') {
 				continue;
 			} else {
 				$array['ID'] = "nav_". $nav_item['link'];
 				if (PAGE == $nav_item['visual']) {
 					$array['ACTIVE'] = ' class="active" ';
-				}
-				else {
+				} else {
 					$array['ACTIVE'] = '';
 				}
 				$array['LINK'] = $nav_item['link'];
 				$array['ICON'] = $nav_item['icon'];
 				$array['NAME'] = $nav_item['visual'];
-				$navbits .= $style->replaceVar("tpl/menu/top_link.tpl", $array);
+				
+				$tpl = "tpl/menu/top_link.tpl";			
+				$navbits .= $style->replaceVar($tpl, $array);
 			}
 		}
 	}	
@@ -66,7 +64,10 @@ if (INSTALL == 1) {
 	if (!empty($navbits)) {
 	    $array3['NAV'] = $navbits;
 	}
-	$navigation = $style->replaceVar("tpl/menu/top_main.tpl", $array3);
+	
+	$tpl = "tpl/menu/top_main.tpl";
+		
+	$navigation = $style->replaceVar($tpl, $array3);
 	$navigation = preg_replace("/<APP_NAME>/si", NAME, $navigation);
 	
 }
@@ -86,7 +87,7 @@ $data = preg_replace("/<MENU>/si", $navigation, $data);
 
 $data = preg_replace("/<URL>/si", URL, $data);
 
-$data = preg_replace("/<LOGO>/si", $this->show_logo(), $data);
+$data = preg_replace("/<LOGO>/si",  $this->show_logo(), $data);
 $data = preg_replace("/<LOGIN>/si", $this->show_login_link(), $data);
 
 

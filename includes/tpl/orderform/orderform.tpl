@@ -442,7 +442,10 @@ function checkSubdomain() {
     </div>
     
     <div id="2" class="table" style="display:none">
-        <div class="cat"><span class="cat_title">_{Select a billing cycle}</span></div>
+        <div class="page-header">
+            <h2>_{Select a billing cycle}</h2>
+        </div>
+        
         <div class="text">
         	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
@@ -465,7 +468,10 @@ function checkSubdomain() {
     
     <!-- cambios por julio  resumen --> 
     <div class="table" id="3" style="display:none">
-        <div class="cat"><span class="cat_title">Summary</span></div>
+        <div class="page-header">
+            <h2>Summary</h2>
+        </div>
+        
         <div class="text">
         	<table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
               <tr>
@@ -480,8 +486,11 @@ function checkSubdomain() {
             </table>
         </div>
     </div>   
-    <div class="table" id="4" style="display:none">
-        <h2>Terms of Service</h2>
+    <div class="table" id="4" style="display:none">        
+        <div class="page-header">
+            <h2>Terms of Service</h2>
+        </div>
+        
         <div class="container">
             %TOS%
         </div>
@@ -495,14 +504,17 @@ function checkSubdomain() {
         
     </div>    
 	<div class="table" id="5" style="display:none">
-        <h2>Client Account</h2>
+        <div class="page-header">
+            <h2>Account Information</h2>
+        </div>
+        
         <div class="text">        
-        	<table  class="data_table">
+        	<table class="data_table">
         	<tr>
         	<td>
         	
         	<fieldset>
-        	<legend>User information</legend>
+        	<legend>Contact Info</legend>
         	
         	<div class="clearfix">
         	   <label>Username</label>
@@ -665,8 +677,10 @@ function checkSubdomain() {
            </table>            
         </div>
     </div>
-    <div class="table" id="6" style="display:none">
-        <div class="cat"><span class="cat_title">Hosting Account</span></div>
+    <div class="table" id="6" style="display:none">        
+        <div class="page-header">
+            <h2>Hosting Account</h2>
+        </div>        
         <div class="text">
         	<table width="100%" border="0" cellspacing="2" cellpadding="0">
               <tr id="dom">
@@ -710,8 +724,11 @@ function checkSubdomain() {
             </div>
         </div>
     </div>
-    <div class="table" id="7" style="display:none">
-        <div class="cat"><span class="cat_title">Setting your account</span></div>
+    <div class="table" id="7" style="display:none">        
+        <div class="page-header">
+            <h2>Setting your account</h2>
+        </div>  
+        
         <div class="text" id="creation">
         	<div id="finished">
             </div>
@@ -724,8 +741,7 @@ function checkSubdomain() {
     <div id="steps" class="row show-grid" style="display:none;" >
         <div class="actions">            
             <input type="button" name="next" id="next" value="_{Continue}" onclick="nextstep()" ondblclick="return false;" class="btn large primary "  />                    
-            <input type="button" name="back" id="back" value="_{Previous Step}" onclick="previousstep()" disabled="disabled" class="btn small" />
-                          
+            <input type="button" name="back" id="back" value="_{Previous Step}" onclick="previousstep()" disabled="disabled" class="btn small" />                          
         </div>
     </div>     
 </form>

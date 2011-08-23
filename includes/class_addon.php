@@ -158,7 +158,9 @@ class addon extends model {
 			}			
 		}
 		if ($serialize == true) {
-			$addon_fee = serialize($addon_fee);
+			if (!empty($addon_fee)) {
+				$addon_fee = serialize($addon_fee);
+			}
 		}
 		return $addon_fee;
 	}	

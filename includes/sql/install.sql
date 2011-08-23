@@ -159,7 +159,7 @@ INSERT INTO `%PRE%config` (name, `value`) VALUES
 ('rows_per_page', '20'),
 ('paypal_mode', '0'),
 ('domain_options', '2'),  -- 1 only domains, 2 only subdomains, 3 both
-('server_status', 'test'); -- 'test'  or 'production' 
+('server_status', 'production'); -- 'test'  or 'production' 
 
 
 
@@ -211,9 +211,8 @@ CREATE TABLE IF NOT EXISTS `%PRE%navbar` (
 --
 
 INSERT INTO `%PRE%navbar` (`icon`, `visual`, `link`, `order`) VALUES
-('cart.png', 'Order Form', 'order', 1),
-('user.png', 'Client Area', 'client', 0),
-('key.png', 'Admin Area', 'admin', 2),
+('home.png', 'Home', 'order', 1),
+('cart.png', 'Web hosting', 'order', 1),
 ('report_magnify.png', 'Knowledge Base', 'support', 3);
 
 -- --------------------------------------------------------
