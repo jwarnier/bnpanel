@@ -405,10 +405,7 @@ class model {
         }
         return empty($type_condition) ? '' : '('.join('OR',$type_condition).') ';
     }
-    
-    
-    
-    
+        
     public function quotedId($id = false)
     {
         return $this->castAttributeForDatabase($this->getPrimaryKey(), $id ? $id : $this->getId());
@@ -541,7 +538,8 @@ class model {
     ====================================================================
     See also: Getting Attributes, Model Attributes, Toggling Attributes, Counting Attributes.
     */
-    public function setAttribute($attribute, $value, $inspect_for_callback_child_method = AK_ACTIVE_RECORD_ENABLE_CALLBACK_SETTERS, $compose_after_set = true)
+    public function setAttribute($attribute, $value, $inspect_for_callback_child_method = false, $compose_after_set = true)
+    //public function setAttribute($attribute, $value, $inspect_for_callback_child_method = AK_ACTIVE_RECORD_ENABLE_CALLBACK_SETTERS, $compose_after_set = true)
     {
         if($attribute[0] == '_'){
             return false;
@@ -549,7 +547,8 @@ class model {
        /* if($this->isFrozen()){
             return false;
         }*/
-        if($inspect_for_callback_child_method === true && method_exists($this,'set'.AkInflector::camelize($attribute))){
+        
+        /*if($inspect_for_callback_child_method === true && method_exists($this,'set'.AkInflector::camelize($attribute))){
             
             $watchdog[$attribute] = @$watchdog[$attribute]+1;
             if($watchdog[$attribute] == 5000){
@@ -560,7 +559,7 @@ class model {
             }
             $this->{$attribute.'_before_type_cast'} = $value;
             return $this->{'set'.AkInflector::camelize($attribute)}($value);
-        }        
+        } */       
         
         if($this->hasAttribute($attribute)){        
             //$this->{$attribute.'_before_type_cast'} = $value;
@@ -671,17 +670,22 @@ class model {
 	 * @return	mixed	inserted id or false if error 
 	 */
 	public function save($attributes) {
-		global $db;				
+		global $db, $main;
+		
+		$this->loadHook('pre_'.__FUNCTION__, $attributes);
+		
 		$new_attributes = $this->filterParams($attributes, $this->getColumns());
 		$sql = 'INSERT INTO '.$this->getTableName().' '.
 				'('.join(', ',array_keys($new_attributes)).') '.
 				'VALUES ('.join(',',array_values($new_attributes)).')';
 		//echo $sql; '<br />';
-		$db->query($sql);
+		$db->query($sql);		
 		$insert_id = $db->insert_id();
-		global $main;
-       	$main->addlog($sql);
-       	       	
+		
+		$attributes['id'] = $insert_id ;
+		
+		$this->loadHook('post_'.__FUNCTION__, $attributes);		
+		$main->addlog($sql);
 		return $insert_id;
 	}
 	
@@ -851,14 +855,15 @@ class model {
 		return $filtered_params;
 	}
 	
-	public function loadHook($function_name, $object) {
+	public function loadHook($function_name, $data = null) {
 		global $main;
-		$class_name = get_class($this);	// i.e invoice		
-		$classes = $main->loadHookFiles($class_name);		
-		if (isset($classes) && !empty($classes)) {
+		$my_class_name = get_class($this);	// i.e invoice, addon, etc	
+		$classes = $main->loadHookFiles($my_class_name);
+		
+		if (isset($classes) && !empty($classes)) { 
 			foreach ($classes as $class) {
 				if (class_exists($class)) {				
-					$class_obj = new $class($object);
+					$class_obj = new $class($data);
 					if (isset($class_obj)) {
 						$class_methods = get_class_methods($class);						
 						if (in_array($function_name, $class_methods)) {							
