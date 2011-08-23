@@ -254,9 +254,7 @@ function acp() {
 	$data['LEFT_COLUMN']  = $main->table($nav, $sidebar);
 	$data['RIGHT_COLUMN'] = '';
 	if (isset($main->getvar['sub'])) {
-		if ($content->navtitle) {
-			//$data['RIGHT_COLUMN'] = $main->table($subnav, $subsidebar); //sub title and content
-			
+		if ($content->navtitle) {		
 			$data['RIGHT_COLUMN'] = $subsidebar;
 		}
 	}
@@ -319,8 +317,8 @@ if (!isset($_SESSION['logged'])) {
 		
 		$content['CONTENT'] =  '<div align="center">'.$main->table("Admin Area - Login", $style->replaceVar("tpl/login/alogin.tpl", array()), "300px").'</div>';
 		
-		echo $style->get("tpl/layout/admin/header.tpl");
-		echo $style->replaceVar("tpl/layout/admin/content.tpl", $content);	
+		echo $style->get("tpl/layout/admin/header.tpl");		
+		echo $style->replaceVar("tpl/layout/client/content.tpl", $content);	
 		
 	}
 } elseif(isset($_SESSION['logged'])) {	

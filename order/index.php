@@ -42,8 +42,8 @@ if (!$main->getvar['id']) {
 }
 
 
-if($db->num_rows($packages2) == 0) {
-	$content .= $main->table("No packages", '<div class="warning">There are no available Packages</div>');
+if ($db->num_rows($packages2) == 0) {
+	$content .= '<div class="alert-message warning">There are no available Packages</div>';
 } else {
 	$n = 0;
 	$array['PACKAGES'] = null;
@@ -83,11 +83,7 @@ if($db->num_rows($packages2) == 0) {
 	$array['USER'] = "";
 	$array['DOMAIN'] = '<input name="cdom" id="cdom" type="text" maxlength="40" onkeyup="checkDomain();"/>';
 
-	if ($main->getCurrentUserId()) {
-		$array['LOGIN_TPL'] = '';
-	} else {
-		$array['LOGIN_TPL'] = '<div id="login_form" title="Login ">'.$style->replaceVar("tpl/login/login_widget.tpl", array()).'</div>';
-	}
+
 	$subdomain_list = $main->getSubDomains();
 
 	switch($db->config('domain_options')) {
@@ -135,12 +131,12 @@ if($db->num_rows($packages2) == 0) {
 
 	//Determine what to show in Client box
 	if(!isset($_SESSION['clogged'])) {
-		//$content = $style->replaceVar("tpl/login/clogin.tpl");
+
 	} else {
 		$user_id = $main->getCurrentUserId();
 		$clientdata = $db->client($user_id);
 		$array['NAME'] = $clientdata['user'];
-		//$content = $style->replaceVar("tpl/user/cdetails.tpl", $array);
+
 	}
 
 	if(!isset($maincontent)) {

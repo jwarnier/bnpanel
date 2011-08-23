@@ -9,6 +9,6 @@
 	<input type="password" name="pass" id="pass_login" tabindex="2" size="20" />
 </p>
 <p class="submit">
-	<input type="button" ondblclick="return false" onclick="login();" name="clogin" id="clogin" value="_{Login}" tabindex="3" />
+	<input type="button" ondblclick="return false" onclick="loginUser();" name="clogin" id="clogin" value="_{Login}" tabindex="3" />
 </p>
 </form>

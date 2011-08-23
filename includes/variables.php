@@ -3,10 +3,11 @@
 
 $navigation = $pagegen = $version = '';
  
+//Define global, as we are going to pull up things from db
+global $db, $starttime, $style, $main;
+
 if (INSTALL == 1) {
-	//Define global, as we are going to pull up things from db
-	global $db, $starttime, $style, $main;
-	
+		
 	if ($db->config("show_page_gentime") == 1) {
 		$mtime = explode(' ', microtime());
 		$totaltime = $mtime[0] + $mtime[1] - $starttime;
@@ -59,17 +60,27 @@ if (INSTALL == 1) {
 			}
 		}
 	}	
-	$array3 = array();
-	$array3['NAV'] = null;
-	if (!empty($navbits)) {
-	    $array3['NAV'] = $navbits;
-	}
-	
-	$tpl = "tpl/menu/top_main.tpl";
-		
-	$navigation = $style->replaceVar($tpl, $array3);
-	$navigation = preg_replace("/<APP_NAME>/si", NAME, $navigation);
-	
+}
+
+$array3 = array();
+$array3['NAV'] = null;
+$array3['ADMIN_NAV'] = null;
+if (!empty($navbits)) {
+	$array3['NAV'] = $navbits;
+}
+if ($main->getCurrentStaffId()) {
+	$array3['ADMIN_NAV'] = '<li><a href="<URL>admin">Administration</a></li>';
+}
+
+$tpl = "tpl/menu/top_main.tpl";
+$navigation = $style->replaceVar($tpl, $array3);
+$navigation = preg_replace("/<APP_NAME>/si", NAME, $navigation);
+
+
+
+if ($main->getCurrentUserId()) {	
+} else {	
+	$data = preg_replace("/<LOGIN_TPL>/si",'<div id="login_form" title="Login">'.$style->replaceVar("tpl/login/login_widget.tpl", array()).'</div>', $data);
 }
 
 global $main;

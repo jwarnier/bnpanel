@@ -14,17 +14,6 @@ $(document).ready(function(){
 	   this.value = this.value.toLowerCase();
 	   check('user', this.value);
    });   
-   
-   //Modal login options see http://jqueryui.com/demos/dialog/#animated for more information
-   $('#login_form').dialog({
-		autoOpen: 	false, //Avoid dialog problem
-		modal: 		true,
-		draggable: 	false,
-		resizable:	false,
-		height:		'auto',
-		position: 	'center'
-			
-	});   
 });
 
 function stopRKey(evt) { 
@@ -102,30 +91,6 @@ function showhide(hide, show) {
 		
 }
 
-function login() {
-	var user = $("#user_login").val();
-	var pass = $("#pass_login").val();	
-	$.get("<AJAX>function=clientLogin&user="+user+"&pass="+pass, function(data) {
-		if (data != '') {
-			if (data == 1) {
-				if (step == '5') {					
-					showhide(step, step + 1)
-					step = step + 1;						
-				}
-				$.get("<AJAX>function=getNavigation", function(data2) {
-					$("#welcome").html(data2);	
-				});			
-				$("#login_form").dialog('close');			
-			} else {
-				alert('Please, try again');
-			}
-		}		
-	});		
-}
-
-function showLogin() {	
-	$("#login_form").dialog('open');
-}
 
 function nextstep() {
 	//alert(step);
@@ -670,8 +635,7 @@ function checkSubdomain() {
            <td>
            <div class="big_title">
 				<a onclick="showLogin();" href="#">_{Log in to your account}</a>
-			</div>				
-           %LOGIN_TPL%           
+			</div>  
            </td>
            </tr> 
            </table>            

@@ -53,14 +53,18 @@ class style {
 	
 	public function show_login_link() {
 		global $main;
+		if ($main->getCurrentStaffId()) {
+			return '';
+		}
 		$user_info = $main->getCurrentUserInfo();
-		
 		$link = '';
-		if (!empty($user_info)) {
-			$link = '<li><a href="'.URL.'client">'.$user_info['user'].'</a></li><li><a href="'.URL.'client/?page=logout">Logout</a></li>';
-		} else {
-			$link = '<li><a href="#" onclick="showLogin();">Sign in</a></li>';
-		}		
+		if (INSTALL) {
+			if (!empty($user_info)) {
+				$link = '<li><a href="'.URL.'client">'.$user_info['user'].'</a></li><li><a href="'.URL.'client/?page=logout">Logout</a></li>';
+			} else {
+				$link = '<li><a href="#" onclick="showLogin();">Sign in</a></li>';
+			}		
+		}
 		return $link;
 	}
 	

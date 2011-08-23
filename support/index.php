@@ -31,7 +31,7 @@ if($db->config("senabled") == 0) {
 		$html = "Seems like the .php is non existant. Is it deleted?";	
 	} else {
 		//If deleting something
-		if(preg_match("/[\.*]/", $main->getvar['page']) == 0) {
+		if (preg_match("/[\.*]/", $main->getvar['page']) == 0) {
 			require $link;
 			$content = new page();
 			if(isset($main->getvar['sub'])) {
@@ -48,7 +48,7 @@ if($db->config("senabled") == 0) {
 				ob_clean(); # Flush the HTML	
 			}
 		} else {
-			$html = "You trying to hack me? You've been warned. An email has been sent.. May I say, Owned?";
+			$html = "";
 			$email->staff("Possible Hacking Attempt", "A user has been logged trying to hack your copy of BNPanel, their IP is: ". $main->removeXSS($_SERVER['REMOTE_ADDR']));
 		}
 	}
