@@ -169,10 +169,10 @@ function nextstep() {
 						showhide(step, step + 1)
 						step = step + 1;						
 					} else {
-						$("#verify").html("<div class='alert-message info'>You must fill all the fields</div> "+wrong);
+						$("#verify").html("<div class='alert-message info'>You must fill all the fields</div>");
 					}	
 				} else {
-					$("#verify").html("<div class='alert-message info'>You must fill all the fields</div> "+wrong);
+					$("#verify").html("<div class='alert-message info'>You must fill all the fields</div>");
 				}													
 			});
 			
@@ -189,11 +189,11 @@ function nextstep() {
 				var subdomain		= document.getElementById("csub").value;
 				
 				if (subdomain == '') {
-					$("#verify").html("<strong>You must fill all the fields</strong> "+wrong);
+					$("#verify").html("<strong>You must fill all the fields</strong>");
 					break;
 				}
 				if (subdomain_id == '' ) {
-					$("#verify").html("<strong>You must select a domain</strong> "+wrong);
+					$("#verify").html("<strong>You must select a domain</strong>");
 					break;
 				}
 				final_domain = subdomain;
@@ -202,14 +202,14 @@ function nextstep() {
 				var subdomain_id 	= '';
 				var subdomain       = '';
 				if (final_domain == '') {
-					$("#verify").html("<strong>You must fill a domain name</strong> "+wrong);
+					$("#verify").html("<strong>You must fill a domain name</strong>");
 					break;
 				}
 			}
 			
 			$.get("<AJAX>function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {							
 				if (data == '1') {
-					$("#verify").html("<strong>Domain already exists</strong> "+wrong);					
+					$("#verify").html("<strong>Domain already exists</strong>");					
 				} else if(data == '0') {
 					final(step, step + 1);
 					step = step + 1
@@ -266,7 +266,7 @@ function nextstep() {
 						});
 					});
 				} else {
-					$("#verify").html("<strong>Seems that you took a lot of time to decide...</strong> "+wrong);		
+					$("#verify").html("<strong>Seems that you took a lot of time to decide...</strong>");		
 				}			
 			});			
 			break;
@@ -459,6 +459,7 @@ function checkSubdomain() {
         	<h3>Already a registered?</h3>
         	</div>
             <a onclick="showLogin();" href="#">_{Log in to your account}</a>
+            <br /> <br />
                
             <div class="page-header">        
             <h3>New users</h3>

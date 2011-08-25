@@ -95,3 +95,13 @@ section {
 header, section, footer, article, aside {
     display: block;
 }
+
+#showaddons {
+	margin-top:15px;
+}
+
+.price {
+	color: #404040;
+    font-weight: bold;
+    font-size: 16px;
+}
