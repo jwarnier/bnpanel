@@ -1112,13 +1112,13 @@ class AJAX {
     * Get addons in the Order Form
     */
    function getAddons() {
-   		global $main, $db, $currency;
+   		global $main, $db, $currency, $style;
 		$billing_id = intval($main->getvar['billing_id']);			
    		$package_id = intval($main->getvar['package_id']);	  
    		
    		if(!empty($billing_id) && !empty($package_id)) {
    		
-	   		$html = '<div class="page-header"><h2>Package Order</h2></div><table width="100%" >';
+	   		$html = '<div class="page-header"><h3>Package</h3></div><table width="100%">';
 	   		
 	   		$sql = "SELECT a.name, amount, bc.name  as billing_name  FROM `<PRE>packages` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
 					ON (bc.id = b.billing_id) WHERE a.id = $package_id AND bc.id = $billing_id  AND b.type = '".BILLING_TYPE_PACKAGE."' ";
@@ -1127,14 +1127,14 @@ class AJAX {
 			if ($db->num_rows($result) > 0) {				
 				while($data = $db->fetch_array($result)) {
 					$amount_to_show  = $currency->toCurrency($data['amount']);			
-			       	$html .= "<tr><td width=\"33%\"> {$data['name']}</td>
+			       	$html .= "<tr><td width=\"33%\">{$data['name']}</td>
 			            <td width=\"33%\" align=\"right\"><strong>{$data['billing_name']}</strong></td>
-			            <td width=\"33%\" align=\"right\">{$amount_to_show}</td>		     
+			            <td width=\"33%\" align=\"right\"><div class='price' >{$amount_to_show}</div></td>		     
 			        	</tr>";
 			        $package_billing_info_exist = true;
 				} 
 			} else {
-				$html .='No data for this package at the moment'; 					
+				$html .=' No data for this package at the moment'; 					
 			}
 			
 	   		$html .='</table></fieldset><br />';
@@ -1145,7 +1145,7 @@ class AJAX {
 	   		if ($db->num_rows($result) > 0) {
 	   			$info_exist = false;
 		   		$html .= '<fieldset style="width:98%;"><legend><b>Order Add-Ons</b></legend>';
-		   		$html .= '<table class="common-table" >';
+		   		$html .= '<table class="common-table">';
 		   		
 		   		while($data = $db->fetch_array($result,'ASSOC')) {		   			
 		   			$sql = "SELECT a.name, a.mandatory, description, setup_fee, bc.name as billing_name, b.amount FROM `<PRE>addons` a INNER JOIN `<PRE>billing_products` b ON (a.id = b.product_id) INNER JOIN `<PRE>billing_cycles` bc
@@ -1172,7 +1172,7 @@ class AJAX {
 						}						
 						$html .='<input id="addon_ids" '.$checked.' value="'.$data['addon_id'].'" name="addon_ids" type="checkbox"></td>';
 						$html .='<td width="33%">'.$addon['name'].' '.$addon_mandatory_text.' </td><td align="right">'.$setup_fee.'</td><td align="right"><strong>'.$addon['billing_name'].'</strong></td>';
-						$html .='<td width="33%" align="right">'.$addon['amount'].'</td></tr>';
+						$html .='<td width="33%" align="right"><div class="price" >'.$addon['amount'].'</div></td></tr>';
 						$info_exist = true;
 					}
 		   		}
@@ -1182,10 +1182,10 @@ class AJAX {
 			if ($package_billing_info_exist) {
 	   			echo $html;
 	   		} else {
-	   			echo 'Please select a Billing cycle';
+	   			echo $style->returnMessage('Please select another Billing cycle');
 	   		}
    		} else  {
-   			echo 'Please select a Billing cycle';
+   			echo $style->returnMessage('Please select another Billing cycle');
    		}
    }
    
@@ -1257,7 +1257,7 @@ class AJAX {
 		            <td></td>
 		            <td>{$data['name']}</td>
 		            <td>{$data['billing_name']} </td>
-		            <td align=\"right\">{$amount_to_show}</td>
+		            <td align=\"right\"><div class='price' >{$amount_to_show}</div></td>
 		            <td></td>
 		        	</tr>";
 		        $total = $total + $data['amount'];
@@ -1269,7 +1269,7 @@ class AJAX {
 		            <td></td>
 		            <td></td>
 		            <td><b><p class="price" >Total</p></b></td>
-		            <td align="right"><p class="price">'.$total_to_show.'</p></td>
+		            <td align="right"><div class="price">'.$total_to_show.'</div></td>
 		            <td></td>
 		        </tr>';
 		$html .='</table>';			  	        
