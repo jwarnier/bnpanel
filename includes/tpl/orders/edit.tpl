@@ -163,9 +163,7 @@ function loadAddons(obj) {
   %SITE_STATUS_INFO%
 </div>
 
-<table width="100%" border="0" cellspacing="2" cellpadding="0">
-  <tr>
-    <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Edit order" /></td>
-  </tr>
-</table>
+<div class="actions">
+    <input type="submit" name="add" id="add" value="Edit order" class="btn primary"/>
+</div>
 </form>

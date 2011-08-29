@@ -134,9 +134,8 @@
 
 %INVOICE_LIST%
  
-<table width="100%" border="0" cellspacing="2" cellpadding="0">
-  <tr>
-    <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Add invoice" /></td>
-  </tr>
-</table>
+<div class="actions">
+<input type="submit" name="add" id="add" value="Add invoice" class="btn primary"/>
+</div>
+
 </form>
