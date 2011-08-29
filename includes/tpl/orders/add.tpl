@@ -272,9 +272,7 @@ function checkdomain() {
     </td>    
   </tr>   
 </table>
-<table width="100%" border="0" cellspacing="2" cellpadding="0">
-  <tr>
-    <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Add order" /></td>
-  </tr>
-</table>
+<div class="actions">
+<input type="submit" name="add" id="add" value="Add order" class="btn primary"/>
+</div>
 </form>
