@@ -1,6 +1,6 @@
 <?php
 
-class ExampleInvoice extends Hook {
+class Hook_Example_Invoice extends Hook {
 	
 	function pre_save() {
 		//echo 'Calling function '.__FUNCTION__.' - BEFORE the save invoice is loaded';

@@ -19,8 +19,7 @@ class invoice extends model {
 	public function create($params) {
 		global $main, $db, $user, $email, $order;
 		
-		$params['created'] = date('Y-m-d h:i:s');
-		
+		$params['created'] = date('Y-m-d h:i:s');		
 		$invoice_id = $this->save($params);
 		
 		$order_id 	= intval($params['order_id']);
@@ -158,8 +157,7 @@ class invoice extends model {
 			$total_amount = 0;			
 			//Getting addon information
 			if (!empty($array['addon_fee'])) {
-				//the addon_fee is a serialize string
-				
+				//the addon_fee is a serialize string				
 				$array['addon_fee'] = unserialize($array['addon_fee']);
 				if (is_array($array['addon_fee']) && count($array['addon_fee']) > 0) {		
 					foreach($array['addon_fee'] as $addon) {					
@@ -261,13 +259,15 @@ class invoice extends model {
 			//Getting the k info
 			$order_id 		 = $this->getOrderByInvoiceId($array['id']);
 			$order_info 	 = $order->getOrderInfo($order_id);
-			
-			$array['domain'] 	= $order_info['real_domain'];					
-			$package_id 	  	= $order_info['pid'];
-			$billing_cycle_id 	= $order_info['billing_cycle_id'];			
+			if (!empty($order_info)) {			
+				$array['domain'] 	= $order_info['real_domain'];					
+				$package_id 	  	= $order_info['pid'];
+				$billing_cycle_id 	= $order_info['billing_cycle_id'];
+			}			
 			
 			$addon_fee_string = '';
-			if (!empty($array['addon_fee'])) {
+			//@todo fix the addon_fee
+			if (!empty($array['addon_fee']) && $array['addon_fee'] != 'Array') {				
 				
 				$array['addon_fee'] = unserialize($array['addon_fee']);				
 				///var_dump($array['addon_fee']);

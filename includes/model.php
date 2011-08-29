@@ -26,6 +26,8 @@ class model {
 	public $_newRecord;	
 	public $has_many;
 	
+	public $is_virtual_obj = false;
+	
 		
 	public function __construct() {	
 		global $db;
@@ -33,6 +35,7 @@ class model {
         $attributes = (array)func_get_args();        
         return $this->init($attributes);
     }
+    
 
     public function init($attributes = array()) {  
     	    
@@ -86,7 +89,9 @@ class model {
         		$handler_name = $class_item['table_name'];
         		$handler = new Model();
         		$handler->setColumns($class_item['columns']);   
-        		$handler->setTableName($handler_name);        				
+        		$handler->setTableName($handler_name);
+        		$handler->_modelName = $class_item['table_name'];
+        		$handler->is_virtual_obj = true;
         		$this->$handler_name = $handler;        		
         	}        	        	
         }
@@ -183,7 +188,7 @@ class model {
             if (!empty($options['returns']) && $options['returns']!='default') {            	
                 $options['returns'] = in_array($options['returns'],array('simulated','default','array'))?$options['returns']:'default';
                 $simulation_class = !empty($options['simulation_class']) && class_exists($options['simulation_class'])?$options['simulation_class']:'AkActiveRecordMock';
-                $result =& $this->findBySql($sql,null,null,null,$options['returns'],$simulation_class);
+                $result =& $this->findBySql($sql,null,null,null,$options['returns'],$simulation_class);                
             } else {            	
                 $result =& $this->findBySql($sql);
             }
@@ -291,8 +296,9 @@ class model {
             //Ak::deprecateWarning("You're calling AR::findBySql with \$limit or \$offset parameters. This has been deprecated.");
             $this->_db->addLimitAndOffset($sql, array('limit'=>$limit,'offset'=>$offset));
         }
-        $objects = array();                
-        $records = $this->_db->select ($sql,'selecting');
+        $objects = array();                        
+        $records = $this->_db->select ($sql,'selecting');  
+              
         foreach ($records as $record){
             if ($returns == 'default') {
                 $objects[] =& $this->instantiate($this->getOnlyAvailableAttributes($record), false);
@@ -306,7 +312,7 @@ class model {
             $false = false;
             $objects = $this->_generateStdClasses($simulation_class,$objects,$this->getType(),$false,$false,array('__owner'=>array('pk'=>$this->getPrimaryKey(),'class'=>$this->getType())));
         }
-
+		
         return $objects;
     }
     
@@ -325,7 +331,7 @@ class model {
 
         $sql .= !empty($options['group']) ? ' GROUP BY '.$options['group'] : '';
         $sql .= !empty($options['order']) ? ' ORDER BY '.$options['order'] : '';
-
+        
         $this->_db->addLimitAndOffset($sql,$options);
 		
         return $sql;
@@ -351,7 +357,9 @@ class model {
         
         $concat = empty($sql) ? '' : ' WHERE ';
         if (stristr($sql,' WHERE ')) $concat = ' AND ';
-        if (empty($conditions) && $this->_getDatabaseType() == 'sqlite') $conditions = '1';  // sqlite HACK
+        
+        //if (empty($conditions) && $this->_getDatabaseType() == 'sqlite') $conditions = '1';  // sqlite HACK
+        if (empty($conditions)) $conditions = '1';  // sqlite HACK
 
         //if($this->getInheritanceColumn() !== false && $this->descendsFromActiveRecord($this)){
         if (1) {
@@ -499,9 +507,19 @@ class model {
         }*/
 		
         $model_name = isset($inheritance_model_name) ? $inheritance_model_name : $this->getModelName();
-        $object = new $model_name();
-        $object->setAttributes($record);				
-        $object->_newRecord = $set_as_new;
+    
+    	if (class_exists($model_name)) {
+	        $object = new $model_name();
+	        $object->setAttributes($record);				
+	        $object->_newRecord = $set_as_new;
+    	} else {    		
+			if ($this->is_virtual_obj) {
+				$this->setAttributes($record);
+				$this->_newRecord = $set_as_new;
+				return $this;
+			}
+    	}
+    	
         /*if ($call_after_instantiate) {
             $object->afterInstantiate();
             $object->notifyObservers('afterInstantiate');
@@ -605,7 +623,7 @@ class model {
         return isset($columns[$attribute]);
     }
     
-    public function getOnlyAvailableAttributes($attributes){    	
+    public function getOnlyAvailableAttributes($attributes) {    	
         $table_name = $this->getTableName();
         $ret_attributes = array();
         if(!empty($attributes) && is_array($attributes)){
@@ -634,7 +652,8 @@ class model {
 
     public function getAvailableAttributes()
     {
-        //return array_merge($this->getColumns(), $this->getAvailableCombinedAttributes());
+        //return array_merge($this->getColumns(), $this->getAvailableCombinedAttributes()); 
+        
         return $this->getColumns();
     }
 
@@ -654,7 +673,7 @@ class model {
     
     
     function getModelName() {
-        if(!isset($this->_modelName)){
+        if (!isset($this->_modelName)){
             if(!$this->setModelName()){
                 trigger_error(Ak::t('Unable to fetch current model name'),E_USER_NOTICE);
             }
@@ -856,13 +875,12 @@ class model {
 	}
 	
 	public function loadHook($function_name, $data = null) {
-		global $main;
+		global $main;		
 		$my_class_name = get_class($this);	// i.e invoice, addon, etc	
 		$classes = $main->loadHookFiles($my_class_name);
-		
 		if (isset($classes) && !empty($classes)) { 
 			foreach ($classes as $class) {
-				if (class_exists($class)) {				
+				if (class_exists($class)) {
 					$class_obj = new $class($data);
 					if (isset($class_obj)) {
 						$class_methods = get_class_methods($class);						
