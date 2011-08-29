@@ -94,7 +94,9 @@ class order extends model {
 		$order_status = array_keys($main->getOrderStatusList());
 		
 		$package_info   = $package->getPackage($order_info['pid']);		
-		$serverphp		= $server->loadServer($package_info['server']); # Create server class		
+		
+		$serverphp		= $server->loadServer($package_info['server']); # Create server class	
+			
 		$site_info = false;
 		if ($serverphp != false ) {					
 			$site_info 		= $serverphp->getSiteStatus($order_id);
@@ -104,12 +106,14 @@ class order extends model {
 		//Email
 		$array['USERNAME']	= $user->formatUsername($user_info['firstname'], $user_info['lastname']);		
 		
+		$server_status = isset($serverphp) && isset($serverphp->status) ? $serverphp->status : false;
+		
 		if (in_array($status, $order_status)) {				
 			switch($status) {
 				case ORDER_STATUS_ACTIVE:			
 					//Setting email
 					$send_email = false;				
-					if ($serverphp->status) {			
+					if ($server_status) {			
 						if ($site_info != false) {
 							//Activating site
 							$result = $server->unsuspend($order_id);							
@@ -151,7 +155,7 @@ class order extends model {
 					}				
 					break;
 				case ORDER_STATUS_WAITING_ADMIN_VALIDATION:
-					if ($serverphp->status) {	
+					if ($server_status) {	
 						if ($site_info != false) {
 							//If site exists we sent an email and user the server->suspend		
 							$emailtemp 	= $db->emailTemplate('orders_waiting_admin');
@@ -173,7 +177,7 @@ class order extends model {
 					}
 					break;
 				case ORDER_STATUS_CANCELLED:	
-					if ($serverphp->status) {			
+					if ($server_status) {			
 						if ($site_info != false) {
 							//If site exists we sent an email and user the server->suspend 
 							$emailtemp 	= $db->emailTemplate('orders_cancelled');
@@ -191,7 +195,7 @@ class order extends model {
 					break;
 				case ORDER_STATUS_DELETED:				
 				case ORDER_STATUS_WAITING_USER_VALIDATION:
-					if ($serverphp->status) {				
+					if ($server_status) {				
 						if ($site_info != false) { 		
 							//If site exists we sent an email and user the server->suspend we dont delete the Order in ISPConfig3					
 							$result = $server->suspend($order_id);
@@ -224,8 +228,8 @@ class order extends model {
 	 */
 	public function delete($id) { # Deletes invoice upon invoice id
 		global $main, $invoice;
-		$result = $this->updateOrderStatus($id, ORDER_STATUS_DELETED);		
-		if($result ) {		
+		$result = $this->updateOrderStatus($id, ORDER_STATUS_DELETED);				
+		if ($result ) {
 			$main->addLog("Order id $id deleted ");
 			
 			//Delete all invoices also
@@ -270,8 +274,9 @@ class order extends model {
 		$main->addlog('order::sendOrderToControlPanel Order #'.$order_id);
 		$order_info		= $this->getOrderInfo($order_id);
 		$package_info 	= $package->getPackage($order_info['pid']);
-		$serverphp 		= $server->loadServer($package_info['server']); # Create server class		
-		if (isset($serverphp) && $serverphp->status) {
+		$serverphp 		= $server->loadServer($package_info['server']); # Create server class
+				
+		if (isset($serverphp) && isset($serverphp->status)) {
 			$result 	= $serverphp->signup($order_id);				
 			if ($result) {
 				$all_addons_info = $addon->getAllAddons();	
@@ -669,13 +674,8 @@ class order extends model {
 		return false;
 	}
 	
-		
-	function test() {		
-		/*
-		$my_order = $this->find(2,3);
-		foreach($my_order as $item) {
-		var_dump($item->id);	
-		}*/	
+	function test() {
+	
 	}
-		
+			
 }

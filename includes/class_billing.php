@@ -14,8 +14,8 @@ class billing extends model {
 	
 	
 	public function create($params) { 
-		$billing_id = $this->save($params);
-		return $billing_id;
+		$id = $this->save($params);
+		return $id;
 	}
 	
 	public function edit($id, $params) {		

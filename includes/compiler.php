@@ -199,13 +199,28 @@ if ($main->checkUserAgent() == false) {
 	$main->logout();
 }
 
-/* Autoload classes */
-function __autoload($class_name) {
-	$class_name = strtolower($class_name);
-    require_once LINK.'class_'.$class_name . '.php';
+/* Autoload base classes and hook classes */
+
+function __autoload($class_name) {	
+	//Loading BNPanel classes
+	if (strpos($class_name, 'hook') === false) {		
+		$class_name = strtolower($class_name);
+		$class_file = LINK.'class_'.$class_name.'.php';		
+	} else {
+		//Loading BNPanel Hook classes i.e dolibarr
+		list($hook, $module, $class) = explode('_', $class_name);
+	
+		//This is a hook class		
+		$class_file = LINK.'hooks/'.$module.'/'.$class.'.php';		
+	}	
+	
+    if (file_exists($class_file)) {    	
+    	require_once $class_file;
+    }
+    
 }
 
-$available_classes = array('addon', 'billing', 'currency', 'email', 'invoice', 'order', 'package', 'server', 'staff', 'style', 'ticket', 'type','user');
+$available_classes = array('addon', 'billing', 'currency', 'email', 'invoice', 'order', 'package', 'server', 'staff', 'style', 'ticket', 'type','user', 'extrafield');
 foreach($available_classes as $class_item) {	
 	${$class_item} = new $class_item();
 	global ${$class_item};		

@@ -587,3 +587,40 @@ CREATE TABLE `%PRE%order_invoices` (
   PRIMARY KEY (id)
 );
 
+CREATE TABLE `%PRE%extrafields` (
+    id	    INT NOT NULL auto_increment,
+    field_name	varchar(255) NOT NULL,
+    model	varchar(255),
+    field_type varchar(255),
+    field_display_text	varchar(255),
+    field_default_value text,
+    field_order int,
+    field_visible tinyint default 0,
+    field_changeable tinyint default 0,
+    field_filter tinyint default 0,
+    tms	DATETIME NOT NULL default '0000-00-00 00:00:00',
+    PRIMARY KEY(id)
+);
+
+-- DROP TABLE IF EXISTS `%PRE%extrafield_options`;
+CREATE TABLE `%PRE%extrafield_options` (
+    id	int NOT NULL auto_increment,
+    field_id int	NOT NULL,
+    option_value	text,
+    option_display_text varchar(64),
+    option_order int,
+    tms	DATETIME NOT NULL default '0000-00-00 00:00:00',
+    PRIMARY KEY (id)
+);
+--DROP TABLE IF EXISTS `%PRE%extrafield_values`;
+CREATE TABLE `%PRE%extrafield_values`(
+    id	bigint	NOT NULL auto_increment,
+    model_id int NOT NULL,
+    field_id int NOT NULL,
+    field_value	text,
+    tms DATETIME NOT NULL default '0000-00-00 00:00:00',
+    PRIMARY KEY(id)
+);
+
+
+

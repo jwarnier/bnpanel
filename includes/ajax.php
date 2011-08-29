@@ -1333,7 +1333,7 @@ class AJAX {
 	   		if (is_array($user_list) && count($user_list) > 0) {
 	   			foreach($user_list as $user_item) {
 	   				$user_name = $user->formatUsername($user_item['firstname'], $user_item['lastname']);
-	   				$user_name = $user_name." (".$user_item['email'].")";
+	   				$user_name = $user_name." (".$user_item['email']." ) ".$user_item['user'];
 	   				echo "<li onclick=\"fill('{$user_name}', '{$user_item['id']}');\">$user_name</li>";	
 	   			}
 	   		}
