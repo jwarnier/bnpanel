@@ -9,6 +9,7 @@ class test extends Panel {
 		
 	public	$name = 'Test';
 	public	$hash = false; # Password or Access Hash?	
+	public  $status = true; //The test is always true!
 			
 	public function testConnection() {		
 		return 'Logged into the Test Server successfully';						
@@ -37,7 +38,7 @@ class test extends Panel {
 		
 		@author Julio Montoya <gugli100@gmail.com> BeezNest	2010
 	*/
-	public function signup($order_id, $package_id, $domain_username, $domain_password, $user_id, $domain, $sub_domain_id) {		
+	public function signup($order_id) {		
 		return true;	
 	}
 	
