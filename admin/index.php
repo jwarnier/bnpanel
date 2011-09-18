@@ -237,7 +237,8 @@ function acp() {
 	}
 	
 	if (isset($header)) {
-		$data['RIGHT_COLUMN'] .= $main->table($header, $html);
+		$data['HEADER'] = $header;
+		$data['RIGHT_COLUMN'] .= $html;
 	} else {
 		$data['RIGHT_COLUMN'] .= $html;
 	}

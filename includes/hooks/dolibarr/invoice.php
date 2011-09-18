@@ -18,6 +18,7 @@ class Hook_Dolibarr_Invoice extends Hook {
 		if (!empty($this->data) && !empty($this->data['id'])) {
 
 			$user_info = $user->getUserById($this->data['uid']);
+			var_dump($user_info); exit;
 			
 			
 			//1. First we create the dolibarr_societe_id field

@@ -10,7 +10,7 @@ class page {
 	public function __construct() {
 		global $main, $server;
 		$this->navtitle = "Servers Sub Menu";
-		$this->navlist[] = array("View All Servers", "server_go.png", "view");
+		$this->navlist[] = array("Servers", "server_go.png", "view");
 		$this->navlist[] = array("Add Server", "server_add.png", "add");
 				
 		//@todo change this and user a simple array 

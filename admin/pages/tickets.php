@@ -10,8 +10,8 @@ class page {
 
 	public function __construct() { # When class is made, retrieves all details like sending method, details.		
 		$this->navtitle = "Tickets Menu";
-		$this->navlist[] = array ("View Open Tickets","page_white_go.png","view");
-		$this->navlist[] = array ("View All Tickets","page_white_go.png","all");
+		$this->navlist[] = array ("Open Tickets","page_white_go.png","view");
+		$this->navlist[] = array ("Tickets","page_white_go.png","all");
 	}
 
 	public function description() {

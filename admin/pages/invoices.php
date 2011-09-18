@@ -12,7 +12,7 @@ class page {
 	
 	public function __construct() {
 		$this->navtitle = "Invoice Sub Menu";
-		$this->navlist[] = array("View all Invoices", "package_go.png", "all");
+		$this->navlist[] = array("Invoices", "package_go.png", "all");
 	}
 	
 	public function description() {
