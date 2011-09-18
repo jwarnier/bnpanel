@@ -132,10 +132,12 @@
 </table>
 
 
-%INVOICE_LIST%
+
  
 <div class="actions">
 <input type="submit" name="add" id="add" value="Add invoice" class="btn primary"/>
 </div>
+
+%INVOICE_LIST%
 
 </form>

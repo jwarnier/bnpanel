@@ -1,6 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
-class page {	
+class page extends Controller {	
 	/*public function curl_get_content($url="http://thehostingtool.com/updates/version.txt"){  
          $ch = curl_init();
          curl_setopt($ch,CURLOPT_URL, $url);

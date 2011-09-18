@@ -28,27 +28,27 @@ class Hook_Dolibarr_Invoice extends Hook {
 				$params['field_type'] 	= 'text';
 				$params['model'] 		= 'user';
 				$extrafield->save($params);
-			}
-			
-			$extra_field_data = $extrafield->getExtraFieldByName('dolibarr_societe_id');
-			
+			}			
+			$extra_field_data = $extrafield->getExtraFieldByName('dolibarr_societe_id');			
 			$user_exists_in_dolibarr = false;
+			
+			$societe_id = null;
 			
 			//2. Check if the 
 			//var_dump($this->data, $extra_field_data);
 			if ($extra_field_data) {				
 				$conditions = array('conditions' => 'model_id  = '.$this->data['uid'].' AND field_id = '.$extra_field_data['id']);
 				$my_result = $extrafield->extrafield_values->find('first', $conditions);
-				if ($my_result) {
+				if ($my_result) {					
 					$user_exists_in_dolibarr = true;
+					$societe_id = $my_result->field_value;
 				}
-			}
+			}			
 			
-			// Load the create invoice
-			
+			// Load the create invoice			
 			$client = new nusoap_client($settings['dolibarr_url']);
-			$client->soap_defencoding='UTF-8';
-			$client->decodeUTF8(false);
+			//$client->soap_defencoding='UTF-8';
+			//$client->decodeUTF8(false);
 			
 			$params['nom'] 				= $user_info['firstname'].' '.$user_info['lastname'];
 			$params['adresse'] 			= $user_info['address'];
@@ -80,20 +80,51 @@ class Hook_Dolibarr_Invoice extends Hook {
 								'societe_params' => $params);			
 			$result = null;
 			
-			if (!$user_exists_in_dolibarr) {
-				
+			if (!$user_exists_in_dolibarr) {				
 				$result = $client->call('createSociete', $parameters, '','');
+				
+			
 				if ($result && isset($result['societe_id'])) {					
 			
 					$values['model_id'] 	= $this->data['uid'];
 					$values['field_id'] 	= $extra_field_data['id'];
-					$values['field_value']	= $result['societe_id'];
+					$societe_id = $values['field_value']	= $result['societe_id'];				
+					
+					//$values['tms']			= $result['societe_id'];
 					//Saving the extra field in the BNPanel DB
 					$extrafield->extrafield_values->save($values);					
 				} else {
 					print $client->error_str;
 				}
 			}
+						
+			//Creating an invoice in Dolibar			
+			if (!empty($societe_id)) {					
+
+				$params = array();
+				
+				$params['societe_id'] 	= $societe_id;
+				$params['amount'] 		= $this->data['amount'];
+				$params['remise'] 		= 0;
+				$params['price'] 		= $this->data['amount'];
+				$params['description'] 	= 'Chamilo';
+					
+				$parameters = array('authentication' => $settings['authentication'],
+														'invoice_params' => $params);
+					
+				$result = $client->call('createInvoice', $parameters, '','');
+				
+				
+				/*
+				echo '<h2>request</h2><pre>' . htmlspecialchars($client->request, ENT_QUOTES) . '</pre>';
+				echo '<h2>response</h2><pre>' . htmlspecialchars($client->response, ENT_QUOTES) . '</pre>';
+				echo '<h2>debug</h2><pre>' . htmlspecialchars($client->debug_str, ENT_QUOTES) . '</pre>';
+				*/
+				
+				
+			}
+			
+			exit;
 		}		
 		
 	}	

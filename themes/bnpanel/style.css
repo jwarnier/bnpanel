@@ -105,3 +105,10 @@ header, section, footer, article, aside {
     font-weight: bold;
     font-size: 16px;
 }
+
+#pagination_loading {
+    left: 950px;
+    position: absolute;
+    top: 68px;
+}
+}
