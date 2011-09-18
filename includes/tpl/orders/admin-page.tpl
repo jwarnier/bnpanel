@@ -50,7 +50,7 @@ function filter() {
 
 
 </script>	
-<p>From here you can see all orders in your BNPanel installation</p>
+<h2>Orders</h2>
 
 %STATUS_FILTER%
 <a  href="#" onclick="filter();">Apply</a>

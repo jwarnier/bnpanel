@@ -15,7 +15,7 @@ class page {
 							
 	public function __construct() {
 		$this->navtitle = "Packages Sub Menu";
-		$this->navlist[] = array("View all Packages", "package_add.png", "view");
+		$this->navlist[] = array("Packages", "package_add.png", "view");
 		$this->navlist[] = array("Add Package", "add.png", "add");
 		
 	}

@@ -9,7 +9,7 @@ class page {
 	public function __construct() {
 		
 		$this->navtitle = "Subdomain Sub Menu";
-		$this->navlist[] = array("View All Subdomains", "package_add.png", "view");
+		$this->navlist[] = array("Subdomains", "package_add.png", "view");
 		$this->navlist[] = array("Add Subdomain", "add.png", "add");				
 		
 	}

@@ -5,7 +5,7 @@
         	%LEFT_COLUMN%
         </div>
     </div>
-    <div class="content">
+    <div class="content">    	
         %RIGHT_COLUMN%
     </div>
 </div>

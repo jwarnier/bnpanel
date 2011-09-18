@@ -7,7 +7,7 @@ class page {
 							
 	public function __construct() {
 		$this->navtitle = "Staff Accounts Sub Menu";		
-		$this->navlist[] = array("View All Staff Account", "user_edit.png", "view");
+		$this->navlist[] = array("Staff Accounts", "user_edit.png", "view");
 		$this->navlist[] = array("Add Staff Account", "user_add.png", "add");
 	}
 	

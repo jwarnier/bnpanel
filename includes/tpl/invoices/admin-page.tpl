@@ -49,12 +49,9 @@ function filter() {
 }
 
 </script>
-<p>From here you can see all invoices in your BNPanel installation.</p>
-
+<h2>Invoices</h2>
 %STATUS_FILTER%
-<a  href="#" onclick="filter();">Apply</a>
-
-
+<a href="#" onclick="filter();">Apply</a>
 <ERRORS>
 
 

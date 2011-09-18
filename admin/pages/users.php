@@ -8,7 +8,7 @@ class page {
 							
 	public function __construct() {
 		$this->navtitle = "Clients Sub Menu";
-		$this->navlist[] = array("View All Clients", "magnifier.png", "search");
+		$this->navlist[] = array("Clients", "magnifier.png", "search");
 		$this->navlist[] = array("Add Client", "add.png", "add");		
 		$this->navlist[] = array("Client Statistics", "book.png", "stats");
 		
