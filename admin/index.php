@@ -67,12 +67,11 @@ function acp() {
 		$link 	= 'pages/'. $admin_nave_item['link'].'.php';
 	}
 	
-	// Left menu
-	$nav = "Sidebar Menu";
+	// Left menu	
 	$array['LINKS'] = '';
 	foreach ($admin_navigation as $row) {
 		if ($main->checkPerms($row['link'])) {
-			$array_item['IMGURL'] 	= $row['icon'];
+			$array_item['IMGURL'] 	= $row['icon'];			
 			$array_item['LINK'] 	= "?page=".$row['link'];
 			$array_item['VISUAL']	= $row['visual'];
 			
@@ -253,7 +252,7 @@ function acp() {
 	
 	define("INFO", '<b>Welcome back, '. strip_tags($staffuser['name']) .'</b><br />');	
 
-	$data['LEFT_COLUMN']  = $main->table($nav, $sidebar);
+	$data['LEFT_COLUMN']  = $sidebar;
 	$data['RIGHT_COLUMN'] = '';
 	if (isset($main->getvar['sub'])) {
 		if (isset($content->navtitle)) {		
@@ -317,7 +316,7 @@ if (!isset($_SESSION['logged'])) {
 			}
 		}	
 		
-		$content['CONTENT'] =  '<div align="center">'.$main->table("Admin Area - Login", $style->replaceVar("tpl/login/alogin.tpl", array()), "300px").'</div>';
+		$content['CONTENT'] =  $style->replaceVar("tpl/login/alogin.tpl", array());
 		
 		echo $style->get("tpl/layout/one-col/header.tpl");		
 		echo $style->replaceVar("tpl/layout/one-col/content.tpl", $content);	

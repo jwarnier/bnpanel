@@ -17,9 +17,8 @@ theme : "advanced",
 </script>
 <ERRORS>
 
-<div class="alert-message %BACKEND_MESSAGE_CLASS%">
+
 %BACKEND_MESSAGE%
-</div>
 
 <form class="content" id="addpackage" name="addpackage" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
@@ -121,9 +120,7 @@ theme : "advanced",
     <td colspan="2" id="customform">%FORM%</td>
   </tr>
 </table>
-<table width="100%" border="0" cellspacing="2" cellpadding="0">
-  <tr>
-    <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Edit Package" /></td>
-  </tr>
-</table>
+<div class="actions">
+    <input type="submit" name="add" id="add" value="Edit Package" class="btn primary"/>
+</div>
 </form>

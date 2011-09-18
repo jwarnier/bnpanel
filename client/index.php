@@ -199,7 +199,7 @@ if (!isset($_SESSION['clogged'])) {
 			define("INFO", SUB);
 			$content = '<div class="center">'.$main->table(gettext("Client Area - Disabled"), $db->config("cmessage"), "300px").'</div>';
 		} else {
-			$content = '<div align="center">'.$main->table(gettext("Client Area - Login"), $style->replaceVar("tpl/login/clogin.tpl", $array), "300px").'</div>';
+			$content = $style->replaceVar("tpl/login/clogin.tpl", $array);
 		}
 		
 		echo $style->get("tpl/layout/one-col/header.tpl");

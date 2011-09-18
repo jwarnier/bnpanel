@@ -1,6 +1,6 @@
 <div class="topbar">
-    <div class="fill">
-        <div class="container">
+    <div class="topbar-inner">
+        <div class="container-fluid">
             <h3><a href="<URL>"><APP_NAME></a></h3>
             <ul>
             	%NAV%

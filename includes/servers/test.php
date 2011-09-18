@@ -75,7 +75,7 @@ class test extends Panel {
 	}
 	
 	public function getAllPackageBackEnd() {
-		$result = array(1=>'A', 2=>'B');		
+		$result = array(1=>'test','2'=>'');		
 		return $result;
 	}
 	
