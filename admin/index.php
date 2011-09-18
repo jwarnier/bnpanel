@@ -104,30 +104,6 @@ function acp() {
 		if (preg_match("/[\.*]/", $main->getvar['page']) == 0  ) {			
 			require $link;
 			$content = new page();
-		
-			# Types Navbar // not to develop this type yet
-			/*
-			$type->createAll();			
-			foreach($type->classes as $key => $value) {
-				if($type->classes[$key]->acpNav) {
-					foreach($type->classes[$key]->acpNav as $key2 => $value)  {
-						$array2['IMGURL'] = $value[2];
-						$array2['LINK'] = "?page=type&type=".$key."&sub=".$value[1];
-						$array2['VISUAL'] = $value[0];
-						$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array2);	
-						if($main->getvar['page'] == "type" && $main->getvar['type'] == $key && $main->getvar['sub'] == $value[1]) {
-							define("SUB", $value[3]);
-							$header = $value[3];
-							$main->getvar['myheader'] = $value[3];
-						}
-					}
-				}
-			}			
-			$array2['IMGURL'] = "logout.png";
-			$array2['LINK'] = "?page=logout";
-			$array2['VISUAL'] = "Logout";
-			$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array2);
-			*/
 			
 			//Page Sidebar
 			
