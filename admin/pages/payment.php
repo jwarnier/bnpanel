@@ -10,7 +10,7 @@
 exit;
 require_once LINK.'plugins.php';
 
-class page {
+class page extends Controller {
 	
 	public $navtitle;
 	public $navlist = array();

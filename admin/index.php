@@ -101,7 +101,7 @@ function acp() {
 	} else {	
 		//If deleting something
 		//&& $main->linkAdminMenuExists($main->getvar['page']) == true
-		if (preg_match("/[\.*]/", $main->getvar['page']) == 0  ) {			
+		if (preg_match("/[\.*]/", $main->getvar['page']) == 0  ) {	
 			require $link;
 			$content = new page();
 			
@@ -110,33 +110,11 @@ function acp() {
 			$sidebar_link_link 	= "tpl/menu/leftmenu_link.tpl";
 			$sidebar_link 		= "tpl/menu/leftmenu_main.tpl";	
 				
-			if (isset($main->getvar['sub'])) {
-				$sidebar_link_link 	= "tpl/menu/submenu_link.tpl";
-				$sidebar_link 		= "tpl/menu/submenu_main.tpl";							
-			}
+			//if (isset($main->getvar['sub'])) {
+									
+			//}
 			
-			$subsidebar = '';
-			if (isset($content->navtitle) && $content->navtitle) {
-				$subnav = $content->navtitle;
-				if (isset($content->navlist)) {
-					$array3 = array();
-					$array3['LINKS'] = null;					
-					foreach($content->navlist as $key => $value) {
-												
-						$array2['IMGURL'] = $value[1];
-						$array2['LINK'] = "?page=".$admin_nave_item['link']."&sub=".$value[2];
-						$array2['VISUAL'] = $value[0];
-						
-						if (isset($main->getvar['sub']) && $value[2] == $main->getvar['sub']) {
-							$array2['ACTIVE'] 	= 'active';
-						} else {
-							$array2['ACTIVE'] 	= '';
-						}						
-						$array3['LINKS'] .= $style->replaceVar($sidebar_link_link, $array2);						
-					}					
-					$subsidebar = $style->replaceVar($sidebar_link, $array3);
-				}
-			}
+
 						
 			if (isset($main->getvar['sub']) && $main->getvar['sub'] && $admin_nave_item['link'] != "type") {				
 				if (is_array($content->navlist)) {
@@ -180,43 +158,26 @@ function acp() {
 				}
 			} else {
 				$html = '';
-				if (isset($main->getvar['sub'])) {
-					ob_start();
-					
+					ob_start();					
 					/** 
 					 * 	Experimental changes only applied to the billing cycle objects otherwise work as usual
 					 * 	 */
-					if (isset($content->pagename) && $content->pagename == 'billing') {
+					if (isset($content->pagename)) {
 						$method_list = array('add', 'edit', 'delete', 'show', 'listing');
-						$sub = $main->getvar['sub'];
-						if(in_array($sub, $method_list)) {
+						$sub = $main->get_variable('sub');
+						if (in_array($sub, $method_list)) {
 							$content->$sub();
 						} else {
 							$content->listing();
 						}
-					} else {										
+					} else {									
 						$content->content();
 					}
+					//$description = $content->description();
 					
 					$html = ob_get_contents(); # Retrieve the HTML
+				
 					ob_clean(); # Flush the HTML
-				} elseif(isset($content->navlist) && $content->navlist) {
-					$description = $content->description();
-					if (!empty($description)) {
-						$html .= $description; # First, we gotta get the page description.
-                    	$html .= "<br /><br />"; # Break it up
-					}
-                    // Now we should prepend some stuff here
-                    $subsidebar2 = "<strong>Page Submenu</strong><div class='break'></div>";
-                    $subsidebar2 .= $subsidebar;
-                    // Done, now output it in a sub() table
-                    $html .= $main->sub($subsidebar2, NULL); # Initial implementation, add the SubSidebar(var) into the description, basically append it 
-				} else {
-					ob_start();
-					$content->content();
-					$html = ob_get_contents(); # Retrieve the HTML
-					ob_clean(); # Flush the HTML
-				}
 			}
 		} else {
 			$html = "You trying to hack me? You've been warned. An email has been sent.. May I say, Owned?";
@@ -230,11 +191,7 @@ function acp() {
 
 	$data['LEFT_COLUMN']  = $sidebar;
 	$data['RIGHT_COLUMN'] = '';
-	if (isset($main->getvar['sub'])) {
-		if (isset($content->navtitle)) {		
-			$data['RIGHT_COLUMN'] = $subsidebar;
-		}
-	}
+	$data['SUBMENU'] = $content->get_submenu();
 	
 	if (isset($header)) {
 		$data['HEADER'] = $header;

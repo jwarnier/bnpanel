@@ -145,7 +145,6 @@ class model {
         switch ($fetch) {
             case 'first':
                 return $this->_findInitial($options);
-
             case 'all':
                 return $this->_findEvery($options);
             default:
@@ -296,7 +295,8 @@ class model {
             //Ak::deprecateWarning("You're calling AR::findBySql with \$limit or \$offset parameters. This has been deprecated.");
             $this->_db->addLimitAndOffset($sql, array('limit'=>$limit,'offset'=>$offset));
         }
-        $objects = array();                        
+        $objects = array();            
+                    
         $records = $this->_db->select ($sql,'selecting');  
               
         foreach ($records as $record){

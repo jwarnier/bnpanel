@@ -8,7 +8,7 @@
 	@author 	Julio Montoya <gugli100@gmail.com> BeezNest 2010 Addon feature implemented 
 	@package	bnpanel.packages	
 */
-class page {
+class page extends Controller {
 	
 	public $navtitle;
 	public $navlist = array();
@@ -30,7 +30,7 @@ class page {
 		global $main, $style, $db, $billing, $package,$addon, $server;
 		require_once LINK.'validator.class.php';		
 		
-		switch($main->getvar['sub']) {
+		switch ($main->get_variable('sub')) {
 			default:								
 				$asOption = array(
 				    'rules' => array(

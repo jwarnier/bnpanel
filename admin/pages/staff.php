@@ -1,6 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
-class page {
+class page extends Controller {
 	
 	public $navtitle;
 	public $navlist = array();

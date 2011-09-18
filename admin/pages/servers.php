@@ -1,7 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-class page {
+class page extends Controller {
 	
 	public $navtitle;
 	public $navlist = array();	
@@ -40,7 +40,7 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db, $server;
-		switch($main->getvar['sub']) {
+		switch ($main->get_variable('sub')) {
 			default:
 				if($_POST && $main->checkToken()) {
 					foreach($main->postvar as $key => $value) {
@@ -62,7 +62,7 @@ class page {
 				$array['TYPE'] = $main->createSelect("type", $this->array_type, '' ,array('onchange'=>'serverchange(this.value)'));
 				
 				echo $style->replaceVar("tpl/servers/addserver.tpl", $array);
-			break;
+				break;
 			
 			case 'view':
 				if(isset($main->getvar['do'])) {

@@ -1,7 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-class page {
+class page extends Controller {
 			 	
 	public $navtitle;
 	public $navlist = array();
@@ -42,7 +42,7 @@ class page {
 	public function content() { # Displays the page 
 		global $main, $page, $style;
 		
-		switch($main->getvar['sub']) {
+		switch ($main->get_variable('sub')) {
 			default: 
 		   	$this->server_status(); 
 			break;

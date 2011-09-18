@@ -1,7 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-class page {
+class page extends Controller {
 	
 	public $navtitle;
 	public $navlist = array();
@@ -22,7 +22,7 @@ class page {
 		global $main, $style, $db, $server;
 		$subdomain_list = $main->getSubDomains();
 		
-		switch($main->getvar['sub']) {
+		switch ($main->get_variable('sub')) {
 			default:
 				if($_POST) {
 					if ($main->checkToken()) { 

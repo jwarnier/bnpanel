@@ -1,7 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-class page {	
+class page extends Controller {	
 	public function content() { # Displays the page 
 		global $style, $db, $main;		
 
