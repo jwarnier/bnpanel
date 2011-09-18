@@ -1,7 +1,9 @@
 <MENU>    
-<div class="container-fluid">    
-    <div class="sidebar"> 
-        %LEFT_COLUMN%
+<div class="container-fluid" style="padding-top: 60px;">    
+    <div class="sidebar">
+    	<div class="well">    	
+        	%LEFT_COLUMN%
+        </div>
     </div>
     <div class="content">
         %RIGHT_COLUMN%

@@ -341,11 +341,11 @@ function checkDomain() {
 	var domain = $("#cdom").val();
 	$.get("<AJAX>function=validateDomain&domain="+domain,  function(data) {
 		if (data == '1') {
-			$("#domain_result").html("<strong>Wrong domain format </strong> "+wrong);	
+			$("#domain_result").html("<strong>Wrong domain format </strong> ");	
 		} else {	
 			$.get("<AJAX>function=checkSubDomainExistsSimple&domain="+domain+"&subdomain_id=0",  function(data2) {							
 				if (data2 == '1') {
-					$("#domain_result").html("<strong>Domain already exists</strong> "+wrong);	
+					$("#domain_result").html("<strong>Domain already exists</strong> ");	
 				} else {
 					$("#domain_result").html("<strong>Domain available</strong> "+right);
 				}
@@ -377,14 +377,14 @@ function checkSubdomain() {
 		if (final_domain != '') {
 			$.get("<AJAX>function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {							
 				if (data == '1') {
-					$("#subdomain_result").html("<strong>Subdomain already exists</strong> "+wrong);	
+					$("#subdomain_result").html("<strong>Subdomain already exists</strong> ");	
 				} else {
 					$("#subdomain_result").html("<strong>Subdomain available</strong> "+right);
 				}
 			});
 		}
 	} else {
-		$("#subdomain_result").html("<strong>Select a domain first</strong> "+wrong);
+		$("#subdomain_result").html("<strong>Select a domain first</strong>");
 	}			
 }
 </script>
@@ -440,13 +440,16 @@ function checkSubdomain() {
             %TOS%
         </div>
          <div class="container">
-       	<label for="agree">
-       	    <input name="agree" id="agree" type="checkbox" value="1" />
-       	    <span>Do you agree to the <APP_NAME> Terms of Service?</span>            
-        </label>
+            <ul class="inputs-list">
+                <li>
+			       	<label for="agree">
+			       	    <input name="agree" id="agree" type="checkbox" value="1" />
+			       	    <span>Do you agree to the <APP_NAME> Terms of Service?</span>            
+			        </label>
+			    </li>
+            </ul>
         </div>
-        <a title="The Terms of Service is the set of rules you abide by. These must be agreed to." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
-        
+        <a title="The Terms of Service is the set of rules you abide by. These must be agreed to." class="tooltip">
     </div>    
 	<div id="5" class="section" style="display:none">
         <div class="page-header">
@@ -576,11 +579,12 @@ function checkSubdomain() {
             
             <div class="clearfix">
                <label>Are you a human?</label>
-                <img src="<URL>includes/captcha_image.php">
-               <div class="input">
-                  <input type="text" name="human" id="human" onchange="check('human', this.value)" />
-                   <span id="humancheck"> </span>
-                   <span class="help-block">Answer the question to prove you are not a bot.</span>
+               
+                <div class="input">
+                    <img src="<URL>includes/captcha_image.php"><br /><br />
+                    <input type="text" name="human" id="human" onchange="check('human', this.value)" />
+                    <span id="humancheck"> </span>
+                    <span class="help-block">Answer the question to prove you are not a bot.</span>
                </div>              
             </div>
  

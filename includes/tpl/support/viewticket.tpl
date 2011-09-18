@@ -1,37 +1,36 @@
 <ERRORS>
-
 <h2>Ticket #%ID%</h2>
 <div class="ticket">
 <h3>%TITLE%</h3>    	
     	
 		<table cellspacing="2" cellpadding="0" border="0" width="100%" class="content"> 
 		<tr>
-			<td class="label">Author:</td>
+			<td >Author:</td>
 			<td>    
 				%AUTHOR%
 			</td>
 		</tr>
 		<tr>
-		<td class="label">Status:</td>
+		<td >Status:</td>
 			<td>    
 				%STATUS%
 			</td>
 		</tr>
 		<tr>
-			<td class="label">Urgency:</td>
+			<td >Urgency:</td>
 			<td>    
 				%URGENCY%
 			</td>
 		</tr>
 		<tr>
-			<td class="label">Created on:</td>
+			<td >Created on:</td>
 			<td>    
 				%TIME%
 			</td>
 		</tr>
 				
 		<tr>
-			<td class="label">Last Updated:</td>
+			<td >Last Updated:</td>
 			<td>    
 				%UPDATED%
 			</td>
@@ -47,5 +46,3 @@
 
 %REPLIES%
 %ADDREPLY%
-
-

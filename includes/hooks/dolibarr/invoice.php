@@ -53,7 +53,8 @@ class Hook_Dolibarr_Invoice extends Hook {
 			$params['cp'] 				= $user_info['zip'];
 			$params['tel'] 				= $user_info['phone'];
 			$params['email'] 			= $user_info['email'];
-			$params['ville'] 			= $user_info['city'];			
+			$params['ville'] 			= $user_info['city'];
+			$params['country'] 			= $user_info['country'];
 			$params['typent_id'] 		= 8; //individual
 			$params['tva_intra']    	=  '';
 			$params['tva_assuj']   =  0;			

@@ -80,7 +80,7 @@ class style {
 		$css .= '<link rel="stylesheet" href="'.URL.'includes/css/960/960_12_col.css" type="text/css" />';
 		*/
 		//Including bootstrap
-		$css = '<link rel="stylesheet" href="'.URL.'includes/css/bootstrap/bootstrap-1.0.0.css" type="text/css" />';
+		$css = '<link rel="stylesheet" href="'.URL.'includes/css/bootstrap/bootstrap.css" type="text/css" />';
 				
 		$css .= '<link rel="stylesheet" type="text/css" href="'.$link.'"/>';
 		

@@ -157,8 +157,8 @@ class invoice extends model {
 			$total_amount = 0;			
 			//Getting addon information
 			if (!empty($array['addon_fee'])) {
-				//the addon_fee is a serialize string				
-				$array['addon_fee'] = unserialize($array['addon_fee']);
+				//the addon_fee is a serialize string
+				$array['addon_fee'] = @unserialize($array['addon_fee']);
 				if (is_array($array['addon_fee']) && count($array['addon_fee']) > 0) {		
 					foreach($array['addon_fee'] as $addon) {					
 						//$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';
