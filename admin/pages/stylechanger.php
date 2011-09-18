@@ -2,7 +2,7 @@
 /* For licensing terms, see /license.txt */
 
 exit; //disabled for security reasons
-class page {
+class page extends Controller {
 			 	
 	public $navtitle;
 	public $navlist = array();

@@ -49,7 +49,8 @@ function filter() {
 }
 
 
-</script>	
+</script>
+
 <h2>Orders</h2>
 
 %STATUS_FILTER%
@@ -60,7 +61,7 @@ function filter() {
 <ERRORS>
 
 
-<div id="pagination_loading" ></div>
+<div id="pagination_loading"></div>
 <table class="common-table"  width="100%" border="0" cellspacing="3" cellpadding="0">
 	<thead>
 		<tr> 

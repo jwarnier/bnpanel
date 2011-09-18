@@ -6,7 +6,7 @@
 	@package	bnpanel.addons	
 */
 
-class page {
+class page extends Controller {
 	
 	public $navtitle;
 	public $navlist = array();
@@ -30,7 +30,7 @@ class page {
 		# Displays the page 
 		global $main, $style, $db, $billing, $addon;
 		
-		switch($main->getvar['sub']) {
+		switch ($main->get_variable('sub')) {
 			default:
 			
 				$asOption = array(

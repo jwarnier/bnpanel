@@ -1,7 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-class page {
+class page extends Controller {
 	
 	public $navtitle;
 	public $navlist = array();
@@ -52,7 +52,7 @@ class page {
 				$main->done();
 			}
 		}
-		switch($main->getvar['sub']) {				
+		switch ($main->get_variable('sub')) {			
 			case "tchoose": #theme chooser
 				$folder = LINK ."../themes/";
 				if ($handle = opendir($folder)) { # Open the folder

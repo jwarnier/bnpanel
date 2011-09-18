@@ -1,7 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-class page {
+class page extends Controller {
 	
 	public $navtitle;
 	public $navlist = array();
@@ -31,7 +31,7 @@ class page {
 		global $main, $style, $db, $order,$package, $invoice, $server, $email,$user;
 		require_once LINK.'validator.class.php';
 		
-		switch($main->getvar['sub']) {			
+		switch ($main->get_variable('sub')) {		
 			case 'add':
 				
 				$asOption = array(
@@ -226,11 +226,9 @@ class page {
 					echo $style->replaceVar("tpl/user/clientview.tpl", $array);
 				}
 			break;	
-			
-			default:		
-			break;
+			default:
 			case 'search':
-				if($main->getvar['do'] ) {
+				if ($main->get_variable('do')) {
 					echo $style->replaceVar("tpl/user/clientview.tpl", $array);
 				} else {					
 					$array['NAME'] = $db->config("name");

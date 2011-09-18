@@ -6,7 +6,7 @@
  * 
  */ 
 
-class page {
+class page extends Controller {
 	
 	public $navtitle;
 	public $navlist = array();
@@ -24,7 +24,7 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db;
-		switch($main->getvar['sub']) {
+		switch ($main->get_variable('sub')) {
 			case "cat":			
 				if (isset($_POST['add']) && $main->checkToken(false)) {
 					foreach($main->postvar as $key => $value) {

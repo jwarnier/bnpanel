@@ -2,12 +2,12 @@
 /* For licensing terms, see /license.txt */
 
 
-class page {
+class page extends Controller {
 	
 	public function __construct() {
 		$this->navtitle = "Order Sub Menu";
 		$this->navlist[] = array("Orders", "package_go.png", "all");
-		$this->navlist[] = array("Add Order", "add.png", "add");
+		$this->navlist[] = array("Add Order", "add.png", "add");		
 	}
 	
 	public function description() {
@@ -25,8 +25,8 @@ class page {
 			echo "<span style='color:red'>Invoice {$_GET['iid']} marked as unpaid. <a href='index.php?page=invoices&iid={$_GET['iid']}&pay=true'>Undo this action</a></span>";
 		}
 		require_once LINK.'validator.class.php';
-				
-		switch($main->getvar['sub']) {					
+
+		switch ($main->get_variable('sub')) {			
 			case 'add':						
 				$asOption = array(
 				    'rules' => array(
@@ -49,7 +49,7 @@ class page {
 					$asOption['rules']['csub2'] = 'required';
 				}
 				
-				$array['json_encode'] = json_encode($asOption);				
+				$this->data['json_encode'] = json_encode($asOption);				
 				$oValidator = new Validator($asOption);				
 			
 				if ($_POST && $main->checkToken()) {				
@@ -167,16 +167,16 @@ class page {
 					}																		
 				}
 				
-				$array['CREATED_AT'] 	= date('Y-m-d');
+				$this->data['CREATED_AT'] 	= date('Y-m-d');
 				$billing_list = $billing->getAllBillingCycles();
 				$new_billing_list = array();
 				//$new_billing_list[-1] = 'None';
 				foreach ($billing_list as $billing_item) {
 					$new_billing_list[$billing_item['id']] = $billing_item['name']; 
 				}
-				$array['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, '', array('onchange'=>'loadPackages(this);', 'class'=>'required'));				
-				$array['PACKAGES'] 		= '-';
-				$array['ADDON'] 		= '-';
+				$this->data['BILLING_CYCLES']= $main->createSelect('billing_cycle_id', $new_billing_list, '', array('onchange'=>'loadPackages(this);', 'class'=>'required'));				
+				$this->data['PACKAGES'] 		= '-';
+				$this->data['ADDON'] 		= '-';
 				$order_list = $main->getOrderStatusList();
 				
 				//Removing the deleted/cancelled option useless when creating an order I hope!
@@ -184,9 +184,9 @@ class page {
 				unset($order_list[ORDER_STATUS_CANCELLED]);
 				unset($order_list[ORDER_STATUS_FAILED]);
 				
-				$array['STATUS']			= $main->createSelect('status', $order_list, '', array('class'=>'required'));				
-				$array['DOMAIN_USERNAME'] 	= $main->generateUsername();
-				$array['DOMAIN_PASSWORD'] 	= $main->generatePassword();	
+				$this->data['STATUS']			= $main->createSelect('status', $order_list, '', array('class'=>'required'));				
+				$this->data['DOMAIN_USERNAME'] 	= $main->generateUsername();
+				$this->data['DOMAIN_PASSWORD'] 	= $main->generatePassword();	
 				
 				switch($db->config('domain_options')) {					
 					case DOMAIN_OPTION_DOMAIN:
@@ -200,7 +200,7 @@ class page {
 					break;
 				}
 							
-    			$array['DOMAIN_TYPE'] = $main->createSelect('domain_type',$values, '', array('onchange'=>'changeDomain();'));
+    			$this->data['DOMAIN_TYPE'] = $main->createSelect('domain_type',$values, '', array('onchange'=>'changeDomain();'));
     			 
 				if ($db->config('domain_options') == DOMAIN_OPTION_SUBDOMAIN) {
 					$subdomain_list = $main->getSubDomains();
@@ -208,7 +208,7 @@ class page {
 						$style->showMessage('No subdomains available. Click <a href="?page=sub&sub=add">here</a> to add new Subdomain', 'warning');								
 					}
 				}				
-				echo $style->replaceVar("tpl/orders/add.tpl", $array);
+				echo $style->replaceVar("tpl/orders/add.tpl", $this->data);
 			break;
 			
 			case 'change_pass':			
@@ -312,14 +312,14 @@ class page {
 				$return_array['DOMAIN'] = $order_info['real_domain'];
 				
 				echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);			
-			break;			
+				break;			
 			case 'view':				
 				if(isset($main->getvar['do'])) {					
 					$return_array = $order->getOrder($main->getvar['do'], true);
 					$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);											
 					echo $style->replaceVar("tpl/orders/view-admin.tpl", $return_array);					
 				}				
-			break;			
+				break;			
 			case 'add_invoice':			
 				$asOption = array(
 				    'rules' => array(
@@ -412,7 +412,7 @@ class page {
 				} else {
 					$main->errors('You need an order before create an invoice!');
 				}			
-			break;		
+				break;		
 			case 'delete':			
 				if (isset($main->getvar['do'])) { 
 					$result = $order->delete($main->getvar['do']);
@@ -429,9 +429,10 @@ class page {
 					echo '<ERRORS>';
 				} 
 				$main->redirect('?page=orders&sub=all&msg=1');	
-			break;
+				break;
 			default :	
-			case 'all':									
+			case 'all':			
+									
 				$per_page = $db->config('rows_per_page');
 				$count_sql = "SELECT count(*)  as count FROM ".$order->getTableName()." WHERE status <> '".ORDER_STATUS_DELETED."'";
 				$result_max = $db->query($count_sql);		
@@ -439,13 +440,13 @@ class page {
 				$count = $count['count'];
 				
 				$order_status = $main->getOrderStatusList();
-				$return_array['STATUS_FILTER'] = $main->createSelect('status_id', $order_status);
+				$this->data['STATUS_FILTER'] = $main->createSelect('status_id', $order_status);
 				
 				
 				if (!empty($count)) {	
 					$quantity = ceil($count / $per_page);
-					$return_array['COUNT'] = $quantity;				
-					echo $style->replaceVar("tpl/orders/admin-page.tpl", $return_array);
+					$this->data['COUNT'] = $quantity;				
+					echo $style->replaceVar("tpl/orders/admin-page.tpl", $this->data);
 				} else {
 					$main->errors('No orders available');
 					echo '<ERRORS>';

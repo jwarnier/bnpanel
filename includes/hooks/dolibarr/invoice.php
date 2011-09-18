@@ -18,10 +18,9 @@ class Hook_Dolibarr_Invoice extends Hook {
 		if (!empty($this->data) && !empty($this->data['id'])) {
 
 			$user_info = $user->getUserById($this->data['uid']);
-			var_dump($user_info); exit;
 			
+			//1. First we create the dolibarr_societe_id field if it doesn't exists
 			
-			//1. First we create the dolibarr_societe_id field
 			$extra_field_exists = $extrafield->getExtraFieldByName('dolibarr_societe_id');
 				
 			if (empty($extra_field_exists)) {
@@ -35,13 +34,15 @@ class Hook_Dolibarr_Invoice extends Hook {
 			
 			$user_exists_in_dolibarr = false;
 			
+			//2. Check if the 
+			//var_dump($this->data, $extra_field_data);
 			if ($extra_field_data) {				
-				$my_result = $extrafield->extrafield_values->find('first', array('conditions' => 'model_id  = '.$this->data['uid']));
+				$conditions = array('conditions' => 'model_id  = '.$this->data['uid'].' AND field_id = '.$extra_field_data['id']);
+				$my_result = $extrafield->extrafield_values->find('first', $conditions);
 				if ($my_result) {
 					$user_exists_in_dolibarr = true;
 				}
 			}
-			
 			
 			// Load the create invoice
 			
@@ -74,7 +75,7 @@ class Hook_Dolibarr_Invoice extends Hook {
 		
 			//$params['cp'] 		= $user_info['cp'];
 			//$params['cp'] 		= $user_info['cp'];
-						
+									
 			$parameters = array('authentication' => $settings['authentication'], 
 								'societe_params' => $params);			
 			$result = null;

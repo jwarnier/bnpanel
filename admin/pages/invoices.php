@@ -8,11 +8,12 @@
  *  
  */
 
-class page {
+class page extends controller {
 	
 	public function __construct() {
+		
 		$this->navtitle = "Invoice Sub Menu";
-		$this->navlist[] = array("Invoices", "package_go.png", "all");
+		$this->navlist[] = array("Invoices", "package_go.png", "all");		
 	}
 	
 	public function description() {
@@ -22,9 +23,10 @@ class page {
 	}	
 	
 	public function content() {		
+		
 		global $style, $db, $main, $invoice,$addon, $package;
 			
-		switch($main->getvar['sub']) {					
+		switch ($main->get_variable('sub')) {			
 			case 'add':
 				echo $style->replaceVar("tpl/invoices/addinvoice.tpl");
 				break;

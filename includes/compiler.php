@@ -220,7 +220,7 @@ function __autoload($class_name) {
     
 }
 
-$available_classes = array('addon', 'billing', 'currency', 'email', 'invoice', 'order', 'package', 'server', 'staff', 'style', 'ticket', 'type','user', 'extrafield');
+$available_classes = array('addon', 'billing', 'currency', 'email', 'invoice', 'order', 'package', 'server', 'staff', 'style', 'ticket', 'type','user', 'extrafield','controller');
 foreach($available_classes as $class_item) {	
 	${$class_item} = new $class_item();
 	global ${$class_item};		

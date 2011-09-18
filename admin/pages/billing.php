@@ -5,7 +5,7 @@
  * @author 	Julio Montoya <gugli100@gmail.com>	BeezNest 2010	
  */
 
-class page {
+class page extends Controller {
 	
 	public $navtitle;
 	public $navlist = array();

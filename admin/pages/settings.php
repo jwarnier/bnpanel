@@ -1,7 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-class page {
+class page extends Controller {
 	
 	public $navtitle;
 	public $navlist = array();
@@ -38,7 +38,7 @@ class page {
 			$db->getSystemConfigList(true);		
 		}
 		
-		switch($main->getvar['sub']) {
+		switch ($main->get_variable('sub')) {
 			default:
 				$array['NAME'] 			= $db->config('name');
 				$array['URL'] 			= $db->config('url');

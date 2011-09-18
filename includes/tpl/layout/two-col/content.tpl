@@ -5,7 +5,8 @@
         	%LEFT_COLUMN%
         </div>
     </div>
-    <div class="content">    	
+    <div class="content"> 
+		%SUBMENU%	  	
         %RIGHT_COLUMN%
     </div>
 </div>
