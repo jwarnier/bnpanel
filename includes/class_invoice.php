@@ -410,7 +410,7 @@ class invoice extends model {
 					      'amount'		=> string '10.600000'
 				 */
 				 //see also addon::generate function
-				$invoice_info['addon_fee'] = unserialize($invoice_info['addon_fee']);
+				$invoice_info['addon_fee'] = @unserialize($invoice_info['addon_fee']);
 				
 				if (is_array($invoice_info['addon_fee']) && !empty($invoice_info['addon_fee'])) {							
 					foreach ($invoice_info['addon_fee'] as $addon_item) {						
@@ -424,8 +424,8 @@ class invoice extends model {
 			$order_info = $order->getOrderInfo($order_id);
 			
 			
-			$array['DOMAIN'] 		= $order_info['domain'];
-			$array['REAL_DOMAIN'] 	= $order_info['real_domain']; 
+			$array['DOMAIN'] 		= isset($order_info['domain']) ? $order_info['domain'] : '';
+			$array['REAL_DOMAIN'] 	= isset($order_info['real_domain']) ? $order_info['real_domain'] : ''; 
 			$package_id 	  		= $order_info['pid'];
 			$billing_cycle_id 		= $order_info['billing_cycle_id'];							
 						

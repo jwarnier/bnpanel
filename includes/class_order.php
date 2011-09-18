@@ -639,13 +639,13 @@ class order extends model {
 			$html  = '<br /><h3>Invoices for this Order</h3>';
 			$html .= '<ul>';
 			foreach($invoice_list as $invoice_item) {				
-				$my_invoice = $invoice->getInvoiceInfo($invoice_item['invoice_id']);
-				if (!empty($my_invoice)) {										
+				$my_invoice = $invoice->getInvoiceInfo($invoice_item['invoice_id']);				
+				if (!empty($my_invoice) && $my_invoice['status'] != 9 ) { //deleted										
 					$html .= '<li><a href="?page=invoices&sub=view&do='.$my_invoice['id'].'" title="Invoice id" >#'.$my_invoice['id'].'</a> ';
 					//Status:'.$invoice_status[$my_invoice['status']].' 
 					$html .=  'Due date: '.date('Y-m-d', $my_invoice['due']).' Total: '.$currency->toCurrency($my_invoice['total_amount']).'</li>';
 				} else {
-					$html .= '<li>Problem found with Invoice #'.$invoice_item['invoice_id'].'</li>';
+					$html .= '<li><del>Invoice #'.$invoice_item['invoice_id'].'</del> was deleted</li>';
 				}
 			}
 			$html .= '</ul>';

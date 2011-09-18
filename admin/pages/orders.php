@@ -15,7 +15,7 @@ class page {
 	}
 		
 	public function content() {		
-		global $style, $server, $db, $main, $invoice,$addon, $order, $billing, $currency, $package, $user;
+		global $style, $server, $db, $main, $invoice, $addon, $order, $billing, $currency, $package, $user;
 		
 		if(isset($_GET['iid']) && isset($_GET['pay'])){			
 			$invoice->set_paid($_GET['iid']);
@@ -292,7 +292,7 @@ class page {
 							$return_array['SITE_STATUS_INFO'] .= 'Registered Domain: '.$site_info['domain'].' <br /> Domain id: '.$site_info['domain_id'].' <br /> Document root: '.$site_info['document_root'];					
 							
 						} else {
-							$return_array['SITE_STATUS_CLASS'] = 'warning';
+							$return_array['SITE_STATUS_CLASS'] = 'alert-message block-message warning ';
 							$return_array['SITE_STATUS'] = '<strong>Site doesn\'t exist in Control Panel</strong><br />';		
 							$return_array['SITE_STATUS'] .= 'The current order is not registered in the Control Panel Server. <br />To send this order to the Control Panel just change the status to Active';
 							$return_array['SITE_STATUS_INFO'] = '';
