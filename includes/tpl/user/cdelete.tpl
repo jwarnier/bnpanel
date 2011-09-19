@@ -21,7 +21,7 @@ function cancel(user, pass) {
 	document.getElementById("finishtext").innerHTML = working;
 	$("#finish").slideDown(500);
 	$("#passwordpart").slideUp(500);
-	$.get("<AJAX>function=cancelacc&user="+user+"&pass="+pass, function(data) {
+	$.get("{$ajax}function=cancelacc&user="+user+"&pass="+pass, function(data) {
 		document.getElementById("finishtext").innerHTML = data;
 						});
 }

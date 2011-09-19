@@ -30,7 +30,7 @@ function check(name, value) {
 	$("#"+name+"check").html(loading);
 	document.getElementById("next").disabled = true;
 	
-	$.get("<AJAX>function="+name+"check&"+name+"="+value, function(data) {
+	$.get("{$ajax}function="+name+"check&"+name+"="+value, function(data) {
 		if(data == "1") {
 			$("#"+name+"check").html(right);
 		}
@@ -51,7 +51,7 @@ function orderstepme(id, type) {
 	if (document.getElementById("domain").value == "sub") {
 		document.getElementById("dom").style.display = 'none';
 		document.getElementById("sub").style.display = '';		
-		$.get("<AJAX>function=sub&pack="+document.getElementById("package").value, function(data) {
+		$.get("{$ajax}function=sub&pack="+document.getElementById("package").value, function(data) {
 			document.getElementById("dropdownboxsub").innerHTML = data;
 		});
 	} else if(document.getElementById("domain").value == "dom") {
@@ -60,7 +60,7 @@ function orderstepme(id, type) {
 		document.getElementById("sub3").style.display = 'none';
 	}
 	
-	$.get('<AJAX>function=orderForm&package='+ document.getElementById("package").value, function(stuff) {
+	$.get('{$ajax}function=orderForm&package='+ document.getElementById("package").value, function(stuff) {
 		$("#custom").html('<table width="100%" border="0" cellspacing="2" cellpadding="0" id="custom">'+stuff+'</table>');		
 	});
 	var step_hide = step;
@@ -127,7 +127,7 @@ function nextstep() {
 				var billing_id  = document.getElementById("billing_id").value;
 				showhide(step, step + 1);
 				step = step + 1;		
-				$.get("<AJAX>function=getSummary&billing_id="+billing_id +"&addon_list="+addon_list +"&package_id="+document.getElementById("package").value, function(data) {
+				$.get("{$ajax}function=getSummary&billing_id="+billing_id +"&addon_list="+addon_list +"&package_id="+document.getElementById("package").value, function(data) {
 					document.getElementById("show_summary").innerHTML = data;
 				});				
 			} else  {
@@ -143,7 +143,7 @@ function nextstep() {
 		case 4:
 			//TOS
 			if(document.getElementById("agree").checked == true) {							
-				$.get("<AJAX>function=userIsLogged", function(data) {
+				$.get("{$ajax}function=userIsLogged", function(data) {
 					if (data == "1") {
 						showhide(step, step + 2);
 						step = step + 2;
@@ -161,7 +161,7 @@ function nextstep() {
 			break;			
 		case 5:					
 			//User form
-			$.get("<AJAX>function=clientcheck", function(data) {
+			$.get("{$ajax}function=clientcheck", function(data) {
 				if(data == "1") {	
 					if (document.getElementById("username").value != '' ) {
 						document.getElementById("verify").innerHTML = right;
@@ -207,7 +207,7 @@ function nextstep() {
 				}
 			}
 			
-			$.get("<AJAX>function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {							
+			$.get("{$ajax}function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {							
 				if (data == '1') {
 					$("#verify").html("<strong>Domain already exists</strong>");					
 				} else if(data == '0') {
@@ -251,12 +251,12 @@ function nextstep() {
 					
 					//showing the signup code
 					//alert(url);
-					$.get("<AJAX>"+url, function(data) {
+					$.get("{$ajax}"+url, function(data) {
 						document.getElementById("finished").innerHTML = data;
 						
 						document.getElementById("verify").innerHTML = "";				
 						//Check if an invoice is generated
-						$.get("<AJAX>function=ispaid", function(invoice_id) {
+						$.get("{$ajax}function=ispaid", function(invoice_id) {
 							if(invoice_id != "") {
 								window.location = "../client/?page=invoices&iid="+invoice_id;				
 							} else {
@@ -300,14 +300,14 @@ function previousstep() {
 		var newstep = step - 1;
 		
 		if (newstep == 3) {
-			$.get("<AJAX>function=userIsLogged", function(data) {
+			$.get("{$ajax}function=userIsLogged", function(data) {
 				if (data == "1") {					
 					newstep = 2
 				}
 			});
 		} else if (newstep == 5) {
 			
-			$.get("<AJAX>function=userIsLogged", function(data) {
+			$.get("{$ajax}function=userIsLogged", function(data) {
 				if (data == "1") {					
 					newstep = 4;
 				}
@@ -332,18 +332,18 @@ function previousstep() {
 function showAddons(obj) {	
 	$("#verify").html('');
 	var billing_id=obj.options[obj.selectedIndex].value;	
-	$.get("<AJAX>function=getAddons&billing_id="+billing_id +"&package_id="+document.getElementById("package").value, function(data) {
+	$.get("{$ajax}function=getAddons&billing_id="+billing_id +"&package_id="+document.getElementById("package").value, function(data) {
 		document.getElementById("showaddons").innerHTML = data;
 	});															
 }
 
 function checkDomain() {
 	var domain = $("#cdom").val();
-	$.get("<AJAX>function=validateDomain&domain="+domain,  function(data) {
+	$.get("{$ajax}function=validateDomain&domain="+domain,  function(data) {
 		if (data == '1') {
 			$("#domain_result").html("<strong>Wrong domain format </strong> ");	
 		} else {	
-			$.get("<AJAX>function=checkSubDomainExistsSimple&domain="+domain+"&subdomain_id=0",  function(data2) {							
+			$.get("{$ajax}function=checkSubDomainExistsSimple&domain="+domain+"&subdomain_id=0",  function(data2) {							
 				if (data2 == '1') {
 					$("#domain_result").html("<strong>Domain already exists</strong> ");	
 				} else {
@@ -375,7 +375,7 @@ function checkSubdomain() {
 	 
 	if (subdomain_id != '') {
 		if (final_domain != '') {
-			$.get("<AJAX>function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {							
+			$.get("{$ajax}function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {							
 				if (data == '1') {
 					$("#subdomain_result").html("<strong>Subdomain already exists</strong> ");	
 				} else {

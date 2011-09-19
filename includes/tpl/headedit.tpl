@@ -4,8 +4,8 @@ $(document).ready(function() {
         $("#" + this.id).blur();
         $("#" + this.id).attr("disabled", "disabled");
         var code = $("#tplCode").val();
-        $.post("<AJAX>function=edittpl", { file: "header", contents: code }, function(data){
-            $.get("<AJAX>function=notice", { status: "good", message: data }, function(data2){
+        $.post("{$ajax}function=edittpl", { file: "header", contents: code }, function(data){
+            $.get("{$ajax}function=notice", { status: "good", message: data }, function(data2){
                 $("#belowDynamic").slideUp(500, function() {
                     $("#spaceForNotice").html(data2);
                     $("#editTheTplNao").removeAttr("disabled");

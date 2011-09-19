@@ -43,7 +43,7 @@
                             if(front == "inputType") {
                                 var Type = $("#" + front + "-" + id).val();
                                 if($("#" + front + "-" + id).val() != "free") {
-                                    open("<AJAX>function=acpPackages&action=typeInfo&type=" + Type + "&id=" + id,
+                                    open("{$ajax}function=acpPackages&action=typeInfo&type=" + Type + "&id=" + id,
                                     'popup-' + id, 'width=250,height=150');
                                 }
                             }
@@ -55,7 +55,7 @@
                             var result = confirm("Are you sure you wish to delete this package? " +
                             "It's gonna mess a lot of things up if you have clients connected to this package.");
                             if(result) {
-                                $.get("<AJAX>function=acpPackages&action=delete&id=" + id, function(data) {
+                                $.get("{$ajax}function=acpPackages&action=delete&id=" + id, function(data) {
                                    $("#portlet-" + id).slideUp(500, function() {
                                     $("#portlet-" + id).remove();
                                     $("#noticeChanges").slideDown(500);
@@ -90,7 +90,7 @@
                                     var reseller = 0;
                                 }
                                 if(id == "new") {
-                                    $.post("<AJAX>function=acpPackages", { action: "add", "name": name,
+                                    $.post("{$ajax}function=acpPackages", { action: "add", "name": name,
                                         "backend": backend, "description": description, "id": id,
                                          "type": type, "val": val, "reseller": reseller,
                                             "server": server, "additional": additional }, function(data) {
@@ -98,7 +98,7 @@
                                         });
                                 }
                                 else {
-                                    $.post("<AJAX>function=acpPackages", { action: "edit", "name": name,
+                                    $.post("{$ajax}function=acpPackages", { action: "edit", "name": name,
                                         "backend": backend, "description": description, "id": id,
                                         "type": type, "val": val, "reseller": reseller, "additional": additional }, function(data) {
                                         $("#saveChangesDiv-" + id).slideDown(500);
@@ -119,7 +119,7 @@
                                 var id = this.id;
                                 var array2 = $(".column").sortable('toArray');
                                 var array2Length = array2.length - 1;
-                                var url = "<AJAX>function=acpPackages";
+                                var url = "{$ajax}function=acpPackages";
                                 var submit = null;
                                 for(var i in array2) {
                                     array2[i] = array2[i].split("-")[1];

@@ -3,7 +3,7 @@ $(document).ready(function() {
     $("#changeThemeBtn").click(function() {
         var val = $("#ui-theme").val();
         $("#submitNotice").slideUp(500);
-        $.get("<AJAX>function=uiThemeChange", { theme: val }, function() {
+        $.get("{$ajax}function=uiThemeChange", { theme: val }, function() {
         $("#submitNotice").slideDown(500);
         });
     });

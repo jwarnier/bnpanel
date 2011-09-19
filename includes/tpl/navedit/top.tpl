@@ -40,7 +40,7 @@ $(document).ready(function(){
                             var id = this.id.toString().split("-")[1];
                             var result = confirm("Are you sure you wish to delete this NavBar link?");
                             if(result) {
-                                $.get("<AJAX>function=navbar&action=delete&id=" + id, function(data) {
+                                $.get("{$ajax}function=navbar&action=delete&id=" + id, function(data) {
                                    $("#portlet-" + id).slideUp(500, function() {
                                     $("#portlet-" + id).remove();
                                     $("#noticeChanges").slideDown(500);
@@ -57,13 +57,13 @@ $(document).ready(function(){
                                 var icon = $("#inputIcon-" + id).val();
                                 var link = $("#inputLink-" + id).val();
                                 if(id == "new") {
-                                    $.post("<AJAX>function=navbar", { action: "add", "name": name,
+                                    $.post("{$ajax}function=navbar", { action: "add", "name": name,
                                         "icon": icon, "link": link }, function(data) {
                                             window.location.reload();
                                         });
                                 }
                                 else {
-                                    $.post("<AJAX>function=navbar", { action: "edit", "name": name,
+                                    $.post("{$ajax}function=navbar", { action: "edit", "name": name,
                                         "icon": icon, "link": link, "id": id }, function(data) {
                                         $("#saveChangesDiv-" + id).slideDown(500);
                                         });
@@ -82,7 +82,7 @@ $(document).ready(function(){
                                 var id = this.id;
                                 var array2 = $(".column").sortable('toArray');
                                 var array2Length = array2.length - 1;
-                                var url = "<AJAX>function=navbar";
+                                var url = "{$ajax}function=navbar";
                                 var submit = null;
                                 for(var i in array2) {
                                     array2[i] = array2[i].split("-")[1];
