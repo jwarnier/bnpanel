@@ -631,7 +631,7 @@ function checkSubdomain() {
         	<table width="100%" border="0" cellspacing="2" cellpadding="0">
               <tr id="dom">
                 <td width="20%" id="domtitle">Domain:</td>
-                <td width="78{$" id="domcontent">%DOMAIN} <span id="domain_result"></span></td>
+                <td width="78%" id="domcontent">{$DOMAIN} <span id="domain_result"></span></td>
                 <td width="2%" align="left" id="domaincheck">
                 	<a title="Your domain, this must be in the format: <strong>example.com</strong>" class="tooltip">
                 	<img src="{$url}themes/icons/information.png" /></a>
