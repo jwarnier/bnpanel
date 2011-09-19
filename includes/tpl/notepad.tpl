@@ -6,7 +6,7 @@
 	theme : "simple"
 	});
 </script>
-<div class="subborder"><div class="sub"><img src="<ICONDIR>note_edit.png" alt="" /> Here you can place admin notes and snippets for other admins or yourself. This will be viewable by all staff members.</div></div>
+<div class="subborder"><div class="sub"><img src="{$icon_dir}note_edit.png" alt="" /> Here you can place admin notes and snippets for other admins or yourself. This will be viewable by all staff members.</div></div>
 <form id="edit" name="edit" method="post" action="">
 <div class="subborder"><div class="sub">
 <table width="100%" border="0" cellspacing="2">

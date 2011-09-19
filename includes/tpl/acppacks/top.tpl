@@ -171,7 +171,7 @@ function transfer(id, stuff) {
 		//]]>
 		</script>
 
-<a href="javascript:void(0)" id="newPackage"><strong><img src="<ICONDIR>add.png" /> Add package.</strong></a>
+<a href="javascript:void(0)" id="newPackage"><strong><img src="{$icon_dir}add.png" /> Add package.</strong></a>
 
 	<div style="width: 420px;" id="newWrapper" class="center hidden"><div class="portlet" id="portlet-new">
 		<div class="portlet-header">New Package</div>
@@ -181,17 +181,17 @@ function transfer(id, stuff) {
                             <tr>
                                     <td><label for="inputName-new">Name:</label></td>
                                     <td><input class="inputClass" type="text" name="name" id="inputName-new" /></td>
-                                    <td><a class="tooltip" title="The User-Friendly version of the package name."><img src="<ICONDIR>eye.png" class="tooltip" alt="Eye" /></a></td>
+                                    <td><a class="tooltip" title="The User-Friendly version of the package name."><img src="{$icon_dir}eye.png" class="tooltip" alt="Eye" /></a></td>
                             </tr>
                             <tr>
                                     <td><label for="inputBackend-new">Backend:</label></td>
                                     <td><input class="inputClass" type="text" class="tooltip" name="link" id="inputBackend-new" /></td>
-                                    <td><a class="tooltip" title="The name of your package as it appears in your hosting software. WHM, DirectAdmin, etc."><img src="<ICONDIR>cog.png" alt="Cog" /></a></td>
+                                    <td><a class="tooltip" title="The name of your package as it appears in your hosting software. WHM, DirectAdmin, etc."><img src="{$icon_dir}cog.png" alt="Cog" /></a></td>
                             </tr>
                             <tr>
                                     <td><label for="inputDescription-new">Description:</label></td>
                                     <td><textarea id="inputDescription-new" rows="3"></textarea></td>
-                                    <td><a class="tooltip" title="Describe your package to your customer."><img src="<ICONDIR>page.png" alt="Page" /></a></td>
+                                    <td><a class="tooltip" title="Describe your package to your customer."><img src="{$icon_dir}page.png" alt="Page" /></a></td>
                             </tr>
                             <tr>
                                     <td>Server:</td>
@@ -200,17 +200,17 @@ function transfer(id, stuff) {
                             <tr>
                                     <td><label for="inputType-new">Type:</label></td>
                                     <td>%TYPES%</td>
-                                    <td><a class="tooltip" title="What kind of package is this?"><img src="<ICONDIR>brick.png" alt="Brick" /></a></td>
+                                    <td><a class="tooltip" title="What kind of package is this?"><img src="{$icon_dir}brick.png" alt="Brick" /></a></td>
                             </tr>
                             <tr>
                                     <td><label for="inputVal-new">Admin Validation:</label></td>
                                     <td><input name="inputVal-new" class="inputClass" type="checkbox" id="inputVal-new" value="1" /></td>
-                                    <td><a class="tooltip" title="Does this package require admin validation?"><img src="<ICONDIR>user_suit.png" alt="Suit" /></a></td>
+                                    <td><a class="tooltip" title="Does this package require admin validation?"><img src="{$icon_dir}user_suit.png" alt="Suit" /></a></td>
                             </tr>
                             <tr>
                                     <td><label for="inputReseller-new">Reseller:</label></td>
                                     <td><input name="inputReseller-new" class="inputClass" type="checkbox" id="inputReseller-new" value="1" /></td>
-                                    <td><a class="tooltip" title="Is this package a reseller?"><img src="<ICONDIR>user_add.png" alt="Add" /></a></td>
+                                    <td><a class="tooltip" title="Is this package a reseller?"><img src="{$icon_dir}user_add.png" alt="Add" /></a></td>
                             </tr>
                         </tbody>
 			</table>

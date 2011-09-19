@@ -28,7 +28,7 @@
 	<div class="sub">
     	<table width="100%" border="0" cellspacing="3" cellpadding="0">
           <tr>
-            <td width="1%"><img src="<ICONDIR>add.png" alt="Add Package"/></td>
+            <td width="1%"><img src="{$icon_dir}add.png" alt="Add Package"/></td>
             <td><a href="Javascript:addpackage()">Add Package</a></td>
           </tr>
         </table>

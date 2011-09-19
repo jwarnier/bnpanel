@@ -1,6 +1,6 @@
 <div class="subborder">
 	<div class="sub">
-   	  <img src="<ICONDIR>arrow_rotate_clockwise.png"><a href="?page=kb&cat=%CATID%">Return To Category</a>
+   	  <img src="{$icon_dir}arrow_rotate_clockwise.png"><a href="?page=kb&cat=%CATID%">Return To Category</a>
 	</div>
 </div>
 <div class="subborder">

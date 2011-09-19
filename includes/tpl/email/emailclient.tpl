@@ -19,7 +19,7 @@
   <tr>
     <td valign="top">Subject:</td>
     <td><input type="text" name="subject" id="subject" />
-    <a title="The subject of the email." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
+    <a title="The subject of the email." class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
   </tr>
   <tr>
     <td width="20%" valign="top" id="description">Message:</td>

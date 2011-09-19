@@ -233,7 +233,7 @@ function checkdomain() {
     <td valign="top">Order status</td>
     <td>
     %STATUS%
-    <a class="tooltip" title="Will operate on the Control Panel server"><img src="<ICONDIR>information.png"></a>
+    <a class="tooltip" title="Will operate on the Control Panel server"><img src="{$icon_dir}information.png"></a>
     </td>
   </tr>
      
@@ -241,7 +241,7 @@ function checkdomain() {
 	    <td valign="top">Control Panel Username</td>
 	    <td>
 	  		<input size="30" id="username" name="username" type="text" value="%DOMAIN_USERNAME%"  class="required"/>
-	  		<a class="tooltip" title="The username to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
+	  		<a class="tooltip" title="The username to login in the Control Panel"><img src="{$icon_dir}information.png"></a>
 	    </td>
 	</tr>
   
@@ -249,7 +249,7 @@ function checkdomain() {
     <td valign="top">Control Panel Password</td>
     <td>
   		<input size="30" id="password"  name="password" type="text" value="%DOMAIN_PASSWORD%"  class="required"/>
-  		<a class="tooltip" title="The password to login in the Control Panel"><img src="<ICONDIR>information.png"></a>
+  		<a class="tooltip" title="The password to login in the Control Panel"><img src="{$icon_dir}information.png"></a>
     </td>
   </tr>	
 <tr>

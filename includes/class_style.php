@@ -42,7 +42,7 @@ class style extends Smarty {
 		$this->assign('url', URL);
 		
 		$this->assign('IMG', URL . "themes/". THEME ."/images/");
-		$this->assign('ICONDIR', URL . "themes/icons/");
+		$this->assign('icon_dir', URL . "themes/icons/");
 		$current_token = $main->getToken();		
 		$this->assign('AJAX', URL."includes/ajax.php?_get_token=".$current_token."&");
 		

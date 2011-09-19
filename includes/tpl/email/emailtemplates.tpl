@@ -53,7 +53,7 @@ $(document).ready(function() {
     		<option value="" disabled="disabled" selected="selected">Select a template</option>
     		%TEMPLATES%
     	</select>
-    <a title="Which template are you going to edit?" class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
+    <a title="Which template are you going to edit?" class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
   </tr>
 </table>
 <div id="templatebit" style="display:none;">
@@ -62,7 +62,7 @@ $(document).ready(function() {
       <tr>
         <td valign="top">Subject:</td>
         <td><input type="text" name="subject" id="subject" size="50" />
-        <a title="The subject of the email." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
+        <a title="The subject of the email." class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
       </tr>
       <tr>
         <td width="20%" valign="top" id="description"></td>

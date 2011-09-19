@@ -2,4 +2,4 @@
 	<a href="../{$LINK}/">{$NAME}</a>
 </li>
 
- <!-- <img src="<ICONDIR>%ICON%" alt="" /> --> 
+ <!-- <img src="{$icon_dir}%ICON%" alt="" /> --> 
