@@ -10,7 +10,7 @@ function(value, element) {
 			subdomain_id = 0;
 		}			
 		$.ajax({
-			url:"<AJAX>function=checkSubDomainExistsSimple&domain="+domain+"&subdomain_id="+subdomain_id,
+			url:"{$ajax}function=checkSubDomainExistsSimple&domain="+domain+"&subdomain_id="+subdomain_id,
 			async:false,
 			type: "GET",
 			success:  function(data) {
@@ -43,14 +43,14 @@ var right = '<img src="{$url}themes/icons/accept.png">';
 <script type="text/javascript">
 function changeAddons(obj) {	
 	var id=obj.options[obj.selectedIndex].value;
-	$.get("<AJAX>function=changeAddons&package_id="+id+"&order_id="+document.getElementById("order_id").value, function(data) {
+	$.get("{$ajax}function=changeAddons&package_id="+id+"&order_id="+document.getElementById("order_id").value, function(data) {
 		document.getElementById("showdata").innerHTML = data;
 	});
 }
 
 function loadPackages(obj) {
 	var id=obj.options[obj.selectedIndex].value;
-	$.get("<AJAX>function=loadPackages&action=add&billing_id="+id, function(data) {
+	$.get("{$ajax}function=loadPackages&action=add&billing_id="+id, function(data) {
 		document.getElementById("showpackages").innerHTML = data;
 	});
 	
@@ -64,7 +64,7 @@ function loadAddons(obj) {
 	var billing_obj = document.getElementById("billing_cycle_id");
 	var billing_id=billing_obj.options[billing_obj.selectedIndex].value;
 	
-	$.get("<AJAX>function=loadaddons&action=add&package_id="+id+"&billing_id="+billing_id, function(data) {
+	$.get("{$ajax}function=loadaddons&action=add&package_id="+id+"&billing_id="+billing_id, function(data) {
 		document.getElementById("showaddons").innerHTML = data;
 	});
 }
@@ -74,7 +74,7 @@ function lookup(inputString) {
         // Hide the suggestion box.
         $('#suggestions').hide();
     } else {
-        $.post("<AJAX>function=searchuser",{
+        $.post("{$ajax}function=searchuser",{
             query:inputString
             }, 
             function(data) {
@@ -97,7 +97,7 @@ function changeDomain() {
 		if (document.getElementById("package_id") != undefined) {
 			var pid = document.getElementById("package_id").value;
 			if (pid != '') {				
-				$.get("<AJAX>function=sub&pack="+pid, function(data) {		
+				$.get("{$ajax}function=sub&pack="+pid, function(data) {		
 					 if (data == '') {		
 						 domain_obj.selectedIndex = 0;				 
 						 data = 'No subdomains available for the moment';					 
@@ -134,7 +134,7 @@ function reset() {
 
 function checkdomain() {
 	var domain = document.getElementById("domain").value;
-	$.get("<AJAX>function=checkSubDomainExistsSimple&domain="+domain, function(data) {
+	$.get("{$ajax}function=checkSubDomainExistsSimple&domain="+domain, function(data) {
 		if (data == 1 ) {
 			document.getElementById("domain_result").innerHTML = wrong;	
 		} else {

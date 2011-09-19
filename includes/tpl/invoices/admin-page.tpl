@@ -20,7 +20,7 @@ $(document).ready(function() {
 
 	Display_Load();
 	
-	$("#tbody").load("<AJAX>function=getInvoices&page=1", Hide_Load());
+	$("#tbody").load("{$ajax}function=getInvoices&page=1", Hide_Load());
 
 	$("#pagination").paginate({
 		count 					: %COUNT%,
@@ -38,14 +38,14 @@ $(document).ready(function() {
 		onChange     			: 	function(page) {
 										pageNum = page;
 										Display_Load();
-										$("#tbody").load("<AJAX>function=getInvoices&page=" + pageNum+"&status="+status_id, Hide_Load());
+										$("#tbody").load("{$ajax}function=getInvoices&page=" + pageNum+"&status="+status_id, Hide_Load());
 									}
 	 });	
 });
 
 function filter() {
 	status_id = $("#status_id").val();
-	$("#tbody").load("<AJAX>function=getInvoices&page=" + pageNum +"&status="+status_id, Hide_Load());
+	$("#tbody").load("{$ajax}function=getInvoices&page=" + pageNum +"&status="+status_id, Hide_Load());
 }
 
 </script>

@@ -6,7 +6,7 @@ To change the order of the packages, drag and drop each box accordingly. The box
 	function update() {
 		var order = $('#sortable').sortable('serialize');
 		$("#sortable").toggle("slide");
-		$.get("<AJAX>"+order+"&function=porder", function(data){$("#sortable").toggle("slide"); document.getElementById("message").innerHTML = order;});	
+		$.get("{$ajax}"+order+"&function=porder", function(data){$("#sortable").toggle("slide"); document.getElementById("message").innerHTML = order;});	
 	}
 </script>
 <div class="errors" id="message"></div>

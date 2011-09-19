@@ -6,7 +6,7 @@ jQuery.validator.addMethod("UsernameExists",
 		function(value, element) {
 			var username_value = $("#user").val();	
 			$.ajax({
-				url:"<AJAX>function=usernameExists&user="+username_value,
+				url:"{$ajax}function=usernameExists&user="+username_value,
 				async:false,
 				type: "GET",
 				success:  function(data) {
@@ -20,7 +20,7 @@ jQuery.validator.addMethod("validateUsername",
 	function(value, element) {
 		var username_value = $("#user").val();	
 		$.ajax({
-			url:"<AJAX>function=validateUserName&user="+username_value,
+			url:"{$ajax}function=validateUserName&user="+username_value,
 			async:false,
 			type: "GET",
 			success:  function(data) {
@@ -38,7 +38,7 @@ function check(name, value) {
 	$("#"+name+"check").html(loading);
 	/* document.getElementById("next").disabled = true; */
 	window.setTimeout(function() {
-		$.get("<AJAX>function="+name+"check&THT=1&"+name+"="+value, function(data) {
+		$.get("{$ajax}function="+name+"check&THT=1&"+name+"="+value, function(data) {
 			if(data == "1") {
 				$("#"+name+"check").html(right);
 			}

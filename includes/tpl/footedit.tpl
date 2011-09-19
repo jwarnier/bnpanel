@@ -4,9 +4,9 @@ $(document).ready(function() {
         $("#" + this.id).blur();
         $("#" + this.id).attr("disabled", "disabled");
         var code = $("#tplCode").val();
-        $.post("<AJAX>function=edittpl", { file: "footer", contents: code }, function(data){
+        $.post("{$ajax}function=edittpl", { file: "footer", contents: code }, function(data){
             if(data == 'Trying to remove the copyright? No thanks.') {
-                $.get("<AJAX>function=notice", { status: "bad", message: data }, function(data2){
+                $.get("{$ajax}function=notice", { status: "bad", message: data }, function(data2){
                     $("#belowDynamic").slideUp(500, function() {
                         $("#spaceForNotice").html(data2);
                         $("#editTheTplNao").removeAttr("disabled");
@@ -15,7 +15,7 @@ $(document).ready(function() {
                 });
             }
             else {
-                $.get("<AJAX>function=notice", { status: "good", message: data }, function(data2){
+                $.get("{$ajax}function=notice", { status: "good", message: data }, function(data2){
                     $("#belowDynamic").slideUp(500, function() {
                         $("#spaceForNotice").html(data2);
                         $("#editTheTplNao").removeAttr("disabled");

@@ -16,7 +16,7 @@ function sendemail() {
 		var subject = document.getElementById("msgsubject").value;
 		var msg = tinyMCE.get('msgcontent').getContent();
 		document.getElementById("ajaxemail").innerHTML = working;
-		$.get("<AJAX>function=massemail&subject="+subject+"&msg="+msg, function(mydata) {
+		$.get("{$ajax}function=massemail&subject="+subject+"&msg="+msg, function(mydata) {
 	if(mydata == "1") {
 		document.getElementById("ajaxemail").innerHTML = "The email has been sent to all your clients!";
 	}

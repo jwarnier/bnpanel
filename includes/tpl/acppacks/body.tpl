@@ -5,13 +5,13 @@
 	function update() {
 		var order = $('#packs').sortable('serialize');
 		$("#packs").toggle("slide");
-		$.get("<AJAX>"+order+"&function=porder", function(data){$("#packs").toggle("slide"); document.getElementById("message").innerHTML = order;});	
+		$.get("{$ajax}"+order+"&function=porder", function(data){$("#packs").toggle("slide"); document.getElementById("message").innerHTML = order;});	
 	}
 	function addpackage() {
 		$("#pbit").slideToggle(500);
 	}
 	function edit(id) {
-		$.get("<AJAX>function=pedit&do="+id, function(data) {
+		$.get("{$ajax}function=pedit&do="+id, function(data) {
 													   if($("#pedit").css("display") == "none") {
 														    $("#pedit").html(data);
 													   	$("#pedit").slideDown(500);
@@ -67,7 +67,7 @@
   <tr>
     <td valign="top">Type:</td>
     <td>
-    <select name="type" id="type" onchange="ajaxSlide('customform','<AJAX>function=acpPadd&type='+ this.value)">
+    <select name="type" id="type" onchange="ajaxSlide('customform','{$ajax}function=acpPadd&type='+ this.value)">
       <option value="free">Free</option>
       <option value="p2h">Post 2 Host</option>
       <option value="paid">Paid</option>

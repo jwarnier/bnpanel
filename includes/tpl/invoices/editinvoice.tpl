@@ -19,7 +19,7 @@
 		var billing_obj = document.getElementById("billing_cycle_id");
 		var billing_id=billing_obj.options[billing_obj.selectedIndex].value;*/
 		var billing_id = document.getElementById("billing_id").value;
-		$.get("<AJAX>function=loadaddons&package_id="+id+"&billing_id="+billing_id+"&order_id="+document.getElementById("order_id").value, function(data) {
+		$.get("{$ajax}function=loadaddons&package_id="+id+"&billing_id="+billing_id+"&order_id="+document.getElementById("order_id").value, function(data) {
 			document.getElementById("showaddons").innerHTML = data;
 		});
 	}
