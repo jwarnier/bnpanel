@@ -1,5 +1,5 @@
 <div class="contextual">
-	<a href="?page=invoices&sub=edit&do=%ID%"> <img src="<URL>themes/icons/pencil.png"> Edit</a> 
+	<a href="?page=invoices&sub=edit&do=%ID%"> <img src="{$url}themes/icons/pencil.png"> Edit</a> 
 </div>
 
 <h2>Invoice #%ID%</h2>

@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
+<script type="text/javascript" src="{$url}includes/javascript/jquery.validate.js"></script>
 <script type="text/javascript">
 	tinyMCE.init({
 	mode : "textareas",
@@ -26,7 +26,7 @@
   <tr>
     <td width="20%">Name:</td>
     <td>
-      <input name="name" type="text" id="name" /><a title="The User-Friendly version of the package name. Type whatever you want to show to the users." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+      <input name="name" type="text" id="name" /><a title="The User-Friendly version of the package name. Type whatever you want to show to the users." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
   
@@ -60,14 +60,14 @@
   	<tr>
     <td valign="top">Mandatory</td>
     <td>
-	 %MANDATORY% <a title="This addon will be set to mandatory for a related package" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+	 %MANDATORY% <a title="This addon will be set to mandatory for a related package" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
     
 	<tr>
     <td valign="top">Install Chamilo</td>
     <td>
-	 %INSTALL_PACKAGE%	<a title="Install chamilo using the Control Panel" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+	 %INSTALL_PACKAGE%	<a title="Install chamilo using the Control Panel" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>  
 

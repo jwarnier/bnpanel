@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
+<script type="text/javascript" src="{$url}includes/javascript/jquery.validate.js"></script>
 
 <script type="text/javascript">
 
@@ -20,8 +20,8 @@ function(value, element) {
 		return result;			
 });
 
-var wrong = '<img src="<URL>themes/icons/cross.png">';
-var right = '<img src="<URL>themes/icons/accept.png">';
+var wrong = '<img src="{$url}themes/icons/cross.png">';
+var right = '<img src="{$url}themes/icons/accept.png">';
 
 	tinyMCE.init({
 		mode : "textareas",
@@ -32,7 +32,7 @@ var right = '<img src="<URL>themes/icons/accept.png">';
 		$("#created_at").datepicker({ 
 			dateFormat: 'yy-mm-dd',
 			showOn: 'button',
-			buttonImage: '<URL>themes/icons/calendar_add.png'			 
+			buttonImage: '{$url}themes/icons/calendar_add.png'			 
 		});
 		 /* $("#addorder").validate(); */
 		$("#addorder").validate(%json_encode%);		
@@ -182,7 +182,7 @@ function checkdomain() {
     <td >            
 	    <input name="user_id" type="hidden" id="user_id" />
 	    <input value="Search an user" onfocus="this.value=(this.value=='Search an user') ? '' : this.value;" onblur="this.value=(this.value=='') ? 'Search an user' : this.value;" size="45" autocomplete="off" id="inputString" onkeyup="lookup(this.value);" type="text" class="required" />
-	    <img title="Reset" onclick="reset();" src="<URL>themes/icons/arrow_refresh.png">
+	    <img title="Reset" onclick="reset();" src="{$url}themes/icons/arrow_refresh.png">
 		<div class="suggestionsBox" id="suggestions" style="display: none;">
 			<div class="suggestionList" id="autoSuggestionsList"></div>
 		</div> 		
@@ -267,7 +267,7 @@ function checkdomain() {
     <div id="show_preview" ></div>  	
     	<ul>	
     	<!-- onclick="send('neworder', %ID%);" -->
-  		<li><a target="_blank" href="?page=email&sub=templates&do=19">Edit New Order email</a> 		<a href="?page=email&sub=templates&do=19"><img src="<URL>themes/icons/pencil.png"></a></li>  		  		
+  		<li><a target="_blank" href="?page=email&sub=templates&do=19">Edit New Order email</a> 		<a href="?page=email&sub=templates&do=19"><img src="{$url}themes/icons/pencil.png"></a></li>  		  		
   		</ul>
     </td>    
   </tr>   

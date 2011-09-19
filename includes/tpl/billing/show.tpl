@@ -3,13 +3,13 @@
   <tr>
     <td width="20%">Name:</td>
     <td>
-      %NAME%<a title="The billing cycle name" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+      %NAME%<a title="The billing cycle name" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>   
   <tr>
     <td valign="top">Number of months:</td>
     <td>
-    %NUMBER_MONTHS% <a title="The Server where the package is located at." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+    %NUMBER_MONTHS% <a title="The Server where the package is located at." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
       <tr>

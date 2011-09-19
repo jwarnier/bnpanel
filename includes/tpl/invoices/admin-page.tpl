@@ -1,5 +1,5 @@
-<script type="text/javascript" src="<URL>includes/javascript/jpaginate/jquery.paginate.js"></script>
-<link rel="stylesheet" href="<URL>includes/javascript/jpaginate/css/style.css" type="text/css" />
+<script type="text/javascript" src="{$url}includes/javascript/jpaginate/jquery.paginate.js"></script>
+<link rel="stylesheet" href="{$url}includes/javascript/jpaginate/css/style.css" type="text/css" />
 <script type="text/javascript">
 var pageNum = 0;
 var status_id = 0;
@@ -13,7 +13,7 @@ function Hide_Load() {
 //Display Loading Image
 function Display_Load() {
 	$("#pagination_loading").fadeIn(900,0);
-	$("#pagination_loading").html("<img src='<URL>themes/icons/ajax-loader2.gif' />");
+	$("#pagination_loading").html("<img src='{$url}themes/icons/ajax-loader2.gif' />");
 }
 
 $(document).ready(function() {	

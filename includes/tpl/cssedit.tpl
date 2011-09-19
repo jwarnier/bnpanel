@@ -1,5 +1,5 @@
-<link type="text/css" href="<URL>includes/codepress/languages/codepress-css.css" rel="stylesheet" id="cp-lang-style" />
-	<script type="text/javascript" src="<URL>includes/codepress/codepress.js"></script>
+<link type="text/css" href="{$url}includes/codepress/languages/codepress-css.css" rel="stylesheet" id="cp-lang-style" />
+	<script type="text/javascript" src="{$url}includes/codepress/codepress.js"></script>
 	<script type="text/javascript">
 		CodePress.language = 'css';
 	</script>

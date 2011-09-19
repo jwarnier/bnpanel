@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
+<script type="text/javascript" src="{$url}includes/javascript/jquery.validate.js"></script>
 <script type="text/javascript">
 /*
 tinyMCE.init({
@@ -21,14 +21,14 @@ tinyMCE.init({
     <td width="20%">Title:</td>
     <td width="10%">
       <input name="title" type="text" id="title" size="40"/></td>
-    <td width="70%"><a title="The name of the ticket. This should briefly describe your problem." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+    <td width="70%"><a title="The name of the ticket. This should briefly describe your problem." class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
   </tr>
   <tr>
     <td valign="top">Urgency:</td>
     <td>    
       %URGENCY%
     </td>
-    <td><a title="The urgency of your ticket. Is it very important and needs solving fast?" class="tooltip"><img src="<URL>themes/icons/information.png" alt="Info" /></a></td>
+    <td><a title="The urgency of your ticket. Is it very important and needs solving fast?" class="tooltip"><img src="{$url}themes/icons/information.png" alt="Info" /></a></td>
   </tr>
   <tr>
     <td valign="top">Content:</td>

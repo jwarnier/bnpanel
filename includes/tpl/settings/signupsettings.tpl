@@ -13,19 +13,19 @@
   <tr>
     <td width="20%">Multiple Signups:</td>
     <td>
-      %MULTIPLE%    <a title="Do you allow multiple signups for one user?" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+      %MULTIPLE%    <a title="Do you allow multiple signups for one user?" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
   <tr>
     <td width="20%">TLD's only:</td>
     <td>
-      %TLDONLY%    <a title="Allow ONLY top level domains? Leave as Disabled if unsure." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+      %TLDONLY%    <a title="Allow ONLY top level domains? Leave as Disabled if unsure." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
   <tr>
     <td width="20%">General Signups:</td>
     <td>
-      %GENERAL%    <a title="Is the signup system offline?" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+      %GENERAL%    <a title="Is the signup system offline?" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
   <tr>

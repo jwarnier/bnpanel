@@ -6,8 +6,8 @@
            <span class="cat_title">%HEADER%</span>
           </td>
           <td align="right">
-          	<a href="Javascript: tblshowhide('%ID%', 'img%ID%', '<URL>')" class="expand">
-          		<img border="0" id="img%ID%" src="<URL>themes/icons/bullet_toggle_minus.png" />
+          	<a href="Javascript: tblshowhide('%ID%', 'img%ID%', '{$url}')" class="expand">
+          		<img border="0" id="img%ID%" src="{$url}themes/icons/bullet_toggle_minus.png" />
           	</a>
           </td>
         </tr>

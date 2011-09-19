@@ -81,7 +81,7 @@ function check() {
   <tr>
     <td width="50%">Country:</td>
     <td>
-		<img src="<URL>themes/flags/%COUNTRY%.gif" />
+		<img src="{$url}themes/flags/%COUNTRY%.gif" />
 	</td>
   </tr>
   <tr>

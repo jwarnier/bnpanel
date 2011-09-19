@@ -48,25 +48,25 @@
   <tr>
     <td width="25%">Name:</td>
     <td>
-      <input name="name" type="text" id="name" /><a title="The reference name in the database. Please use only lowercase characters, no spaces or symbols." class="tooltip"><img src="<URL>themes/icons/cog.png" alt='' /></a>
+      <input name="name" type="text" id="name" /><a title="The reference name in the database. Please use only lowercase characters, no spaces or symbols." class="tooltip"><img src="{$url}themes/icons/cog.png" alt='' /></a>
     </td>
   </tr>
   <tr>
     <td width="25%">Visual:</td>
     <td>
-      <input name="visual" type="text" id="visual" /><a title="The text that your users see in the navigation link." class="tooltip"><img src="<URL>themes/icons/information.png" alt='' /></a>
+      <input name="visual" type="text" id="visual" /><a title="The text that your users see in the navigation link." class="tooltip"><img src="{$url}themes/icons/information.png" alt='' /></a>
     </td>
   </tr>
   <tr>
     <td width="25%">Icon:</td>
     <td>
-      <input name="icon" type="text" id="icon" /><a title="The icons that your users see next to the navigation link. Icons are located in <URL>themes/icons.<br /><strong>Example:</strong> stop.png" class="tooltip"><img src="<URL>themes/icons/picture.png" alt='' /></a>
+      <input name="icon" type="text" id="icon" /><a title="The icons that your users see next to the navigation link. Icons are located in {$url}themes/icons.<br /><strong>Example:</strong> stop.png" class="tooltip"><img src="{$url}themes/icons/picture.png" alt='' /></a>
     </td>
   </tr>
   <tr>
     <td width="25%">Link:</td>
     <td>
-        <input name="link" type="text" id="link" /><a title="The relative URL for the navigation link.<br />Example: admin/" class="tooltip"><img src="<URL>themes/icons/link.png" /></a>
+        <input name="link" type="text" id="link" /><a title="The relative URL for the navigation link.<br />Example: admin/" class="tooltip"><img src="{$url}themes/icons/link.png" /></a>
     </td>
 </tr>
 
