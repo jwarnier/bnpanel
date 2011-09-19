@@ -57,11 +57,11 @@ function editme(id) {
             </tr>
             {$CATID}
             <tr>
-                <td width="20{$">%SUB}:</td>
+                <td width="20%">{$SUB}:</td>
                 <td><input name="name" type="text" id="name" size="40" /></td>
             </tr>
             <tr>
-                <td width="20{$" valign="top">%SUB2}:</td>
+                <td width="20%" valign="top">{$SUB2}:</td>
                 <td><textarea name="description" id="description" cols="" rows=""></textarea></td>
             </tr>
             <tr>
@@ -79,15 +79,16 @@ function editme(id) {
                 <td colspan="2"><strong>Edit {$NAME}</strong></td>
             </tr>
             <tr>
-                <td width="20{$">%SUB}:</td>
+                <td width="20%">{$SUB}:</td>
                 <td><input name="editname" type="text" id="editname" size="40" /></td>
             </tr>
             <tr>
-                <td width="20{$" valign="top">%SUB2}:</td>
+                <td width="20%" valign="top">{$SUB2}:</td>
                 <td><textarea name="editdescription" id="editdescription" cols="" rows=""></textarea></td>
             </tr>
             <tr>
-                <td colspan="2" align="center"><input name="edit" id="edit" type="submit" value="Edit {$NAME}" /><input name="id" id="id" type="hidden" /></td>
+                <td colspan="2" align="center"><input name="edit" id="edit" type="submit" value="Edit {$NAME}" />
+                <input name="id" id="id" type="hidden" /></td>
             </tr>
           </table>
         </div>

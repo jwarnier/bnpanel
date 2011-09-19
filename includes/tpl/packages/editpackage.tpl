@@ -95,7 +95,9 @@ theme : "advanced",
     <tr>
     <td valign="top">Direct Link:</td>
     <td>
-      <input name="direct" type="text" size="60" id="direct" value="{$URL%order/index.php?id=%ID}" readonly /> <a title="A link to order the package directly without showing other packages. (Allows ordering hidden packages.)" class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
+      <input name="direct" type="text" size="60" id="direct" value="{$url}order/index.php?id={$ID}" readonly />
+      <a title="A link to order the package directly without showing other packages. (Allows ordering hidden packages.)" class="tooltip">
+      <img src="{$url}themes/icons/information.png" /></a></td>
   </tr>
   
      <tr>

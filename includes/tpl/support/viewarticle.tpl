@@ -7,7 +7,7 @@
 	<div class="sub">
    	  <table width="100%" border="0" cellspacing="2" cellpadding="0">
     	<tr>
-          	<td width="100{$"><strong>%NAME}</strong></td>
+          	<td width="100%"><strong>{$NAME}</strong></td>
   	    </tr>
         <tr>
           	<td class="break"></td>

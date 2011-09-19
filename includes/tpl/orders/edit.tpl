@@ -70,13 +70,13 @@ function loadAddons(obj) {
      <tr>
     <td width="20%">User</td>
     <td>
-    <a href="?page=users&sub=search&do={$USER_ID%">%USER}</a>
+    <a href="?page=users&sub=search&do={$USER_ID}">{$USER}</a>
     </td>
   </tr> 
      <tr>
     <td valign="top">Domain</td>
     <td>    
-       <a target="_blank" href="http://{$REAL_DOMAIN%">%REAL_DOMAIN}</a>
+       <a target="_blank" href="http://{$REAL_DOMAIN}">{$REAL_DOMAIN}</a>
     </td>
   </tr>  
   <tr>

@@ -25,7 +25,7 @@
 
 <tr>
 <td><strong>Free Disk Space:</strong></td>
-<td> {$DISK_FREE_SPACE% GB / %DISK_TOTAL_SPACE} GB</td>
+<td> {$DISK_FREE_SPACE} GB / {$DISK_TOTAL_SPACE} GB</td>
 </tr>
 
 </table>

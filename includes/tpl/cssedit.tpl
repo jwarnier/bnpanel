@@ -27,7 +27,7 @@ $(document).ready(function() {
 <strong>Editing your Cascading Style Sheet</strong><br />
 <p>Want to edit your style in an web based interface? Here it is!</p>
 <p>Variables:<br /> &lt;IMG&gt; tag links to /themes/your_style/images/ directory.</p><br /><br />
-    <textarea name="css" class="{$CODEPRESS%css" id="cssArea" cols="45" rows="5" style="width:99%; height:300px;"%READONLY}>
+    <textarea name="css" class="{$CODEPRESS}css" id="cssArea" cols="45" rows="5" style="width:99%; height:300px;" READONLY}>
     {$CSSCONTENT}
     </textarea>
 <div id="belowDynamic">

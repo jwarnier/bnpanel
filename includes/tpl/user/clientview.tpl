@@ -22,10 +22,10 @@ function kthx() {
                 window.location = query;
                 }
                 else if(status == "Unsuspend") {
-                    window.location = "{$URL%admin/?page=users&sub=search&do=%ID}&func=unsus";
+                    window.location = "{$url}admin/?page=users&sub=search&do={$ID}&func=unsus";
                 }
                 else if(status == "<a href='?page=users&sub=validate'>Validate</a>") {
-                    window.location = "{$URL}/admin/?page=users&sub=validate";
+                    window.location = "{$url}/admin/?page=users&sub=validate";
                 }
                 else if(status == "No Action") {
                     alert("No action to be performed.");
@@ -91,15 +91,7 @@ function kthx() {
         <td width="1%" align="center"><img src="{$url}themes/icons/pencil.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=edit&amp;do={$ID}">Edit Details</a></td>
       </tr>      
-      
-      <!--  <tr>
-        <td width="1{$" align="right"><img src="{$url}themes/icons/%IMG}" /></td>
-        <td align="left"><a class="suspendIcon" href="javascript:void(0);">{$SUS}</a></td>
-      </tr>
-      <tr>
-        <td width="1%" align="center"><img src="{$url}themes/icons/cross.png" /></td>
-        <td align="left"><a href="javascript:;" onmousedown="document.getElementById('1').style.display = 'block';">Terminate User</a></td>
-      </tr> -->
+
       <tr>
         <td width="1%" align="center"><img src="{$url}themes/icons/email.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=email&amp;do={$ID}&amp;">Email User</a></td>
@@ -122,6 +114,6 @@ function kthx() {
 	  </table>
     </td>
     <td class="rightbreak"></td>
-    <td width="78{$" valign="top">%CONTENT%%BOX}</td>
+    <td width="78%" valign="top">{$CONTENT_BOX}</td>
   </tr>
 </table>
