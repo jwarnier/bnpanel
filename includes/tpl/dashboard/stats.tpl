@@ -7,15 +7,15 @@
 	        <div class="sub">
 	            <strong>At a glance....</strong>
 	            <div class='break'></div>
-                <strong>Version:</strong> %VERSION% (%UPDATE%)<br />
-                <strong>Theme:</strong> %THEME%<br />
-                <strong>Client Area Enabled:</strong> %CENABLED%<br />
-                <strong>Show Version in footer:</strong> %SVID%<br />
-                <strong>Support Area Enabled:</strong> %SENABLED%<br />
-                <strong>Signups Enabled:</strong> %SIGNENABLE%<br />
-                <strong>Multiple Signups:</strong> %MULTI%<br />
-                <strong>Email Method:</strong> %EMETHOD%<br />
-                <strong>Default Page:</strong> %DEFAULT%
+                <strong>Version:</strong> {$VERSION} ({$UPDATE})<br />
+                <strong>Theme:</strong> {$THEME}<br />
+                <strong>Client Area Enabled:</strong> {$CENABLED}<br />
+                <strong>Show Version in footer:</strong> {$SVID}<br />
+                <strong>Support Area Enabled:</strong> {$SENABLED}<br />
+                <strong>Signups Enabled:</strong> {$SIGNENABLE}<br />
+                <strong>Multiple Signups:</strong> {$MULTI}<br />
+                <strong>Email Method:</strong> {$EMETHOD}<br />
+                <strong>Default Page:</strong> {$DEFAULT}
             </div>
          </div>
         </td>
@@ -40,4 +40,4 @@
         </td>
     </tr>
 </table>
-%UPG_BOX%
+{$UPG_BOX}

@@ -1,7 +1,7 @@
 <script type="text/javascript" src="{$url}includes/javascript/jquery.validate.js"></script>
 <script type="text/javascript">
 	$(function() {
-		$("#addstaff").validate(%json_encode%);
+		$("#addstaff").validate({$json_encode});
 		/* $(".staff_settings").buttonset(); */		
 	});	
 </script>
@@ -37,7 +37,7 @@
   </tr>
   <tr id="staffperms">
     <td valign="top">ACP Pages: <br />(Check the ones you don't want them to see)</td>
-    <td align="center">%PAGES%</td>
+    <td align="center">{$PAGES}</td>
   </tr>
   <tr>
     <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Add Staff Account" /></td>

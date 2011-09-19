@@ -77,7 +77,7 @@
   <tr>
     <td valign="top">Server:</td>
     <td>
-    %SERVER% <a title="The Server which the package is located at." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
+    {$SERVER} <a title="The Server which the package is located at." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
   <tr>
@@ -104,6 +104,6 @@
 </form>
 </div></div></div>
 <div id="packs">
-	%PACKS%
+	{$PACKS}
 </div>
 <div align="center"><input name="saveorder" type="button" value="Save Package Order" /></div>

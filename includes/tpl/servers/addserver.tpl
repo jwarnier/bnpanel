@@ -38,7 +38,7 @@ $(window).load(function () {
   <tr>
     <td valign="top">Type:</td>
     <td>
-    %TYPE%
+    {$TYPE}
     
     <a title="The Server Type. This is the Control Panel that your server is running.<br /><i>eg: cPanel/WHM</i>" class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
   </tr>

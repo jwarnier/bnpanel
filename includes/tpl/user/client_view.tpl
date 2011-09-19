@@ -12,28 +12,28 @@
   <tr>
     <td width="20%">Username:</td>
     <td>     
-      %USER%
+      {$USER}
       <a title="The username you registered with." class="tooltip"><img src="{$icon_dir}information.png" /></a>
     </td>
   </tr>
   <tr>
     <td width="20%">Email:</td>
     <td>
-    	%EMAIL%      
+    	{$EMAIL}      
       <a title="Please type your email address here." class="tooltip"><img src="{$icon_dir}information.png" /></a>
     </td>
   </tr>
     <tr>
     <td width="20%">First Name:</td>
     <td>
-    %FIRSTNAME%
+    {$FIRSTNAME}
       <a title="Your first name." class="tooltip"><img src="{$icon_dir}information.png" /></a>
     </td>
   </tr>
     <tr>
     <td width="20%">Last Name:</td>
     <td>
-    %LASTNAME%
+    {$LASTNAME}
       <a title="Your last name." class="tooltip"><img src="{$icon_dir}information.png" /></a>
     </td>
   </tr>
@@ -42,41 +42,41 @@
   <tr>
     <td width="20%">Address:</td>
     <td>
-      %ADDRESS%
+      {$ADDRESS}
       <a title="Your address." class="tooltip"><img src="{$icon_dir}information.png" /></a>
     </td>
   </tr>
   <tr>
     <td width="20%">City:</td>
     <td>
-      	%CITY%
+      	{$CITY}
       <a title="Your city/province." class="tooltip"><img src="{$icon_dir}information.png" /></a>
     </td>
   </tr>
   <tr>
     <td width="20%">State:</td>
     <td>
-      %STATE%
+      {$STATE}
       <a title="Your state/territory." class="tooltip"><img src="{$icon_dir}information.png" /></a>
     </td>
   </tr>
   <tr>
     <td width="20%">Zip Code:</td>
     <td>
-      %ZIP%
+      {$ZIP}
       <a title="Your zip/postal code." class="tooltip"><img src="{$icon_dir}information.png" /></a>
     </td>
   </tr>
   <tr>
     <td width="50%">Country:</td>
     <td>
-		<img src="{$url}themes/flags/%COUNTRY%.gif" />
+		<img src="{$url}themes/flags/{$COUNTRY}.gif" />
 	</td>
   </tr>
   <tr>
     <td width="20%">Phone Number:</td>
     <td>
-      %PHONE%
+      {$PHONE}
       <a title="Your phone number." class="tooltip"><img src="{$icon_dir}information.png" /></a>
     </td>
   </tr>  
@@ -93,21 +93,21 @@
   <tr>
     <td width="50%">Company:</td>
     <td>
-    %COMPANY%
+    {$COMPANY}
       <a title="Company name." class="tooltip"><img src="{$icon_dir}information.png" /></a>
     </td>
   </tr>
     <tr>
     <td width="20%">VAT ID:</td>
     <td>
-    %VATID%     
+    {$VATID}     
      <a title="Company VAT ID." class="tooltip"><img src="{$icon_dir}information.png" /></a>
     </td>
   </tr>
     <tr>
     <td width="20%">SSN/Fiscal ID:</td>
     <td>
-    %FISCALID%
+    {$FISCALID}
      <a title="User's SSN or Fiscal ID." class="tooltip"><img src="{$icon_dir}information.png" /></a>
   </tr>
   </table>

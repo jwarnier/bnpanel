@@ -128,7 +128,7 @@ $(document).ready(function(){
 					<td><a class="tooltip" title="The icons that your users see next to the navigation link. Icons are located in the 'themes/icons' folder. Example: stop.png"><img src="{$icon_dir}picture.png" alt="Picture" /></a></td>
 				</tr>
 				<tr>
-					<td><label for="inputLink-%ID%">Link:</label></td>
+					<td><label for="inputLink-{$ID}">Link:</label></td>
 					<td><input class="inputClass" type="text" class="tooltip" name="link" id="inputLink-new" /></td>
 					<td><a class="tooltip" title="The relative URL for the navagation link. Example: admin/"><img src="{$icon_dir}link.png" alt="Link" /></a></td>
 				</tr>

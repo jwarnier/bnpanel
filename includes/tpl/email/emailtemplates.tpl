@@ -36,7 +36,7 @@ function templates(id) {
 	});
 }
 $(document).ready(function() {
-	var id = '%TEMPLATE_ID%'
+	var id = '{$TEMPLATE_ID}'
 	if (id != '0') {
 		document.getElementById("templatebit").style.display="block";
 		templates(id);
@@ -51,7 +51,7 @@ $(document).ready(function() {
     <td>
     	<select name="template" id="template" onchange="templates(this.value)">
     		<option value="" disabled="disabled" selected="selected">Select a template</option>
-    		%TEMPLATES%
+    		{$TEMPLATES}
     	</select>
     <a title="Which template are you going to edit?" class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
   </tr>

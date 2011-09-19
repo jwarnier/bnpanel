@@ -12,12 +12,12 @@
   <tr>
     <td width="20%">Support Area:</td>
     <td>
-      %SENABLED% <a title="Is the Support area online?" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
+      {$SENABLED} <a title="Is the Support area online?" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
   <tr>
     <td valign="top">Support Area Closed Message:</td>
-    <td><textarea name="smessage" id="smessage" cols="" rows="">%SMESSAGE%</textarea></td>
+    <td><textarea name="smessage" id="smessage" cols="" rows="">{$SMESSAGE}</textarea></td>
   </tr>
   <tr>
     <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Edit Settings" /></td>

@@ -19,13 +19,13 @@ $(window).load(function () {
   <tr>
     <td width="20%">Email Method:</td>
     <td>
-    <select name="emailmethod" id="emailmethod" onchange="emailchange(this.value)">%METHOD%</select>
+    <select name="emailmethod" id="emailmethod" onchange="emailchange(this.value)">{$METHOD}</select>
     <a title="The email method that you are going to use." class="tooltip"><img src="{$icon_dir}information.png" /></a>
     </td>
   </tr>
   <tr>
         <td width="20%">Email From:</td>
-        <td><input name="emailfrom" id="emailfrom" type="text" value="%EMAILFROM%" />
+        <td><input name="emailfrom" id="emailfrom" type="text" value="{$EMAILFROM}" />
         <a title="Email from who?" class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
       </tr>
 </table>
@@ -33,19 +33,19 @@ $(window).load(function () {
       <tr>
         <td>SMTP Host:</td>
         <td align="right">
-        <input name="smtp_host" id="smtp_host" type="text" value="%SMTP_HOST%" />
+        <input name="smtp_host" id="smtp_host" type="text" value="{$SMTP_HOST}" />
         <a title="Your SMTP Host." class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
       </tr>
        <tr>
         <td>SMTP Username:</td>
         <td align="right">
-        <input name="smtp_user" id="smtp_user" type="text" value="%SMTP_USER%" />
+        <input name="smtp_user" id="smtp_user" type="text" value="{$SMTP_USER}" />
         <a title="Your SMTP username." class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
       </tr>
       <tr>
         <td>SMTP Password:</td>
         <td align="right">
-        <input name="smtp_password" id="smtp_password" type="password" value="%SMTP_PASS%" />
+        <input name="smtp_password" id="smtp_password" type="password" value="{$SMTP_PASS}" />
         <a title="Your SMTP Password." class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
       </tr>
     </table>

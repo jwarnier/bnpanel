@@ -1,13 +1,13 @@
 <div class="contextual">
-	<a href="?page=orders&sub=view&do=%ID%"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Order</a> 
+	<a href="?page=orders&sub=view&do={$ID}"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Order</a> 
 </div>
-<h2>Change Password in Order #%ID%</h2>
+<h2>Change Password in Order #{$ID}</h2>
 <ERRORS>
 <form class="content"  name="change_pass" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Username</td>
-    <td>%USERNAME%</td>
+    <td>{$USERNAME}</td>
   </tr>
   <tr>
     <td>New Password:</td>

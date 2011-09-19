@@ -15,7 +15,7 @@
 	});
 
 	$(function() {		
-		$("#addaddon").validate(%json_encode%);		
+		$("#addaddon").validate({$json_encode});		
 		/* $("button, input:submit", "#addaddon").button(); */
 		
 	});
@@ -45,7 +45,7 @@
   <tr>
     <td valign="top">Billing cycle:</td>
     <td>
-    %BILLING_CYCLE%
+    {$BILLING_CYCLE}
     </td>
   </tr>
    
@@ -53,21 +53,21 @@
          <tr>
     <td valign="top">Active</td>
     <td>
-	 %STATUS%	
+	 {$STATUS}	
     </td>
   </tr>
   
   	<tr>
     <td valign="top">Mandatory</td>
     <td>
-	 %MANDATORY% <a title="This addon will be set to mandatory for a related package" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
+	 {$MANDATORY} <a title="This addon will be set to mandatory for a related package" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
     
 	<tr>
     <td valign="top">Install Chamilo</td>
     <td>
-	 %INSTALL_PACKAGE%	<a title="Install chamilo using the Control Panel" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
+	 {$INSTALL_PACKAGE}	<a title="Install chamilo using the Control Panel" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>  
 

@@ -54,56 +54,56 @@ function loadAddons(obj) {
 }
 </script>
 <div class="contextual">
-	<a href="?page=orders&sub=view&do=%ID%"> <img src="{$url}themes/icons/order.png"> View </a>
-	<a href="?page=orders&sub=add_invoice&do=%ID%"> <img src="{$url}themes/icons/note_add.png"> Add Invoice</a>
-	<a href="?page=orders&sub=change_pass&do=%ID%"> <img src="{$url}themes/icons/key.png"> Change CP Password</a>	  
+	<a href="?page=orders&sub=view&do={$ID}"> <img src="{$url}themes/icons/order.png"> View </a>
+	<a href="?page=orders&sub=add_invoice&do={$ID}"> <img src="{$url}themes/icons/note_add.png"> Add Invoice</a>
+	<a href="?page=orders&sub=change_pass&do={$ID}"> <img src="{$url}themes/icons/key.png"> Change CP Password</a>	  
 </div>
 
-<h2>Order #%ID%</h2>
+<h2>Order #{$ID}</h2>
 <ERRORS>
 <form class="content" id="addpackage" name="addpackage" method="post" action="">
 
-<input name="order_id" type="hidden" id="order_id" value="%ID%" />
-<input name="package_id" type="hidden" id="package_id" value="%PACKAGE_ID%" />
+<input name="order_id" type="hidden" id="order_id" value="{$ID}" />
+<input name="package_id" type="hidden" id="package_id" value="{$PACKAGE_ID}" />
 
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
      <tr>
     <td width="20%">User</td>
     <td>
-    <a href="?page=users&sub=search&do=%USER_ID%">%USER%</a>
+    <a href="?page=users&sub=search&do={$USER_ID%">%USER}</a>
     </td>
   </tr> 
      <tr>
     <td valign="top">Domain</td>
     <td>    
-       <a target="_blank" href="http://%REAL_DOMAIN%">%REAL_DOMAIN%</a>
+       <a target="_blank" href="http://{$REAL_DOMAIN%">%REAL_DOMAIN}</a>
     </td>
   </tr>  
   <tr>
     <td valign="top">Billing cycles</td>
     <td>
-    %BILLING_CYCLES%
+    {$BILLING_CYCLES}
     <div id = "showdata"></div>
     </td>
   </tr>
      <tr>
     <td valign="top">Packages</td>
     <td>   
-    	<div id = "showpackages"> %PACKAGES% </div>
+    	<div id = "showpackages"> {$PACKAGES} </div>
     </td>
   </tr>
   
     <tr>
     <td valign="top">Addons</td>
     <td>
-   		<div id = "showaddons"> %ADDON% </div>
+   		<div id = "showaddons"> {$ADDON} </div>
     </td>
   </tr>
    
    <tr>
     <td valign="top">Order status</td>
     <td>
-    %STATUS%
+    {$STATUS}
     <a class="tooltip" title="Will operate on the Control Panel server"><img src="{$icon_dir}information.png"></a>
     </td>
   </tr>
@@ -115,7 +115,7 @@ function loadAddons(obj) {
     Control Panel Username    
     </td>
     <td>
-  		%USERNAME% 
+  		{$USERNAME} 
   		<a class="tooltip" title="The username to login in the Control Panel System"><img src="{$icon_dir}information.png"></a>
     </td>
   </tr>
@@ -123,7 +123,7 @@ function loadAddons(obj) {
       <tr>
     <td valign="top">Control Panel Password</td>
     <td>
-  		%PASSWORD%
+  		{$PASSWORD}
   		<a class="tooltip" title="The password to login in the Control Panel System"><img src="{$icon_dir}information.png"></a>
     </td>
   </tr>
@@ -131,8 +131,8 @@ function loadAddons(obj) {
   <tr>
     <td valign="top">Creation date</td>
     <td>  		
-  		<!--  <input name="created_at" type="text" id="created_at" value="%CREATED_AT%" />  -->
-  		%CREATED_AT%
+  		<!--  <input name="created_at" type="text" id="created_at" value="{$CREATED_AT}" />  -->
+  		{$CREATED_AT}
     </td>
 </tr>
   
@@ -145,7 +145,7 @@ function loadAddons(obj) {
     <td>
     <div id="show_preview" ></div>  	
     	<ul>	
-    	<!-- onclick="send('neworder', %ID%);" -->
+    	<!-- onclick="send('neworder', {$ID});" -->
   		<li><a target="_blank" href="?page=email&sub=templates&do=20">Edit Order Activation email</a> 		<a href="?page=email&sub=templates&do=20"><img src="{$url}themes/icons/pencil.png"></a></li>
   		<li><a target="_blank" href="?page=email&sub=templates&do=21">Edit Order Waiting for Admin email</a><a href="?page=email&sub=templates&do=21"><img src="{$url}themes/icons/pencil.png"></a></li>
   		<li><a target="_blank" href="?page=email&sub=templates&do=22">Edit Order Cancelled email </a>		<a href="?page=email&sub=templates&do=22"><img src="{$url}themes/icons/pencil.png"></a></li>  		
@@ -155,12 +155,12 @@ function loadAddons(obj) {
    
 </table>
 <br />
-%INVOICE_LIST%
+{$INVOICE_LIST}
 
 
-<div class="%SITE_STATUS_CLASS%">
-  %SITE_STATUS%<br />
-  %SITE_STATUS_INFO%
+<div class="{$SITE_STATUS_CLASS}">
+  {$SITE_STATUS}<br />
+  {$SITE_STATUS_INFO}
 </div>
 
 <div class="actions">

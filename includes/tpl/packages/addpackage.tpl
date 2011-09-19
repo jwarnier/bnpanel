@@ -16,7 +16,7 @@
 		width:"100%",
 	});
 	$(function() {
-		$("#addpackage").validate(%json_encode%);
+		$("#addpackage").validate({$json_encode});
 	});	
 </script>
 <ERRORS>
@@ -42,7 +42,7 @@
   <tr>
     <td valign="top">Server:</td>
     <td>
-    %SERVER% <a title="The Server which the package is located at." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
+    {$SERVER} <a title="The Server which the package is located at." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>    
   </tr>  
   <tr>
@@ -80,7 +80,7 @@
    <tr>
     <td valign="top">Addons</td>
     <td>
-    %ADDON%
+    {$ADDON}
     </td>
   </tr>
   

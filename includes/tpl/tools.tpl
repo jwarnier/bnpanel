@@ -1,6 +1,6 @@
 <strong>System Tools</strong>
 <p>Here are some useful tools for your BNPanel Installation to solve a few common problems.</p><br />
-<span style='color:red'> %STATUS% </span>
+<span style='color:red'> {$STATUS} </span>
 <br /><br />
 <!--System Tools List start-->
 <div class="subborder">

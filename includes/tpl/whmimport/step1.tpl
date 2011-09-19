@@ -6,7 +6,7 @@
 	      </tr>
 		  <tr>
 			<td width="30%">Server:</td>
-			<td>%DROPDOWN%</td>
+			<td>{$DROPDOWN}</td>
 		  </tr>
 		  <tr>
 			<td colspan="2" align="center">

@@ -23,7 +23,7 @@ $(document).ready(function() {
 	$("#tbody").load("{$ajax}function=getInvoices&page=1", Hide_Load());
 
 	$("#pagination").paginate({
-		count 					: %COUNT%,
+		count 					: {$COUNT},
 		start 					: 1,
 		display     			: 5,
 		border					: true,
@@ -50,7 +50,7 @@ function filter() {
 
 </script>
 <h2>Invoices</h2>
-%STATUS_FILTER%
+{$STATUS_FILTER}
 <a href="#" onclick="filter();">Apply</a>
 <ERRORS>
 

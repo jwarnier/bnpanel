@@ -2,19 +2,19 @@
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
 <tr>
 <td width="50%"><strong>Server OS:</strong></td>
-<td width="50%"> %OS% </td>
+<td width="50{$"> %OS} </td>
 </tr>
 <tr>
 <td><strong>Server Software:</strong></td>
-<td> %SOFTWARE% </td>
+<td> {$SOFTWARE} </td>
 </tr>
 <tr>
 <td><strong>PHP Version:</strong></td>
-<td> %PHP_VERSION% (<a href="?page=status&sub=phpinfo">PHPInfo</a>)</td>
+<td> {$PHP_VERSION} (<a href="?page=status&sub=phpinfo">PHPInfo</a>)</td>
 </tr>
 <tr>
 <td><strong>MySQL Version:</strong></td>
-<td> %MYSQL_VERSION% </td>
+<td> {$MYSQL_VERSION} </td>
 </tr>
 </table>
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
@@ -26,10 +26,10 @@
 <td align="center"><strong>SSH</strong></td>
 </tr>
 <tr>
-<td align="center"> <img src="../includes/status.php?link=%SERVER%:80"></td>
-<td align="center"> <img src="../includes/status.php?link=%SERVER%:21"></td>
-<td align="center"> <img src="../includes/status.php?link=%SERVER%:3306"></td>
-<td align="center"> <img src="../includes/status.php?link=%SERVER%:110"></td>
-<td align="center"> <img src="../includes/status.php?link=%SERVER%:22"></td>
+<td align="center"> <img src="../includes/status.php?link={$SERVER}:80"></td>
+<td align="center"> <img src="../includes/status.php?link={$SERVER}:21"></td>
+<td align="center"> <img src="../includes/status.php?link={$SERVER}:3306"></td>
+<td align="center"> <img src="../includes/status.php?link={$SERVER}:110"></td>
+<td align="center"> <img src="../includes/status.php?link={$SERVER}:22"></td>
 </tr>
 </table>

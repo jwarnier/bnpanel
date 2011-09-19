@@ -13,32 +13,32 @@ function check() {
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
  <!--  <tr>
     <td width="20%"><strong>Username:</strong></td>
-    <td>%USER%</td>
+    <td>{$USER}</td>
   </tr>  
    
   <tr>
     <td width="20%"><strong>Date Ordered:</strong></td>
-    <td>%SIGNUP%</td>
+    <td>{$SIGNUP}</td>
   </tr>
   -->
   <tr>
     <td width="20%"><strong>Domain:</strong></td>
-    <td>%DOMAIN%</td>
+    <td>{$DOMAIN}</td>
   </tr>
   <tr>
     <td width="20%"><strong>Package:</strong></td>
-    <td>%PACKAGE%</td>
+    <td>{$PACKAGE}</td>
   </tr>  
    <tr>
     <td width="20%"><strong>Addons:</strong></td>
-    <td>%ADDON%</td>
+    <td>{$ADDON}</td>
   </tr>  
   
     
     <tr>
     <td colspan="2">   
     <strong>Package description :</strong>
-          %DESCRIPTION%    
+          {$DESCRIPTION}    
     </td>
   </tr>
   

@@ -9,7 +9,7 @@ tinyMCE.init({
 	});*/
 
 	$(function() {		
-		$("#addticket").validate(%json_encode%);		
+		$("#addticket").validate({$json_encode});		
 	});
 	
 </script>
@@ -26,7 +26,7 @@ tinyMCE.init({
   <tr>
     <td valign="top">Urgency:</td>
     <td>    
-      %URGENCY%
+      {$URGENCY}
     </td>
     <td><a title="The urgency of your ticket. Is it very important and needs solving fast?" class="tooltip"><img src="{$url}themes/icons/information.png" alt="Info" /></a></td>
   </tr>

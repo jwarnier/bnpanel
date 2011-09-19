@@ -35,7 +35,7 @@ var right = '<img src="{$url}themes/icons/accept.png">';
 			buttonImage: '{$url}themes/icons/calendar_add.png'			 
 		});
 		 /* $("#addorder").validate(); */
-		$("#addorder").validate(%json_encode%);		
+		$("#addorder").validate({$json_encode});		
 	});
 	
 </script>
@@ -192,7 +192,7 @@ function checkdomain() {
    <tr>
     <td valign="top">Billing cycles</td>
     <td>
-    %BILLING_CYCLES%
+    {$BILLING_CYCLES}
     <div id = "showdata"></div>
     </td>
   </tr> 
@@ -202,7 +202,7 @@ function checkdomain() {
     <td valign="top">Packages</td>
     <td>
    
-    <div id = "showpackages"> %PACKAGES% </div>
+    <div id = "showpackages"> {$PACKAGES} </div>
     </td>
   </tr>
   
@@ -218,7 +218,7 @@ function checkdomain() {
     <tr>
     <td valign="top">Domain type</td>
     <td>
-		%DOMAIN_TYPE%    
+		{$DOMAIN_TYPE}    
     </td>
   </tr> 
   
@@ -232,7 +232,7 @@ function checkdomain() {
    <tr>
     <td valign="top">Order status</td>
     <td>
-    %STATUS%
+    {$STATUS}
     <a class="tooltip" title="Will operate on the Control Panel server"><img src="{$icon_dir}information.png"></a>
     </td>
   </tr>
@@ -240,7 +240,7 @@ function checkdomain() {
 	<tr>
 	    <td valign="top">Control Panel Username</td>
 	    <td>
-	  		<input size="30" id="username" name="username" type="text" value="%DOMAIN_USERNAME%"  class="required"/>
+	  		<input size="30" id="username" name="username" type="text" value="{$DOMAIN_USERNAME}"  class="required"/>
 	  		<a class="tooltip" title="The username to login in the Control Panel"><img src="{$icon_dir}information.png"></a>
 	    </td>
 	</tr>
@@ -248,14 +248,14 @@ function checkdomain() {
       <tr>
     <td valign="top">Control Panel Password</td>
     <td>
-  		<input size="30" id="password"  name="password" type="text" value="%DOMAIN_PASSWORD%"  class="required"/>
+  		<input size="30" id="password"  name="password" type="text" value="{$DOMAIN_PASSWORD}"  class="required"/>
   		<a class="tooltip" title="The password to login in the Control Panel"><img src="{$icon_dir}information.png"></a>
     </td>
   </tr>	
 <tr>
     <td valign="top">Creation date</td>
     <td>  		
-  		<input name="created_at" type="text" id="created_at" value="%CREATED_AT%"  class="required"/>
+  		<input name="created_at" type="text" id="created_at" value="{$CREATED_AT}"  class="required"/>
     </td>
   </tr>  
   
@@ -266,7 +266,7 @@ function checkdomain() {
     <td>
     <div id="show_preview" ></div>  	
     	<ul>	
-    	<!-- onclick="send('neworder', %ID%);" -->
+    	<!-- onclick="send('neworder', {$ID});" -->
   		<li><a target="_blank" href="?page=email&sub=templates&do=19">Edit New Order email</a> 		<a href="?page=email&sub=templates&do=19"><img src="{$url}themes/icons/pencil.png"></a></li>  		  		
   		</ul>
     </td>    

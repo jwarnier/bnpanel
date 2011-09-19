@@ -1,6 +1,6 @@
 <script type="text/javascript">
 function serverchange(value) {
-	$.get("{$ajax}function=editserverhash&server=%ID%&type="+value, function(data) {
+	$.get("{$ajax}function=editserverhash&server={$ID}&type="+value, function(data) {
 		$("#passtext").slideUp(500);			
 		$("#passbox").slideUp(500, function(lol2) {
 			var result = data.split(";:;");
@@ -32,20 +32,20 @@ $(window).load(function () {
   <tr>
     <td width="20%">Name:</td>
     <td>
-      <input name="name" size="30" type="text" id="name" value="%NAME%" />
+      <input name="name" size="30" type="text" id="name" value="{$NAME}" />
       <a title="The server's user-friendly name." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
   <tr>
     <td width="20%">Host:</td>
     <td>
-      <input name="host" size="30" type="text" id="host" value="%HOST%" />
+      <input name="host" size="30" type="text" id="host" value="{$HOST}" />
       <a title="The Server's Hostname. Must be a FQDN!" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
   <tr>
     <td>Username:</td>
-    <td><input type="text"  name="user" id="user" value="%USER%" />
+    <td><input type="text"  name="user" id="user" value="{$USER}" />
     <a title="The username to access the server." class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
   </tr>
   <tr>
@@ -55,14 +55,14 @@ $(window).load(function () {
   <tr>
     <td valign="top">Type:</td>
     <td>
-    %TYPE%
+    {$TYPE}
     <a title="The control panel that this server is running." class="tooltip">
     <img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>  
    <tr>
     <td valign="top">Server status</td>
-    <td>%SERVER_STATUS%</td>
+    <td>{$SERVER_STATUS}</td>
   </tr>  
   <tr>
     <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Edit Server" /></td>

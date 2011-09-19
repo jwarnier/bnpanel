@@ -25,48 +25,48 @@
 	}
 </script>
 <div class="contextual">
-	<a href="?page=invoices&sub=view&do=%ID%"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Invoice</a> 
+	<a href="?page=invoices&sub=view&do={$ID}"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Invoice</a> 
 </div>
-<h2>Invoice #%ID%</h2>
+<h2>Invoice #{$ID}</h2>
 <ERRORS>
 
 <form class="content"  id="addpackage" name="addpackage" method="post" action="">
-<input name="package_id" type="hidden" id="package_id" value="%PACKAGE_ID%" />
+<input name="package_id" type="hidden" id="package_id" value="{$PACKAGE_ID}" />
 <table width="100%" border="0" cellspacing="2" cellpadding="0"> 
     <tr>
     <td width="20%">Order id:</td>
-    <td><a href="?page=orders&sub=view&do=%ORDER_ID%">#%ORDER_ID%</a></td>
+    <td><a href="?page=orders&sub=view&do={$ORDER_ID%">#%ORDER_ID}</a></td>
   </tr>
      <tr>
     <td valign="top">User</td>
     <td>
-    %USER%
+    {$USER}
     </td>
   </tr>
   
      <tr>
     <td valign="top">Domain</td>
     <td>    
-    <a target="_blank" href="http://%REAL_DOMAIN%">%REAL_DOMAIN%</a>
+    <a target="_blank" href="http://{$REAL_DOMAIN%">%REAL_DOMAIN}</a>
     </td>
   </tr>
   
     <tr>
     <td valign="top">Description:</td>
-    <td><textarea name="notes" id="notes" cols="45" rows="5">%NOTES%</textarea></td>
+    <td><textarea name="notes" id="notes" cols="45" rows="5">{$NOTES}</textarea></td>
   </tr>  
   
       <tr>
     <td valign="top">Billing cycles</td>
     <td>
-    %BILLING_CYCLES%
+    {$BILLING_CYCLES}
     </td>
   </tr>
     
 	<tr>
     <td valign="top">Package</td>
     <td>
-    %PACKAGE_NAME%
+    {$PACKAGE_NAME}
     </td>
   </tr>
   
@@ -74,33 +74,33 @@
     <td valign="top">Package amount</td>
     <td>
     
-    <input name="amount" type="text" id="amount" value="%PACKAGE_AMOUNT%" />
+    <input name="amount" type="text" id="amount" value="{$PACKAGE_AMOUNT}" />
     </td>
   </tr>
  
        <tr>
     <td valign="top">Addons</td>
     <td>
- 	 %ADDON% 
+ 	 {$ADDON} 
     </td>
   </tr>
   
     	<tr>
     <td valign="top">Status</td>
     <td>
-    %STATUS%
+    {$STATUS}
     </td>
   </tr> 
     
   <!-- <tr>
     	<td valign="top">Package amount:</td>
-    	<td><input name="amount" type="text" id="amount" value="%AMOUNT%" /></td>
+    	<td><input name="amount" type="text" id="amount" value="{$AMOUNT}" /></td>
 	</tr>  
   
 	<tr>
     <td valign="top">Total</td>
     <td>
-    %TOTAL%
+    {$TOTAL}
     </td>
   </tr>
   -->  
@@ -109,14 +109,14 @@
   	<tr>
     <td valign="top">Creation date</td>
     <td>  		
-  		%CREATED%
+  		{$CREATED}
     </td>
   </tr>  
   
   	<tr>
     <td valign="top">Due date</td>
     <td>  		
-  		<input name="due" type="text" id="due" value="%DUE%"/>
+  		<input name="due" type="text" id="due" value="{$DUE}"/>
     </td>
   </tr>  
  

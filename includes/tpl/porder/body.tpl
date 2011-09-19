@@ -11,6 +11,6 @@ To change the order of the packages, drag and drop each box accordingly. The box
 </script>
 <div class="errors" id="message"></div>
 <div id="sortable">
-    %PACKS%
+    {$PACKS}
 </div>
 <div align="center"><input name="save" type="button" value="Save Order" onclick="update()" /></div>

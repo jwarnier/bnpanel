@@ -23,7 +23,7 @@ $(document).ready(function() {
 	$("#tbody").load("{$ajax}function=getOrders&page=1", Hide_Load());
 
 	$("#pagination").paginate({
-		count 					: %COUNT%,
+		count 					: {$COUNT},
 		start 					: 1,
 		display     			: 5,
 		border					: true,
@@ -53,7 +53,7 @@ function filter() {
 
 <h2>Orders</h2>
 
-%STATUS_FILTER%
+{$STATUS_FILTER}
 <a  href="#" onclick="filter();">Apply</a>
 
 
