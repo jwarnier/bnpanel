@@ -4,7 +4,7 @@ class Controller {
 	var $navtitle; 
 	var $navlist;
 	var $data;
-	var $content = null;
+	var $content = '';
 	
 	function __construct() {
 	

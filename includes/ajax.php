@@ -5,6 +5,7 @@
  */
  
 $is_ajax_load = true;
+define("PAGE", "AJAX calls");
 require 'compiler.php';
 
 class AJAX {

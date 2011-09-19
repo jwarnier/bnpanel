@@ -1,10 +1,11 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-require '../includes/compiler.php';
-
 define("PAGE", "Order Form");
 define("SUB", "Account Creation");
+
+require '../includes/compiler.php';
+
 define("INFO", "IP Logged: ". $main->removeXSS($_SERVER['REMOTE_ADDR']));
 
 
@@ -146,8 +147,5 @@ if ($db->num_rows($packages2) == 0) {
 }
 $content .= '</div>'; #End it
 
-echo $style->get("tpl/layout/one-col/header.tpl");
-echo $style->replaceVar("tpl/layout/one-col/content.tpl", array('CONTENT' => $content)); 
-echo $style->get("tpl/layout/one-col/footer.tpl"); #Output Footer
-//Output
-require INCLUDES ."output.php";
+echo $style->replaceVar("layout/one-col/index.tpl", array('content' => $content)); 
+

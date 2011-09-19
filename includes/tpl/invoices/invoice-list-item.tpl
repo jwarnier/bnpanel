@@ -9,5 +9,5 @@
 	<!-- <td>{$addon_fee}</td> -->    
   	<td>{$paid}</td>
   	<td>{$due}</td>
-  	<td> {$pay}  {edit} {$delete} </td>  	           
+  	<td>{$pay}  {$edit} {$delete} </td>  	           
 </tr>                
