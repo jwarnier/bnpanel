@@ -43,7 +43,8 @@ function cancel(user, pass) {
                 <td width="25%">Your Password:</td>
                 <td width="10%"><input name="password" id="password" type="password" />
                 </td>
-                <td width="65{$" align="left"><input name="delete" id="delete" type="button" value="Cancel" onclick="cancel('%USER}', document.getElementById('password').value)"/>  <a title="Click here to cancel your account." class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
+                <td width="65{$" align="left">
+                <input name="delete" id="delete" type="button" value="Cancel" onclick="cancel('{$USER}', document.getElementById('password').value)"/>  <a title="Click here to cancel your account." class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
               </tr>
             </table>
         </div>

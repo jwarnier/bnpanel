@@ -2,7 +2,7 @@
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
 <tr>
 <td width="50%"><strong>Server OS:</strong></td>
-<td width="50{$"> %OS} </td>
+<td width="50%"> {$OS} </td>
 </tr>
 <tr>
 <td><strong>Server Software:</strong></td>

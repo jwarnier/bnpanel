@@ -19,6 +19,6 @@
     </div>
     </td>
     <td class="rightbreak"></td>
-    <td width="70{$" valign="top">%CONTENT}</td>
+    <td width="70%" valign="top">{$CONTENT}</td>
   </tr>
 </table>

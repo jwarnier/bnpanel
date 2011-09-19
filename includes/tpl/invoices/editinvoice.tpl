@@ -35,7 +35,7 @@
 <table width="100%" border="0" cellspacing="2" cellpadding="0"> 
     <tr>
     <td width="20%">Order id:</td>
-    <td><a href="?page=orders&sub=view&do={$ORDER_ID%">#%ORDER_ID}</a></td>
+    <td><a href="?page=orders&sub=view&do={$ORDER_ID}">#{$ORDER_ID}</a></td>
   </tr>
      <tr>
     <td valign="top">User</td>
@@ -47,7 +47,7 @@
      <tr>
     <td valign="top">Domain</td>
     <td>    
-    <a target="_blank" href="http://{$REAL_DOMAIN%">%REAL_DOMAIN}</a>
+    <a target="_blank" href="http://{$REAL_DOMAIN}">{$REAL_DOMAIN}</a>
     </td>
   </tr>
   

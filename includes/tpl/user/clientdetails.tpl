@@ -53,8 +53,9 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td width="50%">Client IP:</td>
-          <td align="right"><a href="http://whois.domaintools.com/{$CLIENTIP%" target="_blank">%CLIENTIP}</a>
-          <a title="The IP used during registration." class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
+          <td align="right"><a href="http://whois.domaintools.com/{$CLIENTIP}" target="_blank">{$CLIENTIP}</a>
+          <a title="The IP used during registration." class="tooltip">
+          <img src="{$url}themes/icons/information.png" /></a></td>
         </tr>
       </table>
     </div>

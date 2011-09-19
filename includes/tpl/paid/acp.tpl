@@ -3,7 +3,7 @@
 <table width="100%" border="0" cellspacing="3" cellpadding="0">
   <tr>
     <td width="30%">Days Unpaid Until Suspension:</td>
-    <td width="13{$"><input name="susdays" type="text" id="susdays" size="5" value="%SUSDAYS}" />
+    <td width="13%"><input name="susdays" type="text" id="susdays" size="5" value="{$SUSDAYS}" />
     </td>
     <td width="57%"><a title="The amount of days that when a invoice has been left unpaid, it suspends the Order" class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
   </tr>

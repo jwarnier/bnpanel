@@ -8,6 +8,6 @@
     </div>
     
     <div class="button">
-        <input name="order" id="order{$ID%" type="button" value="_{Order}" onclick="orderstepme('%ID%', '%PACKAGE_TYPE}'); " class="btn primary" />
+        <input name="order" id="order{$ID}" type="button" value="_{Order}" onclick="orderstepme('{$ID}', '{$PACKAGE_TYPE}'); " class="btn primary" />
     </div>
 </div>

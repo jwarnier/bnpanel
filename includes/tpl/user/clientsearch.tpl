@@ -1,5 +1,5 @@
 <script type="text/javascript">
-        var text = "%TEXT";
+	var text = "{$TEXT}";
 	function clientsearch(type, value, page) {
 		var num = document.getElementById('num').value;
 		ajaxSlide("clientsajax", "{$ajax}function=search&type="+type+"&value="+value+"&page="+page+"&num="+num);

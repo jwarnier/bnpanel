@@ -28,16 +28,16 @@
                                 </tr>
                                 <tr>
                                         <td><label for="inputVal-{$ID}">Admin Validation:</label></td>
-                                        <td><input name="inputVal-{$ID%" class="inputClass" type="checkbox" id="inputVal-%ID%" value="1" %CHECKED} /></td>
+                                        <td><input name="inputVal-{$ID}" class="inputClass" type="checkbox" id="inputVal-{$ID}" value="1" %CHECKED} /></td>
                                         <td><a class="tooltip" title="Does this package require admin validation?"><img src="{$icon_dir}user_suit.png" alt="Suit" /></a></td>
                                 </tr>
                                 <tr>
                                         <td><label for="inputReseller-{$ID}">Reseller:</label></td>
-                                        <td><input name="inputReseller-{$ID%" class="inputClass" type="checkbox" id="inputReseller-%ID%" value="1" %CHECKED2} /></td>
+                                        <td><input name="inputReseller-{$ID}" class="inputClass" type="checkbox" id="inputReseller-{$ID}" value="1" %CHECKED2} /></td>
                                         <td><a class="tooltip" title="Is this package a reseller?"><img src="{$icon_dir}user_add.png" alt="Add" /></a></td>
                                 </tr>
                         </tbody>
 			</table>
-                        <div align="center" class="hidden saveChangesDiv" id="saveChangesDiv-{$ID%"><button class="saveChangesBtn" id="saveChangesBtn-%ID}">Save Changes</button></div>
+                        <div align="center" class="hidden saveChangesDiv" id="saveChangesDiv-{$ID}"><button class="saveChangesBtn" id="saveChangesBtn-{$ID}">Save Changes</button></div>
 		</div>
 	</div>
