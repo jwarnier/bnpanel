@@ -65,7 +65,7 @@ class page extends Controller {
 		}						
 		$array['NUMBER_MONTHS'] = $main->dropDown("number_months", $values, '');				
 		$array['STATUS'] = $main->createCheckbox('', 'status');
-		echo $style->replaceVar("billing/add.tpl", $array);
+		$this->replaceVar("billing/add.tpl", $array);
 	}
 	
 	public function edit() {
@@ -114,7 +114,7 @@ class page extends Controller {
 				$array['NUMBER_MONTHS'] = $main->dropDown("number_months", $values, $data['number_months']);						
 				$array['STATUS'] = $main->createCheckbox('', 'status', $data['status']);
 				
-				echo $style->replaceVar("tpl/billing/edit.tpl", $array);
+				$this->replaceVar("tpl/billing/edit.tpl", $array);
 				
 			}
 		}
@@ -138,11 +138,11 @@ class page extends Controller {
 		global $main, $style, $db, $billing;		
 		$query = $db->query("SELECT * FROM `<PRE>billing_cycles`");
 		if($db->num_rows($query) == 0) {
-			echo "There are no billing cycles to edit!";	
+			$this->content = "There are no billing cycles to edit!";	
 		} else {
 			echo "<ERRORS>";
 			while($data = $db->fetch_array($query)) {
-				echo $main->sub('<strong><a href="?page=billing&sub=show&do='.$data['id'].'">'.$data['name']."</a></strong>", '<a href="?page=billing&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=billing&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');						
+				$this->content .= $main->sub('<strong><a href="?page=billing&sub=show&do='.$data['id'].'">'.$data['name']."</a></strong>", '<a href="?page=billing&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=billing&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');						
 				
 			}
 		}		
@@ -156,7 +156,7 @@ class page extends Controller {
 			$array['number_months'] = $result->number_months;
 			$array['name'] 			= $result->name;
 			$array['status'] 		= ($result->status)? 'Active': 'Inactive';
-			echo $style->replaceVar("billing/show.tpl", $array);
+			$this->replaceVar("billing/show.tpl", $array);
 		}
 	}			
 	

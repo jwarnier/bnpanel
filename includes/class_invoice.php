@@ -259,6 +259,7 @@ class invoice extends model {
 			//Getting the k info
 			$order_id 		 = $this->getOrderByInvoiceId($array['id']);
 			$order_info 	 = $order->getOrderInfo($order_id);
+			$package_id 	 = null;
 			if (!empty($order_info)) {			
 				$array['domain'] 	= $order_info['real_domain'];					
 				$package_id 	  	= $order_info['pid'];
@@ -316,7 +317,7 @@ class invoice extends model {
 					$array['pay'] 	= '';
 					$array['due']=  '<span>'.$array['due'].'</span>';						
 			}
-			$array['package']		 = $package_list[$package_id]['name'];
+			$array['package']		 = isset($package_list[$package_id]) ? $package_list[$package_id]['name'] : null;
 			$array['billing_cycle']  = $billing_list[$billing_cycle_id]['name'];
 			
 			$array['edit']  	= '<a href="index.php?page=invoices&sub=edit&do='.$array['id'].'"><img src="../themes/icons/pencil.png" alt="Edit" /></a>';			

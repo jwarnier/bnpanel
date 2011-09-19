@@ -21,7 +21,7 @@ class page extends Controller {
 		
 		$admin_navigation = $main->getAdminNavigation();		
 		
-		switch($main->getvar['sub']) {
+		switch($main->get_variable('sub')) {
 			default:	
 			
 				$asOption = array(
@@ -111,7 +111,7 @@ class page extends Controller {
 				
 					$staff_info	=	$staff->getStaffUserById($main->getvar['do']);					
 					if (empty($staff_info)) {
-						echo "That account doesn't exist";
+						$this->content =  "That account doesn't exist";
 					} else {
 						$result = $oValidator->validate($_POST);
 						
@@ -179,9 +179,9 @@ class page extends Controller {
 					echo "<ERRORS>";
 					foreach($staff_list as $data) {
 						if ($data['id'] != $main->getCurrentStaffId()) {
-							echo $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=edit&do='.$data['id'].'"><img title="Edit" src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=staff&sub=delete&do='.$data['id'].'"><img title="Delete" src="'. URL .'themes/icons/delete.png"></a>');
+							$this->content .= $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=edit&do='.$data['id'].'"><img title="Edit" src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=staff&sub=delete&do='.$data['id'].'"><img title="Delete" src="'. URL .'themes/icons/delete.png"></a>');
 						} else {
-							echo $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=edit&do='.$data['id'].'"><img title="Edit" src="'. URL .'themes/icons/pencil.png"></a>&nbsp; <img title="Delete" src="'. URL .'themes/icons/delete_na.png">');
+							$this->content .=$main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=edit&do='.$data['id'].'"><img title="Edit" src="'. URL .'themes/icons/pencil.png"></a>&nbsp; <img title="Delete" src="'. URL .'themes/icons/delete_na.png">');
 						}											
 					}
 				}

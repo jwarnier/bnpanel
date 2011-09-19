@@ -5,7 +5,6 @@ define("PAGE", "Admin Area");
 require_once '../includes/compiler.php';
 
 
-
 /**
  * 
  * @todo Important TODO message
@@ -159,7 +158,7 @@ function acp() {
 					 * 	 */
 					if (isset($content->pagename)) {
 						$method_list = array('add', 'edit', 'delete', 'show', 'listing');
-						$sub = $main->get_variable('sub');						
+						$sub = $main->get_variable('sub');
 						if (in_array($sub, $method_list)) {
 							$content->$sub();
 						} else {
@@ -184,7 +183,6 @@ function acp() {
 	if (!empty($content->content)) {		
 		$style->assign('content', $content->content);
 	}	
-	
 }
 
 //If user is NOT log in 
@@ -249,8 +247,3 @@ if (!isset($_SESSION['logged'])) {
 	$content = acp();	
 	echo $style->display("layout/two-col/index.tpl");
 }
-
-echo $style->get("tpl/layout/two-col/footer.tpl");
-
-//End the script
-require_once INCLUDES."output.php";

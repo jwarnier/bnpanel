@@ -401,13 +401,13 @@ function checkSubdomain() {
     
     <div id="2" class="section" style="display:none">
         <div class="page-header">
-            <h2>_{Select a billing cycle}</h2>
+            <h2>{t}Select a billing cycle{/t}</h2>
         </div>        
         <div class="row">
             <div class="sub" id="description">
-                _{Payment cycles}                			
+                {t}Payment cycles{/t}                			
       			<select name="billing_id" id="billing_id" onchange="showAddons(this)" >
-          			<option value="0" selected="selected">_{Select a billing cycle}</option>         		
+          			<option value="0" selected="selected">{t}Select a billing cycle{/t}</option>         		
                  		{$BILLING_CYCLE}
                 	</select>
             </div>              		
@@ -461,7 +461,7 @@ function checkSubdomain() {
             <div class="page-header">        
         	<h3>Already a registered?</h3>
         	</div>
-            <a onclick="showLogin();" href="#">_{Log in to your account}</a>
+            <a onclick="showLogin();" href="#">{t}Log in to your account{/t}</a>
             <br /> <br />
                
             <div class="page-header">        
@@ -681,8 +681,8 @@ function checkSubdomain() {
     
     <div id="steps" class="row show-grid" style="display:none;" >
         <div class="actions">            
-            <input type="button" name="next" id="next" value="_{Continue}" onclick="nextstep()" ondblclick="return false;" class="btn large primary "  />                    
-            <input type="button" name="back" id="back" value="_{Previous Step}" onclick="previousstep()" disabled="disabled" class="btn small" />                          
+            <input type="button" name="next" id="next" value="{t}Continue{/t}" onclick="nextstep()" ondblclick="return false;" class="btn large primary "  />                    
+            <input type="button" name="back" id="back" value="{t}Previous Step{/t}" onclick="previousstep()" disabled="disabled" class="btn small" />                          
         </div>
     </div>     
 </form>

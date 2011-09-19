@@ -52,7 +52,8 @@ class page extends Controller {
 				$main->done();
 			}
 		}
-		switch ($main->get_variable('sub')) {			
+		switch ($main->get_variable('sub')) {	
+			default:		
 			case "tchoose": #theme chooser
 				$folder = INCLUDES ."../themes/";
 				if ($handle = opendir($folder)) { # Open the folder
@@ -67,13 +68,13 @@ class page extends Controller {
 				$this->replaceVar("tpl/settings/themesettings.tpl", $array);
 				break;
 			case "tupload": # Theme Uploader
-				echo "Here you can upload a theme of your choice to the installer. Please be sure that the theme is in .zip format.";
-				echo '<div class="warning">This feature is disable for security reasons</div>';				
+				$this->content .= "Here you can upload a theme of your choice to the installer. Please be sure that the theme is in .zip format.";
+				$this->content .= '<div class="warning">This feature is disable for security reasons</div>';				
 				//include INCLUDES."upload.php";
 				//echo '<ERRORS>'; 
 				break;
 			case "cssedit": #CSS Editor - Thanks Jimmie & Kevin!
-				echo '<div class="warning">This feature is disable for security reasons</div>';	
+				$this->content .= '<div class="warning">This feature is disable for security reasons</div>';	
 				/*
 			  	$url = $db->config('url')."themes/".$db->config('theme')."/images/";
 			  	$filetochange = INCLUDES."../themes/".$db->config('theme')."/style.css";
@@ -98,7 +99,7 @@ class page extends Controller {
 			  	
 				break;
 			case "tpledit": #TPL Editor -  Thanks Jimmie & Kevin!
-				echo '<div class="warning">This feature is disable for security reasons</div>';
+				$this->content .= '<div class="warning">This feature is disable for security reasons</div>';
 				# Quite simple redir-tor
 		      	//$this->replaceVar('tpl/tpledit.tpl');
 				break;
@@ -119,7 +120,7 @@ class page extends Controller {
 				break;
 
 			case "editheader":
-			echo '<div class="warning">This feature is disable for security reasons</div>';
+				$this->content .= '<div class="warning">This feature is disable for security reasons</div>';
 		      /*# anyway. Something is crashing
 		      unset($css);
 		      unset($conheader);
@@ -146,10 +147,10 @@ class page extends Controller {
                 $css['NOTICE'] = '';
               }
               $this->replaceVar('tpl/headedit.tpl', $css);*/
-		   break;
+		   		break;
 
 			case "editfooter":
-			echo '<div class="warning">This feature is disable for security reasons</div>';
+				$this->content .= '<div class="warning">This feature is disable for security reasons</div>';
 			/*
               $filetochange = LINK."../themes/".$db->config('theme')."/footer.tpl";
               $contheader = str_replace("<PAGEGEN>", "&lt;PAGEGEN&gt;", file_get_contents($filetochange));
@@ -168,7 +169,7 @@ class page extends Controller {
                 $css['NOTICE'] = '';
               }
               $this->replaceVar('tpl/footedit.tpl', $css);*/
-		   break;
+		  		break;
 			case "ui-theme":
 				$folder = INCLUDES ."./css/";
 				if ($handle = opendir($folder)) { # Open the folder

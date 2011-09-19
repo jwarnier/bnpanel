@@ -14,6 +14,7 @@ class style extends Smarty {
 	function __construct() {
 		
 		parent::__construct();
+		
 		$this->setPluginsDir(INCLUDES.'smarty/plugins/');
 		$this->setCacheDir(CACHE_PATH);
 		$this->setCompileDir(CACHE_PATH);
@@ -25,6 +26,7 @@ class style extends Smarty {
 		$this->cache_lifetime 	= Smarty::CACHING_OFF; // no caching		
 		$this->assign('app_name', NAME);
 		$sub = defined('SUB') ? ' - '.SUB : '';
+		
 		
 		$this->assign('app_title', NAME . " - " . PAGE.$sub);
 		$this->registerPlugin('block', 't', 'do_translation');
@@ -206,69 +208,6 @@ class style extends Smarty {
 		}		
 		$this->assign($array);
 		return $this->fetch($template);
-		
-		
-		/*
-		$data = $this->getFile($template, 0, $style);
-		
-		if (!empty($array)) {
-			foreach($array as $key => $value) {				
-				$data = preg_replace("/%". $key ."%/si", $value, $data);				
-			}	
-			
-			//Commented lines are the traduction like Chamilo
-			
-			//include '/var/www/bnpanel/locale/es_ES/LC_MESSAGES/main.php';			
-			$generate_cache = false;					 		
-			preg_match_all("/_{.*?}/", $data, $output);
-			//preg_match_all("/_\(.*?\)/", $data, $output);				
-			//@todo See this task  https://task.beeznest.net/issues/1464 for more information about the status of the translation package
-						 
-			if ($generate_cache) {
-				if (is_dir(MAIN.'locale/cache') && is_writable(MAIN.'locale/cache')) {		
-					$cache = MAIN.'locale/cache/'.basename($template).'.php';
-					$handle = fopen($cache,'w');
-				} else {
-					$generate_cache = false;
-				}
-			}
-						   		
-			if (!empty($output)) {
-				foreach($output as $out) {
-					if (!empty($out)) {
-						if ($generate_cache) {
-							fputs($handle,"<?php \n");
-						}
-						foreach($out as $item) {							
-							if (!empty($item)) {							
-								$item_original = $item;
-								$item = str_replace(array('_{','}'), '', $item);
-								$save = "gettext('$item');\n";
-								if ($generate_cache) {								
-									fputs($handle, $save);
-								}								
-								//$item = str_replace(array('_(',')'), '', $item);
-								//if (isset($$item)) {
-								if (isset($item)) {
-									$item_to_prereg = preg_quote($item);
-									//This is the piece of code that do the replace to use gettext			
-									$data = preg_replace("/_\{$item_to_prereg\}/si", gettext($item), $data);
-									//$data = preg_replace("/_\($item\)/si", gettext($item), $data);
-								}				
-							}
-						}
-						if ($generate_cache) {
-							fputs($handle,'?>');
-						}
-					}			
-				}
-			}			
-			if ($generate_cache) {
-				fclose($handle) or die ("Error Closing File!");
-			}			
-		}
-		*/
-		//return $data;
 	}
 
 	public function javascript() { # Returns the HTML code for the header that includes all the JS in the javascript folder

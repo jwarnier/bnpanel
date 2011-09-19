@@ -28,8 +28,7 @@ class page extends Controller {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db, $billing, $package,$addon, $server;
-		$content = '';
-		
+				
 		switch ($main->get_variable('sub')) {
 			default:								
 				$asOption = array(
@@ -109,14 +108,14 @@ class page extends Controller {
 					}
 				}
 				
-				$all_servers = $server->getAllServers();
+				$all_servers = $server->getAllServers();				
 				if (!empty($all_servers)) {
 					$array['SERVER'] = $main->createSelect("server", $all_servers);
 						
 					//Addon feature added
 					$array['ADDON'] = $addon->generateAddonCheckboxes();
 					//finish 		
-					$content =  $style->replaceVar("packages/addpackage.tpl", $array);
+					$this->replaceVar("packages/addpackage.tpl", $array);					
 				} else {
 					$main->errors('There are no servers, you need to add a Server first <a href="?page=servers&sub=add">here</a>');					
 				}
@@ -322,17 +321,15 @@ class page extends Controller {
 						}						
 						$array['BACKEND_MESSAGE'] = $message;
 						
-						echo $style->replaceVar("packages/editpackage.tpl", $array);
+						$this->replaceVar("packages/editpackage.tpl", $array);
 					}
 				} else {
 					$query = $db->query("SELECT * FROM <PRE>packages");
-					echo "<ERRORS>";
-					
 					if ($db->num_rows($query) == 0) {
 						$style->showMessage('There are no packages', 'warning');						
 					} else {						
 						while($data = $db->fetch_array($query)) {
-							$content .= $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=packages&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=packages&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');							
+							$this->content .= $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=packages&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=packages&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');							
 						}
 					}
 				}
@@ -356,7 +353,6 @@ class page extends Controller {
 					}		
 				}				
 			break;
-		}
-		return $content;
+		}		
 	}
 }

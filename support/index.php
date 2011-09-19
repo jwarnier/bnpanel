@@ -1,8 +1,8 @@
 <?php
 /* For licensing terms, see /license.txt */
+define("PAGE", "Support Area");
 require '../includes/compiler.php';
 
-define("PAGE", "Support Area");
 ob_start();
 
 if(!isset($main->getvar['page'])) { 
@@ -61,9 +61,4 @@ echo '</div>';
 $data = ob_get_contents();
 ob_end_clean();
 
-echo $style->get("tpl/layout/one-col/header.tpl");
-echo $style->replaceVar("tpl/layout/one-col/content.tpl", array('CONTENT' => $data)); 
-echo $style->get("tpl/layout/one-col/footer.tpl"); #Output Footer
-
-//Output
-require LINK ."output.php";
+echo $style->replaceVar("layout/one-col/index.tpl", array('content' => $data)); 

@@ -34,7 +34,7 @@ class page extends Controller {
 				if (isset($main->getvar['do'])) {
 					$query = $db->query("SELECT * FROM <PRE>invoices WHERE id = '{$main->getvar['do']}'");
 					if ($db->num_rows($query) == 0) {
-						echo "That invoice doesn't exist!";	
+						$this->content .= "That invoice doesn't exist!";	
 					} else {						
 						if($_POST && $main->checkToken()) {							
 											
@@ -89,11 +89,11 @@ class page extends Controller {
 				}
 			default :			
 			case 'all':					
-				$per_page = $db->config('rows_per_page');
-				$count_sql = "SELECT count(*)  as count FROM ".$invoice->getTableName()." WHERE status <> '".INVOICE_STATUS_DELETED."'";
-				$result_max = $db->query($count_sql);		
-				$count = $db->fetch_array($result_max);			
-				$count = $count['count'];
+				$per_page 		= $db->config('rows_per_page');
+				$count_sql 		= "SELECT count(*)  as count FROM ".$invoice->getTableName()." WHERE status <> '".INVOICE_STATUS_DELETED."'";
+				$result_max 	= $db->query($count_sql);		
+				$count 			= $db->fetch_array($result_max);			
+				$count 			= $count['count'];
 				$invoice_status = $main->getInvoiceStatusList();
 				
 				$return_array['STATUS_FILTER'] = $main->createSelect('status_id', $invoice_status);
@@ -103,8 +103,7 @@ class page extends Controller {
 					$return_array['COUNT'] = $quantity;
 					$this->replaceVar("tpl/invoices/admin-page.tpl", $return_array);
 				} else {
-					$main->errors('No invoices available, you should create an Order first <a href="?page=orders&sub=add">here</a>');
-					echo '<ERRORS>';
+					$this->content .= $style->returnMessage('No invoices available, you should create an Order first <a href="?page=orders&sub=add">here</a>');					
 				}								
 				break;			
 		}

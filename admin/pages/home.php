@@ -117,6 +117,7 @@ class page extends Controller {
 		
 				
 		$content = $style->fetch('admin/home.tpl');
+		
 		$style->assign('content', $content);		
 
 		

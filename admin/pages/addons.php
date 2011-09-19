@@ -92,11 +92,11 @@ class page extends Controller {
 				$array['MANDATORY'] 	= $main->createCheckbox('', 'mandatory');
 	
 				//----- Finish billing cycle					
-				echo $style->replaceVar("addons/add.tpl", $array);
-			break;
+				$this->replaceVar("addons/add.tpl", $array);
+				break;
 			case 'view':
 			case 'edit':
-				if(isset($main->getvar['do'])) {
+				if (isset($main->getvar['do'])) {
 					$addon_id = intval($main->getvar['do']);
 															
 					$query = $db->query("SELECT * FROM <PRE>addons WHERE id = $addon_id");
@@ -117,15 +117,13 @@ class page extends Controller {
 								$main->postvar['mandatory'] = 1;
 							} else {
 								$main->postvar['mandatory'] = 0;
-							}						
-							
+							}												
 							
 							if ($main->postvar['install_package'] == 'on') {
 								$main->postvar['install_package'] = 1;
 							} else {
 								$main->postvar['install_package'] = 0;
-							}
-							
+							}							
 							
 							//Editing addon											
 							$addon->edit($main->getvar['do'], $main->postvar);
@@ -180,16 +178,17 @@ class page extends Controller {
 						
 						//----- Finish billing cycle						
 						
-						echo $style->replaceVar('addons/edit.tpl', $array);
+						$this->replaceVar('addons/edit.tpl', $array);
 					}
 				} else {
 					$query = $db->query("SELECT * FROM <PRE>addons");
-					if($db->num_rows($query) == 0) {
-						$style->showMessage('There are no Addons available');	
+					if ($db->num_rows($query) == 0) {						
+						$this->content = $style->returnMessage('There are no Addons available');	
+						
 					} else {
 						echo "<ERRORS>";
 						while($data = $db->fetch_array($query)) {
-							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=addons&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=addons&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
+							$this->content .= $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=addons&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=addons&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 							$n++;
 						}
 					}
