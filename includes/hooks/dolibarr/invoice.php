@@ -1,6 +1,6 @@
 <?php
 
-require_once LINK.'nusoap/nusoap.php';
+require_once INCLUDES.'nusoap/nusoap.php';
 
 class Hook_Dolibarr_Invoice extends Hook {
 	

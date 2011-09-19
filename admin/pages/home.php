@@ -1,5 +1,6 @@
 <?php
 /* For licensing terms, see /license.txt */
+
 class page extends Controller {	
 	/*public function curl_get_content($url="http://thehostingtool.com/updates/version.txt"){  
          $ch = curl_init();
@@ -19,15 +20,14 @@ class page extends Controller {
     } */
     
 	public function content() { 
-		global $db, $main, $style, $page, $server, $package;	
-		
-				
+		global $db, $main, $style, $page, $server, $package;
+						
 		//$current_version = rtrim($this->curl_get_content('http://thehostingtool.com/updates/version.txt')); #Clears the end whitespace. ARGHHH
 		$current_version = '1.3';
 		
 		$running_version 	= $main->cleanwip($db->config('version'));
-		$install_check 		= $main->checkDir(LINK ."../install/");
-		$conf_check 		= $main->checkFilePermission(LINK ."conf.inc.php");
+		$install_check 		= $main->checkDir(INCLUDES ."../install/");
+		$conf_check 		= $main->checkFilePermission(INCLUDES ."conf.inc.php");
 		
 		if ($current_version == $running_version){
 			$updatemsg = "<span style='color:green'>Up-To-Date</span>";
@@ -57,13 +57,11 @@ class page extends Controller {
 		$stats['MULTI'] 	= $main->cleaninteger($db->config('multiple'));
 		$stats['UPDATE'] 	= $updatemsg;
 		$stats['UPG_BOX']	= $upgrademsg;
-		$stats_box 			= $style->replaceVar('tpl/dashboard/stats.tpl', $stats);
+		$stats_box 			= $style->replaceVar('dashboard/stats.tpl', $stats);
 		
 		$cron = '<a href="'.$db->config('url').'includes/cron.php" target="_blank">Run cron here</a>';
 		
-		$content = '<h2>Welcome to your Admin Dashboard!</h2>Welcome to the dashboard of your Admin Control Panel. In this area you can do the tasks that you need to complete such as manage servers, create packages, manage users.<br />
-					Here, you can also change the look and feel of your BNPanel Installation. If you require any help, be sure to ask at the <a href="http://www.beeznest.com" title="BNPanel Community is the official stop for BNPanel Support, Modules, Developer Center and more! Visit our growing community now!" class="tooltip">BNPanel Community</a>' .
-					'<br />'.$stats_box.$cron.'<br />';	
+		$content = '<br />'.$stats_box.$cron.'<br />';
 		
 		if ($_POST) {
 			foreach($main->postvar as $key => $value) {
@@ -81,7 +79,7 @@ class page extends Controller {
 			}
 		}
 		$array['NOTEPAD'] = $db->resources('admin_notes');
-		$content_notepad  = $style->replaceVar('tpl/notepad.tpl', $array);
+		$content_notepad  = $style->replaceVar('notepad.tpl', $array);
 		
 		$subdomain_list = $main->getSubDomains();
 		
@@ -114,16 +112,13 @@ class page extends Controller {
 			$todo_content .= $style->returnMessage(_('Your Server is in Test Mode, you can manually change <a href="?page=settings&sub=paths">here</a>'), 'warning');
 		}
 		
-		// Todo/warning content	
-		if (!empty($todo_content)) {			
-			echo $main->table('Admin TODO List', $todo_content, 'auto', 'auto');
-		}
+		$style->assign('todo', $todo_content);
+		$style->assign('notepad', $content_notepad);
+		
 				
-		// Welcome message		
-		echo $main->table('Welcome', $content, 'auto', 'auto');		
+		$content = $style->fetch('admin/home.tpl');
+		$style->assign('content', $content);		
 
-		//Notepad?
-		echo $main->table('Admin Notepad', $content_notepad, 'auto', 'auto');
 		
 		//Lates commit?
 		
@@ -141,12 +136,12 @@ class page extends Controller {
 			} else {
 				$html= 'You can check the latest version here: https://bnpanel.googlecode.com/hg/';
 			}
-			echo $main->table('Test Server ', $style->returnMessage($html), 'auto', 'auto');
+			echo $style->returnMessage($html);
 		}
 		
 		//RSS
 		/*		
-		require_once(LINK.'rss/rss_fetch.inc');
+		require_once(INCLUDES.'rss/rss_fetch.inc');
 		$url = "http://thehostingtool.com/forum/syndication.php?fid=2&limit=3";
 		$rss = fetch_rss($url);
 		$news = $main->sub("<strong>Add the THT RSS Feed!</strong>", '<a href="http://thehostingtool.com/forum/syndication.php?fid=2" target="_blank" class="tooltip" title="Add the THT RSS Feed!"><img src="<URL>themes/icons/feed.png" /></a>');

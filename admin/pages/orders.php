@@ -24,8 +24,7 @@ class page extends Controller {
 			$invoice->set_unpaid($_GET['iid']);
 			echo "<span style='color:red'>Invoice {$_GET['iid']} marked as unpaid. <a href='index.php?page=invoices&iid={$_GET['iid']}&pay=true'>Undo this action</a></span>";
 		}
-		require_once LINK.'validator.class.php';
-
+		
 		switch ($main->get_variable('sub')) {			
 			case 'add':						
 				$asOption = array(
@@ -208,7 +207,7 @@ class page extends Controller {
 						$style->showMessage('No subdomains available. Click <a href="?page=sub&sub=add">here</a> to add new Subdomain', 'warning');								
 					}
 				}				
-				echo $style->replaceVar("tpl/orders/add.tpl", $this->data);
+				$this->replaceVar("orders/add.tpl", $this->data);
 			break;
 			
 			case 'change_pass':			
@@ -227,7 +226,7 @@ class page extends Controller {
 						//$main->redirect('?page=orders&sub=view&msg=1&do='.$main->getvar['do']);			
 					}
 					$return_array = $order->getOrder($main->getvar['do'], false, false);										
-					echo $style->replaceVar("tpl/orders/change-password.tpl", $return_array);
+					$this->replaceVar("orders/change-password.tpl", $return_array);
 				}				
 			break;
 			case 'edit':
@@ -311,13 +310,13 @@ class page extends Controller {
 				}				
 				$return_array['DOMAIN'] = $order_info['real_domain'];
 				
-				echo $style->replaceVar("tpl/orders/edit.tpl", $return_array);			
+				$this->replaceVar("orders/edit.tpl", $return_array);			
 				break;			
 			case 'view':				
 				if(isset($main->getvar['do'])) {					
 					$return_array = $order->getOrder($main->getvar['do'], true);
 					$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);											
-					echo $style->replaceVar("tpl/orders/view-admin.tpl", $return_array);					
+					$this->replaceVar("orders/view-admin.tpl", $return_array);					
 				}				
 				break;			
 			case 'add_invoice':			
@@ -406,7 +405,7 @@ class page extends Controller {
 						$return_array['STATUS'] 		= $main->createSelect('status', $invoice_status,'', array('class'=>'required'));
 						$return_array['INVOICE_LIST'] 	= $order->showAllInvoicesByOrderId($main->getvar['do']);
 														
-						echo $style->replaceVar('tpl/invoices/addinvoice.tpl', $return_array);	
+						$this->replaceVar('invoices/addinvoice.tpl', $return_array);	
 					}			
 					
 				} else {
@@ -446,7 +445,7 @@ class page extends Controller {
 				if (!empty($count)) {	
 					$quantity = ceil($count / $per_page);
 					$this->data['COUNT'] = $quantity;				
-					echo $style->replaceVar("tpl/orders/admin-page.tpl", $this->data);
+					$this->replaceVar("orders/admin-page.tpl", $this->data);
 				} else {
 					$main->errors('No orders available');
 					echo '<ERRORS>';

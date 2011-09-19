@@ -7,7 +7,7 @@ class db {
 		
 	public function __construct() { # Connect SQL as class is called
 	
-		include LINK.'conf.inc.php'; # Get the config
+		include INCLUDES.'conf.inc.php'; # Get the config
 		$this->sql = $sql; # Assign the settings to DB Class
 		$this->con = @mysql_connect($this->sql['host'], $this->sql['user'], $this->sql['pass']); #Connect to SQL		
 		if (!$this->con) { # If SQL didn't connect

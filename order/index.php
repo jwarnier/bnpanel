@@ -150,4 +150,4 @@ echo $style->get("tpl/layout/one-col/header.tpl");
 echo $style->replaceVar("tpl/layout/one-col/content.tpl", array('CONTENT' => $content)); 
 echo $style->get("tpl/layout/one-col/footer.tpl"); #Output Footer
 //Output
-require LINK ."output.php";
+require INCLUDES ."output.php";

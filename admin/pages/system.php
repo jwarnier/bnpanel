@@ -47,7 +47,7 @@ class page extends Controller {
 		$array['CHECK_ORDERDIR'] = $this->checkPerms(LINK."../order/", "Order Folder");
 		$array['CHECK_CLIENTDIR'] = $this->checkPerms(LINK."../client/", "Client Folder");
 		$array['CHECK_INCDIR'] = $this->checkPerms(LINK, "Includes Folder");
-		echo $style->replaceVar('tpl/systemhealth.tpl', $array);
+		$this->replaceVar('tpl/systemhealth.tpl', $array);
 	}
 	
 	public function tools() {
@@ -55,7 +55,7 @@ class page extends Controller {
 		global $style;
 		global $email;
 		$array['STATUS'] = "Viewing System tools for your BNPanel Installation";
-		echo $style->replaceVar('tpl/tools.tpl', $array);
+		$this->replaceVar('tpl/tools.tpl', $array);
 	}
 	
 	public function chmod_conf() {
@@ -64,23 +64,23 @@ class page extends Controller {
 			$action = chmod(LINK."conf.inc.php", 0644);
 			if($action == TRUE){
 			     $array['STATUS'] = "Configuration File CHMOD'ed to 644";
-			     echo $style->replaceVar('tpl/tools.tpl', $array);
+			     $this->replaceVar('tpl/tools.tpl', $array);
 			}
 			elseif($action == FALSE){
 				 error_reporting(0); # Kill all errors again
 				 ini_set('display_errors', 'Off'); # Attempt to kill all errors.
 				 $array['STATUS'] = "Failed to CHMOD Configuration File to 644.";
-				 echo $style->replaceVar('tpl/tools.tpl', $array);
+				 $this->replaceVar('tpl/tools.tpl', $array);
 			}
 			else {
 			$array['STATUS'] = "You trying to hack me? You've been warned. An email has been sent.. May I say, Owned?";
 			$email->staff("Possible Hacking Attempt", "A user has been logged trying to hack your copy of BNPanel, their IP is: ". $main->removeXSS($_SERVER['REMOTE_ADDR']));
-			echo $style->replaceVar('tpl/tools.tpl');
+			$this->replaceVar('tpl/tools.tpl');
 		    }
 		}
 		else{
 			$array['STATUS'] = "Configuration File is already CHMOD 644!";
-			echo $style->replaceVar('tpl/tools.tpl', $array);
+			$this->replaceVar('tpl/tools.tpl', $array);
 		}
 	}
 	

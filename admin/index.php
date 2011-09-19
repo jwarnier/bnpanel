@@ -1,9 +1,10 @@
 <?php
 /* For licensing terms, see /license.txt */
 
+define("PAGE", "Admin Area");
 require_once '../includes/compiler.php';
 
-define("PAGE", "Admin Area");
+
 
 /**
  * 
@@ -44,7 +45,6 @@ define("PAGE", "Admin Area");
 //Main ACP Function - Creates the ACP basically
 function acp() {
 	global $main, $db, $style, $type, $email, $user;
-	ob_start(); # Stop the output buffer
 	
 	if (!isset($main->getvar['page'])) { 
 		$main->getvar['page'] = 'home';
@@ -69,6 +69,7 @@ function acp() {
 	
 	// Left menu	
 	$array['LINKS'] = '';
+	
 	foreach ($admin_navigation as $row) {
 		if ($main->checkPerms($row['link'])) {
 			$array_item['IMGURL'] 	= $row['icon'];			
@@ -81,16 +82,16 @@ function acp() {
 				$array_item['ACTIVE'] 	=	 ' ';
 			}*/
 
-			$array['LINKS'] 	   .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array_item);
+			$array['LINKS'] 	   .= $style->replaceVar("menu/leftmenu_link.tpl", $array_item);
 		}
 	}
 	//Adding the logout link
 	$array_item['IMGURL'] = "logout.png";
 	$array_item['LINK'] = "?page=logout";
 	$array_item['VISUAL'] = "Logout";
-	$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array_item);	
+	$array['LINKS'] .= $style->replaceVar("menu/leftmenu_link.tpl", $array_item);	
 		
-	$sidebar = $style->replaceVar("tpl/menu/leftmenu_main.tpl", $array);	
+	$sidebar = $style->replaceVar("menu/leftmenu_main.tpl", $array);		
 
 	$user_permission = true;
 	if (!file_exists($link)) {	
@@ -107,15 +108,9 @@ function acp() {
 			
 			//Page Sidebar
 			
-			$sidebar_link_link 	= "tpl/menu/leftmenu_link.tpl";
-			$sidebar_link 		= "tpl/menu/leftmenu_main.tpl";	
-				
-			//if (isset($main->getvar['sub'])) {
-									
-			//}
-			
-
-						
+			$sidebar_link_link 	= "menu/leftmenu_link.tpl";
+			$sidebar_link 		= "menu/leftmenu_main.tpl";	
+								
 			if (isset($main->getvar['sub']) && $main->getvar['sub'] && $admin_nave_item['link'] != "type") {				
 				if (is_array($content->navlist)) {
 					foreach($content->navlist as $key => $value) {
@@ -158,26 +153,21 @@ function acp() {
 				}
 			} else {
 				$html = '';
-					ob_start();					
+										
 					/** 
 					 * 	Experimental changes only applied to the billing cycle objects otherwise work as usual
 					 * 	 */
 					if (isset($content->pagename)) {
 						$method_list = array('add', 'edit', 'delete', 'show', 'listing');
-						$sub = $main->get_variable('sub');
+						$sub = $main->get_variable('sub');						
 						if (in_array($sub, $method_list)) {
 							$content->$sub();
 						} else {
 							$content->listing();
 						}
-					} else {									
-						$content->content();
-					}
-					//$description = $content->description();
-					
-					$html = ob_get_contents(); # Retrieve the HTML
-				
-					ob_clean(); # Flush the HTML
+					} else {														
+						$content->content();						
+					}				
 			}
 		} else {
 			$html = "You trying to hack me? You've been warned. An email has been sent.. May I say, Owned?";
@@ -187,23 +177,18 @@ function acp() {
 	
 	$staffuser = $db->staff($main->getCurrentStaffId());
 	
-	define("INFO", '<b>Welcome back, '. strip_tags($staffuser['name']) .'</b><br />');	
-
-	$data['LEFT_COLUMN']  = $sidebar;
-	$data['RIGHT_COLUMN'] = '';
-	$data['SUBMENU'] = $content->get_submenu();
+	define("INFO", '<b>Welcome back, '. strip_tags($staffuser['name']) .'</b><br />');
+	$style->assign('sidebar',  $sidebar);
+	$style->assign('sub_menu', $content->get_submenu());
 	
-	if (isset($header)) {
-		$data['HEADER'] = $header;
-		$data['RIGHT_COLUMN'] .= $html;
-	} else {
-		$data['RIGHT_COLUMN'] .= $html;
-	}
-	return $data; # Return the HTML
+	if (!empty($content->content)) {		
+		$style->assign('content', $content->content);
+	}	
+	
 }
 
 //If user is NOT log in 
-if (!isset($_SESSION['logged'])) {
+if (!isset($_SESSION['logged'])) {	
 	if (isset($main->getvar['page']) && $main->getvar['page'] == "forgotpass") {
 		define("SUB", "Reset Password");
 		define("INFO", SUB);
@@ -231,15 +216,14 @@ if (!isset($_SESSION['logged'])) {
 			}
 		}
 		$content['CONTENT'] =  '<div align="center">'.$main->table("Admin Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';
-		echo $style->get("tpl/layout/one-col/header.tpl");
-		echo $style->replaceVar("tpl/layout/one-col/content.tpl", $content);
-		echo $style->get("tpl/layout/one-col/footer.tpl");
 		
-	} else { 
+		echo $style->replaceVar("layout/one-col/index.tpl", $content);
+		
+		
+	} else { 		
 		define("SUB", "Login");
-		define("INFO", " ");
-		
-		if ($_POST) { # If user submitts form
+		define("INFO", " ");		
+		if ($_POST) {
 			if ($main->checkToken()) {
 				if($main->staffLogin($main->postvar['user'], $main->postvar['pass'])) {
 					$main->redirect("?page=home");	
@@ -248,13 +232,10 @@ if (!isset($_SESSION['logged'])) {
 					$main->generateToken();
 				}
 			}
-		}	
-		
-		$content['CONTENT'] =  $style->replaceVar("tpl/login/alogin.tpl", array());
-		
-		echo $style->get("tpl/layout/one-col/header.tpl");		
-		echo $style->replaceVar("tpl/layout/one-col/content.tpl", $content);	
-		
+		}		
+		$login = $style->fetch("login/alogin.tpl");
+		$style->assign('content', $login);
+		echo $style->display("layout/one-col/index.tpl");		
 	}
 } elseif(isset($_SESSION['logged'])) {	
 	//Ok user is already in 
@@ -263,14 +244,13 @@ if (!isset($_SESSION['logged'])) {
 	} elseif($main->getvar['page'] == "logout") {
 		$main->logout('admin');		
 		$main->redirect("?page=home");
-	}
-		
-	$content = acp();
-	echo $style->get("tpl/layout/two-col/header.tpl");
-	echo $style->replaceVar("tpl/layout/two-col/content.tpl", $content);
+	}	
+	
+	$content = acp();	
+	echo $style->display("layout/two-col/index.tpl");
 }
 
 echo $style->get("tpl/layout/two-col/footer.tpl");
 
 //End the script
-require_once LINK ."output.php";
+require_once INCLUDES."output.php";

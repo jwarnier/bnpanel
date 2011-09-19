@@ -36,7 +36,7 @@ class page extends Controller {
 		$array['DISK_FREE_SPACE'] 	= substr($diskfreespace,0,4);
 		$array['DISK_TOTAL_SPACE'] 	= substr($disktotalspace,0,4);
 		$array['SERVER']			= $server;
-		echo $style->replaceVar('tpl/settings/aserverstatus.tpl',$array);
+		$this->replaceVar('tpl/settings/aserverstatus.tpl',$array);
 	}
 	
 	public function content() { # Displays the page 

@@ -28,7 +28,7 @@ class page extends Controller {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db, $billing, $package,$addon, $server;
-		require_once LINK.'validator.class.php';		
+		$content = '';
 		
 		switch ($main->get_variable('sub')) {
 			default:								
@@ -116,10 +116,9 @@ class page extends Controller {
 					//Addon feature added
 					$array['ADDON'] = $addon->generateAddonCheckboxes();
 					//finish 		
-					echo $style->replaceVar("tpl/packages/addpackage.tpl", $array);
+					$content =  $style->replaceVar("packages/addpackage.tpl", $array);
 				} else {
-					$main->errors('There are no servers, you need to add a Server first <a href="?page=servers&sub=add">here</a>');
-					echo '<ERRORS>';
+					$main->errors('There are no servers, you need to add a Server first <a href="?page=servers&sub=add">here</a>');					
 				}
 				break;
 			case 'view':
@@ -323,7 +322,7 @@ class page extends Controller {
 						}						
 						$array['BACKEND_MESSAGE'] = $message;
 						
-						echo $style->replaceVar("tpl/packages/editpackage.tpl", $array);
+						echo $style->replaceVar("packages/editpackage.tpl", $array);
 					}
 				} else {
 					$query = $db->query("SELECT * FROM <PRE>packages");
@@ -333,7 +332,7 @@ class page extends Controller {
 						$style->showMessage('There are no packages', 'warning');						
 					} else {						
 						while($data = $db->fetch_array($query)) {
-							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=packages&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=packages&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');							
+							$content .= $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=packages&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=packages&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');							
 						}
 					}
 				}
@@ -358,5 +357,6 @@ class page extends Controller {
 				}				
 			break;
 		}
+		return $content;
 	}
 }

@@ -82,7 +82,7 @@ class page extends Controller {
 						$array['BOXES'] .= $style->replaceVar("tpl/support/acpbox.tpl", $array2);
 					}
 				}
-				echo $style->replaceVar("tpl/support/acp.tpl", $array);
+				$this->replaceVar("tpl/support/acp.tpl", $array);
 				break;
 				
 			case "art":
@@ -152,7 +152,7 @@ class page extends Controller {
 						$array['BOXES'] .= $style->replaceVar("tpl/support/acpbox.tpl", $array2);
 					}
 				}
-				echo $style->replaceVar("tpl/support/acp.tpl", $array);
+				$this->replaceVar("tpl/support/acp.tpl", $array);
 				break;
 		}		
 	}

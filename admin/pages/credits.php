@@ -9,6 +9,6 @@ class page extends Controller {
 		global $db;
 		global $main;
 		
-		echo $style->replaceVar("tpl/credits.tpl");
+		echo $style->replaceVar("credits.tpl");
 	}
 }

@@ -61,7 +61,7 @@ class page extends Controller {
 				//$array['TYPE'] = $main->dropDown("type", $this->array_type, 0, 0);
 				$array['TYPE'] = $main->createSelect("type", $this->array_type, '' ,array('onchange'=>'serverchange(this.value)'));
 				
-				echo $style->replaceVar("tpl/servers/addserver.tpl", $array);
+				$this->replaceVar("tpl/servers/addserver.tpl", $array);
 				break;
 			
 			case 'view':
@@ -103,7 +103,7 @@ class page extends Controller {
 					
 						//Testing connection						
 						$array['SERVER_STATUS'] = $serverphp->testConnection();						
-						echo $style->replaceVar("tpl/servers/viewserver.tpl", $array);						
+						$this->replaceVar("tpl/servers/viewserver.tpl", $array);						
 					}
 				} else {
 					//@todo replace this queries

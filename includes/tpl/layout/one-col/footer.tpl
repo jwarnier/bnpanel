@@ -3,7 +3,7 @@
     <div class="inner">
         <div class="container">
             <p>            
-            <COPYRIGHT>
+            {$copyright}
             </p>            
         </div>
     </div>     
