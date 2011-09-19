@@ -4,7 +4,7 @@ var text = [];
 var carryon;
 var etc;
 var upgrade;
-var wrong = '<img src="<ICONDIR>cross.png">';
+var wrong = '<img src="{$icon_dir}cross.png">';
 var working = '<div align="center"><img src="{$url}themes/icons/working.gif"></div>';
 var goingforit;
 text[1] = "Choose Method";
@@ -182,7 +182,7 @@ $(window).load(function () {
                     </label>
                     </td>
                     <td valign="middle" align="left">
-                    <a class="tooltip" title="Choose if you want to upgrade or install the script.<br /><b>Install:</b> This is for people who haven't installed the script prior to this. Or using different mySQL details.<br /><b>Upgrade:</b> This for people who have installed BNPanel and are upgrading to a new version."><img src="<ICONDIR>information.png"></a>
+                    <a class="tooltip" title="Choose if you want to upgrade or install the script.<br /><b>Install:</b> This is for people who haven't installed the script prior to this. Or using different mySQL details.<br /><b>Upgrade:</b> This for people who have installed BNPanel and are upgrading to a new version."><img src="{$icon_dir}information.png"></a>
                     </td>
                   </tr>
                   <tr>
@@ -205,31 +205,31 @@ $(window).load(function () {
                     <td width="20%">Hostname:</td>
                     <td><label>
                       <input name="hostname" type="text" id="hostname" value="localhost" />
-                    </label><a class="tooltip" title="This is the server url for mySQL. Usually localhost unless you want to use a external mySQL server."><img src="<ICONDIR>information.png"></a></td>
+                    </label><a class="tooltip" title="This is the server url for mySQL. Usually localhost unless you want to use a external mySQL server."><img src="{$icon_dir}information.png"></a></td>
                   </tr>
                    <tr>
                     <td width="20%">mySQL Username:</td>
                     <td><label>
                       <input name="username" type="text" id="username" />
-                    </label><a class="tooltip" title="This is your mySQL username. You can create these in your control panel."><img src="<ICONDIR>information.png"></a></td>
+                    </label><a class="tooltip" title="This is your mySQL username. You can create these in your control panel."><img src="{$icon_dir}information.png"></a></td>
                   </tr>
                   <tr>
                     <td width="20%">mySQL Password:</td>
                     <td><label>
                       <input name="password" type="password" id="password" />
-                    </label><a class="tooltip" title="This is the password for your mySQL account. This was entered on username creation."><img src="<ICONDIR>information.png"></a></td>
+                    </label><a class="tooltip" title="This is the password for your mySQL account. This was entered on username creation."><img src="{$icon_dir}information.png"></a></td>
                   </tr>
                      <tr>
                     <td width="20%">mySQL Database:</td>
                     <td><label>
                       <input name="database" type="text" id="database" value="bnpanel"/>
-                    </label><a class="tooltip" title="The database where the BNPanel SQL will be inside. Includes your control panel username."><img src="<ICONDIR>information.png"></a></td>
+                    </label><a class="tooltip" title="The database where the BNPanel SQL will be inside. Includes your control panel username."><img src="{$icon_dir}information.png"></a></td>
                   </tr>
                      <tr>
                     <td width="20%">Prefix:</td>
                     <td><label>
                       <input name="prefix" type="text" id="prefix" value="" />
-                    </label><a class="tooltip" title="This is the table prefixes for the BNPanel database. Unless you want this to be different. Leave it default."><img src="<ICONDIR>information.png"></a></td>
+                    </label><a class="tooltip" title="This is the table prefixes for the BNPanel database. Unless you want this to be different. Leave it default."><img src="{$icon_dir}information.png"></a></td>
                   </tr>
                   <tr>
                     <td colspan="2" align="center"><label>
@@ -255,7 +255,7 @@ $(window).load(function () {
                 <td width="30%">Site's name:</td>
                 <td><label>
                   <input name="site_name" type="text" id="site_name" value="%SITE_NAME%" />
-                </label><a class="tooltip" title="Site's name"><img src="<ICONDIR>information.png"></a></td>
+                </label><a class="tooltip" title="Site's name"><img src="{$icon_dir}information.png"></a></td>
               </tr>
               
                 <tr>
@@ -263,7 +263,7 @@ $(window).load(function () {
 					</td>
                 <td><label>
                   <input name="site_email" type="text" id="site_email" value="%SITE_EMAIL%" />
-                </label><a class="tooltip" title="Site's email"><img src="<ICONDIR>information.png"></a></td>
+                </label><a class="tooltip" title="Site's email"><img src="{$icon_dir}information.png"></a></td>
               </tr>  
                           
               <tr>
@@ -271,7 +271,7 @@ $(window).load(function () {
                   (Including the trailing slash)</td>
                 <td><label>
                   <input name="url" type="text" id="url" value="%GENERATED_URL%" />
-                </label><a class="tooltip" title="This is a very important field. Make sure this is correct before clicking next. The BNPanel URL is where your BNPanel is located. Make sure it's in this format: http://example.com/BNPanel/"><img src="<ICONDIR>information.png"></a></td>
+                </label><a class="tooltip" title="This is a very important field. Make sure this is correct before clicking next. The BNPanel URL is where your BNPanel is located. Make sure it's in this format: http://example.com/BNPanel/"><img src="{$icon_dir}information.png"></a></td>
               </tr>
               
                <tr>
@@ -281,25 +281,25 @@ $(window).load(function () {
                 <td width="30%">Username:</td>
                 <td><label>
                   <input name="staffusername" type="text" id="staffusername" />
-                </label><a class="tooltip" title="This is your admin username, this is what you'll be logging into with the staff area."><img src="<ICONDIR>information.png"></a></td>
+                </label><a class="tooltip" title="This is your admin username, this is what you'll be logging into with the staff area."><img src="{$icon_dir}information.png"></a></td>
               </tr>
                  <tr>
                 <td width="30%">Password:</td>
                 <td><label>
                   <input name="staffpassword" type="password" id="staffpassword" />
-                </label><a class="tooltip" title="This is your password. Make sure it's entered correctly."><img src="<ICONDIR>information.png"></a></td>
+                </label><a class="tooltip" title="This is your password. Make sure it's entered correctly."><img src="{$icon_dir}information.png"></a></td>
               </tr>
                  <tr>
                 <td width="30%">Email:</td>
                 <td><label>
                   <input name="email" type="text" id="email" />
-                </label><a class="tooltip" title="This is your email where all BNPanel emails will be sent to."><img src="<ICONDIR>information.png"></a></td>
+                </label><a class="tooltip" title="This is your email where all BNPanel emails will be sent to."><img src="{$icon_dir}information.png"></a></td>
               </tr>
                  <tr>
                 <td width="30%">Full Name:</td>
                 <td><label>
                   <input name="name" type="text" id="name" />
-                </label><a class="tooltip" title="This is your name, this will be shown to clients via Tickets and other methods."><img src="<ICONDIR>information.png"></a></td>
+                </label><a class="tooltip" title="This is your name, this will be shown to clients via Tickets and other methods."><img src="{$icon_dir}information.png"></a></td>
               </tr>
               <tr>
                 <td colspan="2" align="center"><label>

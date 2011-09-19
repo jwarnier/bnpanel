@@ -42,7 +42,7 @@ function editme(id) {
 	<div class="sub">
    	  <table width="100%" border="0" cellspacing="2" cellpadding="0">
     	  <tr>
-    	    <td width="1%"><img src="<ICONDIR>add.png"></td>
+    	    <td width="1%"><img src="{$icon_dir}add.png"></td>
     	    <td><a href="Javascript:addme()">Add %NAME%</a></td>
   	    </tr>
   	  </table>

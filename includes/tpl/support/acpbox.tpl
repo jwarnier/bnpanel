@@ -5,9 +5,9 @@
           	<td width="92%"><strong>%NAME%</strong><br />%DESCRIPTION%</td>    	    
     	    <td valign="middle" align="center">
     	       <a href="Javascript:editme('%ID%')">
-    	       <img src="<ICONDIR>pencil.png" /></a>&nbsp;
+    	       <img src="{$icon_dir}pencil.png" /></a>&nbsp;
     	       <a href="?page=kb&sub=%LINK%&del=%ID%">
-    	       <img src="<ICONDIR>cross.png" /></a>
+    	       <img src="{$icon_dir}cross.png" /></a>
   	    </tr>
   	  </table>
 	</div>

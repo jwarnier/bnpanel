@@ -32,7 +32,7 @@ function cancel(user, pass) {
     <div class="sub">
       <span class="errors">Notice:</span> This WILL cancel your client account and your hosting account. This means all your files, once this step has completed can't be retrieved. Your account will remain in our system for informational and auditing purposes so after this process you may not register another account.<br />
       <input name="understand" type="checkbox" id="understand" value="1" onchange="check()" /><strong>I understand this notice above</strong>
-       <a title="Tick here <b>only if you <i>really</i> want to cancel your account!</b>" class="tooltip"><img src="<ICONDIR>information.png" /></a>
+       <a title="Tick here <b>only if you <i>really</i> want to cancel your account!</b>" class="tooltip"><img src="{$icon_dir}information.png" /></a>
     </div>
 </div>
 <div id="passwordpart" style="display:none">
@@ -43,7 +43,7 @@ function cancel(user, pass) {
                 <td width="25%">Your Password:</td>
                 <td width="10%"><input name="password" id="password" type="password" />
                 </td>
-                <td width="65%" align="left"><input name="delete" id="delete" type="button" value="Cancel" onclick="cancel('%USER%', document.getElementById('password').value)"/>  <a title="Click here to cancel your account." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
+                <td width="65%" align="left"><input name="delete" id="delete" type="button" value="Cancel" onclick="cancel('%USER%', document.getElementById('password').value)"/>  <a title="Click here to cancel your account." class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
               </tr>
             </table>
         </div>

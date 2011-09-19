@@ -68,7 +68,7 @@ function filter() {
 	        <th width="30px"><div align="left"><b>&nbsp;No.</b></div></td>
 	        <th width="70px"><strong>User</strong></td>        
 	        <th><strong>Package</strong></td>        
-	        <th><strong><a title="Domain name" class="tooltip"><img src="<ICONDIR>world.png" border="0" /></a> Domain</strong></td>
+	        <th><strong><a title="Domain name" class="tooltip"><img src="{$icon_dir}world.png" border="0" /></a> Domain</strong></td>
 	        <th ><strong>Creation date</strong></td>
 	        <th><strong>Status</strong></td>
 	        <th width="90px"><strong>Actions</strong></td>                

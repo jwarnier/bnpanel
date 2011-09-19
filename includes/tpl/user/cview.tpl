@@ -53,17 +53,17 @@ function check() {
   <tr>
   <td width="20%">Account Password:</td>
     <td><input type="password" name="currentpass" id="currentpass" />
-     <a title="Type your current account password here." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
+     <a title="Type your current account password here." class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
   </tr>
   <tr>
   <td>New Control Panel Password:</td>
     <td><input type="password" name="newpass" id="newpass" />
-     <a title="Type your new cPanel password here." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
+     <a title="Type your new cPanel password here." class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
   </tr>
   <tr>
   <td>Confirm Control Panel Password:</td>
     <td><input type="password" name="cpass" id="cpass" />
-     <a title="Confirm your new Control Panel password here." class="tooltip"><img src="<ICONDIR>information.png" /></a></td>
+     <a title="Confirm your new Control Panel password here." class="tooltip"><img src="{$icon_dir}information.png" /></a></td>
   </tr>
 </table>
 </div></div>

@@ -114,8 +114,8 @@ function kthx() {
 	  <tr>
 	  <td>
 	  <div id="1" style="display:none;">
-		<a title="The user's account and package will remain on the system but in a cancelled state." class="tooltip"><img src="<ICONDIR>information.png" /></a> <a class="cancel" href="javascript:void(0);">Cancel</a><br />
-		<a title="Deletes all traces of the user from the system." class="tooltip"><img src="<ICONDIR>information.png" /></a> <a class="term" href="javascript:void(0);">Terminate</a>
+		<a title="The user's account and package will remain on the system but in a cancelled state." class="tooltip"><img src="{$icon_dir}information.png" /></a> <a class="cancel" href="javascript:void(0);">Cancel</a><br />
+		<a title="Deletes all traces of the user from the system." class="tooltip"><img src="{$icon_dir}information.png" /></a> <a class="term" href="javascript:void(0);">Terminate</a>
 	  </div>
 	  </td>
 	  </tr>

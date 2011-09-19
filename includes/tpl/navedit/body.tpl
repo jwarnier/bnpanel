@@ -33,7 +33,7 @@
 	<div class="sub">
     	<table width="100%" border="0" cellspacing="3" cellpadding="0">
           <tr>
-            <td width="1%"><img src="<ICONDIR>add.png" alt="Add Navlink"/></td>
+            <td width="1%"><img src="{$icon_dir}add.png" alt="Add Navlink"/></td>
             <td><a href="javascript:void(0)" id="addnavlinkLink">Add Navigation Link</a></td>
           </tr>
         </table>
