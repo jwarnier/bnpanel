@@ -34,7 +34,7 @@ class email {
 	}
 	
 	private function smtp() { # Sends the email using SMTP Auth PEAR
-		require_once LINK."pear/Mail.php";
+		require_once INCLUDES."pear/Mail.php";
 		
 		$from = $this->details['from'];
 		$to = $this->email['to'];

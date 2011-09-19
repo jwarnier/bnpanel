@@ -28,7 +28,7 @@ class whmimport {
 				}
 			}
 			if(!$n) {
-				include(LINK ."servers/whm.php");
+				include(INCLUDES ."servers/whm.php");
 				$whm = new whm;
 				$userdata = $whm->listaccs($main->postvar['server']);
 				foreach($userdata as $data) {

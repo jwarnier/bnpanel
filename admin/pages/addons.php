@@ -25,8 +25,7 @@ class page extends Controller {
 	}
 	
 	public function content() {
-		require_once LINK.'validator.class.php';
-		 
+				 
 		# Displays the page 
 		global $main, $style, $db, $billing, $addon;
 		
@@ -93,7 +92,7 @@ class page extends Controller {
 				$array['MANDATORY'] 	= $main->createCheckbox('', 'mandatory');
 	
 				//----- Finish billing cycle					
-				echo $style->replaceVar("tpl/addons/add.tpl", $array);
+				echo $style->replaceVar("addons/add.tpl", $array);
 			break;
 			case 'view':
 			case 'edit':
@@ -181,7 +180,7 @@ class page extends Controller {
 						
 						//----- Finish billing cycle						
 						
-						echo $style->replaceVar('tpl/addons/edit.tpl', $array);
+						echo $style->replaceVar('addons/edit.tpl', $array);
 					}
 				} else {
 					$query = $db->query("SELECT * FROM <PRE>addons");

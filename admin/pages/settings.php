@@ -44,10 +44,7 @@ class page extends Controller {
 				$array['URL'] 			= $db->config('url');
 				$array['ROWS_PER_PAGE'] = $db->config('rows_per_page');
 				$server_status = $db->config('server_status');
-				$array['RECURL'] 		= $main->removeXSS($_SERVER['HTTP_HOST']);
-				
-
-				
+				$array['RECURL'] 		= $main->removeXSS($_SERVER['HTTP_HOST']);				
 				$domain_option_id = $db->config('domain_options');
 				$domain_values = array(DOMAIN_OPTION_DOMAIN=>'Only Domains', DOMAIN_OPTION_SUBDOMAIN=>'Only Subdomains', DOMAIN_OPTION_BOTH=>'Both');
 				$array['DOMAIN_OPTIONS'] = $main->createSelect('domain_options', $domain_values, $domain_option_id);
@@ -60,7 +57,7 @@ class page extends Controller {
 				$values = array('test'=>_('Test'), 'production'=>_('Production'));
 				$array['SERVER_STATUS'] = $main->createSelect('server_status', $values, $server_status);
 								
-				echo $style->replaceVar("tpl/settings/general.tpl", $array);
+				$this->replaceVar("tpl/settings/general.tpl", $array);
 				break;
 				
 			case 'security': #security settings
@@ -72,13 +69,13 @@ class page extends Controller {
 			    $array['SHOW_PAGE_GENTIME'] = $main->dropDown("show_page_gentime", $values, $db->config("show_page_gentime"));
                             $array['SHOW_WHM_SSL'] = $main->dropDown("whm-ssl", $values, $db->config("whm-ssl"));
 				$array['SHOW_FOOTER'] = $main->dropDown("show_footer", $values, $db->config("show_footer"));
-			    echo $style->replaceVar("tpl/asecurity.tpl", $array);
+			    $this->replaceVar("tpl/asecurity.tpl", $array);
 			    break;			
 				
 			case 'tos':
 				global $db;
 				$array['TOS'] = $db->config("tos");
-				echo $style->replaceVar("tpl/tos.tpl", $array);
+				$this->replaceVar("tpl/tos.tpl", $array);
 				break;
 				
 			case 'signup':
@@ -88,7 +85,7 @@ class page extends Controller {
 				$array['TLDONLY'] = $main->dropDown("tldonly", $values, $db->config("tldonly"));
 				$array['GENERAL'] = $main->dropDown("general", $values, $db->config("general"));
 				$array['MESSAGE'] = $db->config("message");
-				echo $style->replaceVar("tpl/settings/signupsettings.tpl", $array);
+				$this->replaceVar("tpl/settings/signupsettings.tpl", $array);
 
 				break;
 				
@@ -99,7 +96,7 @@ class page extends Controller {
 				$array['CENABLED'] = $main->dropDown("cenabled", $values, $db->config("cenabled"));
 				$array['CMESSAGE'] = $db->config("cmessage");
 				$array['ALERTS'] = $db->config("alerts");
-				echo $style->replaceVar("tpl/settings/clientsettings.tpl", $array);
+				$this->replaceVar("tpl/settings/clientsettings.tpl", $array);
 				break;
 				
 		    case 'support':
@@ -107,7 +104,7 @@ class page extends Controller {
 		        $values[] = array("Disabled", "0");
 		        $array['SENABLED'] = $main->dropDown("senabled", $values, $db->config("senabled"));
 		        $array['SMESSAGE'] = $db->config("smessage");
-		        echo $style->replaceVar("tpl/settings/supportsettings.tpl", $array);
+		        $this->replaceVar("tpl/settings/supportsettings.tpl", $array);
 		        break;
 		        
 			case 'email':
@@ -118,7 +115,7 @@ class page extends Controller {
 				$array['SMTP_HOST'] = $db->config("smtp_host");
 				$array['SMTP_USER'] = $db->config("smtp_user");
 				$array['SMTP_PASS'] = $db->config("smtp_password");
-				echo $style->replaceVar("tpl/email/emailsettings.tpl", $array);
+				$this->replaceVar("tpl/email/emailsettings.tpl", $array);
 				break;
 				
 			case 'paid_configuration':
@@ -151,8 +148,9 @@ class page extends Controller {
 				$array['PAYPAL_MODE'] = $main->createSelect('paypal_mode', $values, $selected_id);
 				
 				$array['PAYPALEMAIL'] = $db->config("paypalemail");
-				echo $style->replaceVar("tpl/paid/acp.tpl", $array);
+				$this->replaceVar("tpl/paid/acp.tpl", $array);
 			break;
 		}
+		
 	}
 }

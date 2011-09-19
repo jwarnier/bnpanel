@@ -29,8 +29,7 @@ class page extends Controller {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db, $order,$package, $invoice, $server, $email,$user;
-		require_once LINK.'validator.class.php';
-		
+			
 		switch ($main->get_variable('sub')) {		
 			case 'add':
 				
@@ -71,7 +70,7 @@ class page extends Controller {
 				}			
 				$array['country']		= $main->countrySelect($array['country']);
 				$array['status'] = $main->createSelect('status', $main->getUserStatusList(), '');				
-				echo $style->replaceVar("tpl/user/add.tpl", $array);				
+				$this->replaceVar("tpl/user/add.tpl", $array);				
 			break;
 			
 			case 'edit':
@@ -115,7 +114,7 @@ class page extends Controller {
 					$main_array['BOX'] 		= "";
 					$main_array['ID'] 		= $main->getvar['do'];
 										
-					echo $style->replaceVar("tpl/user/clientview.tpl", $main_array);							
+					$this->replaceVar("tpl/user/clientview.tpl", $main_array);							
 				}
 			break;
 			
@@ -148,7 +147,7 @@ class page extends Controller {
 					$array['ID'] 		= $client['id'];
 					$array['BOX'] 		= '';
 					
-					echo $style->replaceVar("tpl/user/clientview.tpl", $array);
+					$this->replaceVar("tpl/user/clientview.tpl", $array);
 					
 				} else {
 					//selecting all clients
@@ -158,7 +157,7 @@ class page extends Controller {
 					$values[] = array("Order Form", "order");
 					$values[] = array("Client Area", "client");
 					$array['DROPDOWN'] = $main->dropDown("default", $values, $db->config("default"));
-					echo $style->replaceVar("tpl/user/clientsearch.tpl", $array);			
+					$this->replaceVar("tpl/user/clientsearch.tpl", $array);			
 				}
 			break;
 			
@@ -170,7 +169,7 @@ class page extends Controller {
 					$array['BOX'] 		= "";										
 					$array['URL'] 		= URL;
 					$array['ID'] 		= $main->getvar['do'];			
-					echo $style->replaceVar("tpl/user/clientview.tpl", $array);											
+					$this->replaceVar("tpl/user/clientview.tpl", $array);											
 				}			
 			break;
 			
@@ -182,7 +181,7 @@ class page extends Controller {
 					$array['URL'] 		= URL;
 					$array['ID'] 		= $main->getvar['do'];
 					
-					echo $style->replaceVar("tpl/user/clientview.tpl", $array);	
+					$this->replaceVar("tpl/user/clientview.tpl", $array);	
 				}			
 			break;			
 			
@@ -199,7 +198,7 @@ class page extends Controller {
 					$array['BOX'] = "";
 					$array['CONTENT'] = $style->replaceVar("tpl/email/emailclient.tpl");
 					$array['ID'] 	  = $main->getvar['do'];
-					echo $style->replaceVar("tpl/user/clientview.tpl", $array);
+					$this->replaceVar("tpl/user/clientview.tpl", $array);
 				}
 			break;
 			
@@ -223,13 +222,13 @@ class page extends Controller {
 					$array['ID'] 		= $main->getvar['do'];
 					$array['BOX'] = "";
 					$array['CONTENT'] = $style->replaceVar("tpl/user/clientpwd.tpl");
-					echo $style->replaceVar("tpl/user/clientview.tpl", $array);
+					$this->replaceVar("tpl/user/clientview.tpl", $array);
 				}
 			break;	
 			default:
 			case 'search':
 				if ($main->get_variable('do')) {
-					echo $style->replaceVar("tpl/user/clientview.tpl", $array);
+					$this->replaceVar("tpl/user/clientview.tpl", $array);
 				} else {					
 					$array['NAME'] = $db->config("name");
 					$array['URL'] = $db->config("url");
@@ -237,7 +236,7 @@ class page extends Controller {
 					$values[] = array("Order Form", "order");
 					$values[] = array("Client Area", "client");
 					$array['DROPDOWN'] = $main->dropDown("default", $values, $db->config("default"));
-					echo $style->replaceVar("tpl/user/clientsearch.tpl", $array);
+					$this->replaceVar("tpl/user/clientsearch.tpl", $array);
 				}
 				break;
 			case 'stats':
@@ -256,7 +255,7 @@ class page extends Controller {
 				$query = $db->query("SELECT * FROM `<PRE>orders` WHERE `status` = '".USER_STATUS_DELETED."'"); 
 				$array['CANCELLED'] = $db->num_rows($query);
 				
-				echo $style->replaceVar("tpl/user/clientstats.tpl", $array);
+				$this->replaceVar("tpl/user/clientstats.tpl", $array);
 				break;
 			
 			

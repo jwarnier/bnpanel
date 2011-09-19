@@ -19,9 +19,7 @@ class page {
 	
 	public function content() { # Displays the page 
 		global $main, $style, $db, $email, $ticket;
-		
-		require_once LINK.'validator.class.php';
-		
+				
 		$ticket_urgency_list = $main->getTicketUrgencyList();
 		$ticket_status_list = $main->getTicketStatusList();
 		

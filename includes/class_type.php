@@ -112,7 +112,7 @@ class type {
 	
 	public function createType($type) { # Creates a class and then returns it
 		if (!empty($type)) {
-			$file = LINK . "types/". $type .".php";
+			$file = INCLUDES . "types/". $type .".php";
 			if(!file_exists($file)) {
 				//echo "Type doesn't exist!";
 				return false;	
@@ -128,7 +128,7 @@ class type {
 	
 	public function createAll() { # Creates all types and returns them
 		global $main;
-		$files = $main->folderFiles(LINK ."types/");
+		$files = $main->folderFiles(INCLUDES ."types/");
 		foreach($files as $value) {
 			$data = explode(".", $value);
 			if($data[1] != "svn" and $data[1] == "php") {

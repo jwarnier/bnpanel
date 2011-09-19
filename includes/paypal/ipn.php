@@ -5,7 +5,7 @@ global $style, $db, $main, $invoice,  $addon, $billing, $order, $server, $packag
 $main->addLog('paypal::ipn file called');
 
 if(isset($main->getvar['do'])) {			
-	require_once LINK."paypal/paypal.class.php";
+	require_once INCLUDES."paypal/paypal.class.php";
 	$paypal = new paypal_class();
 	//This is a very important step, this thing checks if the payment was sucessfull or not
 	$invoice_id = intval($main->getvar['do']);

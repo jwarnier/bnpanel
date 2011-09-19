@@ -1,3 +1,3 @@
 <ul class="leftmenu">
-%LINKS%
+{$LINKS}
 </ul>

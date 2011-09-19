@@ -13,7 +13,7 @@
   <tr>
     <td align="center">
     <textarea cols="85" rows="5" name="admin_notes" wrap="no">
-    %NOTEPAD%
+    {$NOTEPAD}
     </textarea>
     </td>
   </tr>

@@ -69,9 +69,10 @@ session_start();
 //}
 
 //Defining paths
-$includePath = dirname(__FILE__);
-define('LINK', $includePath.'/');
-define('MAIN', dirname($includePath).'/');
+$current_path = dirname(__FILE__);
+define('INCLUDES', 		$current_path.'/');
+define('ROOT_PATH', 	dirname($current_path).'/');
+define('CACHE_PATH', 	dirname($current_path).'/cache/');
 
 /**
  * 
@@ -137,7 +138,7 @@ $domain = 'default';
 putenv("LC_ALL=$locale");
 setlocale(LC_ALL,$locale);
 
-bindtextdomain($domain, MAIN.'locale'); // /var/www/bnpanel/locale
+bindtextdomain($domain, ROOT_PATH.'locale'); // /var/www/bnpanel/locale
 bind_textdomain_codeset($domain, 'UTF-8');
 textdomain($domain);
 /*
@@ -147,9 +148,6 @@ setlocale(LC_ALL, $locale);
 setlocale(LC_MESSAGES, $locale);
 */
 
-//Stop the output
-ob_start();
-
 //Check for Dependencies
 $d = checkForDependencies();
 if($d !== true) {
@@ -157,9 +155,10 @@ if($d !== true) {
 }
 
 //Grab DB First
-require LINK."class_db.php"; # Get the file
-if (file_exists(LINK."conf.inc.php")) {
-	require LINK."conf.inc.php"; # Get the config
+require INCLUDES."class_db.php"; # Get the file
+
+if (file_exists(INCLUDES."conf.inc.php")) {
+	require INCLUDES."conf.inc.php"; # Get the config
 	define("NOCONFIG", false);
 } else {
 	define("NOCONFIG", true);
@@ -186,12 +185,12 @@ if (SERVER_STATUS == 'test') {
 	$starttime = $starttime[1] + $starttime[0];
 }
 
-require_once LINK.'model.php'; # Get the file
-require_once LINK.'class_main.php'; # Get the file
-			
+require_once INCLUDES.'model.php'; 
+require_once INCLUDES.'class_main.php';
+		
 $main = new main(); # Create the class
 if (isset($main) && !empty($main)) {
-	global $main;		
+	global $main;
 }
 
 //Improve security to avoid double agents with the same session, avoiding session hijacking
@@ -201,31 +200,52 @@ if ($main->checkUserAgent() == false) {
 
 /* Autoload base classes and hook classes */
 
-function __autoload($class_name) {	
+spl_autoload_register('__autoload');
+define('SMARTY_DIR', INCLUDES.'smarty/');
+
+require_once INCLUDES.'smarty/Smarty.class.php';
+
+function __autoload($class_name) {
 	//Loading BNPanel classes
 	if (strpos($class_name, 'hook') === false) {		
 		$class_name = strtolower($class_name);
-		$class_file = LINK.'class_'.$class_name.'.php';		
+		$class_file = INCLUDES.'class_'.$class_name.'.php';		
 	} else {
 		//Loading BNPanel Hook classes i.e dolibarr
 		list($hook, $module, $class) = explode('_', $class_name);
 	
 		//This is a hook class		
-		$class_file = LINK.'hooks/'.$module.'/'.$class.'.php';		
+		$class_file = INCLUDES.'hooks/'.$module.'/'.$class.'.php';		
 	}	
-	
+
     if (file_exists($class_file)) {    	
     	require_once $class_file;
-    }
-    
+    }    
 }
 
-$available_classes = array('addon', 'billing', 'currency', 'email', 'invoice', 'order', 'package', 'server', 'staff', 'style', 'ticket', 'type','user', 'extrafield','controller');
-foreach($available_classes as $class_item) {	
+if (INSTALL == 1) {
+	define("THEME", $db->config("theme")); # Set the default theme
+	define("URL", 	$db->config("url")); # Sets the URL THT is located at
+	define("NAME", 	$db->config("name")); # Sets the name of the website
+} else {
+	define("THEME", 'bnpanel'); # Set the default theme
+	define("URL", "../"); # Set url to blank
+	define("NAME", 	'BNPanel'); # Sets the name of the website
+}
+
+$path		= dirname($main->removeXSS($_SERVER['PHP_SELF']));
+$position 	= strrpos($path,'/') + 1;
+$folder 	= substr($path, $position);
+define("FOLDER", $folder); # Add current folder name to global
+
+$available_classes = array('addon', 'billing', 'currency', 'email', 'invoice', 'order', 'style','package', 'server', 'staff', 'ticket', 'type','user', 'extrafield','controller');
+
+foreach($available_classes as $class_item) {
 	${$class_item} = new $class_item();
 	global ${$class_item};		
 }
 
+require_once INCLUDES.'validator.class.php';
 
 // Setting GETs and POSTss 
 
@@ -277,22 +297,6 @@ if (isset($_GET)) {
 	}
 }
 $main->getvar['_get_token'] = $main->getToken();
-
-if (INSTALL == 1) {	
-	define("THEME", $db->config("theme")); # Set the default theme
-	define("URL", 	$db->config("url")); # Sets the URL THT is located at	
-	define("NAME", 	$db->config("name")); # Sets the name of the website	
-} else {	
-	define("THEME", 'bnpanel'); # Set the default theme
-	define("URL", "../"); # Set url to blank
-	define("NAME", 	'BNPanel'); # Sets the name of the website
-}
-	
-
-$path		= dirname($main->removeXSS($_SERVER['PHP_SELF']));
-$position 	= strrpos($path,'/') + 1;
-$folder 	= substr($path, $position);	
-define("FOLDER", $folder); # Add current folder name to global
 
 if (FOLDER != "install" && FOLDER != "includes" && INSTALL != 1) { # Are we installing?	
 	//Lets just redirect to the installer, shall we?	

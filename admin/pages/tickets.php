@@ -20,7 +20,6 @@ class page extends Controller {
 
 	public function content() { # Displays the page 
 	
-		require_once LINK.'validator.class.php';
 		
 		global $main, $style, $db, $email, $ticket;
 		$main->getvar['do'] = intval($main->getvar['do']);
@@ -37,7 +36,7 @@ class page extends Controller {
 			} else {
 				echo "<div style=\"display: none;\" id=\"nun-tickets\">You currently have no new tickets!</div>";
 				$num_rows = $db->num_rows($query);
-				echo $style->replaceVar("tpl/support/acpticketjs.tpl", array ('NUM_TICKETS' => $num_rows));
+				$this->replaceVar("tpl/support/acpticketjs.tpl", array ('NUM_TICKETS' => $num_rows));
 				while ($data = $db->fetch_array($query)) {					
 					$urg 					= $ticket_urgency_list[$data['urgency']]['color'];
 					$array['STATUS_TITLE'] 	= $ticket_status_list[$data['status']];					
@@ -48,7 +47,7 @@ class page extends Controller {
 					$array['ID'] = $data['id'];
 					$array['STATUS_IMG'] = $data['status'];
 					
-					echo $style->replaceVar("tpl/support/acpticketviewbox.tpl", $array);
+					$this->replaceVar("tpl/support/acpticketviewbox.tpl", $array);
 				}
 			}
 		} else {
@@ -59,7 +58,7 @@ class page extends Controller {
 				} else {
 					echo "<div style=\"display: none;\" id=\"nun-tickets\">You currently have no new tickets!</div>";
 					$num_rows = $db->num_rows($query);
-					echo $style->replaceVar("tpl/support/acpticketjs.tpl", array ('NUM_TICKETS' => $num_rows));
+					$this->replaceVar("tpl/support/acpticketjs.tpl", array ('NUM_TICKETS' => $num_rows));
 					
 					while ($data = $db->fetch_array($query)) {
 						$urg 					= $ticket_urgency_list[$data['urgency']]['color'];
@@ -72,7 +71,7 @@ class page extends Controller {
 						$array['ID'] = $data['id'];
 						$array['STATUS_IMG'] = $data['status'];
 						
-						echo $style->replaceVar("tpl/support/acpticketviewbox.tpl", $array);
+						$this->replaceVar("tpl/support/acpticketviewbox.tpl", $array);
 					}
 				}
 			} else {
@@ -164,7 +163,7 @@ class page extends Controller {
 					$array['ADDREPLY'] .= $style->replaceVar("tpl/support/addreply.tpl", $array2);
 					$array['ID'] = $data['id'];
 					
-					echo $style->replaceVar("tpl/support/viewticket.tpl", $array);
+					$this->replaceVar("tpl/support/viewticket.tpl", $array);
 				}
 			}
 		}

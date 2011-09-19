@@ -13,9 +13,9 @@ class page extends Controller {
 		global $db;
 		global $main;
 		global $type;
-		$files = $main->folderFiles(LINK ."import/");
+		$files = $main->folderFiles(INCLUDES ."import/");
 		foreach($files as $value) {
-			$link = LINK. "import/". $value;
+			$link = INCLUDES. "import/". $value;
 			$data = explode(".", $value);
 			if(file_exists($link)) {
 				include($link);

@@ -57,11 +57,11 @@ class page extends Controller {
 				$array['TEMPLATES'] 	= $main->dropDown("LOL", $values, $selected_id, 0, 1);
 				$array['TEMPLATE_ID'] 	= $selected_id;
 				
-				echo $style->replaceVar("tpl/email/emailtemplates.tpl", $array);
+				echo $style->replaceVar("email/emailtemplates.tpl", $array);
 			break;
 			
 			case "mass": #mass emailer
-				echo $style->replaceVar("tpl/email/massemail.tpl");
+				echo $style->replaceVar("email/massemail.tpl");
 			break;
 		}
 	}

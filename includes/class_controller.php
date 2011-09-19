@@ -4,6 +4,7 @@ class Controller {
 	var $navtitle; 
 	var $navlist;
 	var $data;
+	var $content = null;
 	
 	function __construct() {
 	
@@ -46,6 +47,11 @@ class Controller {
 			}
 		}
 		return $this->data['SUBMENU'] = $subsidebar;
+	}
+	
+	function replaceVar($tpl, $data = array()) {
+		global $style;
+		$this->content .= $style->replaceVar($tpl, $data);
 	}
 	
 } 

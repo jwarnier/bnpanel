@@ -1,5 +1,5 @@
-<li class="%ACTIVE%">	
-	<a href="%LINK%">	   
-	   %VISUAL%
+<li class="{$ACTIVE}">	
+	<a href="{$LINK}">	   
+	   {$VISUAL}
     </a>
 </li>

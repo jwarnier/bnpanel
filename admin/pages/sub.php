@@ -57,7 +57,7 @@ class page extends Controller {
 				
 				if (!empty($all_servers)) {
 					$array['SERVER'] = $main->createSelect("server", $all_servers);
-					echo $style->replaceVar("tpl/subdomain/addsubdomain.tpl", $array);
+					$this->replaceVar("tpl/subdomain/addsubdomain.tpl", $array);
 				} else {
 					$main->errors('There are no servers, you need to add a Server first <a href="?page=servers&sub=add">here</a>');
 					echo '<ERRORS>';
@@ -102,7 +102,7 @@ class page extends Controller {
 							$values[] = array($data['name'], $data['id']);	
 						}
 						$array['SERVER'] = $array['THEME'] = $main->dropDown("server", $values, $data['server']);
-						echo $style->replaceVar("tpl/subdomain/editsubdomain.tpl", $array);
+						$this->replaceVar("tpl/subdomain/editsubdomain.tpl", $array);
 					}
 				} else {
 					$query = $db->query("SELECT * FROM `<PRE>subdomains`");
@@ -111,7 +111,7 @@ class page extends Controller {
 						$style->showMessage("There are no Subdomains available!");	
 					} else {						
 						while($data = $db->fetch_array($query)) {
-							echo $main->sub("<strong>".$data['subdomain']."</strong>", '<a href="?page=sub&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=sub&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
+							$this->content .= $main->sub("<strong>".$data['subdomain']."</strong>", '<a href="?page=sub&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=sub&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 						}
 					}
 				}

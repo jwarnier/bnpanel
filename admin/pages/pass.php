@@ -34,6 +34,6 @@ class page extends Controller {
 				}
 			}
 		}
-		echo $style->replaceVar("tpl/changepass.tpl");
+		$this->replaceVar("tpl/changepass.tpl");
 	}
 }

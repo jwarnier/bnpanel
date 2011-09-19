@@ -18,9 +18,6 @@ class page extends Controller {
 	}
 	public function content() { # Displays the page 
 		global $main, $style, $db, $staff, $user;
-		require_once LINK.'validator.class.php';
-		
-		
 		
 		$admin_navigation = $main->getAdminNavigation();		
 		
@@ -93,7 +90,7 @@ class page extends Controller {
 					//<label for="pages_'.$data['link'].'">On</label>
 				}
 				$array['PAGES'] .= "</table>";
-				echo $style->replaceVar("tpl/staff/addstaff.tpl", $array);
+				$this->replaceVar("tpl/staff/addstaff.tpl", $array);
 			break;
 			case 'view':
 			case 'edit':
@@ -175,7 +172,7 @@ class page extends Controller {
 						}
 						$array['PAGES'] .= "</table>";
 						
-						echo $style->replaceVar("tpl/staff/editstaff.tpl", $array);	
+						$this->replaceVar("tpl/staff/editstaff.tpl", $array);	
 					}
 				} else {					
 					$staff_list = $staff->gettAllStaff();

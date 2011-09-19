@@ -8,7 +8,7 @@
  *  
  */
 
-class page extends controller {
+class page extends Controller {
 	
 	public function __construct() {
 		
@@ -28,7 +28,7 @@ class page extends controller {
 			
 		switch ($main->get_variable('sub')) {			
 			case 'add':
-				echo $style->replaceVar("tpl/invoices/addinvoice.tpl");
+				$this->replaceVar("tpl/invoices/addinvoice.tpl");
 				break;
 			case 'edit':
 				if (isset($main->getvar['do'])) {
@@ -68,13 +68,13 @@ class page extends controller {
 					$return_array = $invoice->getInvoice($main->getvar['do']);
 					
 					$return_array['DUE'] = substr($return_array['DUE'], 0, 10);					
-					echo $style->replaceVar("tpl/invoices/editinvoice.tpl", $return_array);
+					$this->replaceVar("tpl/invoices/editinvoice.tpl", $return_array);
 				}
 				break;			
 			case 'view':				
 				if(isset($main->getvar['do'])) {					
 					$return_array = $invoice->getInvoice($main->getvar['do'], true);									
-					echo $style->replaceVar("tpl/invoices/view-admin.tpl", $return_array);					
+					$this->replaceVar("tpl/invoices/view-admin.tpl", $return_array);					
 				}
 				break;
 			case 'delete':			
@@ -101,7 +101,7 @@ class page extends controller {
 				if (!empty($count)) {
 					$quantity = ceil($count / $per_page);							
 					$return_array['COUNT'] = $quantity;
-					echo $style->replaceVar("tpl/invoices/admin-page.tpl", $return_array);
+					$this->replaceVar("tpl/invoices/admin-page.tpl", $return_array);
 				} else {
 					$main->errors('No invoices available, you should create an Order first <a href="?page=orders&sub=add">here</a>');
 					echo '<ERRORS>';

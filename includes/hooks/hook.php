@@ -17,7 +17,7 @@ class Hook {
 		}
 		
 		//Loading hook settings
-		$hook_settings_file = LINK.'hooks/'.$module.'/'.$module.'.php';
+		$hook_settings_file = INCLUDES.'hooks/'.$module.'/'.$module.'.php';
 		
 		if (file_exists($hook_settings_file)) {
 			require_once $hook_settings_file;			

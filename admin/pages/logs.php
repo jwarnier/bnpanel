@@ -66,16 +66,16 @@ class page extends Controller {
 		);
 		
 		
-		echo $main->createSelect('show', $values, $show);				
-		echo '<input type="submit" name="filter" id="filter" value="Filter Log" />';			
-		echo '<input type="submit" name="clean" id="clean" value="Clean Logs" />';
-		echo '</form>';
+		$this->content =  $main->createSelect('show', $values, $show);				
+		$this->content .= '<input type="submit" name="filter" id="filter" value="Filter Log" />';			
+		$this->content .= '<input type="submit" name="clean" id="clean" value="Clean Logs" />';
+		$this->content .= '</form>';
 				
-		echo '<table class="common-table zebra-striped"><tr bgcolor="#EEEEEE">';
-		echo "<th width=\"75\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Date</td>";
-		echo "<th width=\"60\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Time</td>";
-		echo "<th width=\"75\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Username</td>"; 
-		echo "<th align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Message</td></tr>";
+		$this->content .= '<table class="common-table zebra-striped"><tr bgcolor="#EEEEEE">';
+		$this->content .= "<th width=\"75\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Date</td>";
+		$this->content .=  "<th width=\"60\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Time</td>";
+		$this->content .= "<th width=\"75\" align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Username</td>"; 
+		$this->content .= "<th align=\"center\" style=\"border-collapse: collapse\" bordercolor=\"#000000\">Message</td></tr>";
 		
 		
 		if (!($l)) {
@@ -124,11 +124,11 @@ class page extends Controller {
 				$array['DATE'] = strftime("%m/%d/%Y", $data['logtime']);
 				$array['TIME'] = strftime("%T", $data['logtime']);
 				$array['MESSAGE'] = $data['message'];
-			echo $style->replaceVar("tpl/settings/adminlogs.tpl", $array);
+			$this->replaceVar("tpl/settings/adminlogs.tpl", $array);
 			}
 		}
-		echo "</table></div>";
-		echo "<center>";
+		$this->content .=  "</table></div>";
+		$this->content .=  "<center>";
 		
 		$url = $db->config('url');
 		$url = $url.'admin';
@@ -141,16 +141,16 @@ class page extends Controller {
 		for ($i=1; $i <= $pages; $i++) {
 			$ppage = $l*($i - 1);
 			if ($ppage == $p){
-				echo("<b>$i</b>\n");
+				$this->content .= ("<b>$i</b>\n");
 			} else{
-				echo("<a href=\"$url?page=logs&show=$show&p=$ppage&l=$l\">$i</a> \n");
+				$this->content .= ("<a href=\"$url?page=logs&show=$show&p=$ppage&l=$l\">$i</a> \n");
 			}
 		}
 
 		if (!((($p+$l) / $l) >= $pages) && $pages != 1) {
 			$next_page = $p + $l;
-			echo("    <a href=\"$url?page=logs&show=$show&p=$next_page&l=$l\">NEXT</a>");
+			$this->content .= ("    <a href=\"$url?page=logs&show=$show&p=$next_page&l=$l\">NEXT</a>");
 		}
-		echo "</center>";
+		$this->content .=  "</center>";
 	}
 }

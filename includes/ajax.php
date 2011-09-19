@@ -18,7 +18,7 @@ class AJAX {
 	public function sqlcheck() {
 		global $main;
 		//This call only will work if the conf.inc.php is writable, this means that the installation is not protected yet
-		$link = LINK."conf.inc.php";		
+		$link = INCLUDES."conf.inc.php";		
 		if (file_exists($link) && is_writable($link)) {
 			if (INSTALL != 1) {
 				$host 	= $_GET['host'];
@@ -50,7 +50,7 @@ class AJAX {
 	
 	private function writeconfig($host, $user, $pass, $db, $pre, $true, $upgrade = 'false') {
 		global $style;		
-		$link = LINK."conf.inc.php";		
+		$link = INCLUDES."conf.inc.php";		
 		if (file_exists($link) && is_writable($link)) {			
 			$array['HOST'] 		=  $host;
 			$array['USER'] 		=  $user;
@@ -70,7 +70,7 @@ class AJAX {
 	
 	public function install() {
 		global $db, $main;
-		$conf_file = LINK."conf.inc.php";
+		$conf_file = INCLUDES."conf.inc.php";
 		
 		if (file_exists($conf_file) && is_writable($conf_file)) {
 			include $conf_file;
@@ -110,7 +110,7 @@ class AJAX {
 	private function installsql($data, $pre, $con = 0) {
 		global $main, $style, $db;
 		
-		$conf_file = LINK."conf.inc.php";		
+		$conf_file = INCLUDES."conf.inc.php";		
 		if (file_exists($conf_file) && is_writable($conf_file)) {
 			
 			$array['PRE'] = $pre;
@@ -215,7 +215,7 @@ class AJAX {
 	
 	public function installfinal() {	    
 		global $db, $main;		
-		$conf_file = LINK."conf.inc.php";				
+		$conf_file = INCLUDES."conf.inc.php";				
 		if (file_exists($conf_file) && is_writable($conf_file)) {
 		    
 			if ($main->checkToken(false)) {
@@ -642,9 +642,9 @@ class AJAX {
 		global $main, $server;
 		if ($main->getCurrentStaffId()) {
 			$type = $main->getvar['type'];
-			require_once LINK.'servers/panel.php';	
+			require_once INCLUDES.'servers/panel.php';	
 			if (in_array($type, $server->getAvailablePanels())) {		
-				require_once LINK ."servers/". $type .".php";
+				require_once INCLUDES ."servers/". $type .".php";
 				$server = new $type(-1);
 				if($server->hash) {
 					echo 0;	
@@ -660,9 +660,9 @@ class AJAX {
 		if ($main->getCurrentStaffId()) {			
 			$type 	= $main->getvar['type'];
 			$id 	= intval($main->getvar['server']);
-			require_once LINK.'servers/panel.php';
+			require_once INCLUDES.'servers/panel.php';
 			if (in_array($type, $server->getAvailablePanels())) {
-				require_once LINK."servers/". $type .".php";
+				require_once INCLUDES."servers/". $type .".php";
 				$serverphp = new $type(-1);
 				if($serverphp->hash) {
 					echo 0;	
@@ -759,7 +759,7 @@ class AJAX {
             $array['ID'] = $data['id'];
             $array['NAME'] = $data['name'];
             $array['VISUAL']= $data['visual'];
-            $array['LINK'] = $data['link'];
+            $array['INCLUDES'] = $data['link'];
             $array['ICON'] = $data['icon'];
             //echo $style->replaceVar("tpl/navedit/pbox.tpl", $array);
             //echo "\n<!-- O NOEZ IT R H4XX -->\n"; // <-- Don't remove this.
@@ -798,7 +798,7 @@ class AJAX {
             if(isset($_POST['css'])) {
                 $url = $db->config('url')."themes/".$db->config('theme')."/images/";
                 $slash = stripslashes(str_replace("&lt;IMG&gt;", "<IMG>", $_POST['css'])); #Strip it back
-                $filetochange = LINK."../themes/".$db->config('theme')."/style.css";
+                $filetochange = INCLUDES."../themes/".$db->config('theme')."/style.css";
                 file_put_contents($filetochange, $slash);
                 echo "CSS File Modified! Refresh for changes.";
             }
@@ -853,7 +853,7 @@ class AJAX {
                 $slash = str_replace("&lt;MENU&gt;", "<MENU>", $slash);
                 $slash = str_replace("&#37;INFO%", "%INFO%", $slash);
                 #Alrighty, what to do nexty?
-                $filetochange = LINK."../themes/".$db->config('theme')."/".$file.".tpl";
+                $filetochange = INCLUDES."../themes/".$db->config('theme')."/".$file.".tpl";
                 $filetochangeOpen = fopen($filetochange,"w");
                 fputs($filetochangeOpen,$slash);
                 fclose($filetochangeOpen) or die ("Error Closing File!");

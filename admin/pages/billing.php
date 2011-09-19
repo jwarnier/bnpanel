@@ -65,7 +65,7 @@ class page extends Controller {
 		}						
 		$array['NUMBER_MONTHS'] = $main->dropDown("number_months", $values, '');				
 		$array['STATUS'] = $main->createCheckbox('', 'status');
-		echo $style->replaceVar("tpl/billing/add.tpl", $array);
+		echo $style->replaceVar("billing/add.tpl", $array);
 	}
 	
 	public function edit() {
@@ -156,7 +156,7 @@ class page extends Controller {
 			$array['number_months'] = $result->number_months;
 			$array['name'] 			= $result->name;
 			$array['status'] 		= ($result->status)? 'Active': 'Inactive';
-			echo $style->replaceVar("tpl/billing/show.tpl", $array);
+			echo $style->replaceVar("billing/show.tpl", $array);
 		}
 	}			
 	

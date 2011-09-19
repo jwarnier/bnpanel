@@ -93,9 +93,9 @@ class server extends Model {
 		$server_type = $server_info['type'];
 				
 		//Abstract class Panel added
-		require_once LINK."servers/panel.php";		
+		require_once INCLUDES."servers/panel.php";		
 		if (in_array($server_type, $this->getAvailablePanels())) {
-			$link = LINK."servers/".$server_type.".php"; 
+			$link = INCLUDES."servers/".$server_type.".php"; 
 			if(!file_exists($link)) {
 				$main->addlog("server::loadServer function error. The server  $server_type doesn't exist!");				
 				return false;	
@@ -119,9 +119,9 @@ class server extends Model {
 		$server_id 	 = $type->determineServer($package_id);
 		$server_type = $type->determineServerType($server_id); # Determine server		
 		//Abstract class Panel added
-		require_once LINK."servers/panel.php";		
+		require_once INCLUDES."servers/panel.php";		
 		if (in_array($server_type, $this->getAvailablePanels())) {
-			$link = LINK."servers/".$server_type.".php";
+			$link = INCLUDES."servers/".$server_type.".php";
 			if(!file_exists($link)) {
 				$main->addlog("server::loadServer function error. The server  $server_type doesn't exist!");				
 				return false;	

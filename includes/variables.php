@@ -7,7 +7,7 @@ $navigation = $pagegen = $version = '';
 global $db, $starttime, $style, $main;
 
 if (INSTALL == 1) {
-		
+	/*
 	if ($db->config("show_page_gentime") == 1) {
 		$mtime = explode(' ', microtime());
 		$totaltime = $mtime[0] + $mtime[1] - $starttime;
@@ -31,50 +31,16 @@ if (INSTALL == 1) {
 			$array['TITLE'] 			= $style->replaceVar('tpl/aserverstatus.tpl',$array2);
 			$pagegen .= $style->replaceVar('tpl/footerdebug.tpl',$array);
 		}
-	}
+	}*/
 	 
 	if ($db->config("show_version_id") == 1) {
 	 	$version = $db->config("version");
 	}
 
-	if (FOLDER != 'install') {
-		$array = array();
-		$navigation_list = $main->getMainNavigation();		
-		$navbits = '';
-		foreach ($navigation_list as $nav_item) {			
-			if(!$db->config("show_acp_menu") && $nav_item['link'] == 'admin') {
-				continue;
-			} else {
-				$array['ID'] = "nav_". $nav_item['link'];
-				if (PAGE == $nav_item['visual']) {
-					$array['ACTIVE'] = ' class="active" ';
-				} else {
-					$array['ACTIVE'] = '';
-				}
-				$array['LINK'] = $nav_item['link'];
-				$array['ICON'] = $nav_item['icon'];
-				$array['NAME'] = $nav_item['visual'];
-				
-				$tpl = "tpl/menu/top_link.tpl";			
-				$navbits .= $style->replaceVar($tpl, $array);
-			}
-		}
-	}	
+	
 }
 
-$array3 = array();
-$array3['NAV'] = null;
-$array3['ADMIN_NAV'] = null;
-if (!empty($navbits)) {
-	$array3['NAV'] = $navbits;
-}
-if ($main->getCurrentStaffId()) {
-	$array3['ADMIN_NAV'] = '<li><a href="<URL>admin">Administration</a></li>';
-}
 
-$tpl = "tpl/menu/top_main.tpl";
-$navigation = $style->replaceVar($tpl, $array3);
-$navigation = preg_replace("/<APP_NAME>/si", NAME, $navigation);
 
 if ($main->getCurrentUserId()) {	
 } else {	
@@ -86,24 +52,18 @@ $current_token = $main->getToken();
 
 $data = preg_replace("/<AJAX>/si", URL."includes/ajax.php?_get_token=".$current_token."&", $data);
 
-$sub = defined('SUB') ? ' - '.SUB : '';
-$data = preg_replace("/<APP_TITLE>/si", NAME . " - " . PAGE.$sub, $data);
-$data = preg_replace("/<APP_NAME>/si", NAME, $data);
-$data = preg_replace("/<CSS>/si", $this->css(), $data);
-$data = preg_replace("/<JAVASCRIPT>/si", $this->javascript(), $data);
+
+
+
+
 
 $data = preg_replace("/<MENU>/si", $navigation, $data);
-
-$data = preg_replace("/<URL>/si", URL, $data);
 
 $data = preg_replace("/<LOGO>/si",  $this->show_logo(), $data);
 $data = preg_replace("/<LOGIN>/si", $this->show_login_link(), $data);
 
-
-$data = preg_replace("/<IMG>/si", URL . "themes/". THEME ."/images/", $data);
-$data = preg_replace("/<ICONDIR>/si", URL . "themes/icons/", $data);
 $data = preg_replace("/<PAGEGEN>/si", $pagegen, $data); #Page Generation Time
-$data = preg_replace("/<COPYRIGHT>/si", 'Powered by <a href="http://www.beeznest.com" target="_blank">BNPanel</a> '. $version, $data);
+
 $error_messages = $main->errors();
 
 if (!empty($error_messages)) {
