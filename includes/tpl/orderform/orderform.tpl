@@ -2,10 +2,10 @@
 var step 	= 1;
 var speed 	= 250; //default 1000
 var form 	= document.getElementById("order");
-var wrong 	= '<img src="<URL>themes/icons/cross.png">';
-var right 	= '<img src="<URL>themes/icons/accept.png">';
-var loading = '<img src="<URL>themes/icons/ajax-loader.gif">';
-var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></div>';
+var wrong 	= '<img src="{$url}themes/icons/cross.png">';
+var right 	= '<img src="{$url}themes/icons/accept.png">';
+var loading = '<img src="{$url}themes/icons/ajax-loader.gif">';
+var working = '<div align="center"><img src="{$url}themes/icons/working.gif"></div>';
 var result;
 var pid;
 
@@ -581,7 +581,7 @@ function checkSubdomain() {
                <label>Are you a human?</label>
                
                 <div class="input">
-                    <img src="<URL>includes/captcha_image.php"><br /><br />
+                    <img src="{$url}includes/captcha_image.php"><br /><br />
                     <input type="text" name="human" id="human" onchange="check('human', this.value)" />
                     <span id="humancheck"> </span>
                     <span class="help-block">Answer the question to prove you are not a bot.</span>
@@ -634,7 +634,7 @@ function checkSubdomain() {
                 <td width="78%" id="domcontent">%DOMAIN% <span id="domain_result"></span></td>
                 <td width="2%" align="left" id="domaincheck">
                 	<a title="Your domain, this must be in the format: <strong>example.com</strong>" class="tooltip">
-                	<img src="<URL>themes/icons/information.png" /></a>
+                	<img src="{$url}themes/icons/information.png" /></a>
                 </td>
               </tr>
               
@@ -645,7 +645,7 @@ function checkSubdomain() {
                 </td>
                 <td id="domaincheck" align="left">
                 	<a title="Your domain name" class="tooltip">
-                		<img src="<URL>themes/icons/information.png" />
+                		<img src="{$url}themes/icons/information.png" />
                 	</a>
                 </td>                
               </tr>
@@ -658,7 +658,7 @@ function checkSubdomain() {
                 </td>
                 <td id="domaincheck" align="left">
                 	<a title="Your subdomain, this must be in the format: <strong>subdomain.example.com</strong>" class="tooltip">
-                		<img src="<URL>themes/icons/information.png" />
+                		<img src="{$url}themes/icons/information.png" />
                 	</a>
                 </td>                
               </tr>       

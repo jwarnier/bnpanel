@@ -31,7 +31,7 @@ $(window).load(function () {
   <tr>
     <td width="20%">Name:</td>
     <td>
-      <input name="name" type="text" id="name" /><a title="The Server Name, shown in the AdminCP." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+      <input name="name" type="text" id="name" /><a title="The Server Name, shown in the AdminCP." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
   
@@ -40,18 +40,18 @@ $(window).load(function () {
     <td>
     %TYPE%
     
-    <a title="The Server Type. This is the Control Panel that your server is running.<br /><i>eg: cPanel/WHM</i>" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+    <a title="The Server Type. This is the Control Panel that your server is running.<br /><i>eg: cPanel/WHM</i>" class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
   </tr>
   
   <tr>
     <td width="20%">Host:</td>
     <td>
-      <input name="host" type="text" id="host" value="http://" /><a title="The Server's Hostname. Must be a FQDN!" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+      <input name="host" type="text" id="host" value="http://" /><a title="The Server's Hostname. Must be a FQDN!" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
   <tr>
     <td>Username:</td>
-    <td><input type="text" name="user" id="user" /><a title="Username to connect to WebHost Manager" class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+    <td><input type="text" name="user" id="user" /><a title="Username to connect to WebHost Manager" class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
   </tr>
   <tr>
     <td valign="top" width="20%"><span id="passtext"></span></td>

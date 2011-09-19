@@ -1,5 +1,5 @@
 <div class="contextual">
-	<a href="?page=details&sub=edit"> <img src="<URL>themes/icons/pencil.png"> Edit</a>		  
+	<a href="?page=details&sub=edit"> <img src="{$url}themes/icons/pencil.png"> Edit</a>		  
 </div>
 
 <h2>My Account</h2>
@@ -70,7 +70,7 @@
   <tr>
     <td width="50%">Country:</td>
     <td>
-		<img src="<URL>themes/flags/%COUNTRY%.gif" />
+		<img src="{$url}themes/flags/%COUNTRY%.gif" />
 	</td>
   </tr>
   <tr>

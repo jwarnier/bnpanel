@@ -10,7 +10,7 @@
 	});
 </script>
 <script type="text/javascript">
-var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></div>';
+var working = '<div align="center"><img src="{$url}themes/icons/working.gif"></div>';
 function sendemail() {
 		tinyMCE.triggerSave(true,true);
 		var subject = document.getElementById("msgsubject").value;

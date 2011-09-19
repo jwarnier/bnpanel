@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
+<script type="text/javascript" src="{$url}includes/javascript/jquery.validate.js"></script>
 <script type="text/javascript">
 	/*tinyMCE.init({
 		mode : "textareas",

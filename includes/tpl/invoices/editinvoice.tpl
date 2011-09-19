@@ -9,7 +9,7 @@
 		$( "#due" ).datepicker({ 
 			dateFormat: 'yy-mm-dd',
 			showOn: 'button',
-			buttonImage: '<URL>themes/icons/calendar_add.png'			 
+			buttonImage: '{$url}themes/icons/calendar_add.png'			 
 			});
 	});
 	
@@ -25,7 +25,7 @@
 	}
 </script>
 <div class="contextual">
-	<a href="?page=invoices&sub=view&do=%ID%"> <img src="<URL>themes/icons/arrow_rotate_clockwise.png"> Return to Invoice</a> 
+	<a href="?page=invoices&sub=view&do=%ID%"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Invoice</a> 
 </div>
 <h2>Invoice #%ID%</h2>
 <ERRORS>
@@ -125,9 +125,9 @@
     <td valign="top">Email center</td>
     <td>  	
     	<ul>    		
-  		<li><a target="_blank" href="?page=email&sub=templates&do=25">Edit Invoice Paid email</a>		<a target="_blank" href="?page=email&sub=templates&do=25"><img src="<URL>themes/icons/pencil.png"></a></li>
-  		<li><a target="_blank" href="?page=email&sub=templates&do=26">Edit Invoice Pending email</a>	<a target="_blank" href="?page=email&sub=templates&do=26"><img src="<URL>themes/icons/pencil.png"></a></li>
-  		<li><a target="_blank" href="?page=email&sub=templates&do=27">Edit Invoice Cancelled email</a>	<a target="_blank" href="?page=email&sub=templates&do=27"><img src="<URL>themes/icons/pencil.png"></a></li>		
+  		<li><a target="_blank" href="?page=email&sub=templates&do=25">Edit Invoice Paid email</a>		<a target="_blank" href="?page=email&sub=templates&do=25"><img src="{$url}themes/icons/pencil.png"></a></li>
+  		<li><a target="_blank" href="?page=email&sub=templates&do=26">Edit Invoice Pending email</a>	<a target="_blank" href="?page=email&sub=templates&do=26"><img src="{$url}themes/icons/pencil.png"></a></li>
+  		<li><a target="_blank" href="?page=email&sub=templates&do=27">Edit Invoice Cancelled email</a>	<a target="_blank" href="?page=email&sub=templates&do=27"><img src="{$url}themes/icons/pencil.png"></a></li>		
   		</ul>
     </td>    
   </tr>    

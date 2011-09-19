@@ -1,5 +1,5 @@
 <div class="contextual">
-	<a href="?page=orders&sub=view&do=%ID%"> <img src="<URL>themes/icons/arrow_rotate_clockwise.png"> Return to Order</a> 
+	<a href="?page=orders&sub=view&do=%ID%"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Order</a> 
 </div>
 <h2>Change Password in Order #%ID%</h2>
 <ERRORS>
@@ -12,12 +12,12 @@
   <tr>
     <td>New Password:</td>
     <td><input type="password" name="password" id="password" />
-    <a title="The new password that you are going to use." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+    <a title="The new password that you are going to use." class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
   </tr>
   <tr>
     <td>Confirm New Password:</td>
     <td><input type="password" name="confirm" id="confirm" />
-    <a title="Please confirm your new password." class="tooltip"><img src="<URL>themes/icons/information.png" /></a></td>
+    <a title="Please confirm your new password." class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
   </tr>
   <tr>
     <td colspan="2" align="center">

@@ -4,7 +4,7 @@
   <tr>
     <td width="20%">Name:</td>
     <td>
-      <input name="name" type="text" id="name" /><a title="The User-Friendly version of the package name. Type whatever you want to show to the users." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+      <input name="name" type="text" id="name" /><a title="The User-Friendly version of the package name. Type whatever you want to show to the users." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
   
@@ -12,7 +12,7 @@
     <td valign="top">Number of months</td>
     <td>
 	%NUMBER_MONTHS%    
-    <a title="The type of your package. You can choose between <em>free</em>, <em>post2host</em> and <em>paid</em>." class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+    <a title="The type of your package. You can choose between <em>free</em>, <em>post2host</em> and <em>paid</em>." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>  
     <tr>

@@ -9,7 +9,7 @@ $(function() {
 /*	$( "#created_at" ).datepicker({
 		dateFormat: 'yy-mm-dd',
 		showOn: 'button',
-		buttonImage: '<URL>themes/icons/calendar_add.png'			 
+		buttonImage: '{$url}themes/icons/calendar_add.png'			 
 	});*/
 
 	/* $("#show_preview").dialog({ autoOpen: false, width: '400px' }); */
@@ -54,9 +54,9 @@ function loadAddons(obj) {
 }
 </script>
 <div class="contextual">
-	<a href="?page=orders&sub=view&do=%ID%"> <img src="<URL>themes/icons/order.png"> View </a>
-	<a href="?page=orders&sub=add_invoice&do=%ID%"> <img src="<URL>themes/icons/note_add.png"> Add Invoice</a>
-	<a href="?page=orders&sub=change_pass&do=%ID%"> <img src="<URL>themes/icons/key.png"> Change CP Password</a>	  
+	<a href="?page=orders&sub=view&do=%ID%"> <img src="{$url}themes/icons/order.png"> View </a>
+	<a href="?page=orders&sub=add_invoice&do=%ID%"> <img src="{$url}themes/icons/note_add.png"> Add Invoice</a>
+	<a href="?page=orders&sub=change_pass&do=%ID%"> <img src="{$url}themes/icons/key.png"> Change CP Password</a>	  
 </div>
 
 <h2>Order #%ID%</h2>
@@ -146,9 +146,9 @@ function loadAddons(obj) {
     <div id="show_preview" ></div>  	
     	<ul>	
     	<!-- onclick="send('neworder', %ID%);" -->
-  		<li><a target="_blank" href="?page=email&sub=templates&do=20">Edit Order Activation email</a> 		<a href="?page=email&sub=templates&do=20"><img src="<URL>themes/icons/pencil.png"></a></li>
-  		<li><a target="_blank" href="?page=email&sub=templates&do=21">Edit Order Waiting for Admin email</a><a href="?page=email&sub=templates&do=21"><img src="<URL>themes/icons/pencil.png"></a></li>
-  		<li><a target="_blank" href="?page=email&sub=templates&do=22">Edit Order Cancelled email </a>		<a href="?page=email&sub=templates&do=22"><img src="<URL>themes/icons/pencil.png"></a></li>  		
+  		<li><a target="_blank" href="?page=email&sub=templates&do=20">Edit Order Activation email</a> 		<a href="?page=email&sub=templates&do=20"><img src="{$url}themes/icons/pencil.png"></a></li>
+  		<li><a target="_blank" href="?page=email&sub=templates&do=21">Edit Order Waiting for Admin email</a><a href="?page=email&sub=templates&do=21"><img src="{$url}themes/icons/pencil.png"></a></li>
+  		<li><a target="_blank" href="?page=email&sub=templates&do=22">Edit Order Cancelled email </a>		<a href="?page=email&sub=templates&do=22"><img src="{$url}themes/icons/pencil.png"></a></li>  		
   		</ul>
     </td>    
   </tr>  

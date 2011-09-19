@@ -5,7 +5,7 @@ var carryon;
 var etc;
 var upgrade;
 var wrong = '<img src="<ICONDIR>cross.png">';
-var working = '<div align="center"><img src="<URL>themes/icons/working.gif"></div>';
+var working = '<div align="center"><img src="{$url}themes/icons/working.gif"></div>';
 var goingforit;
 text[1] = "Choose Method";
 text[2] = "Enter Details";

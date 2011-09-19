@@ -75,37 +75,37 @@ function kthx() {
     <div class="subborder">
     <table width="100%" border="0" align="center" cellspacing="2" class="sub">
     	<tr>
-        <td width="1%" align="center"><img src="<URL>themes/icons/user_go.png" /></td>
+        <td width="1%" align="center"><img src="{$url}themes/icons/user_go.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=search&amp;do=%ID%">View User Details</a></td>
       </tr>      
       <tr>
-        <td width="1%" align="center"><img src="<URL>themes/icons/order.png" /></td>
+        <td width="1%" align="center"><img src="{$url}themes/icons/order.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=orders&amp;do=%ID%">View User Orders</a></td>
       </tr>      
       <tr>
-        <td width="1%" align="center"><img src="<URL>themes/icons/invoice.png" /></td>
+        <td width="1%" align="center"><img src="{$url}themes/icons/invoice.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=invoices&amp;do=%ID%">View User Invoices</a></td>
       </tr>
       
       <tr>
-        <td width="1%" align="center"><img src="<URL>themes/icons/pencil.png" /></td>
+        <td width="1%" align="center"><img src="{$url}themes/icons/pencil.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=edit&amp;do=%ID%">Edit Details</a></td>
       </tr>      
       
       <!--  <tr>
-        <td width="1%" align="right"><img src="<URL>themes/icons/%IMG%" /></td>
+        <td width="1%" align="right"><img src="{$url}themes/icons/%IMG%" /></td>
         <td align="left"><a class="suspendIcon" href="javascript:void(0);">%SUS%</a></td>
       </tr>
       <tr>
-        <td width="1%" align="center"><img src="<URL>themes/icons/cross.png" /></td>
+        <td width="1%" align="center"><img src="{$url}themes/icons/cross.png" /></td>
         <td align="left"><a href="javascript:;" onmousedown="document.getElementById('1').style.display = 'block';">Terminate User</a></td>
       </tr> -->
       <tr>
-        <td width="1%" align="center"><img src="<URL>themes/icons/email.png" /></td>
+        <td width="1%" align="center"><img src="{$url}themes/icons/email.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=email&amp;do=%ID%&amp;">Email User</a></td>
       </tr>
       <tr>
-        <td width="1%" align="center"><img src="<URL>themes/icons/user_edit.png" /></td>
+        <td width="1%" align="center"><img src="{$url}themes/icons/user_edit.png" /></td>
         <td align="left"><a href="?page=users&amp;sub=passwd&amp;do=%ID%&amp;">Change BNPanel Password</a></td>
       </tr>
     </table>

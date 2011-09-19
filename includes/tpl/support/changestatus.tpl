@@ -1,5 +1,5 @@
 <script type="text/javascript">
-var loading = '<img src="<URL>themes/icons/ajax-loader.gif">';
+var loading = '<img src="{$url}themes/icons/ajax-loader.gif">';
 function status(id, status) {
 	document.getElementById("statuschange").innerHTML = loading;
 	$.get("<AJAX>function=status&id="+id+"&status="+status, function(data) {

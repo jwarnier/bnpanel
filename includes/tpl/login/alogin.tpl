@@ -21,7 +21,7 @@
 				<input type="submit" name="clogin" id="clogin" value="{t}Login{/t}" tabindex="3" class="btn primary" />
 			</div>
 			<div class="clearfix">
-				<a href="<URL>admin/?page=forgotpass">{t}Lost your password?{/t}</a>
+				<a href="{$url}admin/?page=forgotpass">{t}Lost your password?{/t}</a>
 			</div>
 		</fieldset>
 		</form>	

@@ -19,7 +19,7 @@
     <td width="20%">Name:</td>
     <td>
       <input name="name" type="text" id="name" value="%NAME%" />
-      <a title="The package name" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+      <a title="The package name" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>  
   <tr>
@@ -47,7 +47,7 @@
     <td valign="top">Mandatory 
     </td>
     <td>
-	 %MANDATORY% <a title="This addon will be set to mandatory for a related package" class="tooltip"><img src="<URL>themes/icons/information.png" /></a>
+	 %MANDATORY% <a title="This addon will be set to mandatory for a related package" class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
     

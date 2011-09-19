@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<URL>includes/javascript/jquery.validate.js"></script>
+<script type="text/javascript" src="{$url}includes/javascript/jquery.validate.js"></script>
 <script type="text/javascript">
 	tinyMCE.init({
 	mode : "textareas",
@@ -10,7 +10,7 @@
 		$( "#due" ).datepicker({ 
 			dateFormat: 'yy-mm-dd',
 			showOn: 'button',
-			buttonImage: '<URL>themes/icons/calendar_add.png'			 
+			buttonImage: '{$url}themes/icons/calendar_add.png'			 
 			});
 		$("#addinvoice").validate(%json_encode%);
 	});
@@ -33,7 +33,7 @@
 	}
 </script>
 <div class="contextual">
-	<a href="?page=orders&sub=view&do=%ID%"> <img src="<URL>themes/icons/arrow_rotate_clockwise.png"> Return to Order</a> 
+	<a href="?page=orders&sub=view&do=%ID%"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Order</a> 
 </div>
 
 <h2>Add Invoice to Order #%ID%</h2>
@@ -124,7 +124,7 @@
     <td valign="top">Email center</td>
     <td>  	
     	<ul>    		
-  		<li><a target="_blank" href="?page=email&sub=templates&do=24">Edit New Invoice email</a>		<a target="_blank" href="?page=email&sub=templates&do=24"><img src="<URL>themes/icons/pencil.png"></a></li>
+  		<li><a target="_blank" href="?page=email&sub=templates&do=24">Edit New Invoice email</a>		<a target="_blank" href="?page=email&sub=templates&do=24"><img src="{$url}themes/icons/pencil.png"></a></li>
   		</ul>
     </td>    
   </tr>  
