@@ -12,7 +12,7 @@
 			showOn: 'button',
 			buttonImage: '{$url}themes/icons/calendar_add.png'			 
 			});
-		$("#addinvoice").validate(%json_encode%);
+		$("#addinvoice").validate({$json_encode});
 	});
 
 
@@ -33,31 +33,31 @@
 	}
 </script>
 <div class="contextual">
-	<a href="?page=orders&sub=view&do=%ID%"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Order</a> 
+	<a href="?page=orders&sub=view&do={$ID}"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Order</a> 
 </div>
 
-<h2>Add Invoice to Order #%ID%</h2>
+<h2>Add Invoice to Order #{$ID}</h2>
 <ERRORS>
 <form class="content"  id="addinvoice" name="addinvoice" method="post" action="">
-<input name="billing_id" type="hidden" id="billing_id" value="%BILLING_ID%"/>
-<input name="package_id" type="hidden" id="package_id" value="%PACKAGE_ID%"/>
+<input name="billing_id" type="hidden" id="billing_id" value="{$BILLING_ID}"/>
+<input name="package_id" type="hidden" id="package_id" value="{$PACKAGE_ID}"/>
 
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="20%">Order id:</td>
-    <td><a href="?page=orders&sub=view&do=%ID%">#%ID%</a></td>
+    <td><a href="?page=orders&sub=view&do={$ID%">#%ID}</a></td>
   </tr>
      <tr>
     <td valign="top">User</td>
     <td>
-    %USER%
+    {$USER}
     </td>
 	</tr>
 	  
      <tr>
     <td valign="top">Domain</td>
     <td>    	
-    	 <a target="_blank" href="http://%REAL_DOMAIN%">%REAL_DOMAIN%</a>
+    	 <a target="_blank" href="http://{$REAL_DOMAIN%">%REAL_DOMAIN}</a>
     </td>
   </tr>
   
@@ -70,14 +70,14 @@
       <tr>
     <td valign="top">Billing cycles</td>
     <td>
-    %BILLING_CYCLES%   
+    {$BILLING_CYCLES}   
     </td>
   </tr>
     
      <tr>
     <td valign="top">Packages</td>
     <td>
-    %PACKAGES%
+    {$PACKAGES}
     </td>
   </tr>
   
@@ -86,14 +86,14 @@
        <tr>
     <td valign="top">Addons</td>
     <td>
-     <div id = "showaddons"> %ADDON% </div>
+     <div id = "showaddons"> {$ADDON} </div>
     </td>
   </tr>
   
        <tr>
     <td valign="top">Status</td>
     <td>
-      %STATUS%
+      {$STATUS}
     </td>
   </tr>
 
@@ -101,14 +101,14 @@
     <!--
     <tr>
     	<td valign="top">Package amount:</td>
-    	<td><input name="amount" type="text" id="amount" value="%AMOUNT%" /></td>
+    	<td><input name="amount" type="text" id="amount" value="{$AMOUNT}" /></td>
 	</tr>-->
 	
      <!--
 	<tr>
     <td valign="top">Total</td>
     <td>
-    %TOTAL%
+    {$TOTAL}
     </td>
   </tr>
   -->
@@ -116,7 +116,7 @@
   	<tr>
     <td valign="top">Due date</td>
     <td>  		
-  		<input name="due" type="text" id="due" value="%DUE%" class="required"/>
+  		<input name="due" type="text" id="due" value="{$DUE}" class="required"/>
     </td>
   </tr>
   
@@ -138,6 +138,6 @@
 <input type="submit" name="add" id="add" value="Add invoice" class="btn primary"/>
 </div>
 
-%INVOICE_LIST%
+{$INVOICE_LIST}
 
 </form>

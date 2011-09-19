@@ -13,6 +13,6 @@ As of THT 1.2 we've been switching to the jQuery User Interface to provide some
 of the more AJAXy features. The jQuery UI is themeable and you can select your
 own theme to use within your THT install.
 <br />
-%THEME%
+{$THEME}
 <button id="changeThemeBtn">Change Theme</button><br />
-<div id="submitNotice" style="display: none;">%NOTICE%</div>
+<div id="submitNotice" style="display: none;">{$NOTICE}</div>

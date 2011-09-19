@@ -16,5 +16,5 @@
         </td>
     </tr>
 </table>
-%HIDDEN%
+{$HIDDEN}
 </form>

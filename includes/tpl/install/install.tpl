@@ -119,7 +119,7 @@ function installstuff() {
 	else {
 		etc = "&type=install";	
 	}
-	$.get("{$ajax}function=install&version=%VERSION%"+etc, function(myinstall) {
+	$.get("{$ajax}function=install&version={$VERSION}"+etc, function(myinstall) {
 		document.getElementById("step3").innerHTML = myinstall;
 	});	
 }
@@ -152,7 +152,7 @@ $(window).load(function () {
 
 <table width="100%" border="0" cellspacing="3" cellpadding="0">
   <tr>
-    <td width="30%" valign="top"><table width="100%" border="0" cellspacing="3" cellpadding="0">
+    <td width="30{$" valign="top"><table width="100}" border="0" cellspacing="3" cellpadding="0">
       <tr>
         <td><div class="subborder"><div class="sub" id="1">Step 1: Choose Method</div></div></td>
       </tr>
@@ -172,13 +172,13 @@ $(window).load(function () {
     <td valign="top"><div class="table" style="margin-top:7px;">
         <div class="text" id="main">
         	<div id="step1" style="display:none;">
-            <span class="errors">%ANYTHING%</span>
+            <span class="errors">{$ANYTHING}</span>
                 
                 <table width="100%" border="0" cellspacing="2">
                   <tr>
                     <td width="20%">Choose Method:</td>
                     <td width="1%"><label>
-                   		%INSTALL_OPTIONS%
+                   		{$INSTALL_OPTIONS}
                     </label>
                     </td>
                     <td valign="middle" align="left">
@@ -254,7 +254,7 @@ $(window).load(function () {
                 <tr>
                 <td width="30%">Site's name:</td>
                 <td><label>
-                  <input name="site_name" type="text" id="site_name" value="%SITE_NAME%" />
+                  <input name="site_name" type="text" id="site_name" value="{$SITE_NAME}" />
                 </label><a class="tooltip" title="Site's name"><img src="{$icon_dir}information.png"></a></td>
               </tr>
               
@@ -262,7 +262,7 @@ $(window).load(function () {
                 <td width="30%">Site's email:<br />
 					</td>
                 <td><label>
-                  <input name="site_email" type="text" id="site_email" value="%SITE_EMAIL%" />
+                  <input name="site_email" type="text" id="site_email" value="{$SITE_EMAIL}" />
                 </label><a class="tooltip" title="Site's email"><img src="{$icon_dir}information.png"></a></td>
               </tr>  
                           
@@ -270,7 +270,7 @@ $(window).load(function () {
                 <td width="30%">Site's URL:<br />
                   (Including the trailing slash)</td>
                 <td><label>
-                  <input name="url" type="text" id="url" value="%GENERATED_URL%" />
+                  <input name="url" type="text" id="url" value="{$GENERATED_URL}" />
                 </label><a class="tooltip" title="This is a very important field. Make sure this is correct before clicking next. The BNPanel URL is where your BNPanel is located. Make sure it's in this format: http://example.com/BNPanel/"><img src="{$icon_dir}information.png"></a></td>
               </tr>
               

@@ -1,5 +1,5 @@
 <script type="text/javascript">
-var num_tickets = %NUM_TICKETS%;
+var num_tickets = {$NUM_TICKETS};
 var deleted = 0;
 $(document).ready(function() {
 	$(".ticket-delete").click(function() {

@@ -2,7 +2,7 @@
 <table width="100%" border="0" cellspacing="2">
   <tr>
     <td width="20%">Import From:</td>
-    <td>%DROPDOWN%</td>
+    <td>{$DROPDOWN}</td>
   </tr>
   <tr>
     <td colspan="2" align="center"><label>

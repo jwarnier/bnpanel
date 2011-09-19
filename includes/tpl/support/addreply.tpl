@@ -8,7 +8,7 @@
 	});*/
 
 	$(function() {		
-		$("#add_ticket").validate(%json_encode%);		
+		$("#add_ticket").validate({$json_encode});		
 	});
 	
 </script>
@@ -17,7 +17,7 @@
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
 	<tr>
 		<td >Subject:</td>
-		<td><input name="title" type="text" id="title" value="%TITLE%" size="60" /></td>
+		<td><input name="title" type="text" id="title" value="{$TITLE}" size="60" /></td>
 	</tr>
 	<tr>
 		<td colspan="2">

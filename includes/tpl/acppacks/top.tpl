@@ -195,11 +195,11 @@ function transfer(id, stuff) {
                             </tr>
                             <tr>
                                     <td>Server:</td>
-                                    <td>%SERVER%</td>
+                                    <td>{$SERVER}</td>
                             </tr>
                             <tr>
                                     <td><label for="inputType-new">Type:</label></td>
-                                    <td>%TYPES%</td>
+                                    <td>{$TYPES}</td>
                                     <td><a class="tooltip" title="What kind of package is this?"><img src="{$icon_dir}brick.png" alt="Brick" /></a></td>
                             </tr>
                             <tr>

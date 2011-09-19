@@ -1,2 +1,2 @@
-<a title="Page Generated in: %PAGEGEN% seconds" class="tooltip"><img src="{$icon_dir}time.png" alt="TIME.PNG" /></a>
-<a title="Your IP Address: %IP%" class="tooltip"><img src="{$icon_dir}user_suit.png" alt="IP" /></a>
+<a title="Page Generated in: {$PAGEGEN} seconds" class="tooltip"><img src="{$icon_dir}time.png" alt="TIME.PNG" /></a>
+<a title="Your IP Address: {$IP}" class="tooltip"><img src="{$icon_dir}user_suit.png" alt="IP" /></a>

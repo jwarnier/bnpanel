@@ -393,9 +393,9 @@ function checkSubdomain() {
 <form action="" method="post" name="order" id="order">	
 	<div id="1" class="section">
     	<input name="package" id="package" type="hidden" value="" />    	 
-		%DOMAIN_CONFIGURATION%              
+		{$DOMAIN_CONFIGURATION}              
         <div class="row show-grid">
-        %PACKAGES%
+        {$PACKAGES}
         </div>
     </div>
     
@@ -408,7 +408,7 @@ function checkSubdomain() {
                 _{Payment cycles}                			
       			<select name="billing_id" id="billing_id" onchange="showAddons(this)" >
           			<option value="0" selected="selected">_{Select a billing cycle}</option>         		
-                 		%BILLING_CYCLE%
+                 		{$BILLING_CYCLE}
                 	</select>
             </div>              		
         </div>
@@ -437,7 +437,7 @@ function checkSubdomain() {
         </div>
         
         <div class="container">
-            %TOS%
+            {$TOS}
         </div>
          <div class="container">
             <ul class="inputs-list">
@@ -563,7 +563,7 @@ function checkSubdomain() {
              <div class="clearfix">
                <label>Country</label>
                <div class="input">
-                   %COUNTRY_SELECT%
+                   {$COUNTRY_SELECT}
                    <span id="countrycheck"> </span>             
                </div>              
             </div>
@@ -631,7 +631,7 @@ function checkSubdomain() {
         	<table width="100%" border="0" cellspacing="2" cellpadding="0">
               <tr id="dom">
                 <td width="20%" id="domtitle">Domain:</td>
-                <td width="78%" id="domcontent">%DOMAIN% <span id="domain_result"></span></td>
+                <td width="78{$" id="domcontent">%DOMAIN} <span id="domain_result"></span></td>
                 <td width="2%" align="left" id="domaincheck">
                 	<a title="Your domain, this must be in the format: <strong>example.com</strong>" class="tooltip">
                 	<img src="{$url}themes/icons/information.png" /></a>

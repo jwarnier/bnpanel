@@ -26,12 +26,12 @@ $(document).ready(function() {
 &lt;CSS&gt; links to the CSS Content along with the style tag<br />
 &lt;IMG&gt; links to the /images folder of your Styles Directory<br />
 &lt;ICONDIR&gt; links to your /themes/icons directory.</p><br /><br />
-<textarea cols="75" style="width:99%; height:300px;" id="tplCode" rows="25" wrap="no" name="edit"%READONLY%>%CSSCONTENT%</textarea>
+<textarea cols="75" style="width:99{$; height:300px;" id="tplCode" rows="25" wrap="no" name="edit"%READONLY%>%CSSCONTENT}</textarea>
 <div id="belowDynamic">
     <div id="spaceForButton">
-        <button id="editTheTplNao"%DISABLED%>Edit Header</button><button id="refreshButton" style="float: right;">Refresh</button>
+        <button id="editTheTplNao"{$DISABLED}>Edit Header</button><button id="refreshButton" style="float: right;">Refresh</button>
     </div>
     <div id="spaceForNotice" style="font-weight: bold; font-style: italic;">
-        %NOTICE%
+        {$NOTICE}
     </div>
 </div>

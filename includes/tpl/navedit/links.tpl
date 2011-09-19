@@ -1,1 +1,1 @@
-%LINKS%
+{$LINKS}

@@ -3,29 +3,29 @@
 <table width="100%" border="0" cellspacing="3" cellpadding="0">
   <tr>
     <td width="30%">Days Unpaid Until Suspension:</td>
-    <td width="13%"><input name="susdays" type="text" id="susdays" size="5" value="%SUSDAYS%" />
+    <td width="13{$"><input name="susdays" type="text" id="susdays" size="5" value="%SUSDAYS}" />
     </td>
     <td width="57%"><a title="The amount of days that when a invoice has been left unpaid, it suspends the Order" class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
   </tr>
  <!--  <tr>
     <td>Days Suspended Until Termination:</td>
-    <td><input name="termdays" type="text" id="termdays" size="5" value="%TERDAYS%" />&nbsp;</td>
+    <td><input name="termdays" type="text" id="termdays" size="5" value="{$TERDAYS}" />&nbsp;</td>
     <td><a title="How many days of suspension it takes to terminate." class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
   </tr>  -->
   <tr>
     <td>Currency:</td>
-    <td>%CURRENCY%</td>
+    <td>{$CURRENCY}</td>
     <td><a title="The currency the user has to pay the invoice in." class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
   </tr>
   <tr>
     <td>Paypal Email:</td>
-    <td><input name="paypalemail" type="text" id="paypalemail" size="30" value="%PAYPALEMAIL%" /></td>
+    <td><input name="paypalemail" type="text" id="paypalemail" size="30" value="{$PAYPALEMAIL}" /></td>
     <td><a title="The email you want paypal working with." class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
   </tr>
   
     <tr>
     <td>Paypal Mode:</td>
-    <td>%PAYPAL_MODE%</td>
+    <td>{$PAYPAL_MODE}</td>
     <td><a title="Use sandbox or live mode" class="tooltip"><img src="{$url}themes/icons/information.png" /></a></td>
   </tr>
   

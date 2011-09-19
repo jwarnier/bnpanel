@@ -10,7 +10,7 @@ $(document).ready(function() {
 });
 function kthx() {
             $(".suspendIcon").click(function(){
-                var status = "%SUS%";
+                var status = "{$SUS}";
                 if(status == "Suspend") {
                  var reason = prompt('Please state your reason for suspending. Leave blank for none.');
                 if(reason != null && reason != "") {
@@ -22,10 +22,10 @@ function kthx() {
                 window.location = query;
                 }
                 else if(status == "Unsuspend") {
-                    window.location = "%URL%admin/?page=users&sub=search&do=%ID%&func=unsus";
+                    window.location = "{$URL%admin/?page=users&sub=search&do=%ID}&func=unsus";
                 }
                 else if(status == "<a href='?page=users&sub=validate'>Validate</a>") {
-                    window.location = "%URL%/admin/?page=users&sub=validate";
+                    window.location = "{$URL}/admin/?page=users&sub=validate";
                 }
                 else if(status == "No Action") {
                     alert("No action to be performed.");
@@ -76,25 +76,25 @@ function kthx() {
     <table width="100%" border="0" align="center" cellspacing="2" class="sub">
     	<tr>
         <td width="1%" align="center"><img src="{$url}themes/icons/user_go.png" /></td>
-        <td align="left"><a href="?page=users&amp;sub=search&amp;do=%ID%">View User Details</a></td>
+        <td align="left"><a href="?page=users&amp;sub=search&amp;do={$ID}">View User Details</a></td>
       </tr>      
       <tr>
         <td width="1%" align="center"><img src="{$url}themes/icons/order.png" /></td>
-        <td align="left"><a href="?page=users&amp;sub=orders&amp;do=%ID%">View User Orders</a></td>
+        <td align="left"><a href="?page=users&amp;sub=orders&amp;do={$ID}">View User Orders</a></td>
       </tr>      
       <tr>
         <td width="1%" align="center"><img src="{$url}themes/icons/invoice.png" /></td>
-        <td align="left"><a href="?page=users&amp;sub=invoices&amp;do=%ID%">View User Invoices</a></td>
+        <td align="left"><a href="?page=users&amp;sub=invoices&amp;do={$ID}">View User Invoices</a></td>
       </tr>
       
       <tr>
         <td width="1%" align="center"><img src="{$url}themes/icons/pencil.png" /></td>
-        <td align="left"><a href="?page=users&amp;sub=edit&amp;do=%ID%">Edit Details</a></td>
+        <td align="left"><a href="?page=users&amp;sub=edit&amp;do={$ID}">Edit Details</a></td>
       </tr>      
       
       <!--  <tr>
-        <td width="1%" align="right"><img src="{$url}themes/icons/%IMG%" /></td>
-        <td align="left"><a class="suspendIcon" href="javascript:void(0);">%SUS%</a></td>
+        <td width="1{$" align="right"><img src="{$url}themes/icons/%IMG}" /></td>
+        <td align="left"><a class="suspendIcon" href="javascript:void(0);">{$SUS}</a></td>
       </tr>
       <tr>
         <td width="1%" align="center"><img src="{$url}themes/icons/cross.png" /></td>
@@ -102,11 +102,11 @@ function kthx() {
       </tr> -->
       <tr>
         <td width="1%" align="center"><img src="{$url}themes/icons/email.png" /></td>
-        <td align="left"><a href="?page=users&amp;sub=email&amp;do=%ID%&amp;">Email User</a></td>
+        <td align="left"><a href="?page=users&amp;sub=email&amp;do={$ID}&amp;">Email User</a></td>
       </tr>
       <tr>
         <td width="1%" align="center"><img src="{$url}themes/icons/user_edit.png" /></td>
-        <td align="left"><a href="?page=users&amp;sub=passwd&amp;do=%ID%&amp;">Change BNPanel Password</a></td>
+        <td align="left"><a href="?page=users&amp;sub=passwd&amp;do={$ID}&amp;">Change BNPanel Password</a></td>
       </tr>
     </table>
     </div>
@@ -122,6 +122,6 @@ function kthx() {
 	  </table>
     </td>
     <td class="rightbreak"></td>
-    <td width="78%" valign="top">%CONTENT%%BOX%</td>
+    <td width="78{$" valign="top">%CONTENT%%BOX}</td>
   </tr>
 </table>

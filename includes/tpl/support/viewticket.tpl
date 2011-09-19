@@ -1,48 +1,48 @@
 <ERRORS>
-<h2>Ticket #%ID%</h2>
+<h2>Ticket #{$ID}</h2>
 <div class="ticket">
-<h3>%TITLE%</h3>    	
+<h3>{$TITLE}</h3>    	
     	
 		<table cellspacing="2" cellpadding="0" border="0" width="100%" class="content"> 
 		<tr>
 			<td >Author:</td>
 			<td>    
-				%AUTHOR%
+				{$AUTHOR}
 			</td>
 		</tr>
 		<tr>
 		<td >Status:</td>
 			<td>    
-				%STATUS%
+				{$STATUS}
 			</td>
 		</tr>
 		<tr>
 			<td >Urgency:</td>
 			<td>    
-				%URGENCY%
+				{$URGENCY}
 			</td>
 		</tr>
 		<tr>
 			<td >Created on:</td>
 			<td>    
-				%TIME%
+				{$TIME}
 			</td>
 		</tr>
 				
 		<tr>
 			<td >Last Updated:</td>
 			<td>    
-				%UPDATED%
+				{$UPDATED}
 			</td>
 		</tr>		
 		</table>
 		<hr>
 		<p>
  		<strong>Description</strong>
- 		%DESCRIPTION%<br />
+ 		{$DESCRIPTION}<br />
  		</p>
-        <!--  <strong>Number of replies:</strong> %NUMREPLIES%<br />  -->
+        <!--  <strong>Number of replies:</strong> {$NUMREPLIES}<br />  -->
 </div>
 
-%REPLIES%
-%ADDREPLY%
+{$REPLIES}
+{$ADDREPLY}

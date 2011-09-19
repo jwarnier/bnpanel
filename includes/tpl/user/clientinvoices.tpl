@@ -1,3 +1,3 @@
-%DOMAIN%
+{$DOMAIN}
 
-%PACKAGE%
+{$PACKAGE}

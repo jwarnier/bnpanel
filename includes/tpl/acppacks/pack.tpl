@@ -1,1 +1,1 @@
-%PACKS%
+{$PACKS}

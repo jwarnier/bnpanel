@@ -17,5 +17,5 @@
         <th><strong><a title="When it's due." class="tooltip"><img src="{$icon_dir}time.png" border="0" /></a> Due date</strong></th>
         <th width="150px"><strong>Actions</strong></th>                
 	</tr>
-	%list%
+	{$list}
 </table>

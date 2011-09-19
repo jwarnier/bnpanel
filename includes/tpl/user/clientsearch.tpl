@@ -30,13 +30,13 @@
                     window.location = window.location + "&do=" + accountId + "&func=unsus";
                 }
                 else if(status == "<a href='?page=users&sub=validate'>Validate</a>") {
-                    window.location = "%URL%/admin/?page=users&sub=validate";
+                    window.location = "{$URL}/admin/?page=users&sub=validate";
                 }
 				else if(status == "Cancelled") {
-					window.location = "%URL%/admin/none.php";
+					window.location = "{$URL}/admin/none.php";
 				}
                 else {
-                    window.location = "%URL%/admin/?page=users&sub=validate";
+                    window.location = "{$URL}/admin/?page=users&sub=validate";
                 }
             });
         }

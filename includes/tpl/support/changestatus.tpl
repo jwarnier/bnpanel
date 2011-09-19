@@ -13,7 +13,7 @@ function status(id, status) {
         <tr>
             <td width="25%">Status:</td>
             <td>
-            	%DROPDOWN%
+            	{$DROPDOWN}
             </td>
             <td width="74%" id="statuschange"></td>
           </tr>

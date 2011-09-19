@@ -85,6 +85,6 @@
 </div></div></div>
 <div id="nedit" style="display:none;"></div>
 <div id="packs">
-	%PACKS%
+	{$PACKS}
 </div>
 <div align="center"><input name="saveorder" id="saveorder" type="button" value="Save navigation link order" /></div>

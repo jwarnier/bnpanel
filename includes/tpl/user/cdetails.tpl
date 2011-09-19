@@ -1,5 +1,5 @@
 <ERRORS>
-<div class="subborder"><div class="sub">Welcome back <strong>%NAME%</strong>!</div></div>
+<div class="subborder"><div class="sub">Welcome back <strong>{$NAME}</strong>!</div></div>
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>
     <td width="1%" align="right"><a title="Proceed to client area." class="tooltip"><img src="{$url}themes/icons/user.png" /></a></td>

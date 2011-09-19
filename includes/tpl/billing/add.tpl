@@ -11,14 +11,14 @@
   <tr>
     <td valign="top">Number of months</td>
     <td>
-	%NUMBER_MONTHS%    
+	{$NUMBER_MONTHS}    
     <a title="The type of your package. You can choose between <em>free</em>, <em>post2host</em> and <em>paid</em>." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>  
     <tr>
     <td valign="top">Active</td>
     <td>
-	 %STATUS%	
+	 {$STATUS}	
     </td>
   </tr>
     

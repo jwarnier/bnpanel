@@ -34,12 +34,12 @@ $(document).ready(function() {
 <p>Want to edit your style in an web based interface? Here it is!<br /><br />
 <em>Variables:</em><br /> &lt;PAGEGEN&gt; tag shows the debug stuff.<br />
 &lt;COPYRIGHT&gt; shows the Copyright. <br />
-<textarea cols="75" style="width:99%; height:300px;" id="tplCode" rows="25" wrap="no" name="edit"%READONLY%>%CSSCONTENT%</textarea>
+<textarea cols="75" style="width:99{$; height:300px;" id="tplCode" rows="25" wrap="no" name="edit"%READONLY%>%CSSCONTENT}</textarea>
 <div id="belowDynamic">
     <div id="spaceForButton">
-        <button id="editTheTplNao"%DISABLED%>Edit Footer</button><button id="refreshButton" style="float: right;">Refresh</button>
+        <button id="editTheTplNao"{$DISABLED}>Edit Footer</button><button id="refreshButton" style="float: right;">Refresh</button>
     </div>
     <div id="spaceForNotice" style="font-weight: bold; font-style: italic;">
-        %NOTICE%
+        {$NOTICE}
     </div>
 </div>

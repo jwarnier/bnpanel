@@ -11,7 +11,7 @@
   <tr>
     <td valign="top">Server:</td>
     <td>
-    %SERVER%<a title="The Server which this domain is allocated to." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
+    {$SERVER}<a title="The Server which this domain is allocated to." class="tooltip"><img src="{$url}themes/icons/information.png" /></a>
     </td>
   </tr>
   <tr>

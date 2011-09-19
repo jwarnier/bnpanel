@@ -15,5 +15,5 @@
         	<strong>Status</strong></td>
         <!--  <td width="150px"><strong>Actions</strong></td>  -->                
 	</tr>
-	%list%
+	{$list}
 </table>

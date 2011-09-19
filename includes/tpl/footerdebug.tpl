@@ -1,1 +1,1 @@
-<a title='%TITLE%' class="tooltip"><img src="{$icon_dir}bug.png" alt="BugTracker" /></a>
+<a title='{$TITLE}' class="tooltip"><img src="{$icon_dir}bug.png" alt="BugTracker" /></a>
