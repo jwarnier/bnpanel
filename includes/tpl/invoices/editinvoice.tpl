@@ -28,7 +28,7 @@
 	<a href="?page=invoices&sub=view&do={$ID}"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Invoice</a> 
 </div>
 <h2>Invoice #{$ID}</h2>
-<ERRORS>
+
 
 <form class="content"  id="addpackage" name="addpackage" method="post" action="">
 <input name="package_id" type="hidden" id="package_id" value="{$PACKAGE_ID}" />

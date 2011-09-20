@@ -37,7 +37,7 @@
 </div>
 
 <h2>Add Invoice to Order #{$ID}</h2>
-<ERRORS>
+
 <form class="content"  id="addinvoice" name="addinvoice" method="post" action="">
 <input name="billing_id" type="hidden" id="billing_id" value="{$BILLING_ID}"/>
 <input name="package_id" type="hidden" id="package_id" value="{$PACKAGE_ID}"/>

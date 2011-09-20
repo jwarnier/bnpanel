@@ -1,4 +1,4 @@
-<ERRORS>
+
 <form class="login_wrapper" id="login" name="login" method="post" action="">
 <p>
 	<label>Username</label>	

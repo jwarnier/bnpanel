@@ -52,7 +52,7 @@ function filter() {
 <h2>Invoices</h2>
 {$STATUS_FILTER}
 <a href="#" onclick="filter();">Apply</a>
-<ERRORS>
+
 
 
 <div id="pagination_loading" ></div>

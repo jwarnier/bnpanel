@@ -37,7 +37,7 @@ function editme(id) {
 	width:"100%",
 	});
 </script>
-<ERRORS>
+
 <div class="subborder">
 	<div class="sub">
    	  <table width="100%" border="0" cellspacing="2" cellpadding="0">

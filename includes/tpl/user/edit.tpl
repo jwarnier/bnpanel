@@ -59,7 +59,7 @@ var working = '<div align="center"><img src="{$url}themes/icons/working.gif"></d
 
 </script>
 
-<ERRORS>
+
 <form id="edituser" name="edituser" method="post" action="">
 <fieldset>
 	<legend>

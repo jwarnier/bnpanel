@@ -46,7 +46,7 @@ $(window).load(function () {
 });
 
 </script>
-<ERRORS>         
+         
     <table width="100%" border="0" align="center" cellspacing="2" class="sub">
       <tr>
            <tr>

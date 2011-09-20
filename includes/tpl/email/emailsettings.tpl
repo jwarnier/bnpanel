@@ -13,7 +13,7 @@ $(window).load(function () {
 	}
 					   });
 </script>
-<ERRORS>
+
 <form id="settings" name="settings" method="post" action="">
 <table width="100%" border="0" cellspacing="1" cellpadding="0">
   <tr>

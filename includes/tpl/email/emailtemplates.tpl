@@ -43,7 +43,7 @@ $(document).ready(function() {
 	}	
 });
 </script>
-<ERRORS>
+
 <form action="" method="post" name="edit" id="edit">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>

@@ -3,7 +3,7 @@
 </div>
 
 <h2>Invoice #{$ID}</h2>
-<ERRORS>
+
 <table class="content" border="0" cellspacing="2" cellpadding="0">
 
   <tr>
