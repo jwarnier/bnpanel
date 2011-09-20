@@ -104,9 +104,10 @@ class page extends Controller {
 								$array['pay']=  '-';
 								//$array['due']=  '<span>'.$array['due'].'</span>';
 						}
-						
-						$package_id 	  = $order_info['pid'];				
-						$billing_cycle_id = $order_info['billing_cycle_id'];
+						if (!empty($order_info)) {
+							$package_id 	  = $order_info['pid'];				
+							$billing_cycle_id = $order_info['billing_cycle_id'];
+						}
 						
 						$addon_fee_string = '';
 						if (!empty($invoice_item['addon_fee'])) {
@@ -124,7 +125,7 @@ class page extends Controller {
 						//$array['addon_fee'] = $addon_fee_string;
 						$total_amount 		= $total_amount + $invoice_item['amount'];
 						$array['amount'] 	= $total_amount." ".$db->config('currency');
-						$array2['list'] 	.= $style->replaceVar("tpl/invoices/invoice-list-item-client.tpl", $array);
+						$array2['list']    .= $style->replaceVar("tpl/invoices/invoice-list-item-client.tpl", $array);
 					}					
 					$this->replaceVar('invoices/client-page.tpl', $array2);
 				} else {

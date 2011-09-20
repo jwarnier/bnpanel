@@ -240,7 +240,7 @@ if (!isset($_SESSION['logged'])) {
 	} elseif($main->getvar['page'] == "logout") {
 		$main->logout('admin');		
 		$main->redirect("?page=home");
-	}	
+	}
 	
 	acp();	
 	echo $style->display("layout/two-col/index.tpl");

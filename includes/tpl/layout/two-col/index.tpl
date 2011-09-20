@@ -23,7 +23,8 @@
  
 <div class="container-fluid" style="padding-top: 60px;">    
     <div class="sidebar">
-    	<div class="well">    	
+    	<div class="well">
+    		<h5>Settings</h5>    	   	
         	{$sidebar}
         </div>
     </div>

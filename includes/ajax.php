@@ -1508,7 +1508,8 @@ class AJAX {
 		global $main;
 		$user_info = $main->getCurrentUserInfo();		
 		if (!empty($user_info)) {
-			echo '<li><a href="'.URL.'client">'.$user_info['user'].'</a></li> <li><a href="'.URL.'client/?page=logout">'._('Logout').'</a></li>';
+			echo '<ul class="nav secondary-nav"><li><a href="'.URL.'client">'.$user_info['user'].'</a></li>
+				<li><a href="'.URL.'client/?page=logout">'._('Logout').'</a></li></ul>';
 		} else {
 			echo _('Sign in');
 		}		
