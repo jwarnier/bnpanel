@@ -22,8 +22,7 @@ class page extends Controller {
 		$admin_navigation = $main->getAdminNavigation();		
 		
 		switch($main->get_variable('sub')) {
-			default:	
-			
+			case 'add':
 				$asOption = array(
 				    'rules' => array(
 				        'user' 		=> 'required',				        
@@ -92,6 +91,8 @@ class page extends Controller {
 				$array['PAGES'] .= "</table>";
 				$this->replaceVar("tpl/staff/addstaff.tpl", $array);
 			break;
+						
+			default:
 			case 'view':
 			case 'edit':
 				if(isset($main->getvar['do'])) {	
@@ -175,8 +176,7 @@ class page extends Controller {
 						$this->replaceVar("tpl/staff/editstaff.tpl", $array);	
 					}
 				} else {					
-					$staff_list = $staff->gettAllStaff();
-					echo "<ERRORS>";
+					$staff_list = $staff->gettAllStaff();					
 					foreach($staff_list as $data) {
 						if ($data['id'] != $main->getCurrentStaffId()) {
 							$this->content .= $main->sub("<strong>".$data['user']."</strong>", '<a href="?page=staff&sub=edit&do='.$data['id'].'"><img title="Edit" src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=staff&sub=delete&do='.$data['id'].'"><img title="Delete" src="'. URL .'themes/icons/delete.png"></a>');

@@ -118,7 +118,7 @@ class p2h {
 						$array['CONTENT'] = $style->replaceVar("tpl/editforum.tpl", $array2);
 					}
 					else {
-						$array['CONTENT'] .= "<ERRORS>";
+						$array['CONTENT'] .= " ";
 						while($data = $db->fetch_array($query)) {
 							$content = explode(";:;", $data['name']);
 							if($fname != $content[2]) {

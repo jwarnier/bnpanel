@@ -62,22 +62,14 @@ class page extends Controller {
 		$cron = '<a href="'.$db->config('url').'includes/cron.php" target="_blank">Run cron here</a>';
 		
 		$content = '<br />'.$stats_box.$cron.'<br />';
-		
-		if ($_POST) {
+		$n = null;
+		if ($_POST) {			
 			foreach($main->postvar as $key => $value) {
-				if($value == "" && !$n) {
-					$main->errors("Please fill in all the fields!");
-					$n++;
-				}
-			}
-			if(!$n) { 
-				foreach($main->postvar as $key => $value) {
-					$db->updateResource($key, $value);
-				}
-				$main->errors("Settings Updated!");
-				$main->done();
-			}
+				$db->updateResource($key, $value);
+			}			
+			$main->errors("Settings Updated!");		
 		}
+		
 		$array['NOTEPAD'] = $db->resources('admin_notes');
 		$content_notepad  = $style->replaceVar('notepad.tpl', $array);
 		

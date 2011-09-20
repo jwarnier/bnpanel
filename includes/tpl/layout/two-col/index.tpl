@@ -1,6 +1,4 @@
 {include file="layout/one-col/header.tpl"}	
-
-
 <div class="topbar">
     <div class="topbar-inner">
         <div class="container-fluid">
@@ -12,18 +10,17 @@
             		<a href="?l=en"><img src="../themes/flags/gb.gif" alt="en" /></a>
             	</li>    	
             	<li>    		
-            		<a href="?l=es"><img src="../themes/flags/es.gif" alt="es" /> </a>
+            		<a href="?l=es"><img src="../themes/flags/es.gif" alt="es" /></a>
             	</li>
             	<li>    		
-            		<a href="?l=nl"><img src="../themes/flags/nl.gif" alt="nl" /> </a>
+            		<a href="?l=nl"><img src="../themes/flags/nl.gif" alt="nl" /></a>
             	</li>    	   	
             </ul>            
             <ul class="nav secondary-nav">
-                <span id="welcome" class="welcome"><LOGIN></span>
+                <span id="welcome" class="welcome"></span>
             </ul>            
         </div>
-    </div>
-        
+    </div>        
 </div>
  
 <div class="container-fluid" style="padding-top: 60px;">    
@@ -34,9 +31,14 @@
     </div>
     <div class="content"> 
 		{$sub_menu}
-        {$content}
+		
+		{foreach $messages as $message}
+			{$message}
+		{/foreach}
+		
+		{if (!empty($content))}
+        	{$content}
+        {/if}
     </div>
 </div>
-
-
 {include file="layout/one-col/footer.tpl"}

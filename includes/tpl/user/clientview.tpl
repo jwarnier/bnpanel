@@ -1,3 +1,4 @@
+{literal}
 <script type="text/javascript">
 	function clientsearch() {
 		var type = document.getElementById("type").value;
@@ -5,10 +6,11 @@
 		ajaxSlide("clientsajax", "{$ajax}function=search&type="+type+"&value="+value);
                 kthx();
 	}
-$(document).ready(function() {
-    kthx();
-});
-function kthx() {
+	$(document).ready(function() {
+	    kthx();
+	});
+	
+	function kthx() {
             $(".suspendIcon").click(function(){
                 var status = "{$SUS}";
                 if(status == "Suspend") {
@@ -68,52 +70,48 @@ function kthx() {
             });
         }
 </script>
-<ERRORS>
-<table width="100%" border="0" cellspacing="2">
-  <tr>
-    <td width="22%" valign="top">
-    <div class="subborder">
-    <table width="100%" border="0" align="center" cellspacing="2" class="sub">
-    	<tr>
-        <td width="1%" align="center"><img src="{$url}themes/icons/user_go.png" /></td>
-        <td align="left"><a href="?page=users&amp;sub=search&amp;do={$ID}">View User Details</a></td>
-      </tr>      
-      <tr>
-        <td width="1%" align="center"><img src="{$url}themes/icons/order.png" /></td>
-        <td align="left"><a href="?page=users&amp;sub=orders&amp;do={$ID}">View User Orders</a></td>
-      </tr>      
-      <tr>
-        <td width="1%" align="center"><img src="{$url}themes/icons/invoice.png" /></td>
-        <td align="left"><a href="?page=users&amp;sub=invoices&amp;do={$ID}">View User Invoices</a></td>
-      </tr>
-      
-      <tr>
-        <td width="1%" align="center"><img src="{$url}themes/icons/pencil.png" /></td>
-        <td align="left"><a href="?page=users&amp;sub=edit&amp;do={$ID}">Edit Details</a></td>
-      </tr>      
+{/literal}
 
-      <tr>
-        <td width="1%" align="center"><img src="{$url}themes/icons/email.png" /></td>
-        <td align="left"><a href="?page=users&amp;sub=email&amp;do={$ID}&amp;">Email User</a></td>
-      </tr>
-      <tr>
-        <td width="1%" align="center"><img src="{$url}themes/icons/user_edit.png" /></td>
-        <td align="left"><a href="?page=users&amp;sub=passwd&amp;do={$ID}&amp;">Change BNPanel Password</a></td>
-      </tr>
-    </table>
-    </div>
-	<table>
-	  <tr>
-	  <td>
-	  <div id="1" style="display:none;">
-		<a title="The user's account and package will remain on the system but in a cancelled state." class="tooltip"><img src="{$icon_dir}information.png" /></a> <a class="cancel" href="javascript:void(0);">Cancel</a><br />
-		<a title="Deletes all traces of the user from the system." class="tooltip"><img src="{$icon_dir}information.png" /></a> <a class="term" href="javascript:void(0);">Terminate</a>
-	  </div>
-	  </td>
-	  </tr>
-	  </table>
-    </td>
-    <td class="rightbreak"></td>
-    <td width="78%" valign="top">{$CONTENT_BOX}</td>
+
+<table width="100%" border="0" align="center" cellspacing="2" class="sub">
+	<tr>
+    <td width="1%" align="center"><img src="{$url}themes/icons/user_go.png" /></td>
+    <td align="left"><a href="?page=users&amp;sub=search&amp;do={$ID}">View User Details</a></td>
+  </tr>      
+  <tr>
+    <td width="1%" align="center"><img src="{$url}themes/icons/order.png" /></td>
+    <td align="left"><a href="?page=users&amp;sub=orders&amp;do={$ID}">View User Orders</a></td>
+  </tr>      
+  <tr>
+    <td width="1%" align="center"><img src="{$url}themes/icons/invoice.png" /></td>
+    <td align="left"><a href="?page=users&amp;sub=invoices&amp;do={$ID}">View User Invoices</a></td>
+  </tr>
+  
+  <tr>
+    <td width="1%" align="center"><img src="{$url}themes/icons/pencil.png" /></td>
+    <td align="left"><a href="?page=users&amp;sub=edit&amp;do={$ID}">Edit Details</a></td>
+  </tr>      
+
+  <tr>
+    <td width="1%" align="center"><img src="{$url}themes/icons/email.png" /></td>
+    <td align="left"><a href="?page=users&amp;sub=email&amp;do={$ID}&amp;">Email User</a></td>
+  </tr>
+  <tr>
+    <td width="1%" align="center"><img src="{$url}themes/icons/user_edit.png" /></td>
+    <td align="left"><a href="?page=users&amp;sub=passwd&amp;do={$ID}&amp;">Change BNPanel Password</a></td>
   </tr>
 </table>
+    
+<table>
+  <tr>
+  <td>
+  <div id="1" style="display:none;">
+	<a title="The user's account and package will remain on the system but in a cancelled state." class="tooltip"><img src="{$icon_dir}information.png" /></a> <a class="cancel" href="javascript:void(0);">Cancel</a><br />
+	<a title="Deletes all traces of the user from the system." class="tooltip"><img src="{$icon_dir}information.png" /></a> <a class="term" href="javascript:void(0);">Terminate</a>
+  </div>
+  </td>
+  </tr>
+</table>
+	
+  {$CONTENT_BOX}
+  

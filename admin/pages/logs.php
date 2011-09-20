@@ -33,8 +33,8 @@ class page extends Controller {
 			$db->query('TRUNCATE <pre>logs');			
 		}
 		
-		echo '<div class="subborder">';		
-		echo '<form id="filter" name="filter" method="post" action="">';
+		$this->content .= '<div class="subborder">';		
+		$this->content .='<form id="filter" name="filter" method="post" action="">';
 		
 		/*
 		$values = array(
@@ -66,7 +66,7 @@ class page extends Controller {
 		);
 		
 		
-		$this->content =  $main->createSelect('show', $values, $show);				
+		$this->content .=  $main->createSelect('show', $values, $show);				
 		$this->content .= '<input type="submit" name="filter" id="filter" value="Filter Log" />';			
 		$this->content .= '<input type="submit" name="clean" id="clean" value="Clean Logs" />';
 		$this->content .= '</form>';

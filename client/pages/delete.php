@@ -1,7 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-class page {	
+class page extends Controller {	
 	public function content() { # Displays the page 
 		global $style, $db, $main;
 		if(!$db->config("delacc")) {
@@ -9,7 +9,7 @@ class page {
 		} else {
 			$_SESSION['cdelete'] = true;
 			$array['USER'] = $main->getCurrentUserId();
-			echo $style->replaceVar("tpl/user/cdelete.tpl", $array);
+			$this->replaceVar("tpl/user/cdelete.tpl", $array);
 		}
 	}
 }

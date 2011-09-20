@@ -1,5 +1,3 @@
-<strong>Here you can see your Server Status.</strong>
-<br />
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
 <tr>
 <td width="20%"><strong>Server OS:</strong></td>

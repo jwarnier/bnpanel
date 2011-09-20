@@ -5,15 +5,15 @@ class page {
 	public function content() { # Displays the page 
 		global $main, $style, $db, $email;
 		
-		$main->getvar['cat'] = isset($main->getvar['cat']) ? intval($main->getvar['cat']) : null;
-		$query = $db->query("SELECT * FROM `<PRE>cats`");
+		$cat_id = intval($main->get_variable('cat'));
+		$query 	= $db->query("SELECT * FROM `<PRE>cats`");
+		
 		if(!$db->num_rows($query)) {				
 			echo $style->returnMessage('There are no Knowledge Base Categories/Articles', 'warning');
 		} else {
-			if($main->getvar['cat']) {
-				
-				$cat = $db->query("SELECT * FROM <PRE>cats WHERE id = '{$main->getvar['cat']}'");
-				if(!$db->num_rows($cat)) {
+			if ($cat_id) {				
+				$cat = $db->query("SELECT * FROM <PRE>cats WHERE id = '$cat_id'");
+				if (!$db->num_rows($cat)) {
 					echo "That category doesn't exist!";	
 				} else {
 					echo $main->sub('<img src="<ICONDIR>arrow_rotate_clockwise.png"><a href="?page=kb">Return To Category Selection</a>','');
@@ -28,7 +28,7 @@ class page {
 						}	
 					}
 				}
-			} elseif($main->getvar['art']) {
+			} elseif($main->get_variable('art')) {
 				$cat = $db->query("SELECT * FROM `<PRE>articles` WHERE `id` = '{$main->getvar['art']}'");
 				if(!$db->num_rows($cat)) {
 					echo "That article doesn't exist!";	

@@ -71,7 +71,7 @@ class page extends Controller {
 				$this->content .= "Here you can upload a theme of your choice to the installer. Please be sure that the theme is in .zip format.";
 				$this->content .= '<div class="warning">This feature is disable for security reasons</div>';				
 				//include INCLUDES."upload.php";
-				//echo '<ERRORS>'; 
+
 				break;
 			case "cssedit": #CSS Editor - Thanks Jimmie & Kevin!
 				$this->content .= '<div class="warning">This feature is disable for security reasons</div>';	

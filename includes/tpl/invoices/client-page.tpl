@@ -1,7 +1,3 @@
-<ERRORS>
-<p>From here you can see the list of your invoices.</p>
-
-
 <table  class="content_table"   width="100%" border="0" cellspacing="3" cellpadding="0">
 	<tr> 
         <th width="5%"><div align="left"><b>&nbsp;No.</b></div></th>        

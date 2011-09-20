@@ -25,9 +25,3 @@ if(!isset($main->getvar['u'])) {
 	}
 }
 echo '</div>'; #End it
-echo $style->get("footer.tpl"); #Output Footer
-
-//Output
-include(LINK ."output.php");
-
-?>
