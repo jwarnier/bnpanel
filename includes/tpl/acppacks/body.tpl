@@ -34,7 +34,6 @@
         </table>
     </div>
 </div>
-<ERRORS>
 <div id="pedit" style="display:none;"></div>
 <div id="pbit" style="display:none;"><div class="subborder"><div class="sub">
 <script type="text/javascript">
@@ -44,7 +43,6 @@
 	theme : "advanced"
 	});
 </script>
-<ERRORS>
 <form id="addpackage" name="addpackage" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
 	<tr><td colspan="2"><strong>Add Package</strong></td></tr>
