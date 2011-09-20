@@ -28,9 +28,7 @@ if($db->config('general') == 0) {
 
 global $billing;
 
-//echo '<div class="grid_12">ecg slider:!!!</div>'; #Ajax wrapper, for steps
-
-$content = '<div id="ajaxwrapper" class="container">';
+$content = '';
 
 $main->getvar['id'] = isset($main->getvar['id']) ? intval($main->getvar['id']) : null;
 
@@ -142,9 +140,7 @@ if ($db->num_rows($packages2) == 0) {
 	if(!isset($maincontent)) {
 		$maincontent = $style->replaceVar("tpl/orderform/orderform.tpl", $array);
 	}
-	$content .= '<div>'.$maincontent.'</div>';
+	$content .= $maincontent;
 }
-$content .= '</div>'; #End it
 
 echo $style->replaceVar("layout/one-col/index.tpl", array('content' => $content)); 
-

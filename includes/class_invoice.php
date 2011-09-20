@@ -354,9 +354,10 @@ class invoice extends model {
 			$limit = "LIMIT $start , $per_page";
 		}		
 		$sql = "SELECT * FROM ".$this->getTableName()." WHERE status <> '".INVOICE_STATUS_DELETED."' $user_where $status_where ORDER BY id DESC $limit  ";
+		
 		$result = $db->query($sql);
 		$invoice_list = array();
-		if($db->num_rows($result) >  0) {
+		if( $db->num_rows($result) >  0) {
 			while($data = $db->fetch_array($result,'ASSOC')) {
 				$invoice_list[$data['id']] = $data;
 			}

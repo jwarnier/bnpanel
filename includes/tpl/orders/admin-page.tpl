@@ -65,13 +65,13 @@ function filter() {
 <table class="common-table"  width="100%" border="0" cellspacing="3" cellpadding="0">
 	<thead>
 		<tr> 
-	        <th width="30px"><div align="left"><b>&nbsp;No.</b></div></td>
-	        <th width="70px"><strong>User</strong></td>        
-	        <th><strong>Package</strong></td>        
-	        <th><strong><a title="Domain name" class="tooltip"><img src="{$icon_dir}world.png" border="0" /></a> Domain</strong></td>
-	        <th ><strong>Creation date</strong></td>
-	        <th><strong>Status</strong></td>
-	        <th width="90px"><strong>Actions</strong></td>                
+	        <th width="30px">#</td>
+	        <th width="70px">User</td>        
+	        <th>Package</td>        
+	        <th><a title="Domain name" class="tooltip"><img src="{$icon_dir}world.png" border="0" /></a> Domain</td>
+	        <th>Creation date</td>
+	        <th>Status</td>
+	        <th width="90px">Actions</td>                
 		</tr>
 	</thead>
 	<tbody id="tbody"></tbody>	
