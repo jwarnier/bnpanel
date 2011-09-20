@@ -5,7 +5,7 @@
 exit;
 
 
-class page {
+class page extends Controller {
 	
 	public function content() { # Displays the page 
 		global $style, $db, $main, $server, $invoice, $user;
@@ -50,6 +50,6 @@ class page {
 				}
 		}
 		
-		echo $style->replaceVar("tpl/user/cview.tpl", $array);
+		$this->replaceVar("tpl/user/cview.tpl", $array);
 	}
 }

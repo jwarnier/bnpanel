@@ -22,13 +22,12 @@ class page extends Controller {
 	
 		
 		global $main, $style, $db, $email, $ticket;
-		$main->getvar['do'] = intval($main->getvar['do']);
+		$do_id = intval($main->get_variable('do'));
 		
 		$ticket_urgency_list = $main->getTicketUrgencyList();
-		$ticket_status_list = $main->getTicketStatusList();
-		
+		$ticket_status_list = $main->getTicketStatusList();		
 
-		if ($main->getvar['sub'] == 'all') {
+		if ($main->get_variable('sub') == 'all') {
 
 			$query = $db->query("SELECT * FROM <PRE>tickets WHERE reply = '0' AND status ORDER BY id DESC");
 			if (!$db->num_rows($query)) {
@@ -51,7 +50,7 @@ class page extends Controller {
 				}
 			}
 		} else {
-			if (!$main->getvar['do']) {
+			if (!$do_id) {
 				$query = $db->query("SELECT * FROM <PRE>tickets WHERE reply = '0' AND status != '3' ORDER BY id DESC");
 				if (!$db->num_rows($query)) {
 					echo 'No new tickets available';
@@ -89,7 +88,7 @@ class page extends Controller {
 				$oValidator = new Validator($asOption);		
 				
 				
-				$query = $db->query("SELECT * FROM <PRE>tickets WHERE id = '{$main->getvar['do']}' OR ticketid = '{$main->getvar['do']}' ORDER BY id DESC");
+				$query = $db->query("SELECT * FROM <PRE>tickets WHERE id = '{$do_id}' OR ticketid = '{$do_id}' ORDER BY id DESC");
 				if (!$db->num_rows($query)) {
 					echo "That ticket doesn't exist";
 				} else {
@@ -105,7 +104,7 @@ class page extends Controller {
 							$ticket_params['time'] 		= $time;
 							$ticket_params['userid'] 	= $staff_id;
 							$ticket_params['reply'] 	= 1;
-							$ticket_params['ticketid'] 	= $main->getvar['do'];
+							$ticket_params['ticketid'] 	= $do_id;
 							$ticket_params['staff'] 	= 1;
 							
 							$ticket->create($ticket_params);
@@ -123,7 +122,7 @@ class page extends Controller {
 							$array['CONTENT'] = $main->postvar['content'];
 							$email->send($user['email'], $template['subject'], $template['content'], $array);
 							
-							$main->redirect("?page=tickets&sub=view&msg=1&do=" . $main->getvar['do']);
+							$main->redirect("?page=tickets&sub=view&msg=1&do=".$do_id);
 						}
 					}
 					$data = $db->fetch_array($query);

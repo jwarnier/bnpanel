@@ -11,10 +11,12 @@ function do_translation($params, $content, $smarty, &$repeat, $template = null) 
 
 class style extends Smarty {
 	
+	var $messages = array();
+	
 	function __construct() {
 		
 		parent::__construct();
-		
+				
 		$this->setPluginsDir(INCLUDES.'smarty/plugins/');
 		$this->setCacheDir(CACHE_PATH);
 		$this->setCompileDir(CACHE_PATH);
@@ -25,13 +27,13 @@ class style extends Smarty {
 		$this->caching 			= false;
 		$this->cache_lifetime 	= Smarty::CACHING_OFF; // no caching		
 		$this->assign('app_name', NAME);
-		$sub = defined('SUB') ? ' - '.SUB : '';
-		
+		$sub = defined('SUB') ? ' - '.SUB : '';		
 		
 		$this->assign('app_title', NAME . " - " . PAGE.$sub);
 		$this->registerPlugin('block', 't', 'do_translation');
 		
-		$this->set_header_parameters();		
+		$this->set_header_parameters();
+		$this->assign('messages', $this->messages);		
 		
 		//$this->testInstall($errors);
 	}	
@@ -48,9 +50,6 @@ class style extends Smarty {
 		$current_token = $main->getToken();		
 		$this->assign('ajax', URL."includes/ajax.php?_get_token=".$current_token."&");
 		
-		
-		
-		
 		$version = '';
 		if ($db->config("show_version_id") == 1) {
 			$version = $db->config("version");
@@ -60,14 +59,12 @@ class style extends Smarty {
 		
 		
 		
-		if ($main->getCurrentUserId()) {
-			
-		} else {
-			
-			//$link = '<div id="login_form" title="Login">'.$this->fetch("login/login_widget.tpl", array()).'</div>', $data);
-			$link = $this->fetch("login/login_widget.tpl");
-			$this->assign('login_tpl', $link);			
+		if ($main->getCurrentUserId()) {			
+		} else {						
 		}	
+		
+		$link = $this->fetch("login/login_widget.tpl");
+		$this->assign('login_tpl', $link);		
 		
 		if (FOLDER != 'install') {
 			$array = array();
@@ -92,8 +89,7 @@ class style extends Smarty {
 					$navbits .= $this->fetch($tpl);
 				}
 			}
-		}
-		
+		}		
 		
 		$array3 = array();
 		$array3['nav'] = null;
@@ -103,14 +99,10 @@ class style extends Smarty {
 		}
 		if ($main->getCurrentStaffId()) {
 			$array3['admin_nav'] = '<li><a href="<URL>admin">Administration</a></li>';
-		}
-		
+		}		
 		//$tpl = "tpl/menu/top_main.tpl";
-		$this->assign($array3);
-		
+		$this->assign($array3);		
 	}
-	
-
 	
 	private function error($name, $template, $func) { #Shows a SQL error from main class
 		if (INSTALL) {
@@ -122,40 +114,14 @@ class style extends Smarty {
 		}
 	}
 
-	private function getFile($name, $prepare = 1, $override = 0) { # Returns the content of a file		
-		$link = INCLUDES ."../themes/". THEME . "/" . $name;
-		if (!file_exists($link) || $override != 0) {
-			$link = INCLUDES . $name;
-		}
-		if (!file_exists($link) && INSTALL) {
-			$error['Error'] = "File doesn't exist!";
-			$error['Path'] = $link;			
-		} else {
-			if ($prepare) {
-				return $this->prepare(file_get_contents($link));
-			} else {
-				return file_get_contents($link);
-			}
-		}
-	}
 
-	public function prepare($data) { # Returns the content with the THT variables replaced
-		/*include INCLUDES . "variables.php";
-		return $data;*/
-		
-		//$this->display();
-		
-	}
 	/*
 	private function prepareCSS($data) { # Returns the CSS with all tags removed
 		include LINK . "css_variables.php";
 		return $data;
 	}
 */
-	public function get($template) { # Fetch a template
-		return $this->getFile($template);
-	}
-	
+
 	public function show_logo() {
 		$link = URL."themes/". THEME . "/images/logo.png";
 		return '<img src="'.$link.'" />';
@@ -180,15 +146,9 @@ class style extends Smarty {
 	}
 	
 
-	public function css() { # Fetches the CSS and prepares it
+	public function css() {
         global $db;                
-		$link = URL."themes/". THEME . "/style.css";
-		
-		//Including 960 css		
-		/*$css  = '<link rel="stylesheet" href="'.URL.'includes/css/960/reset.css" type="text/css" />';
-		$css .= '<link rel="stylesheet" href="'.URL.'includes/css/960/text.css" type="text/css" />';
-		$css .= '<link rel="stylesheet" href="'.URL.'includes/css/960/960_12_col.css" type="text/css" />';
-		*/
+		$link = URL."themes/". THEME . "/style.css";		
 		//Including bootstrap
 		$css = '<link rel="stylesheet" href="'.URL.'includes/css/bootstrap/bootstrap.css" type="text/css" />';
 				
@@ -210,34 +170,22 @@ class style extends Smarty {
 		return $this->fetch($template);
 	}
 
-	public function javascript() { # Returns the HTML code for the header that includes all the JS in the javascript folder
+	/**
+	 * Returns the HTML code for the header that includes all the JS in the javascript folder	 * 
+	 */
+	public function javascript() {
 		$folder = INCLUDES ."javascript/";
 		$html = "<script type=\"text/javascript\" src='".URL."includes/javascript/jquery.js'></script>\n";
 		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/jquery-ui.js'></script>\n";
 		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/misc.js'></script>\n";
 		$html .= "<script type=\"text/javascript\" src='".URL."includes/javascript/slide.js'></script>\n";	
         $html .= "<script type=\"text/javascript\" src='".URL."includes/tiny_mce/tiny_mce.js'></script>";
-		//closedir($handle); #Close the folder
 		return $html;
 	}
-
-    public function notice($good, $message) {
-        if($good) {
-            //Cool! Everything's OK.
-            $color = "green";
-        }
-        else {
-            //Oh no! It's a bad message!
-            $color = "red";
-        }
-        $notice = '<strong><em style="color: '. $color .';">';
-        $notice .= $message;
-        $notice .= '</em></strong>';
-        return $notice;
-    }
     
-    public function showMessage($message, $type = 'info',$allow_html = true) {
-		echo $this->returnMessage($message, $type, $allow_html);
+    public function showMessage($message, $type = 'info', $allow_html = true) {
+    	$this->messages[] = $this->returnMessage($message, $type, $allow_html);
+    	$this->assign('messages', $this->messages);		
     }
     
     public function returnMessage($message, $type = 'info', $allow_html = true) {
@@ -254,8 +202,11 @@ class style extends Smarty {
    		} else {
    			$html .= $main->removeXSS($message);    			
    		}
-   		$html .= '</div>';    	
-    	return $html;
+   		$html .= '</div>';  
+   		
+   		$this->messages[] = $html;
+   		$this->assign('messages', $this->messages);
+    	//return $html;
     }
     
     public function returnIcon($icon_name) {

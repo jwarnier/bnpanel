@@ -1,9 +1,9 @@
 <?php
 /* For licensing terms, see /license.txt */
 define("PAGE", "Support Area");
+
 require '../includes/compiler.php';
 
-ob_start();
 
 if(!isset($main->getvar['page'])) { 
 	$main->getvar['page'] = 'kb';
@@ -54,11 +54,8 @@ if($db->config("senabled") == 0) {
 	}
 }
 
-echo '<div>';
-echo $main->table($header, $html);
-echo '</div>';
 
-$data = ob_get_contents();
-ob_end_clean();
+$data = $main->table($header, $html);
+
 
 echo $style->replaceVar("layout/one-col/index.tpl", array('content' => $data)); 

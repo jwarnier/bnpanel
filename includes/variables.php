@@ -32,41 +32,11 @@ if (INSTALL == 1) {
 			$pagegen .= $style->replaceVar('tpl/footerdebug.tpl',$array);
 		}
 	}*/
-	 
-	if ($db->config("show_version_id") == 1) {
-	 	$version = $db->config("version");
-	}
-
 	
 }
 
-
-
-if ($main->getCurrentUserId()) {	
-} else {	
-	$data = preg_replace("/<LOGIN_TPL>/si",'<div id="login_form" title="Login">'.$style->replaceVar("tpl/login/login_widget.tpl", array()).'</div>', $data);
-}
-
 global $main;
-$current_token = $main->getToken();
-
-$data = preg_replace("/<AJAX>/si", URL."includes/ajax.php?_get_token=".$current_token."&", $data);
-
-
-
-
-
-
-$data = preg_replace("/<MENU>/si", $navigation, $data);
-
 $data = preg_replace("/<LOGO>/si",  $this->show_logo(), $data);
 $data = preg_replace("/<LOGIN>/si", $this->show_login_link(), $data);
 
 $data = preg_replace("/<PAGEGEN>/si", $pagegen, $data); #Page Generation Time
-
-$error_messages = $main->errors();
-
-if (!empty($error_messages)) {
-	$data = preg_replace("/<ERRORS>/si", '<div class="alert-message info">'.$error_messages.'</div><div style="clear:both"></div>', $data);	
-}
-//$data = preg_replace("/%INFO%/si", INFO, $data);

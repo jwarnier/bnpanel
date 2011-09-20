@@ -30,8 +30,7 @@ class page extends Controller {
 		global $main, $style, $db, $billing, $addon;
 		
 		switch ($main->get_variable('sub')) {
-			default:
-			
+			case 'add':			
 				$asOption = array(
 				    'rules' => array(
 				        'name' 		=> 'required'			        
@@ -94,6 +93,7 @@ class page extends Controller {
 				//----- Finish billing cycle					
 				$this->replaceVar("addons/add.tpl", $array);
 				break;
+			default:
 			case 'view':
 			case 'edit':
 				if (isset($main->getvar['do'])) {
@@ -183,10 +183,8 @@ class page extends Controller {
 				} else {
 					$query = $db->query("SELECT * FROM <PRE>addons");
 					if ($db->num_rows($query) == 0) {						
-						$this->content = $style->returnMessage('There are no Addons available');	
-						
-					} else {
-						echo "<ERRORS>";
+						$style->returnMessage('There are no Addons available');							
+					} else {						
 						while($data = $db->fetch_array($query)) {
 							$this->content .= $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=addons&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=addons&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 							$n++;

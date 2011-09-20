@@ -1,29 +1,28 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-require '../includes/compiler.php';
-
 define("PAGE", "Client Area");
+
+require '../includes/compiler.php';
 
 //Main ACP Function - Creates the ACP basically
 function client() {
 	global $main, $db, $style, $type,$email;
-	ob_start(); # Stop the output buffer
 		
-	if(!$main->getvar['page']) { 
+	if (!$main->getvar['page']) { 
 		$main->getvar['page'] = 'home';
 	}
 	$client_navigation = $main->getClientNavigation();
 	$client_item = $client_navigation[$main->getvar['page']];
 	
 	$header = 'Home';
-	$link = 'pages/home.php';
-	
+	$link = 'pages/home.php';	
 	
 	if (isset($client_item) && !empty($client_item)) {		
 		$header = $client_item['visual'];		
 		$link = "pages/". $client_item['link'] .".php";
-	}	
+	}
+	
 	if (!file_exists($link)) {
 		$html = "Seems like the .php is non existant. Is it deleted?";	
 	} else {
@@ -46,7 +45,7 @@ function client() {
 				$array2['LINK'] = "?page=".$row['link'];
 				$array2['VISUAL'] = $row['visual'];
 				$array2['ACTIVE'] = 'active';
-				$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array2);			
+				$array['LINKS'] .= $style->replaceVar("menu/leftmenu_link.tpl", $array2);			
 			}
 			
 			# Types Navbar
@@ -55,11 +54,10 @@ function client() {
 			$array2['IMGURL'] = "logout.png";
 			$array2['LINK'] = "?page=logout";
 			$array2['VISUAL'] = "Logout";
-			$array['LINKS'] .= $style->replaceVar("tpl/menu/leftmenu_link.tpl", $array2);
-			$sidebar = $style->replaceVar("tpl/menu/leftmenu_main.tpl", $array);
+			$array['LINKS'] .= $style->replaceVar("menu/leftmenu_link.tpl", $array2);
+			$sidebar = $style->replaceVar("menu/leftmenu_main.tpl", $array);
 			
-			//Page Sidebar
-			
+			//Page Sidebar			
 			if (isset($content->navtitle)) {
 				$subnav = $content->navtitle;
 				$array3 = array();
@@ -70,8 +68,7 @@ function client() {
 					$array2['VISUAL'] = $value[0];
 					$array3['LINKS'] .= $style->replaceVar("tpl/menu/submenu_link.tpl", $array2);
 				}
-				$subsidebar = $style->replaceVar("tpl/menu/submenu_main.tpl", $array3);			
-				
+				$subsidebar = $style->replaceVar("menu/submenu_main.tpl", $array3);
 			}
 			
 			if (isset($main->getvar['sub']) && $main->getvar['sub'] == "delete" && isset($main->getvar['do']) && !$_POST && !$main->getvar['confirm']) {
@@ -79,15 +76,14 @@ function client() {
 					$array['HIDDEN'] .= '<input name="'.$key.'" type="hidden" value="'.$value.'" />';
 				}
 				$array['HIDDEN'] .= " ";
-				$html = $style->replaceVar("tpl/warning.tpl", $array);	
+				$html = $style->replaceVar("warning.tpl", $array);	
 				
 			} elseif(isset($main->getvar['sub']) && $main->getvar['sub'] == "delete" && isset($main->getvar['do']) && $_POST && !$main->getvar['confirm']) {
 				if($main->postvar['yes']) {
 					foreach($main->getvar as $key => $value) {
 					  if($i) {
 						  $i = "&";	
-					  }
-					  else {
+					  } else {
 						  $i = "?";	
 					  }
 					  $url .= $i . $key . "=" . $value;
@@ -99,23 +95,7 @@ function client() {
 					$main->done();	
 				}
 			} else {
-				if(isset($main->getvar['sub'])) {
-					ob_start();
-					$content->content();
-					$html = ob_get_contents(); # Retrieve the HTML
-					ob_clean(); # Flush the HTML
-				} elseif(isset($content->navlist)) {
-					//$html = "Select a sub-page from the sidebar.";
-					ob_start();
-					$content->content();
-					$html = ob_get_contents(); # Retrieve the HTML
-					ob_clean(); # Flush the HTML									
-				} else {
-					ob_start();
-					$content->content();
-					$html = ob_get_contents(); # Retrieve the HTML
-					ob_clean(); # Flush the HTML	
-				}
+				$content->content();				
 			}
 		} else {
 			$html = "You trying to hack me? You've been warned. An email has been sent.. May I say, Owned?";
@@ -132,22 +112,27 @@ function client() {
 			}
 		}
 	}
-	//
-	$staffuser = $db->client($main->getCurrentUserId());
+	
+	$staffuser = $db->client($main->getCurrentUserId());	
+
+	$style->assign('sidebar',  $sidebar);
+	$style->assign('sub_menu', $content->get_submenu());
 		
-	$data['LEFT_COLUMN'] = $main->table($nav, $sidebar);	
+	if (!empty($content->content)) {
+		$style->assign('content', $content->content);
+	}
+	
+		
+	/*$data['LEFT_COLUMN'] = $main->table($nav, $sidebar);	
 	
 	$data['RIGHT_COLUMN'] = $main->table($header, $html);
 	
 	if (isset($content->navtitle)) {
 		$data['RIGHT_COLUMN'] .= $main->table($subnav, $subsidebar);
-	}
-		
-	return $data; # Return the HTML
+	}*/
 }
 
 global $user;
-
 
 if (!isset($_SESSION['clogged'])) {	
 	if (isset($main->getvar['page']) && $main->getvar['page'] == 'forgotpass') {		
@@ -178,9 +163,7 @@ if (!isset($_SESSION['clogged'])) {
 		$main->generateToken();		
 				
 		$content = '<div align="center">'.$main->table("Client Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';		
-				
-		echo $style->get("tpl/layout/one-col/header.tpl");
-		echo $style->replaceVar("tpl/layout/one-col/content.tpl", array('CONTENT' => $content));				
+		echo $style->replaceVar("layout/one-col/index.tpl", array('content' => $content));				
 		
 	} else {
 		define("SUB", "Login");
@@ -191,19 +174,16 @@ if (!isset($_SESSION['clogged'])) {
 			} else {
 				$main->generateToken();
 			}		
-		}	
-		
+		}		
 		$array[] = "";
 		if(!$db->config("cenabled")) {
 			define("SUB", "Disabled");
 			define("INFO", SUB);
 			$content = '<div class="center">'.$main->table(gettext("Client Area - Disabled"), $db->config("cmessage"), "300px").'</div>';
 		} else {
-			$content = $style->replaceVar("tpl/login/clogin.tpl", $array);
-		}
-		
-		echo $style->get("tpl/layout/one-col/header.tpl");
-		echo $style->replaceVar("tpl/layout/one-col/content.tpl", array('CONTENT' => $content));		
+			$content = $style->replaceVar("login/clogin.tpl", $array);
+		}		
+		echo $style->replaceVar("layout/one-col/index.tpl", array('content' => $content));		
 	}
 } elseif($_SESSION['clogged']) {
 	if(!isset($main->getvar['page'])) {
@@ -216,22 +196,14 @@ if (!isset($_SESSION['clogged'])) {
 		} else {
 			$main->redirect('?page=home');
 		}		
-	}
-	
-	echo $style->get("tpl/layout/two-col/header.tpl");
-	
+	}	
 	if (!$db->config("cenabled")) {
 		define("SUB", "Disabled");
 		define("INFO", SUB);
 		$content = '<div align="center">'.$main->table("Client Area - Disabled", $db->config("cmessage"), "300px").'</div>';
-		echo $style->replaceVar("tpl/layout/one-col/content.tpl", $content);
+		echo $style->replaceVar("layout/one-col/index.tpl", $content);
 	} else {		
-		$content = client();
-		echo $style->replaceVar("tpl/layout/two-col/content.tpl", $content);
-	}
-		
+		client();
+		$style->display("layout/two-col/index.tpl");
+	}		
 }
-
-echo $style->get("tpl/layout/one-col/footer.tpl"); #Output Footer
-//End the sctipt
-require LINK .'output.php';

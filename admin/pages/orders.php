@@ -424,8 +424,7 @@ class page extends Controller {
 						//$main->redirect("?page=orders&sub=all");
 					} else {
 						$main->errors("Order cannot be deleted. There is a problem please check the logs of Order #".$main->getvar['do']);
-					}
-					echo '<ERRORS>';
+					}					
 				} 
 				$main->redirect('?page=orders&sub=all&msg=1');	
 				break;
@@ -447,8 +446,7 @@ class page extends Controller {
 					$this->data['COUNT'] = $quantity;				
 					$this->replaceVar("orders/admin-page.tpl", $this->data);
 				} else {
-					$main->errors('No orders available');
-					echo '<ERRORS>';
+					$main->errors('No orders available');					
 				}				
 			break;			
 		}

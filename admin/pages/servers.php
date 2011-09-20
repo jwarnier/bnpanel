@@ -107,9 +107,7 @@ class page extends Controller {
 					}
 				} else {
 					//@todo replace this queries
-					$query = $db->query("SELECT * FROM `<PRE>servers`");
-					echo "<ERRORS>";
-					
+					$query = $db->query("SELECT * FROM `<PRE>servers`");									
 					if($db->num_rows($query) == 0) {
 						$style->showMessage('There are no Servers');						
 					} else {

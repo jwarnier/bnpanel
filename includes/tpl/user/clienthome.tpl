@@ -1,7 +1,10 @@
 {$ALERTS}
 
-Welcome to your client area for <NAME>.<br />
+<h1>Welcome to your client area</h1>
+<p>
 To get started, select an action in the Sidebar. Here's an overview of your account:
+</p>
+
 <div class="subborder">
 	<div class="sub">
 	  <table width="100%" border="0" cellspacing="0" cellpadding="0">

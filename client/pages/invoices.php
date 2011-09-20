@@ -1,7 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-class page {
+class page extends Controller {
 	
 	public function __construct() {
 		$this->navtitle = "Invoice menu";		
@@ -20,9 +20,9 @@ class page {
 		switch($action) {		
 			case 'paid':				
 				//this is moved to the paypal/ipn.php file
-			break;						
+				break;						
 			case 'view':				
-				if(isset($main->getvar['do'])) {					
+				if (isset($main->getvar['do'])) {					
 					switch ($main->getvar['p']) {
 						case 'cancel':
 							$style->showMessage('Your Invoice #'.$main->getvar['do'].' is not paid. <br /> You can pay your Invoice clicking in the "Pay Now" button');
@@ -40,9 +40,9 @@ class page {
 					} else {
 						$return_array['pay'] = '';
 					}					
-					echo $style->replaceVar('tpl/invoices/view-client.tpl', $return_array);					
+					$this->replaceVar('tpl/invoices/view-client.tpl', $return_array);					
 				}
-			break;					
+				break;					
 			case 'all':
 			default :
 				$user_id = $main->getCurrentUserId();				
@@ -121,8 +121,8 @@ class page {
 						$total_amount 		= $total_amount + $invoice_item['amount'];
 						$array['amount'] 	= $total_amount." ".$db->config('currency');
 						$array2['list'] 	.= $style->replaceVar("tpl/invoices/invoice-list-item-client.tpl", $array);
-					}
-					echo $style->replaceVar('tpl/invoices/client-page.tpl', $array2);
+					}					
+					$this->replaceVar('invoices/client-page.tpl', $array2);
 				} else {
 					$style->showMessage('No Invoices available');
 				}

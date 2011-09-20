@@ -139,8 +139,7 @@ class page extends Controller {
 		$query = $db->query("SELECT * FROM `<PRE>billing_cycles`");
 		if($db->num_rows($query) == 0) {
 			$this->content = "There are no billing cycles to edit!";	
-		} else {
-			echo "<ERRORS>";
+		} else {			
 			while($data = $db->fetch_array($query)) {
 				$this->content .= $main->sub('<strong><a href="?page=billing&sub=show&do='.$data['id'].'">'.$data['name']."</a></strong>", '<a href="?page=billing&sub=edit&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=billing&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');						
 				

@@ -213,10 +213,8 @@ if (!isset($_SESSION['logged'])) {
 				}
 			}
 		}
-		$content['CONTENT'] =  '<div align="center">'.$main->table("Admin Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';
-		
-		echo $style->replaceVar("layout/one-col/index.tpl", $content);
-		
+		$content['CONTENT'] =  '<div align="center">'.$main->table("Admin Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';		
+		echo $style->replaceVar("layout/one-col/index.tpl", $content);		
 		
 	} else { 		
 		define("SUB", "Login");
@@ -244,6 +242,6 @@ if (!isset($_SESSION['logged'])) {
 		$main->redirect("?page=home");
 	}	
 	
-	$content = acp();	
+	acp();	
 	echo $style->display("layout/two-col/index.tpl");
 }

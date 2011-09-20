@@ -31,14 +31,14 @@ class main {	//Post variables
 		}
 	}
 		/**	 *  Shows error default, sets error if $error set	 */
-	public function errors($error = null, $clean = false) {			if ($clean) {			$_SESSION['errors'] = null;		}	
+	public function errors($error = null, $clean = false) {		global $style;			if ($clean) {			$_SESSION['errors'] = null;		}	
 		if(!$error) {
 			if (isset($_SESSION['errors'])) {
 				return $_SESSION['errors'];
 			}
 		} else {			if(!empty($error)) {				$other = $_SESSION['errors'];				if (!empty($other)) {					$other .='<br />';							}
 				$_SESSION['errors'] = $other.$error;			}
-		}		//$style->errors[] = $error;						}	
+		}		$error = '<div class="alert-message info">'.$error.'</div><div style="clear:both"></div>';				$style->messages[] = $error;		$style->assign('messages', $style->messages);	}	
 	public function table($header, $content = 0, $width = 0, $height = 0) { // Returns the HTML for a Table
 		global $style;		$props = '';
 		if ($width) {

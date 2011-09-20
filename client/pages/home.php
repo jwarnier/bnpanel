@@ -1,7 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-class page {	
+class page extends Controller {	
 	public function content() { # Displays the page 
 		global $style, $db, $main, $type;
 		$user_id = $main->getCurrentUserId();
@@ -28,6 +28,6 @@ class page {
 		if (!empty($alerts)) {
 			$array['ALERTS'] = '<h3>Important Announcements </h3>'.$db->config('alerts').'';
 		}			
-		echo $style->replaceVar("tpl/user/clienthome.tpl", $array);
+		$this->replaceVar("tpl/user/clienthome.tpl", $array);
 	}
 }

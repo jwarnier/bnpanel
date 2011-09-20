@@ -41,7 +41,13 @@
     </div>
 </div>
 
-<div class="container">	
+<div class="container">
+<br />
+<br />
+	{foreach $messages as $message}
+			{$message}
+	{/foreach}
+	
     {$content}
 </div>
 

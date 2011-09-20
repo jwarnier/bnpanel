@@ -1,7 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-class page {
+class page extends Controller {
 	
 	public $navtitle;
 	public $navlist = array();
@@ -65,7 +65,7 @@ class page {
 					}
 				}
 				$array['URGENCY'] = $main->createSelect('urgency', $main->getTicketUrgencyList());
-				echo $style->replaceVar("tpl/support/addticket.tpl", $array);
+				$this->replaceVar("tpl/support/addticket.tpl", $array);
 				break;
 			default:
 			case 'view':				
@@ -73,14 +73,13 @@ class page {
 					$query = $db->query("SELECT * FROM <PRE>tickets WHERE userid = '{$user_id}' AND reply = '0' ORDER BY id DESC");
 					if(!$db->num_rows($query)) {
 						$style->showMessage('No open tickets');						
-					} else {	
-						echo '<ERRORS>'; 					
+					} else {									
 						while($data = $db->fetch_array($query)) {
 							$array['TITLE'] = $data['title'];
 							$array['UPDATE'] = $ticket->lastUpdated($data['id']);
 							$array['ID'] = $data['id'];
 							$array['STATUS'] = $data['status'];
-							echo $style->replaceVar("tpl/support/ticketviewbox.tpl", $array);
+							$this->replaceVar("tpl/support/ticketviewbox.tpl", $array);
 						}
 					}
 				} else {					
@@ -161,7 +160,7 @@ class page {
 							$array['ADDREPLY'] = "";	
 						}						
 						$array['ID'] = $data['id'];
-						echo $style->replaceVar("tpl/support/viewticket.tpl", $array);	
+						$this->replaceVar("tpl/support/viewticket.tpl", $array);	
 					}
 				}
 				break;

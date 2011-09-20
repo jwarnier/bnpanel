@@ -59,8 +59,7 @@ class page extends Controller {
 					$array['SERVER'] = $main->createSelect("server", $all_servers);
 					$this->replaceVar("tpl/subdomain/addsubdomain.tpl", $array);
 				} else {
-					$main->errors('There are no servers, you need to add a Server first <a href="?page=servers&sub=add">here</a>');
-					echo '<ERRORS>';
+					$main->errors('There are no servers, you need to add a Server first <a href="?page=servers&sub=add">here</a>');					
 				}				
 			break;
 			case 'view':	
@@ -105,8 +104,7 @@ class page extends Controller {
 						$this->replaceVar("tpl/subdomain/editsubdomain.tpl", $array);
 					}
 				} else {
-					$query = $db->query("SELECT * FROM `<PRE>subdomains`");
-					echo "<ERRORS>";
+					$query = $db->query("SELECT * FROM `<PRE>subdomains`");					
 					if($db->num_rows($query) == 0) {
 						$style->showMessage("There are no Subdomains available!");	
 					} else {						

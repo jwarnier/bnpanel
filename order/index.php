@@ -32,7 +32,6 @@ global $billing;
 
 $content = '<div id="ajaxwrapper" class="container">';
 
-
 $main->getvar['id'] = isset($main->getvar['id']) ? intval($main->getvar['id']) : null;
 
 //Get all packages
