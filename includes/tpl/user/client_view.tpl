@@ -1,9 +1,9 @@
 <div class="contextual">
-	<a href="?page=details&sub=edit"> <img src="{$url}themes/icons/pencil.png"> Edit</a>		  
+	<a href="?page=details&sub=edit"> <img src="{$url}themes/icons/pencil.png">Edit</a>		  
 </div>
 
 <h2>My Account</h2>
-<ERRORS>
+
 <fieldset>
 	<legend>
 		User information
