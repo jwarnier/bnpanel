@@ -19,9 +19,10 @@ class page extends Controller {
 	public function content() { # Displays the page 
 		global $main, $style, $db;
 		
-		switch($main->getvar['sub']) {
-		
+		switch($main->get_variable('sub')) {
+			default:
 			case 'templates': #email templates
+				$n = null;
 				if($_POST && $main->checkToken()) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n) {
@@ -58,11 +59,10 @@ class page extends Controller {
 				$array['TEMPLATE_ID'] 	= $selected_id;
 				
 				$this->replaceVar("email/emailtemplates.tpl", $array);
-			break;
-			
+				break;			
 			case "mass": #mass emailer
 				$this->replaceVar("email/massemail.tpl");
-			break;
+				break;
 		}
 	}
 }

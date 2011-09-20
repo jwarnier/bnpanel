@@ -59,7 +59,7 @@ $(window).load(function () {
   </tr>
   
   <tr>
-    <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Add Server" /></td>
+    <td colspan="2" align="center"><input type="submit" name="add" id="add" value="Add Server" class="btn primary" /></td>
   </tr>
 </table>
 </form>
