@@ -41,7 +41,7 @@ class page extends Controller {
 	public function content() { # Displays the page 
 		global $main, $style, $db, $server;
 		switch ($main->get_variable('sub')) {
-			default:
+			case 'add':
 				if($_POST && $main->checkToken()) {
 					foreach($main->postvar as $key => $value) {
 						if($value == "" && !$n) {
@@ -54,7 +54,7 @@ class page extends Controller {
 						//Creating a new server
 						$server->create($main->postvar);
 						$main->errors("Server has been added!");
-						$main->redirect('?page=servers&sub=view&msg=1');
+						//$main->redirect('?page=servers&sub=view&msg=1');
 					}
 				}
 				//$array['TYPE'] = $this->array_type;
@@ -63,13 +63,13 @@ class page extends Controller {
 				
 				$this->replaceVar("tpl/servers/addserver.tpl", $array);
 				break;
-			
+			default:
 			case 'view':
 				if(isset($main->getvar['do'])) {
 					//@todo replace this queries
 					$query = $db->query("SELECT * FROM <PRE>servers WHERE id = '{$main->getvar['do']}'");
 					if($db->num_rows($query) == 0) {
-						echo "That server doesn't exist!";	
+						$style->showMessage("That server doesn't exist!");	
 					}
 					else {
 						if($_POST && $main->checkToken()) {
@@ -82,8 +82,7 @@ class page extends Controller {
 							if(!$n) {
 								$main->postvar['accesshash'] = $main->postvar['hash']; 
 								$server->edit($main->getvar['do'], $main->postvar);
-								$main->errors("Server edited");
-								$main->redirect('?page=servers&sub=view&msg=1');
+								$main->errors("Server edited");								
 							}
 						}
 						$data = $db->fetch_array($query);
@@ -108,14 +107,14 @@ class page extends Controller {
 				} else {
 					//@todo replace this queries
 					$query = $db->query("SELECT * FROM `<PRE>servers`");									
-					if($db->num_rows($query) == 0) {
+					if ($db->num_rows($query) == 0) {
 						$style->showMessage('There are no Servers');						
 					} else {
 						$n = 0;
 						while($data = $db->fetch_array($query)) {
-							echo $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=servers&sub=view&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=servers&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
+							$this->content .= $main->sub("<strong>".$data['name']."</strong>", '<a href="?page=servers&sub=view&do='.$data['id'].'"><img src="'. URL .'themes/icons/pencil.png"></a>&nbsp;<a href="?page=servers&sub=delete&do='.$data['id'].'"><img src="'. URL .'themes/icons/delete.png"></a>');
 							if($n) {
-								echo "<br />";	
+								$this->content .="<br />";	
 							}
 							$n++;
 						}
@@ -123,10 +122,10 @@ class page extends Controller {
 				}
 				break;			
 			case 'delete':
-				if($main->getvar['do'] && $main->checkToken()) {
+				if ($main->getvar['do'] && $main->checkToken()) {
 					$server->delete($main->getvar['do']);
 					$main->errors("Server Account Deleted!");
-					$main->redirect('?page=servers&sub=view&msg=1');		
+				//	$main->redirect('?page=servers&sub=view&msg=1');		
 				}
 			break;
 		}
