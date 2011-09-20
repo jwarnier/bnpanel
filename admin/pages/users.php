@@ -137,12 +137,12 @@ class page extends Controller {
 					$array2['FISCALID'] = $client['fiscalid'];
 
 					$user_status_list 	= $main->getUserStatusList();										
-					$array2['STATUS']  	= $user_status_list[$client['status']];					
+					$array2['STATUS']  	= $user_status_list[$client['status']];
+					$array2['ID'] 		= $client['id'];
 					$array['CONTENT'] 	= $style->replaceVar("tpl/user/clientdetails.tpl", $array2);					
 					$array['URL'] 		= URL;
 					$array['ID'] 		= $client['id'];
-					$array['BOX'] 		= '';
-					
+					$array['BOX'] 		= '';					
 					$this->replaceVar("tpl/user/clientview.tpl", $array);
 					
 				} else {

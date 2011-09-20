@@ -60,7 +60,7 @@ var working = '<div align="center"><img src="{$url}themes/icons/working.gif"></d
 
 <form id="edituser" name="edituser" method="post" action="">
 <div class="page-header">
-		<h2>Edit User</h2>
+	<h2>Edit {$user}</h2>
 </div>
 <table border="0" cellspacing="2" cellpadding="0" align="center" style="width: 100%;">
 <tr>

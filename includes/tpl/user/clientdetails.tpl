@@ -1,5 +1,11 @@
 <div class="page-header">
-<h2>{t}User information{/t}</h2>
+<h2>
+{t}User{/t} {$USER}
+<a href="?page=users&amp;sub=edit&amp;do={$ID}"><img src="{$url}themes/icons/pencil.png" /></a>
+ 
+</h2> 
+       
+		
 </div>
 
 <div class="subborder">

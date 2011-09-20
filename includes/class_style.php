@@ -148,7 +148,7 @@ class style extends Smarty {
 				$link = '<ul class="nav secondary-nav"><li><a href="'.URL.'client">'.$user_info['user'].'</a></li>
 						<li><a href="'.URL.'client/?page=logout">Logout</a></li></ul>';
 			} else {				
-				$link = '<form class="pull-right" action="" method="POST">
+				$link = '<form id="welcome" class="pull-right" action="" method="POST">
 							<input class="input-small" name="user" type="text" placeholder="'.gettext('Username').'">
 							<input class="input-small" name="pass" type="password" placeholder="'.gettext('Password').'">
 							<button class="btn" type="submit">'.gettext('Sign in').'</button>
