@@ -1,4 +1,4 @@
-<ERRORS>
+
 <div class="row">
 	<div class="span8 columns offset4">
 		<form class="form-stacked" id="login" name="login" method="post" action="">

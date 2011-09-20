@@ -56,7 +56,7 @@ var working = '<div align="center"><img src="{$url}themes/icons/working.gif"></d
 
 </script>
 <h2>New User</h2>
-<ERRORS>
+
 <form class="content" id="adduser" name="adduser" method="post" action="">
 <fieldset>
 <legend>

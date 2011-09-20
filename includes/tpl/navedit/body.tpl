@@ -39,9 +39,9 @@
         </table>
     </div>
 </div>
-<ERRORS>
+
 <div id="nbit" style="display:none;"><div class="subborder"><div class="sub">
-<ERRORS>
+
 <form id="addnavlink" name="addnavlink" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
 	<tr><td colspan="2"><strong>Add Navication Link</strong></td></tr>

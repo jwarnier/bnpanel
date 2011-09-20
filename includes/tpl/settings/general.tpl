@@ -1,4 +1,4 @@
-<ERRORS>
+
 <form class="content" id="settings" name="settings" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>

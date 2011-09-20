@@ -58,7 +58,7 @@ function filter() {
 
 
 
-<ERRORS>
+
 
 
 <div id="pagination_loading"></div>

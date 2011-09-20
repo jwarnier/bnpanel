@@ -15,7 +15,7 @@ theme : "advanced",
 	width:"100%",
 });
 </script>
-<ERRORS>
+
 
 
 {$BACKEND_MESSAGE}

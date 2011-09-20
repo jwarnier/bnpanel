@@ -2,7 +2,7 @@
 	<h2>Order #{$ID}</h2>
 </div>
 
-<ERRORS>
+
 <table class="common-table zebra-striped"> 
 	<tr>
     	<td >User:</td>

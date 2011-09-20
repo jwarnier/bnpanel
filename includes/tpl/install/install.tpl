@@ -147,7 +147,7 @@ $(window).load(function () {
 </div>
 <div class="container">
 
-<ERRORS>
+
 <form id="install" name="install" method="post" action="">
 
 <table width="100%" border="0" cellspacing="3" cellpadding="0">

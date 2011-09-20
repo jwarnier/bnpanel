@@ -25,7 +25,7 @@ $(window).load(function () {
 	serverchange(document.getElementById('type').value);
 });
 </script>
-<ERRORS>
+
 <form class="content" id="addserver" name="addserver" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr>

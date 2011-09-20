@@ -5,7 +5,7 @@
 </div>
 
 <h2>Order #{$ID}</h2>
-<ERRORS>
+
 <table class="content" width="100%" border="0" cellspacing="2" cellpadding="0"> 
      <tr>
     <td >User:</td>

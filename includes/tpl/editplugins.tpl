@@ -1,4 +1,4 @@
-<ERRORS>
+
 <form id="addpackage" name="addpackage" method="post" action="">
 <h1>Plugins</h1>
 

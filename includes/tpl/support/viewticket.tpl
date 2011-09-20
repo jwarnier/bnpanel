@@ -1,4 +1,4 @@
-<ERRORS>
+
 <h2>Ticket #{$ID}</h2>
 <div class="ticket">
 <h3>{$TITLE}</h3>    	

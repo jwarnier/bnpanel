@@ -60,7 +60,7 @@ function loadAddons(obj) {
 </div>
 
 <h2>Order #{$ID}</h2>
-<ERRORS>
+
 <form class="content" id="addpackage" name="addpackage" method="post" action="">
 
 <input name="order_id" type="hidden" id="order_id" value="{$ID}" />
