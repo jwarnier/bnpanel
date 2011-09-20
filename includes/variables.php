@@ -37,6 +37,6 @@ if (INSTALL == 1) {
 
 global $main;
 $data = preg_replace("/<LOGO>/si",  $this->show_logo(), $data);
-$data = preg_replace("/<LOGIN>/si", $this->show_login_link(), $data);
+
 
 $data = preg_replace("/<PAGEGEN>/si", $pagegen, $data); #Page Generation Time

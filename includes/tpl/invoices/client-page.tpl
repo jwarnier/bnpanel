@@ -1,4 +1,8 @@
-<table  class="content_table"   width="100%" border="0" cellspacing="3" cellpadding="0">
+<div class="page-header">
+	<h2>{t}Invoices{/t}</h2>
+</div>
+
+<table  class="content_table" width="100%" border="0" cellspacing="3" cellpadding="0">
 	<tr> 
         <th width="5%"><b>#</b></th>
         <th><a title="Domain name" class="tooltip"> <img src="{$icon_dir}world.png" border="0" /> </a> Domain</th>

@@ -10,8 +10,9 @@ function check() {
 </script>
 
 <form class="content" id="edit" name="edit" method="post" action="">
-<fieldset>
-	<legend>{t}User information{/t}</legend>
+<div class="page-header">
+	<h2>{t}User information{/t}</h2>
+</div>
 	<table width="100%" border="0" cellspacing="2" cellpadding="0">
 	  <tr>
 	    <td width="20%">Username:</td>
@@ -122,8 +123,9 @@ function check() {
 	</table>	
 </fieldset>	
 
-<fieldset>
-	<legend>Company information (Optional)</legend>
+<div class="page-header">
+	<h2>{t}Company information (Optional){/t}</h2>	
+</div>
 	<table width="100%" border="0" cellspacing="2" cellpadding="0">	
   	<tr>
     	<td width="50%">Company:</td>

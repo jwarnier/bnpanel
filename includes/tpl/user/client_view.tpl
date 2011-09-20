@@ -2,10 +2,10 @@
 	<a href="?page=details&sub=edit"> <img src="{$url}themes/icons/pencil.png">Edit</a>		  
 </div>
 
-<h2>My Account</h2>
-
 <fieldset>
-	<legend>User information</legend>
+	<div class="page-header">
+		<h2>User information</h2>
+	</div>
 	<table width="100%" border="0" cellspacing="2" cellpadding="0">
 	  <tr>
 	    <td width="20%">Username:</td>
@@ -78,12 +78,14 @@
 	      <a title="Your phone number." class="tooltip"><img src="{$icon_dir}information.png" /></a>
 	    </td>
 	  </tr>  
-	</table>
-	
+	</table>	
 </fieldset>	
 
-<fieldset>
-	<legend>Company information (Optional)</legend>
+<fieldset>	
+	<div class="page-header">
+		<h2>Company information (Optional)</h2>
+	</div>
+	
 	<table width="100%" border="0" cellspacing="2" cellpadding="0">	
   <tr>
     <td width="50%">Company:</td>
@@ -100,10 +102,10 @@
     </td>
   </tr>
     <tr>
-    <td width="20%">SSN/Fiscal ID:</td>
+    	<td width="20%">SSN/Fiscal ID:</td>
     <td>
-    {$FISCALID}
-     <a title="User's SSN or Fiscal ID." class="tooltip"><img src="{$icon_dir}information.png" /></a>
-  </tr>
+    	{$FISCALID}<a title="User's SSN or Fiscal ID." class="tooltip"><img src="{$icon_dir}information.png" /></a>
+    </td>
+  	</tr>
   </table>  
 </fieldset>	

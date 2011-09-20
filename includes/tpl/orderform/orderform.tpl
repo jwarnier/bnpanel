@@ -59,30 +59,24 @@
 				        </label>
 				    </li>
 	            </ul>
-	        </div>
-	        <a title="The Terms of Service is the set of rules you abide by. These must be agreed to." class="tooltip">
+	        </div>	        
 	    </div>    
 		<div id="5" class="row" style="display:none">
 	        <div class="page-header">
 	            <h2>Account Information</h2>
 	        </div>
 	        
-	        <div class="span16">
-	            
+	        <div class="span16">	            
 	            <div class="page-header">        
-		        	<h3>Already a registered?</h3>
-		        	</div>
-		            <a onclick="showLogin();" href="#">{t}Log in to your account{/t}</a>
-		            <br /> <br />
-		               
-		            <div class="page-header">        
-		            <h3>New users</h3>
-		            </div>
-		            
+		        	<h3>{t}Already registered?{/t}</h3>
+		        </div>
+		        <a onclick="showLogin();" href="#">{t}Log in to your account{/t}</a>
+                <br /> <br />		               
+                <div class="page-header">        
+		          <h3>{t}New users{/t}</h3>
+		        </div>
+		            		            
 	        	<fieldset>
-	        	
-	            
-	        	<legend>Contact Info</legend>
 	        	
 	        	<div class="clearfix">
 	        	   <label>Username</label>
@@ -91,8 +85,8 @@
 	        	       <span id="usercheck"> </span>
 	        	       <span class="help-block">The username is your unique identity to your account. Please keep it between 8 and 20.</span>
 	        	   </div>        	   
-	        	</div>
-	        	
+	        	</div>	       
+	        	 	
 	        	<div class="clearfix">
 	               <label>Password</label>
 	               <div class="input">

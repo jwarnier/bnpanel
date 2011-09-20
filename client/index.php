@@ -62,11 +62,13 @@ function client() {
 				$subnav = $content->navtitle;
 				$array3 = array();
 				$array3['LINKS'] = null;
-				foreach($content->navlist as $key => $value) {
-					$array2['IMGURL'] = $value[1];
-					$array2['LINK'] = "?page=".$client_item['link']."&sub=".$value[2];
-					$array2['VISUAL'] = $value[0];
-					$array3['LINKS'] .= $style->replaceVar("tpl/menu/submenu_link.tpl", $array2);
+				if (!empty($content->navlist)) {
+					foreach($content->navlist as $key => $value) {
+						$array2['IMGURL'] = $value[1];
+						$array2['LINK'] = "?page=".$client_item['link']."&sub=".$value[2];
+						$array2['VISUAL'] = $value[0];
+						$array3['LINKS'] .= $style->replaceVar("tpl/menu/submenu_link.tpl", $array2);
+					}
 				}
 				$subsidebar = $style->replaceVar("menu/submenu_main.tpl", $array3);
 			}
@@ -111,30 +113,17 @@ function client() {
 				$header = $value[0];
 			}
 		}
-	}
-	
+	}	
 	$staffuser = $db->client($main->getCurrentUserId());	
-
 	$style->assign('sidebar',  $sidebar);
-	$style->assign('sub_menu', $content->get_submenu());
-		
+	$style->assign('sub_menu', $content->get_submenu());		
 	if (!empty($content->content)) {
 		$style->assign('content', $content->content);
 	}
-	
-		
-	/*$data['LEFT_COLUMN'] = $main->table($nav, $sidebar);	
-	
-	$data['RIGHT_COLUMN'] = $main->table($header, $html);
-	
-	if (isset($content->navtitle)) {
-		$data['RIGHT_COLUMN'] .= $main->table($subnav, $subsidebar);
-	}*/
 }
-
 global $user;
 
-if (!isset($_SESSION['clogged'])) {	
+if (!isset($_SESSION['clogged'])) {
 	if (isset($main->getvar['page']) && $main->getvar['page'] == 'forgotpass') {		
 		define("SUB", "Reset Password");
 		define("INFO", SUB);		
@@ -153,22 +142,23 @@ if (!isset($_SESSION['clogged'])) {
 						$email->send($user_info['email'], $emaildata['subject'], $emaildata['content'], $array);
 						$main->generateToken();
 					} else {
-						$main->errors("That account doesn't exist!");
+						$main->errors("That account doesn't exist");
 					}
 				} else {
-					$main->errors("That account doesn't exist!");
+					$main->errors("That account doesn't exist");
 				}
+			} else {
+				$main->errors("Please fill the email and username");
 			}
 		}
-		$main->generateToken();		
-				
-		$content = '<div align="center">'.$main->table("Client Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';		
+		$main->generateToken();				
+		$content = $style->replaceVar("tpl/login/reset.tpl");		
 		echo $style->replaceVar("layout/one-col/index.tpl", array('content' => $content));				
 		
 	} else {
 		define("SUB", "Login");
 		define("INFO", " ");		
-		if($_POST && $main->checkToken()) {			
+		if ($_POST && $main->checkToken()) {			
 			if($main->clientLogin($main->postvar['user'], $main->postvar['pass'])) {
 				$main->redirect("?page=home");	
 			} else {
@@ -191,11 +181,7 @@ if (!isset($_SESSION['clogged'])) {
 	} elseif($main->getvar['page'] == 'logout') {	
 		$referer = basename($_SERVER['HTTP_REFERER']);		
 		$main->logout('client');
-		if ($referer == 'order') {
-			$main->redirect(URL.'/order');
-		} else {
-			$main->redirect('?page=home');
-		}		
+		$main->redirect(URL.'order');				
 	}	
 	if (!$db->config("cenabled")) {
 		define("SUB", "Disabled");

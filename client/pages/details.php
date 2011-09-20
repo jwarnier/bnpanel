@@ -36,10 +36,13 @@ class page extends Controller {
 				}
 				$main->postvar['email'] = $db->strip($main->postvar['email']);
 				$query = $db->query("SELECT * FROM `<PRE>users` WHERE `email` = '{$main->postvar['email']}' AND `id` != '{$data['id']}'");
-				if($db->num_rows($query) != 0) {
-					$main->errors("That e-mail address is already in use!");
-					$this->replaceVar("tpl/user/cedit.tpl", $array);
-					return;
+				if ($db->num_rows($query) != 0) {
+					if ($data['email'] != $main->postvar['email']) {
+						$main->errors("That e-mail address is already in use!");
+						$this->replaceVar("tpl/user/cedit.tpl", $array);
+						return;
+					}
+					
 				}
 				if(!$main->postvar['state']) {
 					$main->errors("Please enter a valid state!");

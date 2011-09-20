@@ -213,7 +213,7 @@ if (!isset($_SESSION['logged'])) {
 				}
 			}
 		}
-		$content['CONTENT'] =  '<div align="center">'.$main->table("Admin Area - Reset Password", $style->replaceVar("tpl/login/reset.tpl", $array), "300px").'</div>';		
+		$content['content'] =  $style->replaceVar("tpl/login/reset.tpl", $array);		
 		echo $style->replaceVar("layout/one-col/index.tpl", $content);		
 		
 	} else { 		

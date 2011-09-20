@@ -1,6 +1,7 @@
 {$ALERTS}
-
-<h1>Welcome to your client area</h1>
+<div class="page-header">
+	<h2>Welcome to your client area</h2>
+</div>
 <p>
 To get started, select an action in the Sidebar. Here's an overview of your account:
 </p>

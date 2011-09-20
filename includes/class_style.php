@@ -41,10 +41,14 @@ class style extends Smarty {
 	function set_header_parameters() {
 		global $main, $db;
 		
+		//JS
 		$this->assign('javascript', $this->javascript());
-		$this->assign('css', $this->css());
-		$this->assign('url', URL);
 		
+		//CSS
+		$this->assign('css', $this->css());
+		
+		//URLs
+		$this->assign('url', URL);		
 		$this->assign('IMG', URL . "themes/". THEME ."/images/");
 		$this->assign('icon_dir', URL . "themes/icons/");
 		$current_token = $main->getToken();		
@@ -62,6 +66,10 @@ class style extends Smarty {
 		if ($main->getCurrentUserId()) {			
 		} else {						
 		}	
+		
+		
+		$this->assign('login', $this->show_login_link());
+		
 		
 		$link = $this->fetch("login/login_widget.tpl");
 		$this->assign('login_tpl', $link);		
@@ -128,7 +136,7 @@ class style extends Smarty {
 	}
 	
 	public function show_login_link() {
-		global $main;
+		global $main, $style;
 		if (FOLDER == 'admin') {
 			return '';
 		}		
@@ -137,9 +145,14 @@ class style extends Smarty {
 		$link = '';
 		if (INSTALL) {
 			if (!empty($user_info)) {
-				$link = '<li><a href="'.URL.'client">'.$user_info['user'].'</a></li><li><a href="'.URL.'client/?page=logout">Logout</a></li>';
-			} else {
-				$link = '<li><a href="#" onclick="showLogin();">Sign in</a></li>';
+				$link = '<ul class="nav secondary-nav"><li><a href="'.URL.'client">'.$user_info['user'].'</a></li>
+						<li><a href="'.URL.'client/?page=logout">Logout</a></li></ul>';
+			} else {				
+				$link = '<form class="pull-right" action="" method="POST">
+							<input class="input-small" name="user" type="text" placeholder="'.gettext('Username').'">
+							<input class="input-small" name="pass" type="password" placeholder="'.gettext('Password').'">
+							<button class="btn" type="submit">'.gettext('Sign in').'</button>
+						</form>';
 			}		
 		}
 		return $link;
