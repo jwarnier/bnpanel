@@ -9,11 +9,19 @@ var working = '<div align="center"><img src="{$url}themes/icons/working.gif"></d
 var result;
 var pid;
 
+function hide_div() {
+	$("#verify").hide("slow");
+	$("#verify").removeClass("info");
+	$("#verify").removeClass("alert-message");		
+}
+
 $(document).ready(function(){	
    $("#username").change(function(event) {
 	   this.value = this.value.toLowerCase();
 	   check('user', this.value);
-   });   
+   });
+   var timer = setInterval( hide_div, 5000);
+   
 });
 
 function stopRKey(evt) { 
@@ -85,6 +93,7 @@ function showhide(hide, show) {
      });		
 }
 function nextstep() {
+	
 	//alert(step);
 	switch(step) {
 		//addon info
@@ -128,7 +137,7 @@ function nextstep() {
 					document.getElementById("show_summary").innerHTML = data;
 				});				
 			} else  {
-				$("#verify").html("<div class='alert-message info'>You must select a Billing Cycle</div>");
+				$("#verify").html("You must select a Billing Cycle");
 			}
 		break;		
 		
@@ -153,7 +162,7 @@ function nextstep() {
 					}
 				});
 			} else {
-				$("#verify").html("<div class='alert-message info'>You must agree the Terms of Service</div>");
+				$("#verify").html("You must agree the Terms of Service");
 			}			
 			break;			
 		case 5:					
@@ -166,10 +175,10 @@ function nextstep() {
 						showhide(step, step + 1)
 						step = step + 1;						
 					} else {
-						$("#verify").html("<div class='alert-message info'>You must fill all the fields</div>");
+						$("#verify").html("You must fill all the fields");
 					}	
 				} else {
-					$("#verify").html("<div class='alert-message info'>You must fill all the fields</div>");
+					$("#verify").html("You must fill all the fields");
 				}													
 			});
 			
@@ -186,11 +195,11 @@ function nextstep() {
 				var subdomain		= document.getElementById("csub").value;
 				
 				if (subdomain == '') {
-					$("#verify").html("<strong>You must fill all the fields</strong>");
+					$("#verify").html("You must fill all the fields");
 					break;
 				}
 				if (subdomain_id == '' ) {
-					$("#verify").html("<strong>You must select a domain</strong>");
+					$("#verify").html("You must select a domain");
 					break;
 				}
 				final_domain = subdomain;
@@ -199,14 +208,14 @@ function nextstep() {
 				var subdomain_id 	= '';
 				var subdomain       = '';
 				if (final_domain == '') {
-					$("#verify").html("<strong>You must fill a domain name</strong>");
+					$("#verify").html("You must fill a domain name");
 					break;
 				}
 			}
 			
 			$.get("{$ajax}function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {							
 				if (data == '1') {
-					$("#verify").html("<strong>Domain already exists</strong>");					
+					$("#verify").html("Domain already exists");					
 				} else if(data == '0') {
 					final(step, step + 1);
 					step = step + 1
@@ -263,11 +272,17 @@ function nextstep() {
 						});
 					});
 				} else {
-					$("#verify").html("<strong>Seems that you took a lot of time to decide...</strong>");		
+					$("#verify").html("Seems that you took a lot of time to decide...");		
 				}			
 			});			
 			break;
 	}
+	if (document.getElementById("verify").innerHTML != '') {
+		$("#verify").addClass('alert-message');
+		$("#verify").addClass('info');
+		$("#verify").show();
+	}
+	
 }
 
 function final(hide, show) {
@@ -282,6 +297,7 @@ function final(hide, show) {
 
 function previousstep() {
 	//alert(step);
+	hide_div();
 	
 	$("#next").val('Next Step');
 	
@@ -302,8 +318,7 @@ function previousstep() {
 					newstep = 2
 				}
 			});
-		} else if (newstep == 5) {
-			
+		} else if (newstep == 5) {			
 			$.get("{$ajax}function=userIsLogged", function(data) {
 				if (data == "1") {					
 					newstep = 4;
@@ -342,12 +357,11 @@ function checkDomain() {
 		} else {	
 			$.get("{$ajax}function=checkSubDomainExistsSimple&domain="+domain+"&subdomain_id=0",  function(data2) {							
 				if (data2 == '1') {
-					$("#domain_result").html("<strong>Domain already exists</strong> ");	
+					$("#domain_result").html(wrong + " <strong>Domain already exists</strong>");	
 				} else {
-					$("#domain_result").html("<strong>Domain available</strong> "+right);
+					$("#domain_result").html(right + " <strong>Domain available</strong>");
 				}
-			});
-			
+			});			
 		}		
 	});
 }
@@ -374,9 +388,9 @@ function checkSubdomain() {
 		if (final_domain != '') {
 			$.get("{$ajax}function=checkSubDomainExists&domain="+domain_id+"&package_id="+package_id +"&final_domain="+final_domain+"&subdomain_id="+subdomain_id,  function(data) {							
 				if (data == '1') {
-					$("#subdomain_result").html("<strong>Subdomain already exists</strong> ");	
+					$("#subdomain_result").html(wrong + " <strong>Subdomain already exists</strong>");	
 				} else {
-					$("#subdomain_result").html("<strong>Subdomain available</strong> "+right);
+					$("#subdomain_result").html(right + " <strong>Subdomain available</strong>");
 				}
 			});
 		}

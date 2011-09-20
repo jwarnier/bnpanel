@@ -1,7 +1,9 @@
-<div class="contextual">
-	<a href="?page=orders&sub=view&do={$ID}"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Order</a> 
+<div class="tabs sub_tabs">
+	<li> <a href="?page=orders&sub=view&do={$ID}"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Order</a></li> 
 </div>
+<div class="page-header">
 <h2>Change Password in Order #{$ID}</h2>
+</div>
 
 <form class="content"  name="change_pass" method="post" action="">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">

@@ -22,24 +22,27 @@ class page extends Controller {
 				//this is moved to the paypal/ipn.php file
 				break;						
 			case 'view':				
-				if (isset($main->getvar['do'])) {					
-					switch ($main->getvar['p']) {
-						case 'cancel':
-							$style->showMessage('Your Invoice #'.$main->getvar['do'].' is not paid. <br /> You can pay your Invoice clicking in the "Pay Now" button');
-						break;						
-						case 'success':
-							$message = 'Your Invoice #'.$main->getvar['do'].' has been paid<br />';
-							$message .= "Check your email for access information. You should be able to see your site working in a few minutes.<br />";
-							$style->showMessage($message,'success');
-						break;
-					}		
+				if (isset($main->getvar['do'])) {	
+					if (isset($main->getvar['p'])) {
+						switch($main->getvar['p']) {
+							case 'cancel':
+								$style->showMessage('Your Invoice #'.$main->getvar['do'].' is not paid. <br /> You can pay your Invoice clicking in the "Pay Now" button');
+							break;						
+							case 'success':
+								$message = 'Your Invoice #'.$main->getvar['do'].' has been paid<br />';
+								$message .= "Check your email for access information. You should be able to see your site working in a few minutes.<br />";
+								$style->showMessage($message,'success');
+							break;
+						}		
+					}
 					$return_array = $invoice->getInvoice($main->getvar['do'], true);
 					
 					if ($return_array['STATUS'] == 'Pending') {					
-						$return_array['pay'] = '<input type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$main->getvar['do'].'\');" />';
+						$return_array['pay'] = '<input class="btn primary" type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$main->getvar['do'].'\');" />';
 					} else {
 						$return_array['pay'] = '';
 					}					
+					
 					$this->replaceVar('tpl/invoices/view-client.tpl', $return_array);					
 				}
 				break;					
@@ -84,12 +87,12 @@ class page extends Controller {
 							break;
 							case INVOICE_STATUS_CANCELLED:
 								$array['paid'] 	= '<span style="color:red">Canceled</span>';
-								$array['pay'] 	= '<input type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$invoice_item['id'].'\')" />';
+								$array['pay'] 	= '<input type="button" class="btn primary" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$invoice_item['id'].'\')" />';
 								$array['due']	= '<span style="color:red">'.$array['due'].'</span>';		
 							break;
 							case INVOICE_STATUS_WAITING_PAYMENT:
 								$array['paid'] 	= '<span style="color:red">Pending</span>';
-								$array['pay'] 	= '<input type="button" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$invoice_item['id'].'\')" />';
+								$array['pay'] 	= '<input type="button" class="btn primary" name="pay" id="pay" value="Pay Now" onclick="doswirl(\''.$invoice_item['id'].'\')" />';
 								$array['due']	= '<span style="color:red">'.$array['due'].'</span>';		
 							break;
 							case INVOICE_STATUS_DELETED:

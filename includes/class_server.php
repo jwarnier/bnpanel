@@ -416,8 +416,10 @@ class server extends Model {
 			if (!empty($params['userid']) && !empty($params['pid'])) {
 				$order_id = $order->create($params);
 				
-				//Add addons to the new order						
-				$order->addAddons($order_id, $main->getvar['addon_ids']);				
+				//Add addons to the new order		
+				if (!empty($main->getvar['addon_ids'])) {				
+					$order->addAddons($order_id, $main->getvar['addon_ids']);
+				}				
 			}
 			
 			$array['USER']		= $system_username;				

@@ -32,12 +32,12 @@
 		});
 	}
 </script>
-<div class="contextual">
-	<a href="?page=orders&sub=view&do={$ID}"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Order</a> 
+<div class="tabs sub_tabs">
+	<li><a href="?page=orders&sub=view&do={$ID}"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Order</a></li> 
 </div>
-
-<h2>Add Invoice to Order #{$ID}</h2>
-
+<div class="page-header">
+	<h2>Add Invoice to Order #{$ID}</h2>
+</div>
 <form class="content"  id="addinvoice" name="addinvoice" method="post" action="">
 <input name="billing_id" type="hidden" id="billing_id" value="{$BILLING_ID}"/>
 <input name="package_id" type="hidden" id="package_id" value="{$PACKAGE_ID}"/>

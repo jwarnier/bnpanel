@@ -27,12 +27,11 @@ class page extends Controller {
 		This is the area where you can manage all your clients that have signed up for your service. You can perform a variety of tasks like suspend, terminate, email and also check up on their requirements and stats.". $newest;	
 	}
 	
-	public function content() { # Displays the page 
+	public function content() { 
 		global $main, $style, $db, $order,$package, $invoice, $server, $email,$user;
 			
-		switch ($main->get_variable('sub')) {		
-			case 'add':
-				
+		switch ($main->get_variable('sub')) {
+			case 'add':				
 				$asOption = array(
 					    'rules' => array(
 					        'user' 			=> array('required'=>true,'validateUsername'=>'error','UsernameExists'=>'Error'),			        
@@ -69,13 +68,11 @@ class page extends Controller {
 					$main->generateToken();		
 				}			
 				$array['country']		= $main->countrySelect($array['country']);
-				$array['status'] = $main->createSelect('status', $main->getUserStatusList(), '');				
+				$array['status'] 		= $main->createSelect('status', $main->getUserStatusList(), '');				
 				$this->replaceVar("tpl/user/add.tpl", $array);				
-			break;
-			
+				break;			
 			case 'edit':
-				if ($main->getvar['do']) {
-					
+				if ($main->getvar['do']) {					
 					$asOption = array(
 					    'rules' => array(
 					        'user' 			=> array('required'=>true,'validateUsername'=>'error'),
@@ -85,8 +82,7 @@ class page extends Controller {
 					    'messages' => array(			
 					    	'user'=>array('required'=>'This field is required', 'validateUsername'=>'Not a valid Username (6 character minimum)')
 					    )
-					);
-							
+					);							
 					$oValidator = new Validator($asOption);	
 							
 					if ($_POST && $main->checkToken()) {
@@ -105,7 +101,7 @@ class page extends Controller {
 					}
 					
 					$array 					= $user->getUserById($main->getvar['do']);
-					
+										
 					$array['status'] 		= $main->createSelect('status', $main->getUserStatusList(), $array['status']);					
 					$array['country']		= $main->countrySelect($array['country']);
 					$array['json_encode'] 	= json_encode($asOption);
@@ -116,12 +112,12 @@ class page extends Controller {
 										
 					$this->replaceVar("tpl/user/clientview.tpl", $main_array);							
 				}
-			break;
-			
+				break;			
 			case 'search':
-				if(isset($main->getvar['do'])) {			
-							
-					$client = $user->getUserById($main->getvar['do']);					
+				$do_id = $main->get_variable('do');
+				if (!empty($do_id)) {
+					
+					$client = $user->getUserById($do_id);					
 					$array2['DATE'] 	= strftime("%D", $client['signup']);
 					$array2['EMAIL'] 	= $client['email'];
 					$array2['USER'] 	= $client['user'];
@@ -151,8 +147,9 @@ class page extends Controller {
 					
 				} else {
 					//selecting all clients
-					$array['NAME'] = $db->config("name");
-					$array['URL'] = $db->config("url");
+					$array['NAME'] 	= $db->config("name");
+					$array['URL'] 	= $db->config("url");
+					$array['TEXT'] 	= '';
 					$values[] = array("Admin Area", "admin");
 					$values[] = array("Order Form", "order");
 					$values[] = array("Client Area", "client");

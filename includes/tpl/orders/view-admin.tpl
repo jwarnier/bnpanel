@@ -1,10 +1,11 @@
-<div class="contextual">
-	<a href="?page=orders&sub=edit&do={$ID}"> <img src="{$url}themes/icons/pencil.png"> Edit</a>
-	<a href="?page=orders&sub=add_invoice&do={$ID}"> <img src="{$url}themes/icons/note_add.png"> Add Invoice</a>
-	<a href="?page=orders&sub=change_pass&do={$ID}"> <img src="{$url}themes/icons/key.png"> Change CP Password</a>	  
+<div class="tabs sub_tabs">
+	<li><a href="?page=orders&sub=edit&do={$ID}"> <img src="{$url}themes/icons/pencil.png"> Edit</a></li>
+	<li><a href="?page=orders&sub=add_invoice&do={$ID}"> <img src="{$url}themes/icons/note_add.png"> Add Invoice</a></li>
+	<li><a href="?page=orders&sub=change_pass&do={$ID}"> <img src="{$url}themes/icons/key.png"> Change CP Password</a></li>	  
 </div>
-
-<h2>Order #{$ID}</h2>
+<div class="page-header">
+	<h2>Order #{$ID}</h2>
+</div>
 
 <table class="content" width="100%" border="0" cellspacing="2" cellpadding="0"> 
      <tr>

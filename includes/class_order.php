@@ -27,8 +27,11 @@ class order extends model {
 		global $main, $db, $email, $user;
 		$order_id = $this->save($params);		
 		
-		if (!empty($order_id) && is_numeric($order_id )) {			
-			$this->addAddons($order_id, $params['addon_list']);			
+		if (!empty($order_id) && is_numeric($order_id )) {
+				
+			if (!empty($params['addon_list'])) {		
+				$this->addAddons($order_id, $params['addon_list']);
+			}			
 			$main->addLog("order::create : $order_id");
 		
 			$emailtemp 				= $db->emailTemplate('orders_new');
@@ -631,9 +634,9 @@ class order extends model {
 	
 	public function showAllInvoicesByOrderId($order_id) {
 		global $main, $invoice, $currency;
-		$invoice_status = $main->getInvoiceStatusList();
-		
-		$invoice_list = $this->getAllInvoicesByOrderId($order_id);		
+		$invoice_status = $main->getInvoiceStatusList();		
+		$invoice_list 	= $this->getAllInvoicesByOrderId($order_id);
+				
 		$html = '';
 		if (is_array($invoice_list) && count($invoice_list) > 0) {
 			$html  = '<br /><h3>Invoices for this Order</h3>';
