@@ -1219,22 +1219,18 @@ class AJAX {
 		$total = 0;
 		
 		$html = '<table class="common-table" width="100%">
-				        <tr>
-				            <th width="2%"></th>
+				        <tr>				            
 				            <th width="28%"><b>Items in basket</b></th>
 				            <th width="50%"><b>Description</b></th>
-				            <th width="18%" align="right"><b>Cost</b></th>
-				            <th width="2%"></th>
+				            <th width="18%" align="right"><b>Cost</b></th>				            
 				        </tr>';
 				        					        
 		while($data = $db->fetch_array($result,'ASSOC')) {	
 			$amount_to_show  = $currency->toCurrency($data['amount']);
-	       	$html .= "<tr>
-	            <td></td>
-	            <td>{$data['name']}</td>
-	            <td>{$data['billing_name']} </td>
-	            <td align=\"right\">{$amount_to_show}</td>
-	            <td></td>
+	       	$html .= "<tr>	            
+		            <td>{$data['name']}</td>
+		            <td>{$data['billing_name']} </td>
+		            <td align=\"right\">{$amount_to_show}</td>	            
 	        	</tr>";		        	
 	        $total = $total + $data['amount'];
 		}			
@@ -1258,20 +1254,17 @@ class AJAX {
 		            <td></td>
 		            <td>{$data['name']}</td>
 		            <td>{$data['billing_name']} </td>
-		            <td align=\"right\"><div class='price' >{$amount_to_show}</div></td>
-		            <td></td>
+		            <td align=\"right\"><div class='price' >{$amount_to_show}</div></td>		            
 		        	</tr>";
 		        $total = $total + $data['amount'];
 			}
 		}
 		
 		$total_to_show  = $currency->toCurrency($total);	
-		$html .='<tr>
-		            <td></td>
+		$html .='<tr>		            
 		            <td></td>
 		            <td><b><p class="price" >Total</p></b></td>
-		            <td align="right"><div class="price">'.$total_to_show.'</div></td>
-		            <td></td>
+		            <td align="right"><div class="price">'.$total_to_show.'</div></td>		            
 		        </tr>';
 		$html .='</table>';			  	        
 		echo $html;

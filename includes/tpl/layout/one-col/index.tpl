@@ -42,8 +42,6 @@
 </div>
 
 <div class="container">
-<br />
-<br />
 	{foreach $messages as $message}
 			{$message}
 	{/foreach}

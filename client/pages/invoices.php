@@ -45,7 +45,8 @@ class page extends Controller {
 				break;					
 			case 'all':
 			default :
-				$user_id = $main->getCurrentUserId();				
+				$user_id = $main->getCurrentUserId();
+				
 				$billing_cycle_name_list = $billing->getAllBillingCycles();
 				
 				//Addons
@@ -101,13 +102,13 @@ class page extends Controller {
 								//$array['due']=  '<span>'.$array['due'].'</span>';
 						}
 						
-						$package_id 	  = $invoice_item['pid'];
-						$billing_cycle_id = $invoice_item['billing_cycle_id'];
+						$package_id 	  = $order_info['pid'];				
+						$billing_cycle_id = $order_info['billing_cycle_id'];
 						
 						$addon_fee_string = '';
 						if (!empty($invoice_item['addon_fee'])) {
 							
-							$invoice_item['addon_fee'] = unserialize($invoice_item['addon_fee']);
+							$invoice_item['addon_fee'] = @unserialize($invoice_item['addon_fee']);
 							if (is_array($invoice_item['addon_fee']) && count($invoice_item['addon_fee']) > 0 ) {
 								foreach($invoice_item['addon_fee'] as $addon) {					
 									//$addon_fee_string.= $addons_list[$addon['addon_id']].' - '.$addon['amount'].'<br />';

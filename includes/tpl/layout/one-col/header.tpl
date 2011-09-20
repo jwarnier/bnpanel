@@ -24,14 +24,14 @@ $(document).ready(function() {
 function loginUser() {
     var user = $("#user_login").val();
     var pass = $("#pass_login").val();  
-    $.get("<AJAX>function=clientLogin&user="+user+"&pass="+pass, function(data) {
+    $.get("{$ajax}function=clientLogin&user="+user+"&pass="+pass, function(data) {
         if (data != '') {
             if (data == 1) {            
                 if (typeof step != 'undefined' && step == '5') {
                     showhide(step, step + 1)
                     step = step + 1;                        
                 }
-                $.get("<AJAX>function=getNavigation", function(data2) {
+                $.get("{$ajax}function=getNavigation", function(data2) {
                     $("#welcome").html(data2);  
                 });         
                 $("#login_form").dialog('close');           

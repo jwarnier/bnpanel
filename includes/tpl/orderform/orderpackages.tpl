@@ -5,8 +5,7 @@
     </div>
     <div class="description">                
         {$DESCRIPTION}      
-    </div>
-    
+    </div>    
     <div class="button">
         <input name="order" id="order{$ID}" type="button" value="{t}Order{/t}" onclick="orderstepme('{$ID}', '{$PACKAGE_TYPE}'); " class="btn primary" />
     </div>
