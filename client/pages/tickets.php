@@ -68,7 +68,8 @@ class page extends Controller {
 				$this->replaceVar("tpl/support/addticket.tpl", $array);
 				break;
 			default:
-			case 'view':				
+			case 'view':	
+				$array['ADDREPLY'] = '';
 				if(!isset($main->getvar['do']) && $main->checkToken()) {
 					$query = $db->query("SELECT * FROM <PRE>tickets WHERE userid = '{$user_id}' AND reply = '0' ORDER BY id DESC");
 					if(!$db->num_rows($query)) {
@@ -151,7 +152,7 @@ class page extends Controller {
 							$n++;
 						}
 						
-						if($data['status'] != 3) {
+						if ($data['status'] != 3) {
 							$array['ADDREPLY'] .= "<br /><b>Add Reply</b>";
 							$array2['TITLE'] = "RE: ". $data['title'];
 							$array['ADDREPLY'] .= $style->replaceVar("tpl/support/addreply.tpl", $array2);

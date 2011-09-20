@@ -16,10 +16,8 @@
             	<li>    		
             		<a href="?l=nl"><img src="../themes/flags/nl.gif" alt="nl" /> </a>
             	</li>    	   	
-            </ul>            
-            <ul class="nav secondary-nav">
-                <span id="welcome" class="welcome"><LOGIN></span>
-            </ul>            
+            </ul>
+            {$login}
         </div>
     </div>
         

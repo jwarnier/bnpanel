@@ -1,3 +1,6 @@
+<div class="page-header">
+	<h2>{t}Orders{/t}</h2>
+</div>
 <table class="common-table" width="100%" border="0" cellspacing="3" cellpadding="0">
 	<tr> 
         <th width="5%">#</td>             

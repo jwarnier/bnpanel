@@ -39,6 +39,16 @@ if (!$main->getvar['id']) {
 	$packages2 = $db->query("SELECT * FROM <PRE>packages WHERE is_disabled = 0 AND id = '{$main->getvar['id']}'");
 }
 
+if ($_POST && $main->checkToken()) {
+	if($main->clientLogin($main->postvar['user'], $main->postvar['pass'])) {
+		$main->redirect(URL.'client');
+		
+	} else {
+		$main->generateToken();
+	}
+}
+
+
 
 if ($db->num_rows($packages2) == 0) {
 	$content .= '<div class="alert-message warning">There are no available Packages</div>';

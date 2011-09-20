@@ -5,7 +5,7 @@ class page extends Controller {
 	
 	public function __construct() {
 		$this->navtitle = "Invoice menu";		
-		$this->navlist[] = array("View all invoices", "page_white_go.png", "all");
+		//$this->navlist[] = array("View all invoices", "page_white_go.png", "all");
 	}
 	
 	public function description() {
