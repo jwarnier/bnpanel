@@ -4,7 +4,9 @@ function doswirl(id) {
 	window.location = 'index.php?page=invoices&iid='+id;
 }
 </script>
-<h2>Invoice #{$ID}</h2>
+<div class="page-header">
+	<h2>Invoice #{$ID}</h2>
+</div>
 <table class="content" border="0" cellspacing="2" cellpadding="0">
 
   <tr>
@@ -20,7 +22,7 @@ function doswirl(id) {
      <tr>
     <td >Domain:</td>
     <td>
-   <a target="_blank" href="http://{$REAL_DOMAIN}">${REAL_DOMAIN}</a>
+   <a target="_blank" href="http://{$REAL_DOMAIN}">{$REAL_DOMAIN}</a>
     </td>
   </tr>  
       <tr>

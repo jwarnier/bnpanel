@@ -1,5 +1,6 @@
-
+<div class="page-header">
 <h2>Ticket #{$ID}</h2>
+</div>
 <div class="ticket">
 <h3>{$TITLE}</h3>    	
     	

@@ -53,13 +53,14 @@ function loadAddons(obj) {
 	}
 }
 </script>
-<div class="contextual">
-	<a href="?page=orders&sub=view&do={$ID}"> <img src="{$url}themes/icons/order.png"> View </a>
-	<a href="?page=orders&sub=add_invoice&do={$ID}"> <img src="{$url}themes/icons/note_add.png"> Add Invoice</a>
-	<a href="?page=orders&sub=change_pass&do={$ID}"> <img src="{$url}themes/icons/key.png"> Change CP Password</a>	  
+<div class="tabs sub_tabs">
+	<li><a href="?page=orders&sub=view&do={$ID}"> <img src="{$url}themes/icons/order.png"> View </a></li>
+	<li><a href="?page=orders&sub=add_invoice&do={$ID}"> <img src="{$url}themes/icons/note_add.png"> Add Invoice</a></li>
+	<li><a href="?page=orders&sub=change_pass&do={$ID}"> <img src="{$url}themes/icons/key.png"> Change CP Password</a></li>	  
 </div>
-
-<h2>Order #{$ID}</h2>
+<div class="page-header">
+	<h2>Order #{$ID}</h2>
+</div>
 
 <form class="content" id="addpackage" name="addpackage" method="post" action="">
 

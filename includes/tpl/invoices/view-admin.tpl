@@ -1,8 +1,9 @@
-<div class="contextual">
-	<a href="?page=invoices&sub=edit&do={$ID}"> <img src="{$url}themes/icons/pencil.png"> Edit</a> 
+<div class="tabs sub_tabs">
+	<li><a href="?page=invoices&sub=edit&do={$ID}"> <img src="{$url}themes/icons/pencil.png"> Edit</a></li> 
 </div>
-
+<div class="page-header">
 <h2>Invoice #{$ID}</h2>
+</div>
 
 <table class="content" border="0" cellspacing="2" cellpadding="0">
 

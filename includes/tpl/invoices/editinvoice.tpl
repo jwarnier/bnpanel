@@ -24,10 +24,12 @@
 		});
 	}
 </script>
-<div class="contextual">
-	<a href="?page=invoices&sub=view&do={$ID}"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Invoice</a> 
+<div class="tabs sub_tabs">
+	<li><a href="?page=invoices&sub=view&do={$ID}"> <img src="{$url}themes/icons/arrow_rotate_clockwise.png"> Return to Invoice</a></li> 
 </div>
+<div class="page-header">
 <h2>Invoice #{$ID}</h2>
+</div>
 
 
 <form class="content"  id="addpackage" name="addpackage" method="post" action="">

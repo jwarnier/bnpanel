@@ -49,7 +49,9 @@ function filter() {
 }
 
 </script>
-<h2>Invoices</h2>
+<div class="page-header">
+	<h2>Invoices</h2>
+</div>
 {$STATUS_FILTER}
 <a href="#" onclick="filter();">Apply</a>
 

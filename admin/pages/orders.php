@@ -260,7 +260,7 @@ class page extends Controller {
 						}
 					}				
 				} else {
-					echo "That order doesn't exist!";	
+					$main->errors("That order doesn't exist!");	
 				}	
 						
 				$return_array = $order->getOrder($main->getvar['do'], false, false);
@@ -313,9 +313,9 @@ class page extends Controller {
 				$this->replaceVar("orders/edit.tpl", $return_array);			
 				break;			
 			case 'view':				
-				if(isset($main->getvar['do'])) {					
-					$return_array = $order->getOrder($main->getvar['do'], true);
-					$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);											
+				if (isset($main->getvar['do'])) {					
+					$return_array = $order->getOrder($main->getvar['do'], true);				
+					$return_array['INVOICE_LIST'] = $order->showAllInvoicesByOrderId($main->getvar['do']);
 					$this->replaceVar("orders/view-admin.tpl", $return_array);					
 				}				
 				break;			
